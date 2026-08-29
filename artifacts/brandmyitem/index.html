@@ -171,7 +171,7 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;pointer-events:none}
 .ghostpill.solid{background:#1D1D1F;border-color:#1D1D1F;color:#fff;font-weight:500}
 .ghostpill.solid:hover{background:#000}
 .tile{position:absolute;background:transparent;border:none;display:flex;align-items:center;justify-content:center;z-index:2;will-change:transform;animation:floaty 7s ease-in-out infinite}
-.tile img.obj{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 3px #fff) drop-shadow(0 0 3px #fff) drop-shadow(0 0 3px #fff) drop-shadow(0 10px 16px rgba(0,0,0,.14))}
+.tile img.obj{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 8px 12px rgba(0,0,0,.12))}
 @keyframes floaty{0%,100%{transform:translateY(0) translate(var(--px,0),var(--py,0))}50%{transform:translateY(-12px) translate(var(--px,0),var(--py,0))}}
 
 section.band{padding:66px 0}
@@ -253,7 +253,9 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .lcard .newb{position:absolute;top:10px;left:10px;z-index:3}
 .lcard .body{padding:13px 16px 15px}
 .lcard .who{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.lcard .who .avatarc{width:26px;height:26px;border-radius:50%;background:#1D1D1F;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
+.lcard .who .avatarc{width:26px;height:26px;border-radius:50%;background:#1D1D1F;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;overflow:hidden}
+.lcard .who .avatarc.avatar-photo{background:#F5F5F7}
+.lcard .who .avatarc img{width:100%;height:100%;object-fit:cover}
 .lcard .who .oname{font-size:13.5px;font-weight:500}
 .lcard .who .when{font-size:12.5px;color:var(--mfg)}
 .lcard .who .catic{margin-left:auto;width:26px;height:26px;border-radius:50%;background:#fff;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden}
@@ -436,6 +438,21 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .brand-profile-card .label{margin-top:16px}
 .brand-profile-card .label:first-of-type{margin-top:0}
 .brand-profile-card .finetext{margin:7px 0 10px}
+.avatar-picker{padding:14px;border:1px solid var(--border);border-radius:16px;background:var(--wash2);margin-bottom:16px}
+.avatar-picker-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.avatar-picker-head .label{margin:0}
+.avatar-picker-status{font-size:11.5px;color:var(--mfg);white-space:nowrap}
+.avatar-picker .finetext{margin:5px 0 12px}
+.avatar-grid{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px;max-height:238px;overflow-y:auto;padding:2px;scrollbar-width:thin}
+.avatar-option{position:relative;aspect-ratio:1;border:1px solid transparent;border-radius:50%;padding:2px;background:#fff;overflow:hidden;cursor:pointer;transition:transform .15s,border-color .15s,box-shadow .15s}
+.avatar-option:hover{transform:translateY(-2px);border-color:var(--mfg)}
+.avatar-option.on{border:2px solid var(--fg);box-shadow:0 0 0 3px #fff,0 0 0 5px var(--fg)}
+.avatar-option img{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%}
+.item-owner{display:inline-flex;align-items:center;gap:8px}
+.item-owner .avatarc{width:28px;height:28px;border-radius:50%;background:#1D1D1F;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;overflow:hidden;flex-shrink:0}
+.item-owner .avatarc.avatar-photo{background:#F5F5F7}
+.item-owner .avatarc img{width:100%;height:100%;object-fit:cover}
+@media(max-width:640px){.avatar-grid{grid-template-columns:repeat(6,minmax(0,1fr));gap:7px}}
 .profile-purpose{height:auto;min-height:78px;padding:11px 13px;line-height:1.45;resize:vertical}
 .directory-section{margin-top:18px;padding-top:16px;border-top:1px solid var(--border)}
 .directory-section:first-of-type{margin-top:0;padding-top:0;border-top:0}
@@ -825,6 +842,11 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
         </div></div>
         <div class="card"><div class="card-h"><div class="card-t">Post it</div></div>
         <div class="card-c" style="padding-top:12px">
+           <div class="avatar-picker">
+             <div class="avatar-picker-head"><label class="label" for="avatarGrid">Choose your Memoji</label><span class="avatar-picker-status" id="avatarPickStatus">Selected</span></div>
+             <p class="finetext">Pick the face brands will see next to your name on the live listing.</p>
+             <div class="avatar-grid" id="avatarGrid" role="group" aria-label="Choose your Memoji"></div>
+           </div>
           <div class="field"><label class="label" for="pName">Your name</label><input class="input" id="pName" placeholder="Cam"></div>
           <div class="field"><label class="label" for="pMail">Email for purchases and shipping</label><input class="input" id="pMail" type="email" placeholder="you@email.com"></div>
           <button class="btn btn-primary btn-full btn-lg" id="postBtn">Post my item live</button>
@@ -848,7 +870,7 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
       <div class="card"><div class="card-c">
         <div class="raise"><span class="r1"><span id="iRaised">$0</span> <span>of <span id="iGoal">$0</span></span></span><span id="iTag"></span></div>
         <div class="bigbar"><i id="iBar" style="width:0%"></i></div>
-        <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--mfg);font-weight:600"><span id="iWho"></span><span id="iHab"></span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--mfg);font-weight:600"><span id="iWho" class="item-owner"></span><span id="iHab"></span></div>
       </div></div>
       <div class="card"><div class="card-h"><div class="card-t">The deal</div></div>
       <div class="card-c" style="padding-top:8px">
@@ -5074,14 +5096,14 @@ var DEMO_BIDDERS={
   'Fairway+':{brand:'Twitch',link:'https://www.twitch.tv',logo:'logos/twitch.svg'}
 };
 var DEMO_CONTEXT={
-  demo1:{social:'10K\u2013100K',cities:['Los Angeles, CA'],universities:['UCLA']},
-  demo2:{social:'1K\u201310K',cities:['Miami, FL']},
-  demo3:{social:'100K+',cities:['New York, NY'],universities:['New York University']},
-  demo4:{social:'10K\u2013100K',cities:['Los Angeles, CA'],universities:['University of Southern California']},
-  demo5:{social:'100K+',cities:['San Francisco, CA'],universities:['Stanford University']},
-  demo6:{social:'1K\u201310K',cities:['Seattle, WA'],universities:['University of Washington']},
-  demo7:{social:'10K\u2013100K',cities:['Austin, TX'],universities:['University of Texas at Austin']},
-  demo8:{social:'1K\u201310K',cities:['Toronto, ON'],universities:['University of Toronto']}
+  demo1:{social:'10K\u2013100K',cities:['Los Angeles, CA'],universities:['UCLA'],avatar:'avatars/avatar-01.png'},
+  demo2:{social:'1K\u201310K',cities:['Miami, FL'],avatar:'avatars/avatar-19.png'},
+  demo3:{social:'100K+',cities:['New York, NY'],universities:['New York University'],avatar:'avatars/avatar-37.png'},
+  demo4:{social:'10K\u2013100K',cities:['Los Angeles, CA'],universities:['University of Southern California'],avatar:'avatars/avatar-22.png'},
+  demo5:{social:'100K+',cities:['San Francisco, CA'],universities:['Stanford University'],avatar:'avatars/avatar-07.png'},
+  demo6:{social:'1K\u201310K',cities:['Seattle, WA'],universities:['University of Washington'],avatar:'avatars/avatar-30.png'},
+  demo7:{social:'10K\u2013100K',cities:['Austin, TX'],universities:['University of Texas at Austin'],avatar:'avatars/avatar-40.png'},
+  demo8:{social:'1K\u201310K',cities:['Toronto, ON'],universities:['University of Toronto'],avatar:'avatars/avatar-16.png'}
 };
 (function upgradeDemoBidders(){
   var changed=false,replacements={};
@@ -5108,6 +5130,7 @@ var DEMO_CONTEXT={
     if(!l.social){l.social=ctx.social;changed=true}
     if(!Array.isArray(l.cities)||!l.cities.length){l.cities=ctx.cities.slice();changed=true}
     if(ctx.universities&&(!Array.isArray(l.universities)||!l.universities.length)){l.universities=ctx.universities.slice();changed=true}
+    if(!l.avatar){l.avatar=ctx.avatar;changed=true}
   });
   if(changed)store.set('bmi_db4',DB);
 })();
@@ -5252,6 +5275,11 @@ function monoTile(name,cls){
 }
 function safeCardText(value){
   return String(value||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function ownerAvatarHtml(l){
+  var name=(l&&l.owner||'?').trim()||'?';
+  if(l&&l.avatar)return '<span class="avatarc avatar-photo"><img src="'+l.avatar+'" alt="'+safeCardText(name)+' profile picture"></span>';
+  return '<span class="avatarc">'+safeCardText(name.slice(0,1).toUpperCase())+'</span>';
 }
 function sponsorLogoStack(l){
   var unique=[],seen={};
@@ -6136,7 +6164,7 @@ function renderHomeCampaigns(){
     var card=document.createElement('button');card.type='button';card.className='lcard home-campaign-card';
     card.innerHTML='<div class="thumb" id="home-th-'+l.id+'"></div>'+
       '<div class="body">'+
-      '<div class="who"><span class="avatarc">'+init+'</span><span class="oname">'+l.owner+'</span><span class="when">&middot; '+ago(l.created)+'</span><span class="catic"><img src="'+PHO(l)+'" alt=""></span></div>'+
+      '<div class="who">'+ownerAvatarHtml(l)+'<span class="oname">'+l.owner+'</span><span class="when">&middot; '+ago(l.created)+'</span><span class="catic"><img src="'+PHO(l)+'" alt=""></span></div>'+
       listingContextHtml(l)+'<div class="iname">'+it.label+'</div>'+
       '<div class="moneyrow"><span class="amts">'+money(raisedOf(l))+'<span>/'+money(goalOf(l))+'</span></span>'+
       '<span class="chips"><span class="chipg">'+sponsorLogoStack(l)+'<span>'+sold+'/'+l.slots+' sold</span></span><span class="chipb">from '+money(minOpenPrice(l)===Infinity?Math.min.apply(null,l.prices):minOpenPrice(l))+'</span></span></div>'+
@@ -6325,7 +6353,7 @@ function renderDash(){
     var card=document.createElement('button');card.className='lcard';
     card.innerHTML='<div class="thumb" id="th-'+l.id+'"></div>'+
       '<div class="body">'+
-      '<div class="who"><span class="avatarc">'+init+'</span><span class="oname">'+l.owner+'</span><span class="when">&middot; '+ago(l.created)+'</span><span class="catic"><img src="'+PHO(l)+'" alt=""></span></div>'+
+      '<div class="who">'+ownerAvatarHtml(l)+'<span class="oname">'+l.owner+'</span><span class="when">&middot; '+ago(l.created)+'</span><span class="catic"><img src="'+PHO(l)+'" alt=""></span></div>'+
       listingContextHtml(l)+'<div class="iname">'+it.label+'</div>'+
       '<div class="moneyrow"><span class="amts">'+money(raisedOf(l))+'<span>/'+money(goalOf(l))+'</span></span>'+
       '<span class="chips"><span class="chipg">'+sponsorLogoStack(l)+'<span>'+sold+'/'+l.slots+' sold</span></span><span class="chipb">from '+money(minOpenPrice(l)===Infinity?Math.min.apply(null,l.prices):minOpenPrice(l))+'</span></span></div>'+
@@ -6341,7 +6369,29 @@ function renderDash(){
 }
 
 /* ============ BUILD ============ */
-var B={type:'macbook',slots:4,prices:[],habs:['Coffee shops'],cities:[],universities:[],purpose:'',freq:'Daily',social:'1K\u201310K',socialLinks:{}};
+var B={type:'macbook',slots:4,prices:[],habs:['Coffee shops'],cities:[],universities:[],purpose:'',freq:'Daily',social:'1K\u201310K',socialLinks:{},avatar:''};
+var AVATAR_COUNT=48;
+function renderAvatarPicker(){
+  var grid=document.getElementById('avatarGrid');
+  if(!grid)return;
+  grid.innerHTML='';
+  for(var i=1;i<=AVATAR_COUNT;i++){
+    var src='avatars/avatar-'+pad(i)+'.png';
+    var b=document.createElement('button');
+    b.type='button';
+    b.className='avatar-option'+(B.avatar===src?' on':'');
+    b.setAttribute('aria-label','Choose Memoji '+i);
+    b.setAttribute('aria-pressed',B.avatar===src?'true':'false');
+    b.innerHTML='<img src="'+src+'" alt="">';
+    b.onclick=function(){
+      B.avatar=this.querySelector('img').getAttribute('src');
+      renderAvatarPicker();
+    };
+    grid.appendChild(b);
+  }
+  var status=document.getElementById('avatarPickStatus');
+  if(status)status.textContent=B.avatar?'Memoji selected':'Choose a Memoji';
+}
 function renderVariants(k){
   var v=ITEM_VARIANTS[k];
   var row=document.getElementById('variantsRow');
@@ -6537,6 +6587,7 @@ function showBuild(){
   }
   renderLocationPicker('cities');
   renderLocationPicker('universities');
+  renderAvatarPicker();
   renderSocialConnect();
   cuPickTemplate(B.type);
   document.getElementById('slotMinus').onclick=function(){if(B.slots>1){B.slots--;B.prices=suggest(B.type,B.slots);refreshBuild();cuRepart()}};
@@ -7088,6 +7139,7 @@ function postListing(){
   var name=document.getElementById('pName').value.trim();
   var mail=document.getElementById('pMail').value.trim();
   if(!name||!mail){toast('Add your name and email to post');return}
+  if(!B.avatar){toast('Choose a Memoji before posting');return}
   var l;
   if(CU.template&&CU.angles&&CU.angles.length>1&&!CU.faces.length&&CU.tiles.length){
     /* catalog item: same zone layout offered on each photographed face */
@@ -7111,11 +7163,11 @@ function postListing(){
     pool.order.forEach(function(o,rank){prices[facesOut[o.fi].off+o.i]=pool.prices[rank]});
     var mdl=(document.getElementById('tModel')||{value:''}).value.trim();
     l={id:uid(),type:'custom',custom:true,photo:CU.faces[0].photo,faces:facesOut,tiles:CU.faces[0].tiles,
-      retail:retail,title:mdl||null,owner:name,mail:mail,habs:B.habs.slice(),cities:B.cities.slice(),universities:B.universities.slice(),purpose:B.purpose.trim(),freq:B.freq,social:B.social,color:B.color,socialLinks:Object.assign({},B.socialLinks),slots:flatTiles.length,
+      retail:retail,title:mdl||null,owner:name,mail:mail,avatar:B.avatar,habs:B.habs.slice(),cities:B.cities.slice(),universities:B.universities.slice(),purpose:B.purpose.trim(),freq:B.freq,social:B.social,color:B.color,socialLinks:Object.assign({},B.socialLinks),slots:flatTiles.length,
       prices:prices,claims:prices.map(function(){return null}),created:Date.now()};
     CU.faces=[];cuFaceChips();
   }else{
-    l={id:uid(),type:B.type,owner:name,mail:mail,habs:B.habs.slice(),cities:B.cities.slice(),universities:B.universities.slice(),purpose:B.purpose.trim(),freq:B.freq,social:B.social,color:B.color,socialLinks:Object.assign({},B.socialLinks),slots:B.slots,
+    l={id:uid(),type:B.type,owner:name,mail:mail,avatar:B.avatar,habs:B.habs.slice(),cities:B.cities.slice(),universities:B.universities.slice(),purpose:B.purpose.trim(),freq:B.freq,social:B.social,color:B.color,socialLinks:Object.assign({},B.socialLinks),slots:B.slots,
       prices:B.prices.slice(),claims:B.prices.map(function(){return null}),created:Date.now()};
   }
   DB.listings.unshift(l);
@@ -7420,7 +7472,7 @@ function refreshItemCards(){
   document.getElementById('iGoal').textContent=money(goal);
   document.getElementById('iBar').style.width=pct+'%';
   document.getElementById('iTag').innerHTML='<span class="badge '+(pct>=100?'badge-ok':'badge-sec')+'">'+(pct>=100?'BRANDED':'UNBRANDED')+'</span>';
-  document.getElementById('iWho').textContent='Posted by '+CUR.owner;
+  document.getElementById('iWho').innerHTML=ownerAvatarHtml(CUR)+'<span>Posted by '+safeCardText(CUR.owner)+'</span>';
   document.getElementById('iHab').textContent=[CUR.habs.join(' \u00b7 '),CUR.freq,CUR.social&&(CUR.social+' followers')].filter(Boolean).join(' \u00b7 ');
   var locEl=document.getElementById('iBrandLocations'),purposeEl=document.getElementById('iPurpose'),socialEl=document.getElementById('iSocial'),linksEl=document.getElementById('iSocialLinks');
   if(locEl)locEl.textContent=(CUR.habs&&CUR.habs.length?CUR.habs.join(' · '):'Not provided');
