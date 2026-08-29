@@ -1,3 +1,4 @@
 - [BrandMyItem build environment](brandmyitem-build-environment.md) — Vite checks PORT and BASE_PATH during production builds.
 - [Brand-fit listing profile](brand-fit-listing-profile.md) — owner context belongs on listings so brands can evaluate placement, purpose, and identity.
 - [Ticker activity semantics](brandmyitem-ticker-activity.md) — live activity should describe one clear bid event with amount and sponsored item, not rotate through fulfillment stages.
+- [Catalog photo replacement](catalog-photo-replacement.md) — outlined cutouts are hero-only; campaign surfaces use untouched photos fitted proportionally.
