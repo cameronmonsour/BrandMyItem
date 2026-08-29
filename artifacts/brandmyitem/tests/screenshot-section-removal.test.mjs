@@ -67,6 +67,21 @@ test('dashboard activity uses the same live ticker as the homepage', () => {
   assert.match(html, /\(DB\.activity\|\|\[\]\)\.forEach\(function\(a\)\{\s+if\(!a\.txt\)return;/);
 });
 
+test('dashboard removes duplicate category controls and shows brand decision details', () => {
+  assert.doesNotMatch(html, /id="railCats"/);
+  assert.match(html, /<h1>Live items<\/h1>/);
+  assert.match(html, /id="dashLiveTitle">Brands are claiming spots now<\/h2>/);
+  assert.match(html, /function listingBrandFitHtml\(l\)/);
+  assert.match(html, />Why brands buy this placement</);
+  assert.match(html, />Following<\/span>/);
+  assert.match(html, />Location<\/span>/);
+  assert.match(html, />University<\/span>/);
+  assert.match(html, />Exact item price<\/span>/);
+  assert.match(html, />Spots<\/span>/);
+  assert.match(html, />Fulfillment<\/span>/);
+  assert.match(html, />Open spot<\/span>/);
+});
+
 test('fulfillment copy states the delivery and branding windows', () => {
   assert.match(html, /\+10% fulfillment fee · 60-day delivery window/);
   assert.match(html, /Delivered in under 23 days · 7-day branding window/);

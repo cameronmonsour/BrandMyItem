@@ -214,10 +214,11 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 @media(max-width:640px){.faq-grid{grid-template-columns:1fr;grid-template-rows:none;grid-auto-flow:row}.faq-grid details.faq{margin-bottom:10px}.faq-grid details.faq:last-child{margin-bottom:0}}
 
 /* dashboard */
-.dash-head{padding:26px 0 12px}
-.dash-head h2{font-family:var(--serif);font-size:32px;font-weight:500;letter-spacing:-.012em;margin-bottom:4px;padding-bottom:2px;display:inline-block;transform:scaleX(.95);transform-origin:left center}
-.dash-head p{color:var(--mfg);font-size:14px}
-.searchbar{position:relative;margin:14px 0 12px}
+.dash-head{padding:38px 0 20px;max-width:720px}
+.dash-head .eyebrow{margin-bottom:7px}
+.dash-head h1{font-family:var(--serif);font-size:clamp(36px,5vw,56px);font-weight:500;letter-spacing:-.025em;line-height:1;padding-bottom:5px}
+.dash-head p{max-width:620px;color:var(--mfg);font-size:15px;line-height:1.55}
+.searchbar{position:relative;margin:0 0 12px}
 .searchbar input{height:48px;border-radius:999px;padding-left:46px;font-size:15px}
 .searchbar svg{position:absolute;left:17px;top:50%;transform:translateY(-50%);color:var(--mfg)}
 .catstrip{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 14px;scrollbar-width:none}
@@ -231,11 +232,19 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .stat{background:var(--wash2);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px 18px}
 .stat b{display:block;font-size:22px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .stat span{font-size:12px;color:var(--mfg);font-weight:600}
-.dash{display:grid;grid-template-columns:248px 1fr;gap:22px;padding-bottom:90px}
+.dash{display:grid;grid-template-columns:228px minmax(0,1fr);gap:24px;padding-bottom:90px;align-items:start}
+.dash-results{min-width:0}
 .rail{position:sticky;top:76px;align-self:start;display:flex;flex-direction:column;gap:14px}
 .rail h5{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--mfg);margin-bottom:8px}
 .pricerow{display:flex;gap:8px;align-items:center}
 .pricerow .input{height:36px;font-size:13px;border-radius:10px}
+.dash-live-panel{margin:0 0 18px;padding:16px;border:1px solid var(--border);border-radius:20px;background:var(--wash2)}
+.dash-live-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:12px}
+.dash-live-head .eyebrow{margin:0 0 3px;font-size:10.5px}
+.dash-live-head h2{font-family:var(--serif);font-size:25px;font-weight:600;line-height:1.05;letter-spacing:-.015em}
+.dash-live-badge{display:inline-flex;align-items:center;gap:7px;flex:0 0 auto;padding:6px 10px;border-radius:999px;background:#fff;border:1px solid var(--border);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.dash-live-badge i{width:7px;height:7px;border-radius:50%;background:#1F7A44;box-shadow:0 0 0 4px rgba(31,122,68,.11);animation:pulse 1.6s infinite}
+.dash-live-panel .home-live-feed{border-radius:12px}
 .ticker{border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;margin-bottom:20px;background:var(--bg)}
 .ticker-h{display:flex;align-items:center;gap:8px;padding:11px 16px;border-bottom:1px solid var(--border);background:var(--wash2);font-size:13px;font-weight:600}
 .tick{display:flex;justify-content:space-between;gap:12px;padding:10px 16px;font-size:13.5px;border-bottom:1px solid var(--border)}
@@ -285,6 +294,21 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .lcard .sponsor-monogram{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#1D1D1F;color:#fff;font-size:6px;font-weight:700;letter-spacing:-.04em}
 .lcard .sponsor-more{display:inline-flex;align-items:center;justify-content:center;height:16px;margin-left:2px;color:var(--mfg);font-size:9px;font-weight:700}
 .lcard .chipb{display:inline-flex;align-items:center;font-size:11px;font-weight:500;background:#1D1D1F;color:#fff;border-radius:999px;padding:4px 8px;line-height:1.2;font-variant-numeric:tabular-nums;white-space:nowrap;flex-shrink:0}
+.lcard .listing-why{margin:12px 0 0;padding:12px;border:1px solid var(--border);border-radius:14px;background:var(--wash2)}
+.lcard .listing-why-head{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--mfg);margin-bottom:5px}
+.lcard .listing-purpose{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;min-height:34px;font-size:12px;line-height:1.42;color:var(--fg)}
+.lcard .listing-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 12px;margin-top:11px;padding-top:11px;border-top:1px solid var(--border)}
+.lcard .listing-fact{min-width:0}
+.lcard .listing-fact span{display:block;font-size:9.5px;font-weight:700;letter-spacing:.055em;text-transform:uppercase;color:var(--mfg);margin-bottom:2px}
+.lcard .listing-fact b{display:block;overflow:hidden;text-overflow:ellipsis;font-size:11.5px;font-weight:600;line-height:1.35}
+.lcard .listing-fact.wide{grid-column:1/-1}
+.lcard .listing-fact.wide b{white-space:normal}
+.lcard .listing-price-row{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-top:12px}
+.lcard .listing-price-row .amts{font-size:15.5px;font-weight:600;font-variant-numeric:tabular-nums}
+.lcard .listing-price-row .amts span{color:#A6B0BA;font-weight:500}
+.lcard .listing-price-row .spot-ask{text-align:right}
+.lcard .listing-price-row .spot-ask span{display:block;font-size:9.5px;font-weight:700;letter-spacing:.055em;text-transform:uppercase;color:var(--mfg)}
+.lcard .listing-price-row .spot-ask b{font-size:13px;font-weight:700}
 .pbar{height:5px;border-radius:99px;background:#EEF1F5;overflow:hidden;margin:10px 0 0}
 .pbar i{display:block;height:100%;border-radius:99px;background:#1D1D1F;transition:width .5s}
 .empty{border:1px solid rgba(60,60,67,.20);border-radius:var(--r-lg);padding:46px 20px;text-align:center;color:var(--mfg);font-size:14px;grid-column:1/-1}
@@ -628,6 +652,17 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
   .itemgrid2{grid-template-columns:1fr}
   .item3d{transform:rotateX(10deg) rotateY(-20deg) scale(.62)!important}
   .finalwrap{min-height:330px}
+}
+@media(max-width:620px){
+  .dash-head{padding:26px 0 16px}
+  .dash-head h1{font-size:39px}
+  .statrow{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .stat{padding:13px 14px}
+  .stat b{font-size:19px}
+  .dash-live-panel{padding:13px}
+  .dash-live-head{align-items:center}
+  .dash-live-head h2{font-size:21px}
+  .grid{grid-template-columns:1fr}
 }
 @media(max-width:620px){.brand-fit-grid{grid-template-columns:1fr}}
 @media(max-width:620px){.location-add-row{align-items:stretch}.location-add{padding:0 12px}}
@@ -1028,6 +1063,11 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
 <!-- DASHBOARD -->
 <div class="view" id="v-dashboard">
   <div class="wrap">
+    <div class="dash-head">
+      <div class="eyebrow">Live sponsorship inventory</div>
+      <h1>Live items</h1>
+      <p>Compare the owner, audience, placement, exact pricing, and fulfillment plan before your brand claims a spot.</p>
+    </div>
     <div class="searchbar">
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <input class="input" id="dq" placeholder="Search items, owners, habitats&hellip;">
@@ -1036,10 +1076,6 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
     <div class="statrow" id="statRow"></div>
     <div class="dash">
       <aside class="rail">
-        <div class="card"><div class="card-c" style="padding:18px">
-          <h5>Category</h5>
-          <div id="railCats"></div>
-        </div></div>
         <div class="card"><div class="card-c" style="padding:18px">
           <h5>Status</h5>
           <label class="check"><input type="radio" name="fst" value="all" checked>All items</label>
@@ -1064,8 +1100,14 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
           </select>
         </div></div>
       </aside>
-      <main>
-        <div class="home-live-feed" id="dashLiveFeed"></div>
+      <main class="dash-results">
+        <section class="dash-live-panel" aria-labelledby="dashLiveTitle">
+          <div class="dash-live-head">
+            <div><div class="eyebrow">Live activity</div><h2 id="dashLiveTitle">Brands are claiming spots now</h2></div>
+            <span class="dash-live-badge"><i></i>Live</span>
+          </div>
+          <div class="home-live-feed" id="dashLiveFeed"></div>
+        </section>
         <div class="grid" id="dashGrid"></div>
       </main>
     </div>
@@ -7032,17 +7074,6 @@ function showDash(){
     b.onclick=function(){F.cat=c.id;showDash()};
     cs.appendChild(b);
   });
-  var rc=document.getElementById('railCats');rc.innerHTML='';
-  var la=document.createElement('label');la.className='check';
-  la.innerHTML='<input type="radio" name="frc" '+(F.cat==='All'?'checked':'')+'>All categories';
-  la.querySelector('input').onchange=function(){F.cat='All';showDash()};
-  rc.appendChild(la);
-  CATS.slice(1).forEach(function(c){
-    var l=document.createElement('label');l.className='check';
-    l.innerHTML='<input type="radio" name="frc" '+(F.cat===c.id?'checked':'')+'>'+c.id;
-    l.querySelector('input').onchange=function(){F.cat=c.id;showDash()};
-    rc.appendChild(l);
-  });
   document.getElementById('dq').value=F.q;
   document.getElementById('dq').oninput=function(){F.q=this.value;renderDash()};
   document.querySelectorAll('input[name=fst]').forEach(function(r){
@@ -7064,6 +7095,31 @@ function minOpenPrice(l){
 function listingSpotPrice(l){
   var open=minOpenPrice(l);
   return open===Infinity&&l.prices.length?Math.min.apply(null,l.prices):open;
+}
+function listingBrandFitHtml(l){
+  var cities=campaignValues(l.cities,(l.habs&&l.habs.length?l.habs.slice(0,2).join(' · '):'Not provided'));
+  var universities=campaignValues(l.universities);
+  var purpose=l.purpose||('Visible '+(l.freq||'regularly').toLowerCase()+' in '+campaignValues(l.habs,'everyday settings').toLowerCase()+'.');
+  var fulfillment=l.brandingMode==='assisted'?'BrandMyItem applies':'Owner applies';
+  var openCount=openSlots(l),sold=(l.slots||0)-openCount;
+  var spotPrice=listingSpotPrice(l);
+  var spotLabel=openCount?(money(spotPrice)+' minimum'):'All spots sold';
+  return '<div class="listing-why">'+
+    '<div class="listing-why-head">Why brands buy this placement</div>'+
+    '<p class="listing-purpose">'+safeCardText(purpose)+'</p>'+
+    '<div class="listing-facts">'+
+      '<div class="listing-fact"><span>Following</span><b>'+safeCardText(l.social?l.social+' followers':'Not provided')+'</b></div>'+
+      '<div class="listing-fact"><span>Seen</span><b>'+safeCardText(l.freq||'Not provided')+'</b></div>'+
+      '<div class="listing-fact"><span>Location</span><b>'+safeCardText(cities)+'</b></div>'+
+      '<div class="listing-fact"><span>University</span><b>'+safeCardText(universities)+'</b></div>'+
+      '<div class="listing-fact"><span>Exact item price</span><b>'+money(RETL(l))+'</b></div>'+
+      '<div class="listing-fact"><span>Spots</span><b>'+sold+' sold · '+openCount+' open</b></div>'+
+      '<div class="listing-fact wide"><span>Fulfillment</span><b>'+safeCardText(fulfillment+' · '+brandingMethod(l.type))+'</b></div>'+
+      '<div class="listing-fact"><span>Commitment</span><b>'+termOf(l)+' months</b></div>'+
+      '<div class="listing-fact"><span>Check-in</span><b>'+safeCardText(cadence(RETL(l)))+'</b></div>'+
+    '</div>'+
+    '<div class="listing-price-row"><span class="amts">'+money(raisedOf(l))+'<span>/'+money(goalOf(l))+'</span></span><span class="spot-ask"><span>Open spot</span><b>'+spotLabel+'</b></span></div>'+
+  '</div>';
 }
 function postActivityRows(){
   var rows=[],seen={},listings=DB.listings||[];
@@ -7147,8 +7203,6 @@ function renderDash(){
   }
   list.forEach(function(l){
     var it={label:LBLL(l)},pct=pctOf(l),isNew=Date.now()-l.created<1000*60*60*24;
-    var sold=l.slots-openSlots(l);
-    var init=(l.owner||'?').trim().slice(0,1).toUpperCase();
     var card=document.createElement('button');card.type='button';card.className='lcard';
     card.setAttribute('data-listing-id',l.id);
     card.setAttribute('aria-haspopup','dialog');
@@ -7156,9 +7210,8 @@ function renderDash(){
     card.innerHTML='<div class="thumb" id="th-'+l.id+'"></div>'+
       '<div class="body">'+
       '<div class="who">'+ownerAvatarHtml(l)+'<span class="oname">'+l.owner+'</span><span class="when">&middot; '+ago(l.created)+'</span><span class="catic"><img src="'+PHO(l)+'" alt=""></span></div>'+
-      listingContextHtml(l)+'<div class="iname">'+it.label+'</div>'+
-       '<div class="moneyrow"><span class="amts">'+money(raisedOf(l))+'<span>/'+money(goalOf(l))+'</span></span>'+
-       '<span class="chips"><span class="chipg sold-count">'+sold+'/'+l.slots+' sold</span><span class="sponsor-price">'+sponsorLogoStack(l)+'<span class="chipb">from '+money(listingSpotPrice(l))+'</span></span></span></div>'+
+      '<div class="iname">'+it.label+'</div>'+
+      listingBrandFitHtml(l)+
       '<div class="pbar"><i style="width:'+pct+'%"></i></div>'+
       '</div>';
     card.onclick=function(){openCampaignDetails(l)};
