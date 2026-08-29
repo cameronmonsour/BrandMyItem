@@ -5377,6 +5377,19 @@ ITEM_PHOTOS=LOCAL_PRODUCT_PHOTOS;
 HERO_PHOTOS=LOCAL_PRODUCT_PHOTOS;
 HERO_CUTOUTS=LOCAL_PRODUCT_PHOTOS;
 HERO_SUIT=LOCAL_PRODUCT_PHOTOS.suit;
+(function normalizeSavedProductPhotos(){
+  var changed=false;
+  (DB.listings||[]).forEach(function(l){
+    var isDemo=!!(DEMO_CONTEXT[l.id]||String(l.id).indexOf('demo')===0);
+    var photo=LOCAL_PRODUCT_PHOTOS[l.type];
+    if(!photo||(!isDemo&&l.custom))return;
+    if(l.photo!==photo){l.photo=photo;changed=true}
+    (l.faces||[]).forEach(function(f){
+      if(f.photo!==photo){f.photo=photo;delete f.photoRef;changed=true}
+    });
+  });
+  if(changed)store.set('bmi_db4',DB);
+})();
 function listingPhoto(l){
   if(!l)return '';
   var p=(typeof LOCAL_PRODUCT_PHOTOS!=='undefined'&&LOCAL_PRODUCT_PHOTOS[l.type])||'';
@@ -6036,7 +6049,7 @@ function mount3D(el,st,opts){
 }
 function renderFinal(el,st,opts){
   /* BUILD 43: photo model only. All legacy 3D and schematic rendering is dead code below this line. */
-  var l=st;
+  var l=normalizeListingPhoto(st);
   if(!l.photo){
     var ph=(typeof ITEM_PHOTOS!=='undefined')&&ITEM_PHOTOS[l.type];
     if(ph)l={photo:ph,tiles:mapTiles(l.type,l.slots)||[],claims:l.claims||[],prices:l.prices||[],custom:true,id:l.id,preview:l.preview,type:l.type};
@@ -7430,6 +7443,7 @@ function trackCardHtml(l,c){
 function showItem(id){
   CUR=DB.listings.filter(function(l){return l.id===id})[0];
   if(!CUR){location.hash='dashboard';return}
+  CUR=normalizeListingPhoto(CUR);
   itemMode='auction';
   runCountdown('itemCount',CUR);
   drawItemMap();
