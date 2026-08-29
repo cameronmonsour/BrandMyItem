@@ -1121,7 +1121,7 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
           <div class="build-product-layout">
             <div class="build-product-visual">
               <input type="file" id="cuPhoto" accept="image/*" style="display:none">
-              <div class="upl" id="cuUpl" style="display:none">Upload a photo of your item &middot; trace where ads may go</div>
+              <div class="upl" id="cuUpl" style="display:none">Upload a photo of your item &middot; draw each custom placement shape</div>
                <div id="cuWrap" style="display:none">
                  <div class="cu-viewport" id="cuViewport"><canvas id="cuCanvas" width="1" height="1" tabindex="0" aria-label="Item photo tracing canvas"></canvas></div>
                  <div class="cu-zoom" role="toolbar" aria-label="Photo zoom controls">
@@ -1131,9 +1131,9 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
                    <button id="cuZoomIn" type="button" title="Zoom in" aria-label="Zoom in">+</button>
                  </div>
                 <div id="cuFaces" style="display:none;gap:6px;margin:8px 0"></div>
-                <p class="finetext" id="cuHint">Ad space is pre-placed for you. Drag any box to move it, or use the tools below to add your own.</p>
+                <p class="finetext" id="cuHint">Choose a shape tool to add a placement, or trace a custom outline point by point.</p>
                 <div class="finetext" id="cuTraceStatus" role="status" aria-live="polite" style="display:none;margin-top:4px"></div>
-                <div class="toolbox" role="toolbar" aria-label="Box editing tools">
+                <div class="toolbox" role="toolbar" aria-label="Placement shape tools">
               <button class="icontool wide" id="cuUndo" type="button" title="Undo the last traced point" aria-label="Undo the last traced point" disabled>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M9 7 4 12l5 5"/><path d="M4 12h11a5 5 0 0 1 0 10h-1"/></svg>
                 <span class="lbl">Undo point</span>
@@ -1142,31 +1142,31 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="m7 7 10 10M17 7 7 17"/></svg>
                 <span class="lbl">Cancel trace</span>
               </button>
-              <button class="icontool wide" id="cuReset" type="button" title="Reset all placement zones" aria-label="Reset all placement zones" disabled>
+              <button class="icontool wide" id="cuReset" type="button" title="Reset all placement shapes" aria-label="Reset all placement shapes" disabled>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M5 7h14M8 7V5h8v2M7 7l1 13h8l1-13"/><path d="M10 10v7M14 10v7"/></svg>
-                <span class="lbl">Reset zones</span>
+                <span class="lbl">Reset shapes</span>
               </button>
-              <button class="icontool" id="cuDel" type="button" title="Remove selected box" style="display:none">
+              <button class="icontool" id="cuDel" type="button" title="Remove selected shape" style="display:none">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M4 7h16"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
               </button>
               <span class="tool-sep"></span>
-              <button class="icontool on" id="cuShapeRect" type="button" title="Add rectangle box">
+              <button class="icontool on" id="cuShapeRect" type="button" title="Use a rectangle placement">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="4" y="6" width="16" height="12" rx="2"/></svg>
               </button>
-              <button class="icontool" id="cuShapeCircle" type="button" title="Add circle / oval box">
+              <button class="icontool" id="cuShapeCircle" type="button" title="Use a circle or oval placement">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><ellipse cx="12" cy="12" rx="8" ry="7"/></svg>
               </button>
-              <button class="icontool" id="cuAdd" type="button" title="Add a box">
+              <button class="icontool" id="cuAdd" type="button" title="Add the selected placement shape">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
               </button>
               <button class="icontool" id="cuTrace" type="button" title="Trace a custom shape" aria-label="Trace a custom shape">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 4c4.5 0 8 2.7 8 6.5S16.5 17 12 17s-8-2.7-8-6.5S7.5 4 12 4Z" stroke-dasharray="2.6 2.2"/><circle cx="17.3" cy="15.6" r="1.3" fill="currentColor" stroke="none"/></svg>
               </button>
-              <button class="icontool" id="cuCopy" type="button" title="Duplicate selected box" style="display:none">
+              <button class="icontool" id="cuCopy" type="button" title="Duplicate selected shape" style="display:none">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
               </button>
               <span class="tool-sep"></span>
-              <label class="icontool" title="Box color" style="cursor:pointer;position:relative">
+              <label class="icontool" title="Shape color" style="cursor:pointer;position:relative">
                 <span class="colorswatch" id="cuColorSwatch"></span>
                 <input id="cuColor" type="color" value="#1D1D1F" style="position:absolute;inset:0;opacity:0;cursor:pointer">
               </label>
@@ -7482,7 +7482,7 @@ function renderBuildSpecs(k){
   });
 }
 /* ============ CUSTOM ITEM: photo + trace ============ */
-var CU={img:null,photo:null,poly:[],tracePointer:null,closed:false,tiles:[],prices:[],mixed:true,retail:0,faces:[],shape:'rect',color:'#1D1D1F',tracing:false,sel:-1,zoom:1};
+var CU={img:null,photo:null,poly:[],tracePointer:null,closed:false,tiles:[],prices:[],mixed:true,retail:0,faces:[],shape:'rect',color:'#1D1D1F',tracing:false,customized:false,sel:-1,zoom:1};
 var FACE_NAMES=['Front','Back','Left','Right'];
 function cuFaceChips(){
   var el=document.getElementById('cuFaces');if(!el)return;
@@ -7528,76 +7528,30 @@ function cuKnockout(img){
   g.putImageData(d,0,0);
   return c.toDataURL('image/png');
 }
-function cuPartition(n){
-  if(!CU.closed||CU.poly.length<3)return false;
-  var G=40;
-  var xs=CU.poly.map(function(p){return p[0]}),ys=CU.poly.map(function(p){return p[1]});
+function cuCreateTracedShape(){
+  if(CU.poly.length<3)return false;
+  var pts=CU.poly.map(function(p){return [p[0],p[1]]});
+  var area=0;
+  for(var i=0,j=pts.length-1;i<pts.length;j=i++){
+    area+=(pts[j][0]*pts[i][1])-(pts[i][0]*pts[j][1]);
+  }
+  if(Math.abs(area)/2<0.0015)return false;
+  var xs=pts.map(function(p){return p[0]}),ys=pts.map(function(p){return p[1]});
   var x0=Math.min.apply(null,xs),x1=Math.max.apply(null,xs);
   var y0=Math.min.apply(null,ys),y1=Math.max.apply(null,ys);
-  function inside(x,y){
-    var c=false,pl=CU.poly;
-    for(var i=0,j=pl.length-1;i<pl.length;j=i++){
-      if((pl[i][1]>y)!==(pl[j][1]>y)&&x<(pl[j][0]-pl[i][0])*(y-pl[i][1])/(pl[j][1]-pl[i][1])+pl[i][0])c=!c;
-    }
-    return c;
-  }
-  var cw=(x1-x0)/G,ch=(y1-y0)/G,cells=[],iy,ix;
-  for(iy=0;iy<G;iy++)for(ix=0;ix<G;ix++)
-    if(inside(x0+(ix+0.5)*cw,y0+(iy+0.5)*ch))cells.push(iy*G+ix);
-  if(cells.length<4)return false;
-  var set={};cells.forEach(function(i){set[i]=1});
-  var wts=[];for(var i2=0;i2<n;i2++)wts.push(CU.mixed?Math.pow(0.62,i2):1);
-  function PX(i){return x0+((i%G)+0.5)*cw}
-  function PY(i){return y0+(Math.floor(i/G)+0.5)*ch}
-  function divide(idx,ws){
-    if(ws.length<=1||idx.length<2)return [idx];
-    var half=Math.ceil(ws.length/2);
-    var w1=ws.slice(0,half),w2=ws.slice(half);
-    var s1=0,s2=0;w1.forEach(function(w){s1+=w});w2.forEach(function(w){s2+=w});
-    var mnx=Infinity,mxx=-Infinity,mny=Infinity,mxy=-Infinity;
-    idx.forEach(function(i){var x=PX(i),y=PY(i);if(x<mnx)mnx=x;if(x>mxx)mxx=x;if(y<mny)mny=y;if(y>mxy)mxy=y});
-    var horiz=(mxx-mnx)>=(mxy-mny);
-    var sorted=idx.slice().sort(function(a,b){return horiz?PX(a)-PX(b):PY(a)-PY(b)});
-    var cut=Math.max(1,Math.min(sorted.length-1,Math.round(sorted.length*s1/(s1+s2))));
-    return divide(sorted.slice(0,cut),w1).concat(divide(sorted.slice(cut),w2));
-  }
-  var groups=divide(cells,wts);
-  var tiles=groups.map(function(g){
-    var gs={};g.forEach(function(i){gs[i]=1});
-    var seed=g[0],bd=-1;
-    g.forEach(function(i){
-      var iy2=Math.floor(i/G),ix2=i%G,d=0;
-      while(gs[(iy2+d)*G+ix2]&&gs[(iy2-d)*G+ix2]&&gs[iy2*G+ix2+d]&&gs[iy2*G+ix2-d])d++;
-      if(d>bd){bd=d;seed=i}
-    });
-    var a0=seed%G,a1=a0,b0=Math.floor(seed/G),b1=b0;
-    function rin(p0,p1,q0,q1){
-      if(p0<0||q0<0||p1>=G||q1>=G)return false;
-      for(var jy=q0;jy<=q1;jy++)for(var jx=p0;jx<=p1;jx++)if(!gs[jy*G+jx])return false;
-      return true;
-    }
-    var grew=true,gd=0;
-    while(grew&&gd++<200){
-      grew=false;
-      if(rin(a0,a1+1,b0,b1)){a1++;grew=true}
-      if(rin(a0-1,a1,b0,b1)){a0--;grew=true}
-      if(rin(a0,a1,b0,b1+1)){b1++;grew=true}
-      if(rin(a0,a1,b0-1,b1)){b0--;grew=true}
-    }
-    return {x:x0+(a0+(a1-a0+1)/2)*cw,y:y0+(b0+(b1-b0+1)/2)*ch,
-            w:(a1-a0+1)*cw*0.92,h:(b1-b0+1)*ch*0.92,cells:g.length};
+  CU.tiles.push({
+    x:(x0+x1)/2,
+    y:(y0+y1)/2,
+    w:Math.max(0.01,x1-x0),
+    h:Math.max(0.01,y1-y0),
+    shape:'poly',
+    color:CU.color,
+    pts:pts
   });
-  tiles.sort(function(a,b){return b.cells-a.cells});
-  var tot=0;tiles.forEach(function(t){tot+=t.cells});
-  var retail=Math.max(1,parseInt(document.getElementById('cuRetail').value||'100',10));
-  CU.retail=retail;
-  var unit=retail<200?1:5;
-  var pr=tiles.map(function(t){return Math.max(unit,Math.round(retail*t.cells/tot/unit)*unit)});
-  var diff=retail-pr.reduce(function(a,b){return a+b},0);
-  pr[0]+=diff;
-  CU.tiles=tiles.map(function(t){return {x:t.x,y:t.y,w:t.w,h:t.h}});
-  CU.prices=pr;
-  B.prices=pr.slice();
+  CU.sel=CU.tiles.length-1;
+  CU.closed=true;
+  CU.prices=boxPrices();
+  B.prices=CU.prices.slice();
   return true;
 }
 function cuDraw(){
@@ -7741,7 +7695,7 @@ function cuInit(){
         im2.onload=function(){CU.img=im2;CU.template=null;CU.poly=[];CU.tracePointer=null;CU.tracing=false;CU.closed=false;CU.tiles=[];CU.prices=[];
            CU.zoom=1;
           document.getElementById('cuWrap').style.display='block';
-          upl.textContent='Photo loaded &middot; trace the ad area below';
+          upl.textContent='Photo loaded &middot; trace each custom placement shape below';
           traceUI();cuDraw()};
         im2.src=CU.photo;
       };
@@ -7776,7 +7730,7 @@ function cuInit(){
       }
       status.style.display='block';
     }else{
-      hint.textContent='Ad space is pre-placed for you. Drag any box to move it, or use the tools below to add your own.';
+      hint.textContent='Choose a shape tool to add a placement, or trace a custom outline point by point.';
       status.textContent='';
       status.style.display='none';
     }
@@ -7790,7 +7744,19 @@ function cuInit(){
     var hadTrace=CU.tracing||CU.poly.length;
     CU.tracing=false;CU.poly=[];CU.tracePointer=null;CU.sel=-1;
     selUI();traceUI();cuDraw();
-    if(showMessage&&hadTrace)toast('Trace canceled · no zone was added');
+    if(showMessage&&hadTrace)toast('Trace canceled · no shape was added');
+  }
+  function deleteSelectedShape(showMessage){
+    if(CU.sel<0||!CU.tiles[CU.sel])return false;
+    CU.tiles.splice(CU.sel,1);
+    if(CU.prices.length)CU.prices.splice(CU.sel,1);
+    CU.sel=-1;
+    CU.closed=!!CU.tiles.length;
+    CU.prices=CU.tiles.length?boxPrices():[];
+    B.prices=CU.prices.slice();
+    selUI();traceUI();cuDraw();totals();
+    if(showMessage)toast('Shape deleted');
+    return true;
   }
   function traceStartHit(x,y,r){
     if(!CU.poly.length)return false;
@@ -7803,15 +7769,19 @@ function cuInit(){
     cancelTrace(false);
     if(CU.template){
       cuApplyTemplate();
-      toast('Placement zones reset');
+      toast('Placement shapes reset');
       return;
     }
     CU.tiles=[];CU.prices=[];CU.closed=false;B.prices=[];CU.sel=-1;
     selUI();traceUI();cuDraw();totals();
-    toast('Placement zones cleared');
+    toast('Placement shapes cleared');
   }
   function setTool(tool){
     if(tool==='trace'){
+      if(!CU.customized&&CU.tiles.length){
+        CU.tiles=[];CU.prices=[];B.prices=[];CU.closed=false;
+      }
+      CU.customized=true;
       CU.tracing=true;CU.poly=[];CU.tracePointer=null;CU.sel=-1;
     }else{
       if(CU.tracing||CU.poly.length)cancelTrace(true);
@@ -7838,22 +7808,21 @@ function cuInit(){
     if(CU.tracing){
       cv.focus();
       if(CU.poly.length>2&&traceStartHit(x,y,r)){
-        var wasClosed=CU.closed;
-        CU.closed=true;
-        if(!cuPartition(B.slots)){
-          CU.closed=wasClosed;CU.tracePointer=null;traceUI();cuDraw();
-          toast('Make the traced zone a little larger before closing it');
+        if(!cuCreateTracedShape()){
+          CU.tracePointer=null;traceUI();cuDraw();
+          toast('Make the traced shape a little larger before closing it');
           return;
         }
         CU.poly=[];CU.tracePointer=null;CU.tracing=false;
         document.getElementById('cuTrace').classList.remove('on');
         selUI();traceUI();cuDraw();totals();
-        toast('Zone closed · '+B.slots+' spot'+(B.slots>1?'s':'')+' auto-placed');
+        toast('Custom shape created');
         return;
       }
       CU.poly.push([x,y]);CU.tracePointer=null;traceUI();cuDraw();
       return;
     }
+    cv.focus();
     /* boxes first: resize handle, then body */
     for(var i=CU.tiles.length-1;i>=0;i--){
       var t=CU.tiles[i];
@@ -7911,6 +7880,8 @@ function cuInit(){
     if((e.key==='Backspace'||e.key==='Delete')&&CU.tracing&&CU.poly.length){
       e.preventDefault();CU.poly.pop();CU.tracePointer=null;traceUI();cuDraw();
       toast('Point removed · '+CU.poly.length+' point'+(CU.poly.length===1?'':'s')+' left');
+    }else if((e.key==='Backspace'||e.key==='Delete')&&!CU.tracing&&CU.sel>=0){
+      e.preventDefault();deleteSelectedShape(true);
     }
   });
   document.getElementById('cuAdd').onclick=function(){
@@ -7920,7 +7891,7 @@ function cuInit(){
     selUI();traceUI();cuDraw();totals();
   };
   document.getElementById('cuCopy').onclick=function(){
-    if(CU.sel<0||!CU.tiles[CU.sel]){toast('Select a box first');return}
+    if(CU.sel<0||!CU.tiles[CU.sel]){toast('Select a shape first');return}
     var src=CU.tiles[CU.sel];
     var copy={x:Math.min(0.92,src.x+0.05),y:Math.min(0.92,src.y+0.05),w:src.w,h:src.h,shape:src.shape,color:src.color};
     if(src.pts)copy.pts=src.pts.map(function(p){return [Math.min(0.98,p[0]+0.05),Math.min(0.98,p[1]+0.05)]});
@@ -7929,9 +7900,7 @@ function cuInit(){
     selUI();traceUI();cuDraw();totals();
   };
   document.getElementById('cuDel').onclick=function(){
-    if(CU.sel<0)return;
-    CU.tiles.splice(CU.sel,1);CU.prices.splice(CU.sel,1);
-    CU.sel=-1;if(!CU.tiles.length)CU.closed=false;selUI();traceUI();cuDraw();totals();
+    deleteSelectedShape(true);
   };
   document.getElementById('cuUndo').onclick=function(){
     if(CU.tracing&&CU.poly.length){
@@ -8010,6 +7979,7 @@ function tmplMax(t){
 }
 function cuApplyTemplate(){
   var t=CU.template;if(!t)return;
+  if(CU.customized)return;
   CU.tracing=false;CU.poly=[];CU.tracePointer=null;CU.sel=-1;
   var KO=null; /* logo keep-out retired */
   var mx=tmplMax(t);
@@ -8081,7 +8051,7 @@ function cuComposeAngles(list,done){
   });
 }
 function cuPickTemplate(t){
-  CU.template=t;CU.faces=[];CU.angleIx=0;CU.tracing=false;CU.poly=[];CU.tracePointer=null;CU.sel=-1;
+  CU.template=t;CU.faces=[];CU.angleIx=0;CU.tracing=false;CU.customized=false;CU.poly=[];CU.tracePointer=null;CU.sel=-1;
   /* front photo only for now -- no side or back angles */
   CU.angles=[['Front',ITEM_PHOTOS[t]]];
   document.getElementById('cuRetail').value=ITEMS[t].retail;
@@ -8106,7 +8076,7 @@ function tmplInit(){
   it.onchange=function(){cuPickTemplate(it.value)};
   fillItems();
 }
-function cuRepart(){if(CU.template){cuApplyTemplate()}else if(CU.closed&&!CU.tracing){cuPartition(B.slots);cuDraw();totals()}}
+function cuRepart(){if(CU.template&&!CU.customized)cuApplyTemplate()}
 function boxPrices(){
   var retail=Math.max(1,parseInt(document.getElementById('cuRetail').value||'100',10));
   var tot=0;CU.tiles.forEach(function(t){tot+=t.w*t.h});
