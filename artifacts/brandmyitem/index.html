@@ -154,6 +154,8 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;pointer-events:none}
 .bighero{position:relative;background:#F5F5F7;color:var(--fg);height:min(calc(100vh - 104px),900px);min-height:600px;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .bighero:before,.bighero:after,.bighero .toprule{display:none}
 .herocenter{position:relative;z-index:3;text-align:center;max-width:min(94vw,1400px)}
+.herotag{font-size:clamp(14px,1.4vw,19px);font-weight:400;color:var(--mfg);margin-bottom:6px;letter-spacing:.002em}
+.heroword{font-family:var(--serif);font-weight:500;font-size:clamp(44px,9vw,150px);line-height:.92;letter-spacing:-.015em;color:var(--fg);user-select:none;display:inline-block;transform:scaleX(.9);padding-bottom:.06em;white-space:nowrap}
 .hero-middle{display:inline-block;min-width:3.15ch;font-style:italic;transform-origin:50% 92%;will-change:transform,opacity}
 .hero-middle.is-slipping{animation:heroWordSlipOut .34s cubic-bezier(.65,0,.84,.18) forwards}
 .hero-middle.is-entering{animation:heroWordSlipIn .48s cubic-bezier(.16,1,.3,1) both}
@@ -926,6 +928,8 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
       <div class="tile" style="left:59%;bottom:16%;width:12vw;max-width:200px;aspect-ratio:5/4;animation-duration:7.6s;animation-delay:.2s" data-d="18"><img class="obj" data-item="suit" alt=""></div>
       <div class="tile" style="right:7%;bottom:21%;width:12vw;max-width:200px;aspect-ratio:5/6;animation-duration:8.2s;animation-delay:1.8s" data-d="16"><img class="obj" data-item="paddle" alt=""></div>
       <div class="herocenter">
+        <div class="herotag">Brands buy sponsored ad space on the items you want.</div>
+        <div class="heroword" aria-label="BrandMyItem, BrandAnyItem, BrandYourItem"><span class="hero-brand">Brand</span><span class="hero-middle" aria-live="polite">My</span><span class="hero-item">Item</span></div>
         <div class="herobtns">
           <a class="ghostpill" href="#build">I&rsquo;m a user</a>
           <a class="ghostpill solid" href="#dashboard">I&rsquo;m a brand</a>
