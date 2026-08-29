@@ -80,6 +80,9 @@ test('dashboard keeps compact tracker cards without a duplicate left category bo
   assert.doesNotMatch(html, /<div class="eyebrow">Live activity<\/div>/);
   assert.doesNotMatch(html, /class="dash-live-badge"/);
   assert.match(html, /class="home-live-feed" id="dashLiveFeed"/);
+  assert.match(html, /\.dash-results\{min-width:0;display:flex;flex-direction:column;gap:18px\}/);
+  assert.match(html, /\.rail\{position:sticky;top:76px;align-self:start;display:flex;flex-direction:column;gap:16px\}/);
+  assert.match(html, /\.grid\{display:grid;grid-template-columns:repeat\(auto-fill,minmax\(236px,1fr\)\);gap:20px\}/);
   assert.doesNotMatch(html, /function listingBrandFitHtml\(l\)/);
   assert.doesNotMatch(html, /class="listing-why"/);
   assert.match(html, /id="fSocial"/);
