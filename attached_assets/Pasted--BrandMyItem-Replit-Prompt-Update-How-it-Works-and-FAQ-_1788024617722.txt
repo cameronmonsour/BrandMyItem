@@ -1,0 +1,60 @@
+# BrandMyItem — Replit Prompt: Update "How it Works" and FAQ Copy
+
+Paste this into Replit's agent. This updates two existing sections in `brandmyitem.html` — the "Four steps" How it Works band and the FAQ accordion — to reflect the simplified business model finalized in `FINAL_BUSINESS_MODEL_DECISIONS.md`. Both sections currently describe the original escrow-based model (12-month fixed term, no mention of the 60-day unsold window, no mention of assisted branding). Replace their copy with what's below. Keep the existing HTML structure, classes, and the accordion/step-card visual design exactly as they are — this is a copy change only, not a redesign.
+
+---
+
+## Section 1: "How it Works" — four steps
+
+Find the section with `id="home-how"` (heading "Four steps. No sales calls."). Replace the four step descriptions with:
+
+**Step 1 — Build it** *(unchanged, still accurate)*
+> Pick the item you want. The surface splits into sticker spots sized to real print dimensions, and you set the starting price on each.
+
+**Step 2 — Post it live**
+> Your item lands in the live feed instantly, unbranded, with every spot open and a 60-day clock running. Sell out in time and it ships. Don't, and every spot already sold is refunded automatically — no listing sits open forever.
+
+**Step 3 — Brands buy spots**
+> Brands drop their logo on an open spot and are charged right then — the exact listed price plus a 20% platform fee, or 30% if you've chosen to have BrandMyItem apply the branding for you. First come, first served, no haggling.
+
+**Step 4 — It ships branded**
+> At 100%, BrandMyItem buys the item and ships it — 30 days if you apply the sponsor branding yourself, 60 if BrandMyItem does it for you. Pick a term of 6, 12, or 18 months when you post; a quick monthly photo keeps the listing in good standing for as long as you chose.
+
+Also update the "What the money buys" paragraph directly below this section:
+> Every listing shows the real spec and real retail price of the item being funded. Spot prices sum to exactly that price, a 20% platform fee sits on top of each purchase (30% if BrandMyItem handles the branding for you), and the owner receives the item itself — never cash, and never before it's actually purchased and shipped.
+
+---
+
+## Section 2: FAQ — "Asked and answered"
+
+Find the section with `id="home-faq"`. Update these existing questions and add three new ones. Keep the same `<details class="faq"><summary>...</summary><div class="fa">...</div></details>` pattern for every entry.
+
+**Update — "Does the owner make money?"**
+> No, and that's the point. BrandMyItem buys the item directly the moment a listing is fully funded and ships it to the owner. Spot money funds that purchase, the platform fee runs the business, and cash never changes hands with the owner at any point.
+
+**Update — "What does a brand actually get?"**
+> Your logo printed on the item itself, visible everywhere it goes and in everything its owner posts, plus your spot on the listing page with a link to your site, for as long as the owner's chosen term runs (6, 12, or 18 months). No impressions promised, just real presence in real rooms your ads can't reach.
+
+**Update — "How does payment work?"**
+> Buying a spot charges your card immediately for the listed price plus the platform fee. No holds, no waiting. If a listing doesn't sell out within 60 days, every brand on it is refunded automatically. If it sells out but shipment runs late, you'll get a notice before the promised date passes, with the choice to wait or take a full refund. If the item can never be delivered, you're refunded in full without having to ask.
+
+**Update — "What keeps the owner honest?"**
+> Monthly photo check-ins, public on the listing for anyone to see. The first one requires a receipt dated after the listing funded, so nobody can claim credit for an item they already owned. Miss a check-in and the listing gets flagged publicly; miss two in a row and that owner can't post another listing.
+
+*(Leave "Is this real?", "Can any brand join?", and "What can I post?" exactly as they are — still accurate.)*
+
+**New — "What if the item never sells out?"**
+> Every listing gets 60 days. Sell out in time and it ships. If it doesn't, every brand who bought a spot is refunded automatically and the listing closes — no request needed, no money left sitting indefinitely.
+
+**New — "Do I have to say it's sponsored if I post about it?"**
+> Yes. Any post about a sponsored item needs to disclose that, and BrandMyItem's built-in share tool tags it for you automatically. That's not a house rule — it's an FTC requirement any time you post about something you received for free in exchange for showing a brand's logo.
+
+**New — "Who actually buys the item?"**
+> BrandMyItem does, directly, the moment a listing hits 100%. Neither the brand nor the owner ever fronts the cost — brands pay for ad space, BrandMyItem buys and ships the physical item, and the owner never touches money at any step.
+
+---
+
+## Notes
+
+- This is copy only — no changes to `l.termMonths`, the 60-day timeout logic, or anything else described in `REPLIT_SIMPLIFIED_MODEL_PROMPT.md`. If that migration hasn't been built yet, this copy will describe features slightly ahead of the code — build the copy and the underlying logic together, or at minimum in the same pass, so the marketing page never promises something the app doesn't yet do.
+- Tone to match: short declarative sentences, no corporate hedging, plain confident language — consistent with the existing "Four steps. No sales calls." heading style. Don't add marketing fluff to any of the copy above; it's written in the voice already established on the page.
