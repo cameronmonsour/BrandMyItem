@@ -1290,16 +1290,16 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
           <div class="label">Share your reach</div>
           <div class="social-connect" id="socialConnect"></div>
           <div class="brand-deal-section">
-            <div class="field" style="margin-top:14px"><div class="label">Commitment term</div>
-              <div class="choice-grid term-choice-grid" id="termChoices" role="radiogroup" aria-label="Commitment term">
-                <button class="choice-card" type="button" data-choice-group="term" data-value="6" aria-pressed="false"><strong>6 months</strong><span>Shorter runway</span></button>
-                <button class="choice-card on" type="button" data-choice-group="term" data-value="12" aria-pressed="true"><strong>12 months</strong><span>Balanced runway</span></button>
-                <button class="choice-card" type="button" data-choice-group="term" data-value="18" aria-pressed="false"><strong>18 months</strong><span>Longest runway</span></button>
+            <div class="field" style="margin-top:14px"><div class="label">Check-in term</div>
+              <div class="choice-grid term-choice-grid" id="termChoices" role="radiogroup" aria-label="Check-in term">
+                <button class="choice-card" type="button" data-choice-group="term" data-value="6" aria-pressed="false"><strong>6 months</strong><span>Send check-ins for 6 months</span></button>
+                <button class="choice-card on" type="button" data-choice-group="term" data-value="12" aria-pressed="true"><strong>12 months</strong><span>Send check-ins for 12 months</span></button>
+                <button class="choice-card" type="button" data-choice-group="term" data-value="18" aria-pressed="false"><strong>18 months</strong><span>Send check-ins for 18 months</span></button>
               </div>
               <div class="term-runway" aria-live="polite">
-                <div class="term-runway-head"><span>Completion chance</span><b id="termConfidenceOut"></b></div>
+                <div class="term-runway-head"><span>Check-in duration</span><b id="termConfidenceOut"></b></div>
                 <div class="term-runway-track" id="termRunwayTrack" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i></div>
-                <div class="term-runway-caption">More runway gives the listing more time to fill every spot. It improves the odds, but never guarantees completion.</div>
+                <div class="term-runway-caption">This sets how long you want to send check-ins after delivery. The listing stays posted for 60 days, until it is completed or deleted.</div>
               </div>
             </div>
             <div class="field" style="margin-top:14px"><div class="label">Who applies the branding?</div>
@@ -1315,8 +1315,9 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
         <div class="card details-card"><div class="card-h"><div class="card-t">Details</div></div>
         <div class="card-c" style="padding-top:8px">
           <div class="fact"><span>Item ships</span><b>new, at 100% claimed</b></div>
+          <div class="fact"><span>Listing window</span><b>60 days, until completed or deleted</b></div>
           <div class="fact"><span>Check-in</span><b id="cadOut">monthly photo</b></div>
-          <div class="fact"><span>Commitment term</span><b id="buildTermOut">12 months</b></div>
+          <div class="fact"><span>Check-in term</span><b id="buildTermOut">12 months</b></div>
           <div class="fact"><span>Fulfillment</span><b id="buildFulfillmentOut">You apply branding</b></div>
           <div class="fact"><span>Branded material</span><b id="buildMaterialOut">Adhesive sticker/decal for you to apply</b></div>
           <div class="fact"><span>Platform fee</span><b>20%</b></div>
@@ -7303,7 +7304,7 @@ function setBuildChoiceCards(group,value){
 function refreshTermRunway(){
   var term=termOf(B),level=term===6?1:(term===18?3:2);
   var label=document.getElementById('termConfidenceOut');
-  if(label)label.textContent='';
+  if(label)label.textContent=term+' months';
   document.querySelectorAll('#termRunwayTrack i').forEach(function(segment,i){
     segment.classList.toggle('on',i<level);
   });

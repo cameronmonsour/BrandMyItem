@@ -102,6 +102,10 @@ test('dashboard keeps compact tracker cards without a duplicate left category bo
   assert.doesNotMatch(builderHtml, /IRLi applies the approved sponsor branding/);
   assert.doesNotMatch(builderHtml, /You apply the approved sponsor branding after delivery/);
   assert.match(html, /\.term-runway\{margin-top:11px;padding:11px 12px 10px;border-radius:12px;background:transparent\}/);
+  assert.match(builderHtml, /<div class="label">Check-in term<\/div>/);
+  assert.match(builderHtml, /Send check-ins for 6 months/);
+  assert.match(builderHtml, /This sets how long you want to send check-ins after delivery\. The listing stays posted for 60 days, until it is completed or deleted\./);
+  assert.match(builderHtml, /<span>Listing window<\/span><b>60 days, until completed or deleted<\/b>/);
   assert.match(html, /\.brand-profile-card \.label\{margin-top:16px;color:var\(--fg\)\}/);
   assert.doesNotMatch(html, /function listingBrandFitHtml\(l\)/);
   assert.doesNotMatch(html, /class="listing-why"/);
