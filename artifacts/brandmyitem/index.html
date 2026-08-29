@@ -246,13 +246,8 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .filter-card .pricerow .input{min-width:0}
 .filter-clear{width:100%;height:34px;margin-top:2px;border:1px solid var(--border);border-radius:10px;background:var(--bg);font-size:12px;font-weight:600;color:var(--mfg)}
 .filter-clear:hover{background:var(--wash);color:var(--fg)}
-.dash-live-panel{margin:0 0 18px;padding:16px;border:1px solid var(--border);border-radius:20px;background:var(--wash2)}
-.dash-live-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:12px}
-.dash-live-head .eyebrow{margin:0 0 3px;font-size:10.5px}
-.dash-live-head h2{font-family:var(--serif);font-size:25px;font-weight:600;line-height:1.05;letter-spacing:-.015em}
 .dash-live-badge{display:inline-flex;align-items:center;gap:7px;flex:0 0 auto;padding:6px 10px;border-radius:999px;background:#fff;border:1px solid var(--border);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
 .dash-live-badge i{width:7px;height:7px;border-radius:50%;background:#1F7A44;box-shadow:0 0 0 4px rgba(31,122,68,.11);animation:pulse 1.6s infinite}
-.dash-live-panel .home-live-feed{border-radius:12px}
 .ticker{border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;margin-bottom:20px;background:var(--bg)}
 .ticker-h{display:flex;align-items:center;gap:8px;padding:11px 16px;border-bottom:1px solid var(--border);background:var(--wash2);font-size:13px;font-weight:600}
 .tick{display:flex;justify-content:space-between;gap:12px;padding:10px 16px;font-size:13.5px;border-bottom:1px solid var(--border)}
@@ -652,9 +647,6 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
   .statrow{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
   .stat{padding:13px 14px}
   .stat b{font-size:19px}
-  .dash-live-panel{padding:13px}
-  .dash-live-head{align-items:center}
-  .dash-live-head h2{font-size:21px}
   .grid{grid-template-columns:1fr}
 }
 @media(max-width:620px){.brand-fit-grid{grid-template-columns:1fr}}
@@ -1143,12 +1135,7 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
         <button class="filter-clear" id="clearDashFilters" type="button">Clear all filters</button>
       </aside>
       <main class="dash-results">
-        <section class="dash-live-panel" aria-labelledby="dashLiveTitle">
-          <div class="dash-live-head">
-            <h2 id="dashLiveTitle">Brands are claiming spots now</h2>
-          </div>
-          <div class="home-live-feed" id="dashLiveFeed"></div>
-        </section>
+        <div class="home-live-feed" id="dashLiveFeed"></div>
         <div class="grid" id="dashGrid"></div>
       </main>
     </div>

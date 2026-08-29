@@ -75,9 +75,11 @@ test('dashboard keeps compact tracker cards without a duplicate left category bo
   assert.doesNotMatch(html, /Avg open spot<\/span>/);
   assert.doesNotMatch(html, /<h1>Live items<\/h1>/);
   assert.doesNotMatch(html, /Live sponsorship inventory/);
+  assert.doesNotMatch(html, /class="dash-live-panel"/);
+  assert.doesNotMatch(html, /dashLiveTitle/);
   assert.doesNotMatch(html, /<div class="eyebrow">Live activity<\/div>/);
   assert.doesNotMatch(html, /class="dash-live-badge"/);
-  assert.match(html, /id="dashLiveTitle">Brands are claiming spots now<\/h2>/);
+  assert.match(html, /class="home-live-feed" id="dashLiveFeed"/);
   assert.doesNotMatch(html, /function listingBrandFitHtml\(l\)/);
   assert.doesNotMatch(html, /class="listing-why"/);
   assert.match(html, /id="fSocial"/);
