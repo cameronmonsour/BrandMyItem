@@ -47,7 +47,7 @@ test('keeps outlined hero art while referenced suit and backpack photos remain i
 
 test('dashboard filters use listing metadata and compose with displayed spot prices', () => {
   assert.match(html, /\{id:'Event',item:'cooler'\}/);
-  assert.match(html, /\{id:'Custom',item:null\}/);
+  assert.doesNotMatch(html, /\{id:'Custom',item:null\}/);
   assert.match(html, /function listingCategory\(l\)\{\s+if\(l&&l\.type&&ITEMS\[l\.type\]\)return ITEMS\[l\.type\]\.cat;\s+return 'Custom';/);
   assert.match(html, /var it=\{label:LBLL\(l\),cat:listingCategory\(l\)\}/);
   assert.match(html, /function syncDashboardFilterState\(\)/);
@@ -73,7 +73,8 @@ test('dashboard keeps compact tracker cards without a duplicate left category bo
   assert.doesNotMatch(html, /id="statRow"/);
   assert.doesNotMatch(html, /Items live<\/span>/);
   assert.doesNotMatch(html, /Avg open spot<\/span>/);
-  assert.match(html, /<h1>Live items<\/h1>/);
+  assert.doesNotMatch(html, /<h1>Live items<\/h1>/);
+  assert.doesNotMatch(html, /Live sponsorship inventory/);
   assert.match(html, /id="dashLiveTitle">Brands are claiming spots now<\/h2>/);
   assert.doesNotMatch(html, /function listingBrandFitHtml\(l\)/);
   assert.doesNotMatch(html, /class="listing-why"/);
