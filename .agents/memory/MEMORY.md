@@ -4,3 +4,4 @@
 - [Catalog photo replacement](catalog-photo-replacement.md) — outlined cutouts are hero-only; campaign surfaces use untouched photos fitted proportionally.
 - [Custom tracer semantics](custom-tracer-semantics.md) — tracing creates the customer-drawn polygon itself; it must never partition the outline into rectangular boxes.
 - [Dashboard filter language](dashboard-filter-language.md) — filters use compact Apple-style inset groups, not separate floating form cards.
+- [Campaign preview hierarchy](campaign-preview-hierarchy.md) — campaign details use one editorial surface with dividers, not nested gray cards.

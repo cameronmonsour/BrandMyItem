@@ -761,52 +761,62 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .modal .mp{font-size:13.5px;color:var(--mfg);margin-bottom:16px;line-height:1.55}
 .campaign-bg{position:fixed;inset:0;background:rgba(17,17,19,.48);backdrop-filter:blur(7px);z-index:85;display:none;align-items:center;justify-content:center;padding:20px}
 .campaign-bg.on{display:flex}
-.campaign-dialog{display:flex;flex-direction:column;width:100%;max-width:720px;max-height:min(88dvh,760px);background:#fff;border:1px solid rgba(60,60,67,.14);border-radius:26px;box-shadow:0 30px 90px rgba(17,17,19,.32);overflow:hidden}
-.campaign-scroll{overflow:auto;padding:26px 28px 24px}
-.campaign-top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
-.campaign-kicker{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--mfg)}
+.campaign-dialog{display:flex;flex-direction:column;width:100%;max-width:860px;max-height:min(90dvh,820px);background:#fff;border:1px solid rgba(60,60,67,.16);border-radius:30px;box-shadow:0 30px 90px rgba(17,17,19,.32);overflow:hidden}
+.campaign-scroll{overflow:auto;padding:30px 34px 34px}
+.campaign-top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:28px}
+.campaign-kicker{display:flex;align-items:center;gap:9px;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#6E6E73}
 .campaign-kicker .pulse{width:6px;height:6px;border-radius:50%;background:#1D1D1F}
-.campaign-close{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:1px solid var(--border);font-size:24px;font-weight:400;line-height:1;color:var(--mfg);flex:0 0 auto}
-.campaign-close:hover{background:var(--wash);color:var(--fg)}
-.campaign-intro{display:grid;grid-template-columns:154px minmax(0,1fr);gap:20px;align-items:center;margin-bottom:22px}
-.campaign-cover{aspect-ratio:1.08;background:var(--wash2);border:1px solid var(--border);border-radius:18px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.campaign-close{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;border:0;background:#F5F5F7;font-size:24px;font-weight:400;line-height:1;color:#6E6E73;flex:0 0 auto;transition:background .15s,color .15s}
+.campaign-close:hover{background:#E5E5EA;color:#1D1D1F}
+.campaign-intro{display:grid;grid-template-columns:176px minmax(0,1fr);gap:26px;align-items:center;margin-bottom:32px}
+.campaign-cover{aspect-ratio:1.08;background:#fff;border:1px solid var(--border);border-radius:18px;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .campaign-cover img{width:100%;height:100%;object-fit:contain}
 .campaign-cover-fallback{padding:14px;text-align:center;font-size:13px;font-weight:600;color:var(--mfg)}
-.campaign-category{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--mfg);margin-bottom:5px}
-.campaign-title{font-family:var(--serif);font-size:35px;font-weight:500;letter-spacing:-.018em;line-height:1.02;margin-bottom:10px}
+.campaign-category{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#6E6E73;margin-bottom:7px}
+.campaign-title{font-family:var(--serif);font-size:42px;font-weight:500;letter-spacing:-.025em;line-height:1.02;margin-bottom:12px}
 .campaign-owner{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--mfg)}
 .campaign-owner .avatarc{width:28px;height:28px;border-radius:50%;background:#1D1D1F;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;overflow:hidden;flex-shrink:0}
 .campaign-owner .avatarc.avatar-photo{background:var(--wash)}
 .campaign-owner .avatarc img{width:100%;height:100%;object-fit:cover}
-.campaign-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.campaign-panel{border:1px solid var(--border);border-radius:16px;padding:16px;background:var(--wash2);min-width:0}
+.campaign-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-top:1px solid #D2D2D7}
+.campaign-panel{border:0;border-radius:0;padding:26px 0;min-width:0;background:transparent}
+.campaign-grid .campaign-panel:nth-child(1){padding-right:30px}
+.campaign-grid .campaign-panel:nth-child(2){padding-left:30px;border-left:1px solid #D2D2D7}
 .campaign-panel-wide{grid-column:1/-1}
-.campaign-label{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--mfg);margin-bottom:8px}
-.campaign-purpose{font-size:14px;line-height:1.55}
-.campaign-purpose p{min-height:44px}
-.campaign-facts{margin-top:14px;border-top:1px solid var(--border)}
-.campaign-fact{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);font-size:12.5px}
+.campaign-label{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#6E6E73;margin-bottom:12px}
+.campaign-purpose{font-size:15px;line-height:1.55}
+.campaign-purpose p{min-height:0;max-width:34em}
+.campaign-facts{margin-top:22px;border-top:1px solid #D2D2D7}
+.campaign-fact{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.45fr);align-items:baseline;gap:16px;padding:13px 0;border-bottom:1px solid #D2D2D7;font-size:13px}
 .campaign-fact:last-child{border-bottom:0;padding-bottom:0}
 .campaign-fact span{color:var(--mfg)}
-.campaign-fact b{text-align:right;font-weight:600}
-.campaign-reach{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.campaign-fact b{text-align:right;font-weight:600;line-height:1.35}
+.campaign-reach{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 24px}
 .campaign-reach-stat{min-width:0}
-.campaign-reach-stat span{display:block;font-size:11px;color:var(--mfg);margin-bottom:3px}
-.campaign-reach-stat b{display:block;font-size:13px;line-height:1.35;overflow-wrap:anywhere}
-.campaign-profile-links{display:flex;gap:6px;flex-wrap:wrap;margin-top:13px}
-.campaign-profile-links a{font-size:11.5px;font-weight:600;padding:5px 8px;border:1px solid var(--border);border-radius:999px;background:#fff}
-.campaign-profile-links a:hover{background:var(--wash)}
-.campaign-funding-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
-.campaign-funding-amount{font-size:22px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.campaign-reach-stat span{display:block;font-size:11px;color:#6E6E73;margin-bottom:5px}
+.campaign-reach-stat b{display:block;font-size:14px;line-height:1.4;overflow-wrap:anywhere}
+.campaign-profile-links{display:flex;gap:7px;flex-wrap:wrap;margin-top:18px}
+.campaign-profile-links a{font-size:11.5px;font-weight:600;padding:6px 10px;border:1px solid #D2D2D7;border-radius:999px;background:#F5F5F7}
+.campaign-profile-links a:hover{background:#E5E5EA}
+.campaign-funding-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.campaign-funding-amount{font-size:34px;font-weight:600;letter-spacing:-.035em;font-variant-numeric:tabular-nums;line-height:1}
 .campaign-funding-amount span{font-size:13px;color:var(--mfg);font-weight:500}
-.campaign-percent{font-size:12px;font-weight:600;color:var(--mfg)}
-.campaign-progress{height:8px;border-radius:99px;background:#E9EAED;overflow:hidden;margin:12px 0 9px}
+.campaign-percent{font-size:13px;font-weight:600;color:#6E6E73}
+.campaign-progress{height:7px;border-radius:99px;background:#E5E5EA;overflow:hidden;margin:18px 0 11px}
 .campaign-progress i{display:block;height:100%;border-radius:99px;background:#1D1D1F}
-.campaign-funding-meta{display:flex;justify-content:space-between;gap:12px;font-size:12px;color:var(--mfg)}
-.campaign-prices{display:flex;flex-wrap:wrap;gap:7px}
-.campaign-price{display:flex;flex-direction:column;gap:2px;min-width:108px;padding:9px 10px;border:1px solid var(--border);border-radius:11px;background:#fff}
-.campaign-price span{font-size:11px;color:var(--mfg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.campaign-price b{font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}
+.campaign-funding-meta{display:flex;justify-content:space-between;gap:12px;font-size:12px;color:#6E6E73}
+.campaign-prices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.campaign-price{display:flex;flex-direction:column;gap:8px;min-width:0;padding:11px 12px;border:1px solid var(--border);border-radius:12px;background:#fff}
+.campaign-price.claimed{background:#F5F5F7}
+.campaign-price-top{display:flex;align-items:center;justify-content:space-between;gap:7px;min-width:0}
+.campaign-price-top>span:first-child{font-size:11px;color:var(--mfg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.campaign-price-status{font-size:9px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#6E6E73;flex:0 0 auto}
+.campaign-price-main{display:flex;align-items:center;gap:8px;min-width:0}
+.campaign-price-main b{font-size:16px;font-weight:600;font-variant-numeric:tabular-nums}
+.campaign-price-logo{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#fff;border:1px solid var(--border);flex:0 0 auto}
+.campaign-price-logo img{width:100%;height:100%;object-fit:contain;padding:3px}
+.campaign-price-logo span{font-size:9px;font-weight:700;color:var(--fg)}
+.campaign-price-open-mark{width:26px;height:26px;border-radius:50%;border:1px dashed #A1A1A6;display:flex;align-items:center;justify-content:center;color:#6E6E73;font-size:14px;line-height:1;flex:0 0 auto}
 .campaign-no-open{font-size:13px;color:var(--mfg)}
 .campaign-sponsors{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .campaign-sponsor{display:flex;align-items:center;gap:8px;min-width:0}
@@ -818,9 +828,9 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .campaign-sponsor-copy b{font-size:12px;font-weight:600}
 .campaign-sponsor-copy span{font-size:11px;color:var(--mfg)}
 .campaign-more-sponsors{font-size:12px;color:var(--mfg);margin-top:10px}
-.campaign-footer{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 28px;border-top:1px solid var(--border);background:#fff}
+.campaign-footer{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 34px;border-top:1px solid #D2D2D7;background:#fff}
 .campaign-footer-note{font-size:12px;line-height:1.4;color:var(--mfg)}
-.campaign-continue{flex:0 0 auto}
+.campaign-continue{flex:0 0 auto;border-radius:999px;min-height:48px;padding:0 22px}
 .upl{border:1px solid rgba(60,60,67,.20);border-radius:14px;padding:18px;text-align:center;font-size:13px;font-weight:600;color:var(--mfg);cursor:pointer;margin-bottom:12px}
 .upl:hover{border-color:#1D1D1F}
 .upl img{max-height:52px;max-width:80%;margin:0 auto}
@@ -865,16 +875,25 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
 @media(max-width:620px){.brand-fit-location-grid{grid-template-columns:1fr}}
 @media(max-width:620px){
   .campaign-bg{align-items:flex-end;padding:10px}
-  .campaign-dialog{max-height:88dvh;border-radius:24px 24px 14px 14px}
-  .campaign-scroll{padding:20px 18px 18px}
-  .campaign-intro{grid-template-columns:108px minmax(0,1fr);gap:14px;margin-bottom:16px}
-  .campaign-title{font-size:29px}
-  .campaign-grid{grid-template-columns:1fr;gap:10px}
+  .campaign-dialog{max-height:90dvh;border-radius:24px 24px 14px 14px}
+  .campaign-scroll{padding:22px 20px 24px}
+  .campaign-top{margin-bottom:22px}
+  .campaign-intro{grid-template-columns:104px minmax(0,1fr);gap:16px;margin-bottom:24px}
+  .campaign-title{font-size:31px}
+  .campaign-grid{grid-template-columns:1fr}
+  .campaign-grid .campaign-panel,
+  .campaign-grid .campaign-panel:nth-child(1),
+  .campaign-grid .campaign-panel:nth-child(2){padding:22px 0;border-left:0}
+  .campaign-grid .campaign-panel:first-child{padding-top:24px}
+  .campaign-grid .campaign-panel + .campaign-panel{border-top:1px solid #D2D2D7}
+  .campaign-prices{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .campaign-price{padding:10px}
+  .campaign-price-top>span:first-child{font-size:10px}
   .campaign-panel-wide{grid-column:auto}
   .campaign-sponsors{grid-template-columns:1fr}
-  .campaign-footer{align-items:flex-end;padding:14px 18px;gap:10px}
+  .campaign-footer{align-items:flex-end;padding:14px 20px;gap:10px}
   .campaign-footer-note{max-width:58%}
-  .campaign-continue{width:auto}
+  .campaign-continue{width:auto;padding:0 18px}
   .itempick-head{display:block;width:calc(100vw - 44px);max-width:calc(100vw - 44px);padding-bottom:12px}
   .item-request-copy{justify-content:flex-end;gap:7px;margin-top:6px}
   #v-build .wrap,#v-build .builder,#v-build .bstage,#customCard{width:100%;min-width:0;max-width:100%}
@@ -7317,13 +7336,25 @@ function campaignSponsorHtml(c){
   return '<div class="campaign-sponsor"><div class="campaign-sponsor-mark">'+mark+'</div>'+
     '<div class="campaign-sponsor-copy"><b>'+safeCardText(brand)+'</b><span>'+money(c.amt||0)+' · '+ago(c.purchasedAt||Date.now())+'</span></div></div>';
 }
+function campaignSpotHtml(price,meta,claim){
+  var brand=claim&&claim.brand?(claim.brand.trim()||'Sponsor'):'';
+  var mark=claim?(claim.logo?'<img src="'+claim.logo+'" alt="'+safeCardText(brand)+' logo">':'<span>'+safeCardText(brand.slice(0,2).toUpperCase())+'</span>'):'';
+  return '<div class="campaign-price'+(claim?' claimed':'')+'">'+
+    '<div class="campaign-price-top"><span>'+safeCardText(meta.pos)+' · '+safeCardText(meta.size)+'</span>'+
+      (claim?'<span class="campaign-price-status">Claimed</span>':'<span class="campaign-price-status">Open</span>')+
+    '</div>'+
+    '<div class="campaign-price-main">'+
+      (claim?'<div class="campaign-price-logo">'+mark+'</div>':'<div class="campaign-price-open-mark" aria-hidden="true">+</div>')+
+      '<b>'+money(price)+'</b>'+
+    '</div>'+
+  '</div>';
+}
 function renderCampaignDetails(l){
   var el=document.getElementById('campaignDetails');if(!el)return;
   var photo=PHO(l),label=LBLL(l),category=ITEMS[l.type]&&ITEMS[l.type].cat?ITEMS[l.type].cat:'Custom';
   var purpose=l.purpose||'The owner has not added a purpose statement yet.';
   var claimed=(l.claims||[]).filter(Boolean).length,open=openSlots(l),raised=raisedOf(l),goal=goalOf(l),pct=Math.round(pctOf(l));
-  var openPrices=[];
-  (l.prices||[]).forEach(function(price,i){if(!(l.claims||[])[i])openPrices.push({price:price,meta:campaignSpotMeta(l,i)})});
+  var spotPrices=(l.prices||[]).map(function(price,i){return{price:price,meta:campaignSpotMeta(l,i),claim:(l.claims||[])[i]||null}});
   var sponsors=(l.claims||[]).filter(Boolean).slice().sort(function(a,b){return(b.purchasedAt||0)-(a.purchasedAt||0)});
   var shownSponsors=sponsors.slice(0,3),extraSponsors=Math.max(0,sponsors.length-shownSponsors.length);
   var photoHtml=photo?'<img src="'+photo+'" alt="'+safeCardText(label)+'">':'<div class="campaign-cover-fallback">'+safeCardText(label)+'</div>';
@@ -7362,8 +7393,8 @@ function renderCampaignDetails(l){
         '<div class="campaign-funding-meta"><span>'+claimed+' of '+(l.slots||0)+' spots sold</span><span>'+open+' open '+(open===1?'spot':'spots')+'</span></div>'+
       '</section>'+
       '<section class="campaign-panel">'+
-        '<div class="campaign-label">Open spot pricing</div>'+
-        (openPrices.length?'<div class="campaign-prices">'+openPrices.map(function(o){return '<div class="campaign-price"><span>'+safeCardText(o.meta.pos)+' · '+safeCardText(o.meta.size)+'</span><b>'+money(o.price)+'</b></div>'}).join('')+'</div>':'<p class="campaign-no-open">All spots are claimed. View the full listing to see the finished placement.</p>')+
+        '<div class="campaign-label">Spot pricing</div>'+
+        (spotPrices.length?'<div class="campaign-prices">'+spotPrices.map(function(o){return campaignSpotHtml(o.price,o.meta,o.claim)}).join('')+'</div>':'<p class="campaign-no-open">No placements have been added yet.</p>')+
       '</section>'+
       '<section class="campaign-panel">'+
         '<div class="campaign-label">Sponsor activity</div>'+
