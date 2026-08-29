@@ -713,7 +713,7 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
       <div class="steps">
         <div class="step"><div class="n">1</div><h3>Build it</h3><p>Pick the item you want. The surface splits into sticker spots sized to real print dimensions, and you set the starting price on each.</p></div>
         <div class="step"><div class="n">2</div><h3>Post it live</h3><p>Your item lands in the live feed instantly, unbranded, with every spot open and the countdown running.</p></div>
-        <div class="step"><div class="n">3</div><h3>Brands buy spots</h3><p>Brands drop their logo on an open spot and buy it at the exact listed price plus a 20% platform fee. First come, first served, no haggling.</p></div>
+        <div class="step"><div class="n">3</div><h3>Brands buy spots</h3><p>Brands drop their logo on an open spot and buy it at the exact listed price plus the fee shown at checkout. First come, first served, no haggling.</p></div>
       </div>
       <div class="steps" style="grid-template-columns:1fr;margin-top:16px">
         <div class="step" style="display:flex;gap:18px;align-items:flex-start"><div class="n" style="margin:0;flex-shrink:0">4</div><div><h3>It ships branded</h3><p>At 100% your item ships factory new with the winning sponsors printed as quality die-cut vinyl. Quick photo check-ins keep the deal live for the 12-month term, weekly to monthly depending on the item price.</p></div></div>
@@ -727,9 +727,9 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
       </div>
       <div style="max-width:720px">
         <details class="faq"><summary>Is this real?</summary><div class="fa">Completely. The items are real, the stickers are real die-cut vinyl, and every listing belongs to a real person who takes it where they work, study, and travel. The only fiction is the idea that a laptop lid or a suitcase isn't premium ad inventory.</div></details>
-        <details class="faq"><summary>Does the owner make money?</summary><div class="fa">No, and that's the point. The owner gets the item itself, shipped new with the sponsors printed on. Spot money funds the item, the 20% fee runs the platform, and nobody is paying strangers cash.</div></details>
+        <details class="faq"><summary>Does the owner make money?</summary><div class="fa">No, and that's the point. The owner gets the item itself, shipped new with the sponsors printed on. Spot money funds the item, the 20% platform fee runs the platform, and an additional fulfillment fee applies only when BrandMyItem applies the branding. Applicable tax and shipping may also be added at checkout.</div></details>
         <details class="faq"><summary>What does a brand actually get?</summary><div class="fa">Your logo printed on the item itself, visible everywhere it goes and in everything its owner posts, plus your spot on the listing page with a link to your site. No impressions promised, just real presence in real rooms your ads can't reach.</div></details>
-        <details class="faq"><summary>How does payment work?</summary><div class="fa">Buying a spot records it at the exact listed price plus a 20% platform fee. You'll get a payment link by email to settle, and money only counts toward the bar once it clears. Spots are first come, first served.</div></details>
+        <details class="faq"><summary>How does payment work?</summary><div class="fa">Buying a spot records it at the exact listed price plus the 20% platform fee. If BrandMyItem applies the branding, a 10% fulfillment fee is added, for a 30% total before applicable tax and shipping. You'll get a payment link by email to settle, and money only counts toward the bar once it clears. Spots are first come, first served.</div></details>
         <details class="faq"><summary>Can any brand join?</summary><div class="fa">Almost. Every sponsor is approved by hand before anything is printed. Alcohol, cannabis, tobacco, and political ads aren't accepted, and the item's owner has the final say on what rides on their stuff. Refused purchases are refunded in full.</div></details>
         <details class="faq"><summary>What keeps the owner honest?</summary><div class="fa">Photo check-ins. Owners confirm the item and the ads are out in the world on a schedule set by the item's price, weekly for big-ticket items down to monthly for small ones, for a 12-month term. Miss check-ins and payouts pause.</div></details>
         <details class="faq"><summary>What can I post?</summary><div class="fa">Objects and wearables. Laptops, phones, tumblers, luggage, coolers, wedding suits, graduation gowns. Nothing that needs insurance or permits, so no cars or property.</div></details>
@@ -936,8 +936,9 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
             <div class="fact"><span>Commitment term</span><b id="buildTermOut">12 months</b></div>
             <div class="fact"><span>Fulfillment</span><b id="buildFulfillmentOut">You apply branding</b></div>
             <div class="fact"><span>Branded material</span><b id="buildMaterialOut">Sponsor decal, patch, or magnet</b></div>
-            <div class="fact"><span>Platform fee</span><b id="buildFeeOut">20%</b></div>
-            <div class="fact"><span>Taxes</span><b id="buildTaxOut">Sales tax if applicable at checkout</b></div>
+            <div class="fact"><span>Platform fee</span><b>20%</b></div>
+            <div class="fact"><span>Total fee before tax &amp; shipping</span><b id="buildFeeOut">20%</b></div>
+            <div class="fact"><span>Tax + shipping</span><b id="buildTaxOut">If applicable at checkout</b></div>
             <div class="field" style="margin-top:14px"><div class="label">Commitment term</div>
               <div class="choice-grid term-choice-grid" id="termChoices" role="radiogroup" aria-label="Commitment term">
                 <button class="choice-card" type="button" data-choice-group="term" data-value="6" aria-pressed="false"><strong>6 months</strong><span>Shorter commitment</span></button>
@@ -948,8 +949,8 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
             </div>
             <div class="field" style="margin-top:14px"><div class="label">Who applies the branding?</div>
               <div class="choice-grid fulfillment-choice-grid" id="brandingChoices" role="radiogroup" aria-label="Branding fulfillment">
-                <button class="choice-card" type="button" data-choice-group="branding" data-value="assisted" aria-pressed="false"><strong>BrandMyItem</strong><span>We apply the approved sponsor branding.</span><small>10% platform fee · 60-day target</small></button>
-                <button class="choice-card on" type="button" data-choice-group="branding" data-value="self" aria-pressed="true"><strong>You</strong><span>You apply the approved sponsor branding.</span><small>20% platform fee · 30-day target</small></button>
+                <button class="choice-card" type="button" data-choice-group="branding" data-value="assisted" aria-pressed="false"><strong>BrandMyItem</strong><span>We apply the approved sponsor branding.</span><small>+10% fulfillment fee · 60-day target</small></button>
+                <button class="choice-card on" type="button" data-choice-group="branding" data-value="self" aria-pressed="true"><strong>You</strong><span>You apply the approved sponsor branding.</span><small>30-day target</small></button>
               </div>
               <p class="choice-note">In both paths, BrandMyItem buys and ships the physical item. Only the branding application changes.</p>
               <p class="tax-note">Sales tax, if applicable, is calculated at checkout based on the transaction and buyer location. Listing proceeds may have tax implications for the owner; this demo does not determine filing obligations or provide tax advice.</p>
@@ -994,7 +995,9 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
         <div class="fact"><span>Term</span><b id="iTerm">12 months</b></div>
          <div class="fact"><span>Fulfillment</span><b id="iFulfillment">You apply branding</b></div>
          <div class="fact"><span>Branded material</span><b id="iMaterial">Sponsor decal, patch, or magnet</b></div>
-         <div class="fact"><span>Taxes</span><b id="iTax">Sales tax if applicable at checkout</b></div>
+         <div class="fact"><span>Platform fee</span><b>20%</b></div>
+         <div class="fact"><span>Total fee before tax &amp; shipping</span><b id="iTotalFee">20%</b></div>
+         <div class="fact"><span>Tax + shipping</span><b id="iTax">If applicable at checkout</b></div>
       </div></div>
        <div class="card"><div class="card-h"><div class="card-t">The spots</div><div class="card-d" id="iFeeCopy">Exact prices, first come, first served. A 20% platform fee is added at checkout.</div></div>
       <div class="card-c" style="padding-top:10px;font-size:13.5px;color:var(--mfg);line-height:1.6" id="spotSummary"></div></div>
@@ -5378,7 +5381,7 @@ function goalOf(l){return l.prices.reduce(function(s,p){return s+p},0)}
 function pctOf(l){var g=goalOf(l);return g?Math.min(100,raisedOf(l)/g*100):0}
 function openSlots(l){return l.closed?0:(l.claims||[]).filter(function(c){return!c}).length}
 function termOf(l){var n=parseInt(l&&l.termMonths,10);return n===6||n===18?n:12}
-function feeRateOf(l){return l&&l.brandingMode==='assisted'?0.10:0.20}
+function feeRateOf(l){return l&&l.brandingMode==='assisted'?0.30:0.20}
 function feeFor(l,price){return Math.round(price*feeRateOf(l))}
 function deliveryDaysOf(l){return l&&l.brandingMode==='assisted'?60:30}
 function endOf(l){return (l.postedAt||l.created)+((l.unsoldTimeoutDays||AUCTION_DAYS)*86400000)}
@@ -5409,8 +5412,9 @@ function normalizeModelState(){
     if(!Array.isArray(l.claims))l.claims=[];
     (l.claims||[]).forEach(function(c){
       if(!c)return;
-      if(!c.feeRate)c.feeRate=feeRateOf(l);
-      if(c.fee===undefined)c.fee=feeFor(l,c.amt||0);
+      var currentFeeRate=feeRateOf(l),currentFee=feeFor(l,c.amt||0);
+      if(c.feeRate!==currentFeeRate){c.feeRate=currentFeeRate;changed=true}
+      if(c.fee!==currentFee){c.fee=currentFee;changed=true}
       if(c.escrow){delete c.escrow;changed=true}
     });
     if(pctOf(l)>=100&&!l.fundedAt){l.fundedAt=Date.now();changed=true}
@@ -7994,7 +7998,7 @@ function trackCardHtml(l,c){
         '<div style="margin-top:10px;font-size:13px;color:#3a3a3c;line-height:2">'+
           '<div>Submission ID <b style="float:right">'+c.subId+'</b></div>'+
           '<div>Spot price <b style="float:right">'+money(c.amt)+'</b></div>'+
-          '<div>Platform fee ('+Math.round((c.feeRate===undefined?feeRateOf(l):c.feeRate)*100)+'%) <b style="float:right">'+money(c.fee)+'</b></div>'+
+          '<div>Total fee before tax &amp; shipping ('+Math.round((c.feeRate===undefined?feeRateOf(l):c.feeRate)*100)+'%) <b style="float:right">'+money(c.fee)+'</b></div>'+
           '<div>Total charged <b style="float:right">'+money(c.amt+c.fee)+'</b></div>'+
           '<div>Fulfillment status <b style="float:right">'+badge+'</b></div>'+
           '<div>Check-ins on file <b style="float:right">'+checkins.length+' of '+termOf(l)+'</b></div>'+
@@ -8092,10 +8096,13 @@ function refreshItemCards(){
   }
   document.getElementById('iCad').textContent=cadence(RETL(CUR));
   var shipEl=document.getElementById('iShips');if(shipEl)shipEl.textContent=CUR.closed?'closed · claims refunded':(CUR.shippedAt?'shipped to owner':(pct>=100?'funded · preparing shipment':'new, at 100% claimed'));
-  var feeCopy=document.getElementById('iFeeCopy');if(feeCopy)feeCopy.textContent='Exact prices, first come, first served. A '+Math.round(feeRateOf(CUR)*100)+'% platform fee is added at checkout.';
   var assisted=CUR.brandingMode==='assisted';
+  var feeCopy=document.getElementById('iFeeCopy');if(feeCopy)feeCopy.textContent=assisted?
+    'Exact prices, first come, first served. The 20% platform fee is always included; BrandMyItem adds 10% fulfillment, making the total 30% before applicable tax and shipping.':
+    'Exact prices, first come, first served. The 20% platform fee is always included. Applicable tax and shipping may also be added at checkout.';
   var fulfillmentEl=document.getElementById('iFulfillment');if(fulfillmentEl)fulfillmentEl.textContent=assisted?'BrandMyItem applies branding':'You apply branding';
   var materialEl=document.getElementById('iMaterial');if(materialEl)materialEl.textContent=assisted?'Applied sponsor decal, patch, or magnet':'Sponsor decal, patch, or magnet for you to apply';
+  var totalFeeEl=document.getElementById('iTotalFee');if(totalFeeEl)totalFeeEl.textContent=Math.round(feeRateOf(CUR)*100)+'%';
   var taxEl=document.getElementById('iTax');if(taxEl)taxEl.textContent='Sales tax if applicable at checkout';
   var termEl=document.getElementById('iTerm');if(termEl)termEl.textContent=termOf(CUR)+' months'+(CUR.termLocked?' · locked':'');
   var claimed=CUR.slots-openSlots(CUR);
@@ -8297,7 +8304,7 @@ function openBid(i){
   document.getElementById('mSlotInfo').innerHTML=meta.pos+' &middot; '+meta.size+' ('+meta.dims+') on '+LBLL(CUR)+'. Your logo goes on the item itself and on this page. First come, first served.';
   document.getElementById('mPrice').textContent=money(price);
   document.getElementById('mFee').textContent=money(fee);
-  var feeLabel=document.getElementById('mFeeLabel');if(feeLabel)feeLabel.textContent='Platform fee ('+Math.round(feeRateOf(CUR)*100)+'%)';
+  var feeLabel=document.getElementById('mFeeLabel');if(feeLabel)feeLabel.textContent='Total fee before tax & shipping ('+Math.round(feeRateOf(CUR)*100)+'%)';
   document.getElementById('mTotal').textContent=money(total);
   document.getElementById('uplBox').innerHTML='Upload your logo · required (PNG, transparent works best)';
   document.getElementById('mBrand').value='';document.getElementById('mMail').value='';document.getElementById('mLink').value='';
