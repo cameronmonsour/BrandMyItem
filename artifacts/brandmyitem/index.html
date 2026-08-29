@@ -331,21 +331,9 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .social-chip svg{width:16px;height:16px;flex-shrink:0}
 .social-chip .handle{color:#6e6e73;font-weight:500}
 .social-chip .unlink{margin-left:4px;color:#8e8e93;font-weight:700}
-.escrow-explain{display:flex;flex-direction:column;gap:14px;margin:16px 0}
-.escrow-row{display:flex;gap:12px;align-items:flex-start}
-.escrow-ic{font-size:20px;line-height:1;flex-shrink:0;width:28px;text-align:center}
-.escrow-row b{display:block;font-size:14px;margin-bottom:2px}
-.escrow-row span{display:block;font-size:13px;color:#6e6e73;line-height:1.4}
-.escrow-badge,.status-badge{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;text-transform:uppercase;letter-spacing:.02em}
-.escrow-badge.held{background:#FFF4D6;color:#8A6D1D}
-.escrow-badge.active,.status-badge.active{background:#DDF2E4;color:#1F7A44}
-.escrow-badge.complete{background:#E7E7EA;color:#3A3A3C}
-.escrow-badge.risk,.status-badge.risk{background:#FCE4E2;color:#B23327}
-.ledger{display:flex;flex-direction:column;gap:0}
-.ledger-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
-.ledger-row:last-child{border-bottom:none}
-.ledger-brand{font-weight:600;font-size:13.5px}
-.ledger-amt{font-size:12.5px;color:#6e6e73}
+.status-badge{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;text-transform:uppercase;letter-spacing:.02em}
+.status-badge.active{background:#DDF2E4;color:#1F7A44}
+.status-badge.risk{background:#FCE4E2;color:#B23327}
 .checkin-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
 .checkin-item:last-child{border-bottom:none}
 .checkin-item img{width:40px;height:40px;object-fit:cover;border-radius:8px;background:#fff;border:1px solid var(--border)}
@@ -8254,7 +8242,7 @@ function submitTrackProof(itemId,subId,key){
     var entry={date:Date.now(),photo:photo,confirmId:cid};
     if(first){entry.receipt=receipt;entry.receiptDate=new Date(date+'T12:00:00').getTime()}
     l.checkins.push(entry);
-    updateEscrowStatuses(l);saveDB();
+    saveDB();
     if(c.demo){
       renderTrackDemos();
     }else{
@@ -8435,105 +8423,6 @@ function refreshItemCards(){
   if(lp)lp.onclick=function(e){e.preventDefault();downloadLogoPack()};
   renderOwnerTools();
 }
-function renderOwnerToolsLegacy(){
-  var vb=document.getElementById('verifyBlock');if(!vb)return;
-  if(CUR.ownerVerified){
-    vb.innerHTML='<div class="fact"><span>Identity verification</span><b style="color:#1F7A44">Verified \u2713</b></div>'+
-      '<div class="subid-box" style="margin-top:14px">'+
-        '<div class="subid-label">Verification confirmation</div>'+
-        '<div class="subid-val" style="font-size:20px">'+(CUR.verifyConfirmId||'')+'</div>'+
-        (CUR.mail?'<p class="finetext" style="margin:8px 0 0">Confirmation sent to <b>'+CUR.mail+'</b></p>':'')+
-      '</div>';
-  }else{
-    vb.innerHTML='<div class="fact"><span>Identity verification</span><b style="color:#B23327">Required before payout</b></div>'+
-      '<p class="finetext" style="margin:6px 0 10px">In production this opens Stripe Identity: government ID plus a selfie match, tied to the bank account funds would move to. No payout or item purchase releases without it.</p>'+
-      '<button class="btn btn-primary btn-full" id="verifyBtn" type="button">Start verification &rarr;</button>';
-  }
-  var vbtn=document.getElementById('verifyBtn');
-  if(vbtn)vbtn.onclick=function(){
-    CUR.ownerVerified=true;
-    CUR.verifyConfirmId='OV-'+uid().toUpperCase().slice(0,6);
-    logAct('<b>'+CUR.owner+'</b> completed identity verification on <b>'+LBLL(CUR)+'</b>');
-    saveDB();refreshItemCards();
-    toast('Identity verified · this demo simulates the Stripe Identity flow');
-  };
-  var cb=document.getElementById('checkinBlock');if(!cb)return;
-  var pct=pctOf(CUR);
-  if(!CUR.ownerVerified){
-    cb.innerHTML='<p class="finetext" style="margin:0;color:#8e8e93">Check-in photos unlock once identity verification is complete.</p>';
-    return;
-  }
-  if(pct<100){
-    cb.innerHTML='<p class="finetext" style="margin:0;color:#8e8e93">Check-ins aren&rsquo;t needed yet &mdash; they start once the item is fully funded and shipped. '+Math.round(pct)+'% funded so far.</p>';
-    return;
-  }
-  var checkins=CUR.checkins||[];
-  var isFirst=checkins.length===0;
-  var fundedDate=CUR.fundedAt?new Date(CUR.fundedAt).toLocaleDateString():'today';
-  var progHtml='<div class="fact"><span>Check-ins submitted</span><b>'+checkins.length+' of 12</b></div>'+
-    '<div class="pbar" style="margin:8px 0 14px"><i style="display:block;height:100%;background:#1D1D1F;border-radius:99px;width:'+Math.round(checkins.length/12*100)+'%"></i></div>';
-  if(isFirst){
-    cb.innerHTML=progHtml+
-      '<p class="finetext" style="margin:0 0 12px">First check-in needs a receipt too &mdash; proof this item was bought after your campaign funded on <b>'+fundedDate+'</b>, not something you already owned.</p>'+
-      '<div class="field"><label class="label" for="receiptDate">Purchase date on the receipt</label><input class="input" id="receiptDate" type="date"></div>'+
-      '<input type="file" id="receiptInput" accept="image/*" style="display:none">'+
-      '<div class="upl" id="receiptBox" style="margin-bottom:12px">Upload your receipt &middot; required</div>'+
-      '<input type="file" id="checkinInput" accept="image/*" style="display:none">'+
-      '<div class="upl" id="checkinBox">Upload your check-in photo &middot; required</div>'+
-      '<p class="finetext" id="receiptErr" style="display:none;color:#B23327;margin:10px 0 0"></p>'+
-      '<button class="btn btn-primary btn-full" id="checkinBtn" type="button" style="margin-top:12px">Submit first check-in</button>';
-    var receiptData=null,checkinData=null;
-    var rbox=document.getElementById('receiptBox'),rinput=document.getElementById('receiptInput');
-    var cbox=document.getElementById('checkinBox'),cinput2=document.getElementById('checkinInput');
-    rbox.onclick=function(){rinput.click()};
-    cbox.onclick=function(){cinput2.click()};
-    rinput.onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){receiptData=r.result;rbox.innerHTML='<img src="'+receiptData+'" alt="receipt">'};r.readAsDataURL(f)};
-    cinput2.onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){checkinData=r.result;cbox.innerHTML='<img src="'+checkinData+'" alt="check-in">'};r.readAsDataURL(f)};
-    document.getElementById('checkinBtn').onclick=function(){
-      var err=document.getElementById('receiptErr');err.style.display='none';
-      var dateVal=document.getElementById('receiptDate').value;
-      if(!dateVal){err.textContent='Enter the purchase date shown on your receipt.';err.style.display='block';return}
-      if(!receiptData){err.textContent='Upload your receipt.';err.style.display='block';return}
-      if(!checkinData){err.textContent='Upload your check-in photo.';err.style.display='block';return}
-      var receiptTime=new Date(dateVal+'T12:00:00').getTime();
-      if(CUR.fundedAt&&receiptTime<CUR.fundedAt-86400000){
-        err.textContent='That date is before your campaign fully funded on '+fundedDate+'. This item can\u2019t be one you already had \u2014 use the receipt from after funding.';
-        err.style.display='block';
-        return;
-      }
-      CUR.checkins=CUR.checkins||[];
-      var cid1='CI-'+uid().toUpperCase().slice(0,6);
-      CUR.checkins.push({date:Date.now(),photo:checkinData,receipt:receiptData,receiptDate:receiptTime,confirmId:cid1});
-      updateEscrowStatuses(CUR);
-      logAct('<b>'+CUR.owner+'</b> submitted a check-in and receipt for <b>'+LBLL(CUR)+'</b>');
-      saveDB();refreshItemCards();
-      openShare(checkinData,cid1);
-    };
-    return;
-  }
-  cb.innerHTML=progHtml+
-    '<input type="file" id="checkinInput" accept="image/*" style="display:none">'+
-    '<button class="btn btn-primary btn-full" id="checkinBtn" type="button">Submit this month&rsquo;s check-in photo</button>'+
-    (checkins.length?'<div style="margin-top:14px">'+checkins.slice().reverse().map(function(ci){
-      return '<div class="checkin-item"><img src="'+ci.photo+'" alt=""><span class="ci-date">'+new Date(ci.date).toLocaleDateString()+'</span></div>';
-    }).join('')+'</div>':'');
-  var cbtn=document.getElementById('checkinBtn'),cinput=document.getElementById('checkinInput');
-  if(cbtn)cbtn.onclick=function(){cinput.click()};
-  if(cinput)cinput.onchange=function(e){
-    var f=e.target.files[0];if(!f)return;
-    var r=new FileReader();
-    r.onload=function(){
-      CUR.checkins=CUR.checkins||[];
-      var cid2='CI-'+uid().toUpperCase().slice(0,6);
-      CUR.checkins.push({date:Date.now(),photo:r.result,confirmId:cid2});
-      updateEscrowStatuses(CUR);
-      logAct('<b>'+CUR.owner+'</b> submitted a check-in photo for <b>'+LBLL(CUR)+'</b>');
-      saveDB();refreshItemCards();
-      openShare(r.result,cid2);
-    };
-    r.readAsDataURL(f);
-  };
-}
 function renderOwnerTools(){
   var vb=document.getElementById('verifyBlock'),cb=document.getElementById('checkinBlock');
   if(!vb||!cb||!CUR)return;
@@ -8673,7 +8562,6 @@ document.getElementById('mCopyId').onclick=function(){
   else done();
 };
 document.getElementById('mDone').onclick=function(){document.getElementById('modalBg').classList.remove('on')};
-function updateEscrowStatuses(l){return l}
 var SITE_URL='brandmyitem.com';
 function openShare(photo,checkinId){
   var caption='I got my '+LBLL(CUR)+' paid for by brands on '+SITE_URL+' \ud83c\udf89 #ad';
