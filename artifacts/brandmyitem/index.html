@@ -234,18 +234,228 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .stat span{font-size:12px;color:var(--mfg);font-weight:600}
 .dash{display:grid;grid-template-columns:228px minmax(0,1fr);gap:28px;padding-bottom:90px;align-items:start}
 .dash-results{min-width:0;display:flex;flex-direction:column;gap:18px}
-.rail{position:sticky;top:76px;align-self:start;display:flex;flex-direction:column;gap:16px}
-.rail h5{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--mfg);margin-bottom:8px}
-.pricerow{display:flex;gap:8px;align-items:center}
-.pricerow .input{height:36px;font-size:13px;border-radius:10px}
-.filter-field{display:block;margin:0 0 12px}
-.filter-field:last-child{margin-bottom:0}
-.filter-field>span{display:block;font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--mfg);margin-bottom:6px}
-.filter-card .select{width:100%;height:38px;font-size:13px;border-radius:10px}
-.filter-card .input{height:38px;font-size:13px;border-radius:10px}
-.filter-card .pricerow .input{min-width:0}
-.filter-clear{width:100%;height:34px;margin-top:2px;border:1px solid var(--border);border-radius:10px;background:var(--bg);font-size:12px;font-weight:600;color:var(--mfg)}
-.filter-clear:hover{background:var(--wash);color:var(--fg)}
+/* Native Apple-like Filter Rail */
+.rail {
+  position: sticky;
+  top: 76px;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+.ios-group {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.ios-group-head {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--mfg);
+  margin-bottom: 6px;
+  padding-left: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.ios-box {
+  background: #FFFFFF;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+  min-width: 0;
+}
+.ios-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 16px;
+  position: relative;
+  background: #FFFFFF;
+  min-height: 40px;
+  min-width: 0;
+  cursor: pointer;
+}
+.ios-item + .ios-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 16px;
+  right: 0;
+  height: 1px;
+  background: var(--border);
+}
+.ios-item:active {
+  background: #F9F9F9;
+}
+.ios-item-col {
+  flex-direction: column;
+  align-items: stretch;
+  padding: 10px 16px;
+  gap: 2px;
+  cursor: default;
+}
+.ios-item-col:active {
+  background: #FFFFFF;
+}
+.ios-label {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--fg);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.ios-control {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 0 1 58%;
+  max-width: 58%;
+  min-width: 0;
+  margin-left: auto;
+  padding-left: 12px;
+}
+.ios-select {
+  display: block;
+  min-width: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  border: none;
+  font-size: 13.5px;
+  font-weight: 400;
+  line-height: 1.25;
+  color: #6E6E73;
+  text-align: right;
+  width: 100%;
+  outline: none;
+  cursor: pointer;
+  padding: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ios-select option {
+  direction: ltr;
+  color: var(--fg);
+}
+.ios-chevron {
+  width: 12px;
+  height: 12px;
+  color: #C7C7CC;
+  margin-left: 5px;
+  flex-shrink: 0;
+  display: block;
+}
+.ios-input-right {
+  appearance: none;
+  background: transparent;
+  border: none;
+  font-size: 13.5px;
+  font-weight: 400;
+  color: var(--fg);
+  text-align: right;
+  width: 100%;
+  min-width: 0;
+  outline: none;
+  padding: 0;
+}
+.ios-input-right::placeholder {
+  color: #C7C7CC;
+}
+.ios-input-col {
+  appearance: none;
+  background: transparent;
+  border: none;
+  font-size: 13.5px;
+  font-weight: 400;
+  color: var(--fg);
+  width: 100%;
+  outline: none;
+  padding: 4px 0 2px;
+}
+.ios-input-col::placeholder {
+  color: #C7C7CC;
+}
+.ios-pricerow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  margin-top: 6px;
+}
+.ios-input-box {
+  flex: 1;
+  min-width: 0;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--wash2);
+  padding: 0 10px;
+  font-size: 13.5px;
+  color: var(--fg);
+  outline: none;
+  transition: border-color 0.15s;
+}
+.ios-input-box:focus,
+.ios-input-box:focus-visible {
+  outline: none;
+  border-color: #1D1D1F;
+}
+.ios-radio {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.ios-radio:focus-visible ~ .ios-label {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+.ios-check {
+  width: 16px;
+  height: 16px;
+  color: #1D1D1F;
+  display: none;
+}
+.ios-radio:checked ~ .ios-check {
+  display: block;
+}
+.ios-btn {
+  width: 100%;
+  background: #FFFFFF;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: #FF3B30;
+  font-size: 14px;
+  font-weight: 500;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+  transition: background 0.1s;
+}
+.ios-btn:hover {
+  background: #FAFAFA;
+}
+.ios-btn:active {
+  background: #F0F0F0;
+}
+.ios-select:focus-visible,
+.ios-input-right:focus-visible,
+.ios-input-col:focus-visible {
+  outline: none;
+}
+.ios-item:focus-within {
+  background: #F5F5F7;
+}
 .dash-live-badge{display:inline-flex;align-items:center;gap:7px;flex:0 0 auto;padding:6px 10px;border-radius:999px;background:#fff;border:1px solid var(--border);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
 .dash-live-badge i{width:7px;height:7px;border-radius:50%;background:#1F7A44;box-shadow:0 0 0 4px rgba(31,122,68,.11);animation:pulse 1.6s infinite}
 .ticker{border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;margin-bottom:20px;background:var(--bg)}
@@ -633,8 +843,7 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
   .builder{grid-template-columns:1fr}
   .steps{grid-template-columns:1fr}
   .dash{grid-template-columns:1fr}
-  .rail{position:static;flex-direction:row;flex-wrap:wrap}
-  .rail .card{flex:1;min-width:230px}
+  .rail{position:static;flex-direction:column;gap:16px}
   .statrow{grid-template-columns:repeat(2,1fr)}
   .nav .lnk.hidemob{display:none}
   .mapgrid{grid-template-columns:repeat(2,1fr)}
@@ -1057,84 +1266,175 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
     <div class="catstrip" id="catStrip"></div>
     <div class="dash">
       <aside class="rail">
-        <div class="card filter-card"><div class="card-c" style="padding:18px">
-          <h5>Audience</h5>
-          <label class="filter-field"><span>Following</span><select class="select" id="fSocial">
-            <option value="">Any following</option>
-            <option value="Under 1K">Under 1K</option>
-            <option value="1K–10K">1K–10K</option>
-            <option value="10K–100K">10K–100K</option>
-            <option value="100K+">100K+</option>
-          </select></label>
-          <label class="filter-field"><span>Seen</span><select class="select" id="fFreq">
-            <option value="">Any frequency</option>
-            <option value="Daily">Daily</option>
-            <option value="Few times a week">Few times a week</option>
-            <option value="Weekly">Weekly</option>
-            <option value="Occasionally">Occasionally</option>
-          </select></label>
-        </div></div>
-        <div class="card filter-card"><div class="card-c" style="padding:18px">
-          <h5>Where it shows up</h5>
-          <label class="filter-field"><span>Location or setting</span><input class="input" id="fLocation" placeholder="City, campus, coffee shop"></label>
-          <label class="filter-field"><span>University</span><input class="input" id="fUniversity" placeholder="Search universities"></label>
-        </div></div>
-        <div class="card filter-card"><div class="card-c" style="padding:18px">
-          <h5>Item &amp; inventory</h5>
-          <label class="filter-field"><span>Exact item price</span><div class="pricerow">
-            <input class="input" id="fItemMin" type="number" placeholder="Min">
-            <span style="color:var(--mfg)">&ndash;</span>
-            <input class="input" id="fItemMax" type="number" placeholder="Max">
-          </div></label>
-          <label class="filter-field"><span>Open spots</span><input class="input" id="fOpenMin" type="number" min="0" placeholder="Minimum open spots"></label>
-          <label class="filter-field"><span>Branding method</span><select class="select" id="fMethod">
-            <option value="">Any method</option>
-          </select></label>
-        </div></div>
-        <div class="card filter-card"><div class="card-c" style="padding:18px">
-          <h5>Deal details</h5>
-          <label class="filter-field"><span>Fulfillment</span><select class="select" id="fFulfillment">
-            <option value="">Any fulfillment</option>
-            <option value="self">Owner applies</option>
-            <option value="assisted">BrandMyItem applies</option>
-          </select></label>
-          <label class="filter-field"><span>Commitment</span><select class="select" id="fTerm">
-            <option value="">Any term</option>
-            <option value="6">6 months</option>
-            <option value="12">12 months</option>
-            <option value="18">18 months</option>
-          </select></label>
-          <label class="filter-field"><span>Check-in</span><select class="select" id="fCadence">
-            <option value="">Any check-in</option>
-            <option value="monthly photo">Monthly photo</option>
-            <option value="photo every 2 weeks">Photo every 2 weeks</option>
-            <option value="weekly photo">Weekly photo</option>
-          </select></label>
-        </div></div>
-        <div class="card"><div class="card-c" style="padding:18px">
-          <h5>Status</h5>
-          <label class="check"><input type="radio" name="fst" value="all" checked>All items</label>
-          <label class="check"><input type="radio" name="fst" value="open">Open spots</label>
-          <label class="check"><input type="radio" name="fst" value="done">Fully branded</label>
-        </div></div>
-        <div class="card"><div class="card-c" style="padding:18px">
-          <h5>Spot price</h5>
-          <div class="pricerow">
-            <input class="input" id="fmin" type="number" placeholder="Min">
-            <span style="color:var(--mfg)">&ndash;</span>
-            <input class="input" id="fmax" type="number" placeholder="Max">
+        <div class="ios-group">
+          <div class="ios-group-head">Audience</div>
+          <div class="ios-box">
+            <label class="ios-item">
+              <span class="ios-label">Following</span>
+              <div class="ios-control">
+                <select class="ios-select" id="fSocial">
+                  <option value="">Any</option>
+                  <option value="Under 1K">Under 1K</option>
+                  <option value="1K–10K">1K–10K</option>
+                  <option value="10K–100K">10K–100K</option>
+                  <option value="100K+">100K+</option>
+                </select>
+                <svg class="ios-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+              </div>
+            </label>
+            <label class="ios-item">
+              <span class="ios-label">Seen</span>
+              <div class="ios-control">
+                <select class="ios-select" id="fFreq">
+                  <option value="">Any</option>
+                  <option value="Daily">Daily</option>
+                  <option value="Few times a week">Few times a week</option>
+                  <option value="Weekly">Weekly</option>
+                  <option value="Occasionally">Occasionally</option>
+                </select>
+                <svg class="ios-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+              </div>
+            </label>
           </div>
-        </div></div>
-        <div class="card"><div class="card-c" style="padding:18px">
-          <h5>Sort</h5>
-          <select class="select" id="fsort" style="width:100%">
-            <option value="new">Newest first</option>
-            <option value="close">Closest to funded</option>
-            <option value="cheap">Cheapest spot</option>
-            <option value="rich">Biggest goal</option>
-          </select>
-        </div></div>
-        <button class="filter-clear" id="clearDashFilters" type="button">Clear all filters</button>
+        </div>
+
+        <div class="ios-group">
+          <div class="ios-group-head">Where it shows up</div>
+          <div class="ios-box">
+            <label class="ios-item ios-item-col">
+              <span class="ios-label">Location or setting</span>
+              <input class="ios-input-col" id="fLocation" placeholder="City, campus, coffee shop">
+            </label>
+            <label class="ios-item ios-item-col">
+              <span class="ios-label">University</span>
+              <input class="ios-input-col" id="fUniversity" placeholder="Search universities">
+            </label>
+          </div>
+        </div>
+
+        <div class="ios-group">
+          <div class="ios-group-head">Item & inventory</div>
+          <div class="ios-box">
+            <div class="ios-item ios-item-col">
+              <span class="ios-label">Exact item price</span>
+              <div class="ios-pricerow">
+                <input class="ios-input-box" id="fItemMin" type="number" placeholder="Min">
+                <span style="color:var(--mfg)">&ndash;</span>
+                <input class="ios-input-box" id="fItemMax" type="number" placeholder="Max">
+              </div>
+            </div>
+            <label class="ios-item">
+              <span class="ios-label">Open spots</span>
+              <div class="ios-control">
+                <input class="ios-input-right" id="fOpenMin" type="number" min="0" placeholder="Any">
+              </div>
+            </label>
+            <label class="ios-item">
+              <span class="ios-label">Method</span>
+              <div class="ios-control">
+                <select class="ios-select" id="fMethod">
+                  <option value="">Any</option>
+                </select>
+                <svg class="ios-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="ios-group">
+          <div class="ios-group-head">Deal details</div>
+          <div class="ios-box">
+            <label class="ios-item">
+              <span class="ios-label">Fulfillment</span>
+              <div class="ios-control">
+                <select class="ios-select" id="fFulfillment">
+                  <option value="">Any</option>
+                  <option value="self">Owner applies</option>
+                  <option value="assisted">BrandMyItem applies</option>
+                </select>
+                <svg class="ios-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+              </div>
+            </label>
+            <label class="ios-item">
+              <span class="ios-label">Commitment</span>
+              <div class="ios-control">
+                <select class="ios-select" id="fTerm">
+                  <option value="">Any</option>
+                  <option value="6">6 months</option>
+                  <option value="12">12 months</option>
+                  <option value="18">18 months</option>
+                </select>
+                <svg class="ios-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+              </div>
+            </label>
+            <label class="ios-item">
+              <span class="ios-label">Check-in</span>
+              <div class="ios-control">
+                <select class="ios-select" id="fCadence">
+                  <option value="">Any</option>
+                  <option value="monthly photo">Monthly photo</option>
+                  <option value="photo every 2 weeks">Photo every 2 weeks</option>
+                  <option value="weekly photo">Weekly photo</option>
+                </select>
+                <svg class="ios-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="ios-group">
+          <div class="ios-group-head">Status</div>
+          <div class="ios-box">
+            <label class="ios-item">
+              <input type="radio" name="fst" value="all" class="ios-radio" checked>
+              <span class="ios-label">All items</span>
+              <svg class="ios-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+            </label>
+            <label class="ios-item">
+              <input type="radio" name="fst" value="open" class="ios-radio">
+              <span class="ios-label">Open spots</span>
+              <svg class="ios-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+            </label>
+            <label class="ios-item">
+              <input type="radio" name="fst" value="done" class="ios-radio">
+              <span class="ios-label">Fully branded</span>
+              <svg class="ios-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+            </label>
+          </div>
+        </div>
+
+        <div class="ios-group">
+          <div class="ios-group-head">Spot price</div>
+          <div class="ios-box">
+            <div class="ios-item ios-item-col" style="padding-bottom:12px;">
+              <div class="ios-pricerow" style="margin-top:0;">
+                <input class="ios-input-box" id="fmin" type="number" placeholder="Min">
+                <span style="color:var(--mfg)">&ndash;</span>
+                <input class="ios-input-box" id="fmax" type="number" placeholder="Max">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ios-group">
+          <div class="ios-group-head">Sort</div>
+          <div class="ios-box">
+            <label class="ios-item">
+              <span class="ios-label">Sort by</span>
+              <div class="ios-control">
+                <select class="ios-select" id="fsort">
+                  <option value="new">Newest</option>
+                  <option value="close">Closest to funded</option>
+                  <option value="cheap">Cheapest</option>
+                  <option value="rich">Biggest goal</option>
+                </select>
+                <svg class="ios-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <button class="ios-btn" id="clearDashFilters" type="button">Clear filters</button>
       </aside>
       <main class="dash-results">
         <div class="home-live-feed" id="dashLiveFeed"></div>
