@@ -218,12 +218,11 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .searchbar svg{position:absolute;left:17px;top:50%;transform:translateY(-50%);color:var(--mfg)}
 .catstrip{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 14px;scrollbar-width:none}
 .catstrip::-webkit-scrollbar{display:none}
-.cat{display:flex;flex-direction:column;align-items:center;gap:7px;min-width:82px;padding:12px 10px;border-radius:14px;border:1px solid var(--border);background:var(--bg);font-size:12.5px;font-weight:500;color:var(--fg)}
+.cat{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:10px;min-width:112px;height:64px;padding:12px 16px;border-radius:10px;border:1px solid var(--border);background:var(--bg);font-size:12.5px;font-weight:500;color:var(--fg)}
 .cat .ic{height:26px;display:flex;align-items:center;justify-content:center}
 .cat .ic img{max-height:26px;max-width:34px;object-fit:contain;border:0;outline:0;background:transparent;box-shadow:none}
-.allring{width:18px;height:18px;border-radius:50%;border:2px solid var(--fg);display:inline-block}
 .cat:hover{background:var(--wash)}
-.cat.on{background:#1D1D1F;color:#fff;border-color:var(--border)}
+.cat.on{background:var(--bg);color:var(--fg);border-color:var(--border);outline:none;box-shadow:none}
 .statrow{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
 .stat{background:var(--wash2);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px 18px}
 .stat b{display:block;font-size:22px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
@@ -6961,7 +6960,7 @@ function showDash(){
   CATS.forEach(function(c){
     var b=document.createElement('button');b.className='cat'+(F.cat===c.id?' on':'');
      var catPhoto=c.item&&((typeof HERO_SOURCE_FILES!=='undefined'&&HERO_SOURCE_FILES[c.item])||ITEM_PHOTOS[c.item]);
-     b.innerHTML='<span class="ic">'+(catPhoto?'<img src="'+catPhoto+'" alt="">':'<i class="allring"></i>')+'</span>'+c.id;
+     b.innerHTML=catPhoto?'<span class="ic"><img src="'+catPhoto+'" alt=""></span>'+c.id:c.id;
     b.onclick=function(){F.cat=c.id;showDash()};
     cs.appendChild(b);
   });

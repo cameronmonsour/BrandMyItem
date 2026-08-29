@@ -28,4 +28,7 @@ test('uses transparent outline product art for category and item picker thumbnai
   assert.match(html, /var photo=\(typeof HERO_SOURCE_FILES!=='undefined'&&HERO_SOURCE_FILES\[k\]\)\?HERO_SOURCE_FILES\[k\]/);
   assert.match(html, /\.cat \.ic img\{[^}]*border:0;outline:0;background:transparent;box-shadow:none\}/);
   assert.match(html, /\.itemcard img\{[^}]*border:0;outline:0;box-shadow:none/);
+  assert.match(html, /\.cat\{display:flex;flex-direction:row;[^}]*border-radius:10px/);
+  assert.match(html, /\.cat\.on\{background:var\(--bg\);color:var\(--fg\);border-color:var\(--border\);outline:none;box-shadow:none\}/);
+  assert.match(html, /b\.innerHTML=catPhoto\?/);
 });
