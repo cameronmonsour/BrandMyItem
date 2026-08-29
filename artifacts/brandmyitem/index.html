@@ -833,6 +833,8 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
 .home-flow-step{text-align:center;min-width:0}
 .home-flow-step:nth-child(2),.home-flow-step:nth-child(4){padding-top:28px}
 .home-flow-icon{width:82px;height:82px;margin:0 auto 18px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--fg);color:var(--bg);box-shadow:0 0 0 8px var(--bg);position:relative}
+.home-flow-icon.photo{background:var(--bg);border:1px solid var(--border);overflow:hidden}
+.home-flow-icon.photo img{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%}
 .home-flow-icon svg{width:47px;height:47px;overflow:visible}
 .home-flow-icon path,.home-flow-icon rect,.home-flow-icon circle,.home-flow-icon polyline,.home-flow-icon line{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .home-flow-index{display:inline-flex;align-items:center;justify-content:center;width:25px;height:25px;border:1px solid var(--border);border-radius:50%;font-size:11px;font-weight:700;color:var(--mfg);background:var(--bg);margin-bottom:10px}
@@ -874,6 +876,7 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
   .home-flow-step,.home-flow-step:nth-child(2),.home-flow-step:nth-child(4){display:grid;grid-template-columns:72px minmax(0,1fr);column-gap:18px;text-align:left;padding:0 0 30px;position:relative}
   .home-flow-step:not(:last-child):after{content:'';position:absolute;left:35px;top:68px;bottom:2px;width:1px;background:var(--border)}
   .home-flow-icon{grid-row:1/4;width:70px;height:70px;margin:0;box-shadow:0 0 0 6px var(--bg)}
+  .home-flow-icon.photo{box-shadow:0 0 0 6px var(--bg)}
   .home-flow-icon svg{width:39px;height:39px}
   .home-flow-index{margin:1px 0 7px}
   .home-flow-step h3,.home-flow-step p{max-width:none;margin-left:0}
@@ -959,7 +962,7 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
         <svg class="home-flow-line" viewBox="0 0 1000 100" preserveAspectRatio="none" aria-hidden="true"><path pathLength="720" d="M10 38 C115 12 165 82 270 56 S430 20 520 53 S690 88 760 48 S895 12 990 44"/></svg>
         <ol class="home-flow-list">
           <li class="home-flow-step">
-            <span class="home-flow-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path class="flow-moving" d="M11 15h26v17H11z M7 36h34 M15 36l2-4h14l2 4"/></svg></span>
+            <span class="home-flow-icon photo" aria-hidden="true"><img src="how-it-works-post-your-item.png" alt=""></span>
             <span class="home-flow-index">1</span><h3>Post your item</h3><p>Choose the real product and the 6, 12, or 18-month term.</p>
           </li>
           <li class="home-flow-step">
