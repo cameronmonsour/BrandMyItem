@@ -1,0 +1,52 @@
+# BrandMyItem — Replit Build Prompt: Simplified Model Migration
+
+Paste this whole document into Replit's agent. It describes a **business logic overhaul** of the existing `brandmyitem.html` file — replacing the current escrow/identity-verification/recurring-payment system with a simpler model that was deliberately redesigned for legal cleanliness and low operational overhead. This is not cosmetic — it changes the data model, removes entire features, and adds a few new ones. Read this whole document before touching code; several pieces depend on each other.
+
+Reference `BRANDMYITEM_BIBLE.md` (already provided) for the existing function names, data shapes, and file architecture this migration builds on top of.
+
+---
+
+## 1. The model, end to end
+
+1. **Owner posts an item.** Picks a catalog item (or uploads their own), the app auto-splits it into ad spots summing to the retail price. **New at this step: owner picks a commitment term** — a dropdown with presets (6 / 12 / 18 months), not freeform. This term applies to the whole listing uniformly and **locks permanently the moment the first spot sells** — it can never change after that, since every brand on a listing is buying into the same fixed term.
+2. **Brands buy spots.** Charged immediately and in full (spot price + 20% platform fee) at the moment of purchase — no holds, no delayed capture, no campaign-completion trigger. This is a deliberate choice: card authorization holds expire after ~7 days, and listings can realistically take longer than that to sell out, so "authorize now, capture at completion" doesn't work here. Charge now, refund later if needed.
+3. **Unsold-listing timeout.** If a listing does not sell out within **60 days** of being posted (finalized — 60 was chosen over 30 as giving multi-spot/expensive listings enough real time to sell out, and over 90 as unnecessarily doubling brand money exposure for a marginal gain in completions), **every brand who bought a spot on that listing is automatically refunded in full**, and the listing is closed/reset. This is the single most important safeguard in the whole system — it bounds the maximum time a brand's money can sit against undelivered value, which is what keeps this from resembling the kind of open-ended crowdfunding failure the FTC has actually brought enforcement action over (see the legal doc referenced in §7).
+4. **Listing sells out → IRLi LLC buys the item and ships it.**
+   - **Self-applied branding (default):** IRLi LLC procures and ships the item to the owner within **~23 days** of full funding. The owner then has **7 days from delivery** to apply the sponsor materials and submit the first check-in (which already requires a receipt + proof photo, so it doubles as branding confirmation). **30 days total, split across two parties instead of one blended number** — this matters because IRLi LLC controls the first leg (procurement/shipping) and the owner controls the second (applying branding), and without a defined split there was no clean way to say which party caused a delay, or when the Mail Order Rule's delay-notice clock should actually start. Track both legs as separate timestamps: `l.shippedAt` (item left for the owner) and `l.brandingDueAt` (`shippedAt + 7 days`).
+   - **Assisted branding (optional, +10% platform fee instead of 20%):** IRLi LLC produces and applies the materials. Target: **60 days** from full funding to delivery, **not split** — IRLi LLC controls this entire path end to end, so there's no third-party step in the middle and no sub-deadline is needed. **Launch with this live, not deferred** — since IRLi LLC already handles unboxing and repackaging the item for shipment either way, applying branding as one more step in that same process is a small incremental addition, not a separate operational system. The real one-time setup cost is having a printer/heat-press or local print-shop relationship, not an ongoing per-order complexity.
+5. **Delay handling.** If IRLi LLC is not going to make the promised delivery window, an automated notice must go out to every affected brand **before** the promised date passes, offering: consent to a new date, or an immediate full refund. (Exact template is in the legal doc, §7 below — this isn't placeholder copy, the wording has a specific legal reason for its structure, particularly the "silence = consent only if the new delay is ≤30 days past the original promise" line. Don't simplify that away.)
+6. **Non-delivery.** If the item can never be delivered (discontinued, unavailable, etc.), affected brands are refunded automatically, without needing to request it.
+7. **Check-ins — display-only, no money attached.** Owner submits a photo roughly monthly for the length of the locked term. This is a trust/reputation feature now, not a financial gate:
+   - **First check-in only** requires a receipt photo + a manually-entered purchase date, validated against the listing's `fundedAt` timestamp (must be on or after it) — this exists specifically to prevent someone claiming credit for an item they already owned before the campaign ran. This part is unchanged from the current build.
+   - **Missing one check-in** → the listing gets a visible "check-in overdue" flag, shown publicly on the item page.
+   - **Missing two or more consecutive check-ins** → the listing is marked non-compliant, and **the owner's account is restricted from posting any new listing** going forward. There is no "dispute" step and no refund tied to this — the sale already fully settled when the item shipped, so there's nothing left to claw back. The only real consequence is reputational/access-based.
+8. **Sharing.** After any check-in, the existing share-modal flow fires (X / Facebook / Instagram-copy). **The auto-generated caption must now always include a disclosure tag** (e.g., "#ad" or "Sponsored by [Brand]") — this isn't optional styling, it's required under the FTC's 2023 Endorsement Guides the moment the owner posts about receiving a sponsored item, whether or not they were required to post at all.
+
+---
+
+## 2. What to REMOVE from the current build
+
+Per `BRANDMYITEM_BIBLE.md`'s existing architecture, remove or fully bypass:
+
+- **The entire escrow state machine** (`updateEscrowStatuses()`, the held/active/risk/complete enum, the Escrow Ledger card on the item page). None of this applies anymore — there's no holding period, so there's no state to track between "charged" and "delivered."
+- **Owner identity verification** (`renderOwnerTools()`'s verify block, `ownerVerified`, `verifyConfirmId`). This was built for a version of the model where the owner received money and needed KYC before payout. In the current model **the owner never touches money at all** — IRLi LLC buys and ships the item directly — so there's nothing left for identity verification to gate. Replace with simple shipping-address collection (needed for fulfillment, not identity).
+- **The two-step "held → active" gating on check-ins.** Check-ins should now only be gated on the item actually having shipped, not on any financial/verification state.
+- **The multi-step "Continue to Stripe" escrow-explainer modal step.** Simplify checkout back to something close to a standard one-step purchase (still show the fee breakdown — spot price + 20% clearly separated — but the escrow/identity/12-month explainer copy no longer describes how the system actually works and should be rewritten or removed).
+
+## 3. What to ADD
+
+- **Term-length picker** at posting time (6/12/18 month presets). Store as `l.termMonths`, lock (`l.termLocked = true`) the moment `l.claims` gets its first non-null entry. All "X of 12 months" style copy throughout the app should read from `l.termMonths` instead of a hardcoded 12.
+- **`l.postedAt` + `l.unsoldTimeoutDays`** (60, finalized) — a background check (can run client-side on page load against `Date.now()`, given this app has no server) that auto-refunds and closes any listing past its timeout without having sold out. Since this app currently has no real payment backend, "refund" here means: mark all claims on that listing `refunded`, log it in the activity feed, and reflect it clearly in the UI — actual Stripe refund calls are a backend concern for whoever wires up real payments.
+- **Delay-notice trigger** — if a listing is past its promised delivery date and not yet marked shipped, surface the notice (this can be a manual "send delay notice" action in owner tools for now, given there's no real email-sending capability in a static file; a real backend would automate this).
+- **Check-in flag counter** — `l.missedCheckins` (increment when an expected check-in period passes with no photo), driving the "overdue" badge and the 2-strikes posting restriction (`ownerRestricted` flag checked before allowing `postListing()` to run for that owner). For self-applied listings specifically, the *first* check-in's deadline is `l.brandingDueAt` (see §1 above), not the standard monthly cadence — missing that specific one means the owner never applied the branding at all, which is a more serious signal than a routine missed monthly photo and should probably be called out distinctly in the UI rather than just incrementing the same counter silently.
+- **FTC disclosure tag** — bake directly into the caption template in `openShare()`, not left to the owner to add manually.
+
+## 4. Legal documents to carry over as-is
+
+Two files, `BRANDMYITEM_DRAFT_TERMS.md` (Terms of Service + Privacy Policy) and this build prompt, should travel with the codebase. The ToS's payment-timing, refund-trigger, and delay-notice language should match what's actually built — if the final unsold-timeout number is 90 days instead of 60, update it in both the code and that document together, they need to stay in sync.
+
+## 5. Explicitly out of scope for this pass
+
+- Real Stripe integration (charging, refunding) — this remains a front-end simulation until a real backend exists, per the existing Bible doc's "what's real vs. mocked" section.
+- Real identity verification, real KYC — removed, not replaced with anything, per §2 above.
+- (Assisted-branding is now in scope for launch per the updated §1 above — remove this line from out-of-scope.)

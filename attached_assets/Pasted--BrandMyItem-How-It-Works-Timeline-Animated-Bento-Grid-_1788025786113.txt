@@ -1,0 +1,99 @@
+# BrandMyItem — "How It Works" Timeline + Animated Bento Grid
+
+Two new sections, built in the style of the references: a curved numbered-step timeline (like the SideShift reference) and a bento-style feature grid where every card carries its own small looping animation (like the UGC-platform reference). Written so you can generate the icon art separately and slot it in — every image has its own exact prompt below, plus a placeholder convention so the section works before the art exists.
+
+---
+
+## Part 1 — "How It Works" Timeline
+
+Curved connector line, five stops, each a white-line icon in a circle with a caption below — same skeleton as the reference, mapped to BrandMyItem's actual flow instead of a generic 5-step SaaS pitch.
+
+| # | Caption | Icon concept |
+|---|---|---|
+| 1 | Post your item | The item itself — one clean white-outline icon, swappable per category (laptop, phone, suit, etc.) |
+| 2 | Brands buy spots | A small square "ad spot" tile with a corner tag/price icon |
+| 3 | It ships | A delivery van/box in transit |
+| 4 | Arrives branded | A simple house/doorstep icon with a package at the door |
+| 5 | Monthly check-in | A camera or photo-frame icon |
+
+### Image prompt (use once per icon, swap only the bracketed subject)
+
+> A single minimalist line-art icon of [SUBJECT], drawn in pure white 2px stroke on a transparent background, no fill, no shading, no gradient, rounded line caps, centered in the frame with even padding, geometric and simplified like an Apple keynote icon — not photorealistic, not 3D, not filled/solid. Consistent stroke weight across the whole set. Square canvas, icon fills roughly 60% of the frame.
+
+Subjects to generate, one per stop:
+1. "a laptop computer, closed, viewed from a slight angle"
+2. "a small square tag or ad placard with a price corner fold"
+3. "a delivery van in motion, small speed lines behind it"
+4. "a simple house front door with a package sitting on the doormat"
+5. "a vintage camera, front-facing, with a small aperture circle in the lens"
+
+Since these render as white strokes, they need a dark or colored circular badge behind each one to be visible — in the reference, that's a light blue-tinted rounded square behind each icon. For BrandMyItem, use a solid `#1D1D1F` (the site's ink black) circle behind each white icon, sized consistently (same diameter for all five), sitting on the curved connector line exactly like the reference.
+
+### Animation (per icon, looping, subtle — not attention-grabbing)
+
+- **Icon 1 (laptop):** the lid gently opens a few degrees and closes, on a slow loop (~3s)
+- **Icon 2 (ad spot):** the price tag corner flips up slightly, like a page-corner peel, then settles back
+- **Icon 3 (van):** the van drifts a few pixels left-to-right continuously, like it's driving in place, speed lines pulse
+- **Icon 4 (house/package):** the package gently bounces/settles once per loop, like it was just set down
+- **Icon 5 (camera):** the aperture circle briefly contracts and expands, like a shutter click, every few seconds
+
+Keep every animation small (a few px of movement, or a subtle scale/rotate under 10°) — the reference's whole appeal is restraint, not motion for its own sake. Build with CSS `@keyframes` on each SVG/icon element; no JS animation library needed for anything this simple.
+
+### Connector line
+
+A single thin curved path (SVG, `stroke:#E5E5EA`, matching the site's existing `--border` token) running left to right beneath all five icons, dipping slightly between stops like the reference — can be one static `<path>` with a `stroke-dasharray` animation that "draws itself" on scroll-into-view for a nice one-time reveal, separate from the per-icon loops.
+
+---
+
+## Part 2 — Animated Bento Feature Grid
+
+Four cards in a 2×2 grid (2 wide, 2 tall on desktop; stacks to 1 column on mobile), each pairing a bold headline + one sentence with its own small looping illustration — same pattern as the UGC reference (their "Payouts" card has the bouncing invoice, their "Fifteen Steps" card has the paper airplane).
+
+| Card | Headline | Copy | Illustration concept | Loop animation |
+|---|---|---|---|---|
+| 1 | **Real items, not points.** | Brands fund an actual MacBook, suit, or cooler — not credits, not gift cards, a real thing that ships to a real address. | The item photo itself (reuse existing catalog cutout art, e.g. the MacBook), sitting on a soft shadow | Item slowly rotates a few degrees side to side, like turning in light |
+| 2 | **Refunded automatically, never held.** | If a listing doesn't sell out in 60 days, every brand gets their money back — no request, no waiting on a reply. | A simple circular arrow / refund icon with a dollar sign | The circular arrow continuously rotates once every ~4s, dollar sign pulses briefly at the 12 o'clock position each loop |
+| 3 | **One photo a month. That's it.** | No dashboards, no logins for the owner — just a monthly picture proving the logo's still on. | A camera shutter icon with a small checkmark | Shutter "clicks" (quick scale-down/up) every few seconds, checkmark fades in right after |
+| 4 | **Your logo, actually on something.** | Printed, not pinned to a feed. Real vinyl, real placement, visible everywhere the item goes. | A logo/sticker being applied to a flat surface — a hand or squeegee icon smoothing a decal | The decal/sticker icon subtly "presses down" — a small squash-and-settle motion on loop |
+
+### Image prompt template for the four illustrations
+
+> A minimalist icon illustration of [SUBJECT], white line art with no fill on a transparent background, occasional single flat-color accent only where noted, Apple-keynote style — geometric, restrained, no photorealism, no drop shadows except a soft one beneath the whole icon if it's meant to look like it's floating. Square canvas.
+
+Subjects:
+1. *(Skip generation — reuse the existing product cutout photos already in the app, e.g. `HERO_CUTOUTS.macbook`, rather than a new illustration — real product photography is more effective here than an icon.)*
+2. "a circular refund arrow icon (like a redo/loop symbol) with a small dollar sign centered inside it"
+3. "a vintage camera icon with a small checkmark badge overlapping its bottom-right corner"
+4. "a hand holding a squeegee smoothing a rectangular sticker onto a flat surface, simple line art"
+
+---
+
+## Placeholder convention (build now, drop in images later)
+
+Each icon/illustration slot should reference a named image variable that doesn't exist yet, so the layout and animation work today with a visible placeholder, and swapping in real art later is a one-line change:
+
+```js
+var HOWITWORKS_ICONS = {
+  post: null,      // laptop icon — swap in when ready
+  spot: null,      // price-tag icon
+  ship: null,      // delivery van icon
+  arrive: null,    // house/package icon
+  checkin: null    // camera icon
+};
+var BENTO_ICONS = {
+  realItem: null,  // reuse HERO_CUTOUTS.macbook or similar, not a new asset
+  refund: null,
+  checkin: null,
+  logo: null
+};
+```
+
+Until an icon is filled in, render a simple dashed-outline placeholder box in the same size/position the final icon will occupy (matches the existing app convention — the box editor already does this for open ad spots), so the section's layout, spacing, and animation timing can be built and tested before a single image exists.
+
+---
+
+## Notes
+
+- Keep the icon badge color and connector-line color tied to the site's existing CSS variables (`--fg`, `--border`) rather than hardcoded hex, so this stays in sync if the color system ever changes.
+- All animations should be pure CSS, looping, and *stop* (not just fade) if the user has "prefers-reduced-motion" set — that's a real accessibility setting to respect, not optional polish.
+- This is copy, layout, and animation only — no changes to the actual business logic from `REPLIT_SIMPLIFIED_MODEL_PROMPT.md`. Build this as a purely visual addition to the existing home page.
