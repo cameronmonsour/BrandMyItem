@@ -359,28 +359,26 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .home-section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:20px}
 .home-section-head .band-head{margin-bottom:0}
 .home-section-head .big{margin-bottom:7px}
-.home-live-feed{border-top:1px solid var(--border)}
-.home-feed-row{display:flex;align-items:center;gap:14px;padding:15px 4px;border-bottom:1px solid var(--border);text-decoration:none;color:var(--fg);transition:background .15s}
-.home-feed-row:hover{background:var(--wash)}
-.home-feed-avatar{width:34px;height:34px;border-radius:50%;background:var(--fg);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
-.home-feed-copy{flex:1;min-width:0;font-size:14px;line-height:1.35}
-.home-feed-copy b{font-weight:700}
-.home-feed-meta{display:block;color:var(--mfg);font-size:12px;margin-top:3px}
-.home-feed-item{font-weight:600}
-.home-feed-arrow{font-size:22px;color:#8e8e93;line-height:1;flex-shrink:0}
-.home-tracker-card{max-width:760px;margin:0 auto}
-.home-tracker-input{display:flex;gap:10px}
-.home-tracker-input .input{flex:1;min-width:0}
-.home-reference-list{border-top:1px solid var(--border);margin-top:18px}
-.home-reference-row{display:flex;align-items:center;gap:14px;width:100%;padding:14px 4px;border:0;border-bottom:1px solid var(--border);background:transparent;color:var(--fg);text-align:left;cursor:pointer;font:inherit}
-.home-reference-row:hover{background:var(--wash)}
-.home-reference-thumb{width:52px;height:52px;border:1px solid var(--border);border-radius:12px;object-fit:contain;background:#fff;flex-shrink:0}
-.home-reference-copy{flex:1;min-width:0}
-.home-reference-title{display:block;font-size:15px;font-weight:700}
-.home-reference-meta{display:block;font-size:13px;color:var(--mfg);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.home-reference-arrow{font-size:22px;color:#8e8e93}
+.home-live-feed{border:1px solid var(--border);border-radius:16px;overflow:hidden;background:#fff}
+.home-activity-scroll{display:flex;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
+.home-activity-scroll::-webkit-scrollbar{display:none}
+.home-activity-item{display:flex;align-items:center;gap:9px;flex:0 0 auto;padding:13px 18px;border-right:1px solid var(--border);text-decoration:none;color:var(--fg);transition:background .15s}
+.home-activity-item:hover{background:var(--wash)}
+.home-activity-item:last-child{border-right:0}
+.home-activity-avatar{width:26px;height:26px;border-radius:50%;background:var(--fg);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+.home-activity-name{font-size:13px;font-weight:700;white-space:nowrap}
+.home-activity-icon{width:16px;height:16px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+.home-activity-icon.paid{background:#D9E8FF;color:#3766B1}
+.home-activity-icon.delivered{background:#E5F4D8;color:#4D8B35}
+.home-activity-icon.approved{background:#DDF2E4;color:#1F7A44}
+.home-activity-action{font-size:13px;white-space:nowrap}
+.home-activity-time{font-size:12px;color:var(--mfg);white-space:nowrap}
+.home-campaign-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.home-campaign-card{width:100%;padding:0;cursor:pointer}
+.home-campaign-card .thumb{aspect-ratio:16/10}
+@media(max-width:900px){.home-campaign-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:620px){.track-submit-grid{grid-template-columns:1fr}}
-@media(max-width:640px){.home-section-head{display:block}.home-section-head .badge{display:inline-flex;margin-top:14px}.home-tracker-input{display:block}.home-tracker-input .btn{width:100%;margin-top:10px}}
+@media(max-width:640px){.home-section-head{display:block}.home-section-head .badge{display:inline-flex;margin-top:14px}.home-activity-item{padding:12px 14px}.home-activity-item:nth-child(n+5){display:none}.home-campaign-grid{grid-template-columns:1fr}}
 @media(max-width:640px){.itempick-nav{display:none}.itemcard{width:132px}}
 .toolbox{display:flex;align-items:center;gap:4px;flex-wrap:wrap;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:5px;margin:10px 0}
 .icontool{display:flex;align-items:center;gap:6px;width:32px;height:32px;padding:0;border-radius:8px;border:1px solid transparent;background:transparent;color:var(--fg);cursor:pointer;transition:background .12s,border-color .12s;justify-content:center;flex-shrink:0}
@@ -505,33 +503,20 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
       <div class="home-section-head">
         <div class="band-head">
           <div class="eyebrow">Live now</div>
-          <h2 class="big">Brands are claiming spots.</h2>
-          <p>See who is backing which item across the live catalog. Every spot is first come, first served.</p>
         </div>
-        <span class="badge badge-ok"><span class="pulse"></span> LIVE FEED</span>
+        <span class="badge badge-ok"><span class="pulse"></span> LIVE</span>
       </div>
       <div class="home-live-feed" id="homeLiveFeed"></div>
     </section>
 
-    <section class="band" id="home-track-section" style="padding-top:0">
+    <section class="band" id="home-campaigns-section" style="padding-top:0">
       <div class="home-section-head">
         <div class="band-head">
-          <div class="eyebrow">Your items</div>
-          <h2 class="big">Track every item in one place.</h2>
-          <p>Use the email from your spot purchase to see all of the products connected to it.</p>
+          <div class="eyebrow">For brands</div>
         </div>
+        <a class="btn btn-secondary" href="#dashboard">View all campaigns</a>
       </div>
-      <div class="card home-tracker-card">
-        <div class="card-c" style="padding:20px">
-          <label class="label" for="homeTrackMail">Work email</label>
-          <div class="home-tracker-input">
-            <input class="input" id="homeTrackMail" type="email" placeholder="you@brand.com">
-            <button class="btn btn-primary" id="homeTrackBtn" type="button">Track my items</button>
-          </div>
-          <p class="finetext" id="homeTrackErr" style="display:none;color:#B23327;margin:10px 0 0"></p>
-          <div id="homeTrackResult"></div>
-        </div>
-      </div>
+      <div class="home-campaign-grid" id="homeCampaignGrid"></div>
     </section>
 
     <section class="band" style="padding-top:10px" id="home-onboard">
@@ -5909,17 +5894,58 @@ function renderHomeLiveFeed(){
   if(!feed)return;
   var rows=homeLiveRows();
   if(!rows.length){
-    feed.innerHTML='<div class="empty" style="border-top:0">The first brand spot will appear here when a listing goes live.</div>';
+    feed.innerHTML='<div class="empty" style="border:0;border-radius:0;padding:22px">The first campaign update will appear here when a listing goes live.</div>';
     return;
   }
-  feed.innerHTML=rows.map(function(row){
-    var brand=(row.c.brand||'A brand').trim(),initial=brand.slice(0,1).toUpperCase();
-    return '<a class="home-feed-row" href="#item/'+row.l.id+'">'+
-      '<span class="home-feed-avatar">'+initial+'</span>'+
-      '<span class="home-feed-copy"><b>'+brand+'</b> claimed a spot on <span class="home-feed-item">'+LBLL(row.l)+'</span><span class="home-feed-meta">'+money(row.c.amt||row.l.prices[0])+' spot &middot; '+ago(row.ts)+'</span></span>'+
-      '<span class="home-feed-arrow" aria-hidden="true">&rsaquo;</span>'+
+  var stages=[
+    {cls:'paid',icon:'$',label:function(row){return 'paid '+money(row.c.amt||row.l.prices[0])}},
+    {cls:'delivered',icon:'•',label:function(){return 'kit delivered'}},
+    {cls:'delivered',icon:'×2',label:function(){return 'kit delivered ×2'}},
+    {cls:'approved',icon:'✓',label:function(){return 'proof approved'}}
+  ];
+  feed.innerHTML='<div class="home-activity-scroll">'+rows.map(function(row,i){
+    var stage=stages[i%stages.length],name=(row.l.owner||row.c.brand||'A brand').trim(),initial=name.slice(0,1).toUpperCase();
+    return '<a class="home-activity-item" href="#item/'+row.l.id+'" title="'+LBLL(row.l)+'">'+
+      '<span class="home-activity-avatar">'+initial+'</span>'+
+      '<span class="home-activity-name">'+name+'</span>'+
+      '<span class="home-activity-icon '+stage.cls+'">'+stage.icon+'</span>'+
+      '<span class="home-activity-action">'+stage.label(row)+'</span>'+
+      '<span class="home-activity-time">&middot; '+ago(row.ts)+'</span>'+
     '</a>';
-  }).join('');
+  }).join('')+'</div>';
+}
+function renderHomeCampaigns(){
+  var host=document.getElementById('homeCampaignGrid');
+  if(!host)return;
+  var list=DB.listings.filter(function(l){return openSlots(l)>0}).sort(function(a,b){
+    var close=pctOf(b)-pctOf(a);
+    return close||((b.created||0)-(a.created||0));
+  }).slice(0,3);
+  if(!list.length){
+    list=DB.listings.slice().sort(function(a,b){return pctOf(b)-pctOf(a)}).slice(0,3);
+  }
+  host.innerHTML='';
+  if(!list.length){
+    host.innerHTML='<div class="empty"><b>No campaigns live yet</b>Be the first to post an item.</div>';
+    return;
+  }
+  list.forEach(function(l){
+    var it={label:LBLL(l)},pct=pctOf(l),sold=l.slots-openSlots(l),init=(l.owner||'?').trim().slice(0,1).toUpperCase();
+    var card=document.createElement('button');card.type='button';card.className='lcard home-campaign-card';
+    card.innerHTML='<div class="thumb" id="home-th-'+l.id+'"></div>'+
+      '<div class="body">'+
+      '<div class="who"><span class="avatarc">'+init+'</span><span class="oname">'+l.owner+'</span><span class="when">&middot; '+ago(l.created)+'</span><span class="catic"><img src="'+PHO(l)+'" alt=""></span></div>'+
+      '<div class="iname">'+it.label+'</div>'+
+      '<div class="moneyrow"><span class="amts">'+money(raisedOf(l))+'<span>/'+money(goalOf(l))+'</span></span>'+
+      '<span class="chips"><span class="chipg">'+sold+'/'+l.slots+' sold</span><span class="chipb">from '+money(minOpenPrice(l)===Infinity?Math.min.apply(null,l.prices):minOpenPrice(l))+'</span></span></div>'+
+      '<div class="pbar"><i style="width:'+pct+'%"></i></div>'+
+      '</div>';
+    card.onclick=function(){location.hash='item/'+l.id};
+    host.appendChild(card);
+    renderFinal(document.getElementById('home-th-'+l.id),l);
+    var live=document.createElement('span');live.className='badge badge-blue newb';live.textContent='LIVE';
+    document.getElementById('home-th-'+l.id).appendChild(live);
+  });
 }
 function homeReferenceRowHtml(l,c){
   var photo=l.photo||(typeof ITEM_PHOTOS!=='undefined'&&ITEM_PHOTOS[l.type])||'';
@@ -5982,7 +6008,7 @@ function showHome(){
   var open=DB.listings.reduce(function(s,l){return s+openSlots(l)},0);
   var hl=document.getElementById('homeLive');if(hl)hl.textContent=money(totalRaised)+' raised live · '+open+' spots open';
   renderHomeLiveFeed();
-  showHomeTracker();
+  renderHomeCampaigns();
   if(!homeType)homeType=featured().type;
   var f=featuredOf(homeType);
   var tabs=document.getElementById('itemTabs');tabs.innerHTML='';
