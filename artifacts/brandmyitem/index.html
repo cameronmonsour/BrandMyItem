@@ -356,7 +356,31 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .track-order-chevron{width:24px;height:24px;border-radius:50%;background:var(--wash);display:flex;align-items:center;justify-content:center;color:#6e6e73;font-size:18px;line-height:1;transition:transform .2s}
 .track-order[open] .track-order-chevron{transform:rotate(180deg)}
 .track-order-content{border-top:1px solid var(--border);padding:22px}
+.home-section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:20px}
+.home-section-head .band-head{margin-bottom:0}
+.home-section-head .big{margin-bottom:7px}
+.home-live-feed{border-top:1px solid var(--border)}
+.home-feed-row{display:flex;align-items:center;gap:14px;padding:15px 4px;border-bottom:1px solid var(--border);text-decoration:none;color:var(--fg);transition:background .15s}
+.home-feed-row:hover{background:var(--wash)}
+.home-feed-avatar{width:34px;height:34px;border-radius:50%;background:var(--fg);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.home-feed-copy{flex:1;min-width:0;font-size:14px;line-height:1.35}
+.home-feed-copy b{font-weight:700}
+.home-feed-meta{display:block;color:var(--mfg);font-size:12px;margin-top:3px}
+.home-feed-item{font-weight:600}
+.home-feed-arrow{font-size:22px;color:#8e8e93;line-height:1;flex-shrink:0}
+.home-tracker-card{max-width:760px;margin:0 auto}
+.home-tracker-input{display:flex;gap:10px}
+.home-tracker-input .input{flex:1;min-width:0}
+.home-reference-list{border-top:1px solid var(--border);margin-top:18px}
+.home-reference-row{display:flex;align-items:center;gap:14px;width:100%;padding:14px 4px;border:0;border-bottom:1px solid var(--border);background:transparent;color:var(--fg);text-align:left;cursor:pointer;font:inherit}
+.home-reference-row:hover{background:var(--wash)}
+.home-reference-thumb{width:52px;height:52px;border:1px solid var(--border);border-radius:12px;object-fit:contain;background:#fff;flex-shrink:0}
+.home-reference-copy{flex:1;min-width:0}
+.home-reference-title{display:block;font-size:15px;font-weight:700}
+.home-reference-meta{display:block;font-size:13px;color:var(--mfg);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.home-reference-arrow{font-size:22px;color:#8e8e93}
 @media(max-width:620px){.track-submit-grid{grid-template-columns:1fr}}
+@media(max-width:640px){.home-section-head{display:block}.home-section-head .badge{display:inline-flex;margin-top:14px}.home-tracker-input{display:block}.home-tracker-input .btn{width:100%;margin-top:10px}}
 @media(max-width:640px){.itempick-nav{display:none}.itemcard{width:132px}}
 .toolbox{display:flex;align-items:center;gap:4px;flex-wrap:wrap;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:5px;margin:10px 0}
 .icontool{display:flex;align-items:center;gap:6px;width:32px;height:32px;padding:0;border-radius:8px;border:1px solid transparent;background:transparent;color:var(--fg);cursor:pointer;transition:background .12s,border-color .12s;justify-content:center;flex-shrink:0}
@@ -476,6 +500,39 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
         </div>
       </div>
     </div>
+
+    <section class="band" id="home-live-section" style="padding-top:10px">
+      <div class="home-section-head">
+        <div class="band-head">
+          <div class="eyebrow">Live now</div>
+          <h2 class="big">Brands are claiming spots.</h2>
+          <p>See who is backing which item across the live catalog. Every spot is first come, first served.</p>
+        </div>
+        <span class="badge badge-ok"><span class="pulse"></span> LIVE FEED</span>
+      </div>
+      <div class="home-live-feed" id="homeLiveFeed"></div>
+    </section>
+
+    <section class="band" id="home-track-section" style="padding-top:0">
+      <div class="home-section-head">
+        <div class="band-head">
+          <div class="eyebrow">Your items</div>
+          <h2 class="big">Track every item in one place.</h2>
+          <p>Use the email from your spot purchase to see all of the products connected to it.</p>
+        </div>
+      </div>
+      <div class="card home-tracker-card">
+        <div class="card-c" style="padding:20px">
+          <label class="label" for="homeTrackMail">Work email</label>
+          <div class="home-tracker-input">
+            <input class="input" id="homeTrackMail" type="email" placeholder="you@brand.com">
+            <button class="btn btn-primary" id="homeTrackBtn" type="button">Track my items</button>
+          </div>
+          <p class="finetext" id="homeTrackErr" style="display:none;color:#B23327;margin:10px 0 0"></p>
+          <div id="homeTrackResult"></div>
+        </div>
+      </div>
+    </section>
 
     <section class="band" style="padding-top:10px" id="home-onboard">
       <div id="onboardHost"></div>
@@ -5003,7 +5060,7 @@ function suitFix(){try{
     if(f&&f[1])ITEM_PHOTOS[k]=f[1];
   });
 }catch(e){}}
-function LBLL(l){return l.custom?(l.title||'Custom item'):(ITEMS[l.type]?ITEMS[l.type].label:l.type)}
+function LBLL(l){return l.custom?(l.title||((l.type&&ITEMS[l.type])?ITEMS[l.type].label:'Custom item')):(ITEMS[l.type]?ITEMS[l.type].label:l.type)}
 function PHO(l){return l.custom?l.photo:(ITEM_PHOTOS[l.type]||'')}
 function RETL(l){return l.custom?(l.retail||l.prices.reduce(function(a,b){return a+b},0)):ITEMS[l.type].retail}
 function slotMeta(type,count,i){
@@ -5829,10 +5886,103 @@ function featuredOf(type){
   if(of)return of;
   return {id:null,type:type,owner:'You, maybe',mail:'',habs:['Anywhere'],slots:Math.min(4,ITEMS[type].maxSlots),prices:suggest(type,Math.min(4,ITEMS[type].maxSlots)),claims:[null,null,null,null].slice(0,Math.min(4,ITEMS[type].maxSlots)),created:Date.now(),preview:true};
 }
+function homeLiveRows(){
+  var groups=[];
+  DB.listings.forEach(function(l){
+    var group=[];
+    (l.claims||[]).forEach(function(c,i){
+      if(!c)return;
+      group.push({l:l,c:c,ts:c.purchasedAt||((l.created||Date.now())+i*60000)});
+    });
+    if(group.length)groups.push(group.sort(function(a,b){return b.ts-a.ts}));
+  });
+  groups.sort(function(a,b){return b[0].ts-a[0].ts});
+  var rows=[],round=0;
+  while(rows.length<8&&groups.some(function(group){return !!group[round]})){
+    groups.forEach(function(group){if(group[round]&&rows.length<8)rows.push(group[round])});
+    round++;
+  }
+  return rows;
+}
+function renderHomeLiveFeed(){
+  var feed=document.getElementById('homeLiveFeed');
+  if(!feed)return;
+  var rows=homeLiveRows();
+  if(!rows.length){
+    feed.innerHTML='<div class="empty" style="border-top:0">The first brand spot will appear here when a listing goes live.</div>';
+    return;
+  }
+  feed.innerHTML=rows.map(function(row){
+    var brand=(row.c.brand||'A brand').trim(),initial=brand.slice(0,1).toUpperCase();
+    return '<a class="home-feed-row" href="#item/'+row.l.id+'">'+
+      '<span class="home-feed-avatar">'+initial+'</span>'+
+      '<span class="home-feed-copy"><b>'+brand+'</b> claimed a spot on <span class="home-feed-item">'+LBLL(row.l)+'</span><span class="home-feed-meta">'+money(row.c.amt||row.l.prices[0])+' spot &middot; '+ago(row.ts)+'</span></span>'+
+      '<span class="home-feed-arrow" aria-hidden="true">&rsaquo;</span>'+
+    '</a>';
+  }).join('');
+}
+function homeReferenceRowHtml(l,c){
+  var photo=l.photo||(typeof ITEM_PHOTOS!=='undefined'&&ITEM_PHOTOS[l.type])||'';
+  var status=c.escrow||'held',label=ESCROW_LABEL[status]||'Held';
+  return '<button class="home-reference-row" type="button">'+
+    (photo?'<img class="home-reference-thumb" src="'+photo+'" alt="">':'')+
+    '<span class="home-reference-copy"><span class="home-reference-title">'+LBLL(l)+'</span><span class="home-reference-meta">'+c.brand+' &middot; '+c.subId+'</span></span>'+
+    '<span class="escrow-badge '+status+'">'+label+'</span><span class="home-reference-arrow" aria-hidden="true">&rsaquo;</span>'+
+  '</button>';
+}
+function openTrackFromHome(mail){
+  location.hash='track';
+  setTimeout(function(){
+    var input=document.getElementById('tkMail'),btn=document.getElementById('tkBtn');
+    if(!input)return;
+    input.value=mail||'';
+    if(mail&&mail!=='demo@brandmyitem.com'&&btn)btn.click();
+  },40);
+}
+function renderHomeTrackerRows(matches,mail){
+  var result=document.getElementById('homeTrackResult');
+  if(!result)return;
+  if(!matches.length){
+    result.innerHTML='<p class="finetext" style="margin:16px 0 0">No items found for that email yet.</p>';
+    return;
+  }
+  result.innerHTML='<div class="home-reference-list">'+
+    matches.map(function(m){return homeReferenceRowHtml(m.l,m.c)}).join('')+
+  '</div>';
+  result.querySelectorAll('.home-reference-row').forEach(function(row){row.onclick=function(){openTrackFromHome(mail)}});
+}
+function homeTrackMatches(mail){
+  var matches=[];
+  DB.listings.forEach(function(l){
+    (l.claims||[]).forEach(function(c){
+      if(c&&(c.mail||'').toLowerCase()===mail)matches.push({l:l,c:c});
+    });
+  });
+  return matches.sort(function(a,b){return (b.c.purchasedAt||0)-(a.c.purchasedAt||0)});
+}
+function showHomeTracker(){
+  var input=document.getElementById('homeTrackMail'),btn=document.getElementById('homeTrackBtn'),result=document.getElementById('homeTrackResult');
+  if(!input||!btn||!result)return;
+  if(!btn._wired){
+    btn._wired=1;
+    btn.onclick=function(){
+      var mail=input.value.trim().toLowerCase(),err=document.getElementById('homeTrackErr');
+      err.style.display='none';
+      if(!mail){err.textContent='Enter the email you used for your purchase.';err.style.display='block';return}
+      renderHomeTrackerRows(homeTrackMatches(mail),mail);
+    };
+  }
+  if(!result._seeded){
+    renderHomeTrackerRows(demoTrackMatches(),'demo@brandmyitem.com');
+    result._seeded=1;
+  }
+}
 function showHome(){
   var totalRaised=DB.listings.reduce(function(s,l){return s+raisedOf(l)},0);
   var open=DB.listings.reduce(function(s,l){return s+openSlots(l)},0);
   var hl=document.getElementById('homeLive');if(hl)hl.textContent=money(totalRaised)+' raised live · '+open+' spots open';
+  renderHomeLiveFeed();
+  showHomeTracker();
   if(!homeType)homeType=featured().type;
   var f=featuredOf(homeType);
   var tabs=document.getElementById('itemTabs');tabs.innerHTML='';
