@@ -36,7 +36,7 @@ test.describe('item-specific branding methods', () => {
     }
 
     await itemButtons.filter({ hasText: 'Quencher' }).click();
-    await page.getByRole('button', { name: /IRLi applied/i }).click();
+    await page.getByRole('button', { name: /BrandMyItem applied/i }).click();
     await expect(page.locator('#buildFulfillmentOut')).toHaveText(
       'BrandMyItem applies branding',
     );

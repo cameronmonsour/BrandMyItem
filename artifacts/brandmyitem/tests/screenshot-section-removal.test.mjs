@@ -98,6 +98,9 @@ test('dashboard keeps compact tracker cards without a duplicate left category bo
   assert.match(html, /\.grid\{display:grid;grid-template-columns:repeat\(auto-fill,minmax\(236px,1fr\)\);gap:20px\}/);
   assert.match(html, /\.habs button\.on\{background:#1D1D1F;border:1px solid #1D1D1F;color:#fff\}/);
   assert.match(html, /\.choice-card\.on\{border:1px solid #1D1D1F;background:#1D1D1F;color:#fff;box-shadow:none\}/);
+  assert.match(builderHtml, /<strong>BrandMyItem applied<\/strong><small>\+10% fulfillment fee/);
+  assert.doesNotMatch(builderHtml, /IRLi applies the approved sponsor branding/);
+  assert.doesNotMatch(builderHtml, /You apply the approved sponsor branding after delivery/);
   assert.match(html, /\.brand-profile-card \.label\{margin-top:16px;color:var\(--fg\)\}/);
   assert.doesNotMatch(html, /function listingBrandFitHtml\(l\)/);
   assert.doesNotMatch(html, /class="listing-why"/);
