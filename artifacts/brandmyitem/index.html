@@ -189,7 +189,8 @@ h2.big{font-family:var(--serif);font-size:clamp(30px,3.8vw,42px);font-weight:500
 .build-product-layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(270px,.75fr);gap:20px;padding:20px;border-top:1px solid var(--border);align-items:start}
 .build-product-visual{min-width:0}
 .cu-viewport{max-width:100%;height:460px;overflow:auto;display:flex;align-items:flex-start;justify-content:center;background:#fff;border:1px solid rgba(60,60,67,.16);border-radius:14px}
-.cu-viewport canvas{flex:none;display:block;border-radius:14px;touch-action:none}
+.cu-viewport canvas{flex:none;display:block;border-radius:14px;touch-action:none;cursor:grab}
+.cu-viewport canvas.is-panning{cursor:grabbing}
 .cu-zoom{display:flex;align-items:center;justify-content:center;gap:6px;margin:8px 0 0}
 .cu-zoom button{height:30px;min-width:30px;padding:0 9px;border:1px solid rgba(60,60,67,.18);border-radius:8px;background:#fff;color:#3f3f46;font-size:13px;font-weight:600}
 .cu-zoom button:hover{background:#f5f5f7}
@@ -208,6 +209,9 @@ details.faq summary::-webkit-details-marker{display:none}
 details.faq summary:after{content:'+';font-size:18px;font-weight:600;color:var(--mfg);transition:transform .2s}
 details.faq[open] summary:after{transform:rotate(45deg)}
 details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:1.65}
+.faq-grid{max-width:720px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(5,auto);grid-auto-flow:column;gap:10px 16px}
+.faq-grid details.faq{margin-bottom:0}
+@media(max-width:640px){.faq-grid{grid-template-columns:1fr;grid-template-rows:none;grid-auto-flow:row}.faq-grid details.faq{margin-bottom:10px}.faq-grid details.faq:last-child{margin-bottom:0}}
 
 /* dashboard */
 .dash-head{padding:26px 0 12px}
@@ -218,7 +222,7 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .searchbar svg{position:absolute;left:17px;top:50%;transform:translateY(-50%);color:var(--mfg)}
 .catstrip{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 14px;scrollbar-width:none}
 .catstrip::-webkit-scrollbar{display:none}
-.cat{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:10px;min-width:112px;height:64px;padding:12px 16px;border-radius:10px;border:1px solid var(--border);background:var(--bg);font-size:12.5px;font-weight:500;color:var(--fg)}
+.cat{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:8px;min-width:96px;height:54px;padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg);font-size:12.5px;font-weight:500;color:var(--fg)}
 .cat .ic{height:26px;display:flex;align-items:center;justify-content:center}
 .cat .ic img{max-height:26px;max-width:34px;object-fit:contain;border:0;outline:0;background:transparent;box-shadow:none}
 .cat:hover{background:var(--wash)}
@@ -269,8 +273,11 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .lcard .moneyrow{display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0}
 .lcard .moneyrow .amts{font-size:15.5px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap;min-width:0}
 .lcard .moneyrow .amts span{color:#A6B0BA;font-weight:500}
-.lcard .chips{display:flex;gap:5px;flex:0 0 auto;min-width:0}
+.lcard .chips{display:flex;align-items:flex-end;gap:5px;flex:0 0 auto;min-width:0}
 .lcard .chipg{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;background:var(--wash);border-radius:999px;padding:3px 7px 3px 4px;line-height:1.2;font-variant-numeric:tabular-nums;white-space:nowrap}
+.lcard .chipg.sold-count{padding:4px 8px}
+.lcard .sponsor-price{display:flex;flex-direction:column;align-items:flex-end;gap:3px;min-width:0}
+.lcard .sponsor-price .sponsor-stack{padding-left:0}
 .lcard .sponsor-stack{display:inline-flex;align-items:center;padding-left:2px}
 .lcard .sponsor-logo{width:16px;height:16px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;overflow:hidden;background:#fff;border:1px solid rgba(60,60,67,.18);box-shadow:0 1px 2px rgba(0,0,0,.08);margin-left:-4px;flex-shrink:0}
 .lcard .sponsor-logo:first-child{margin-left:0}
@@ -1001,11 +1008,7 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
     </section>
 
     <section class="band" id="home-faq" style="padding-top:0">
-      <div class="band-head">
-        <div class="eyebrow">Questions</div>
-        <h2 class="big">Asked and answered.</h2>
-      </div>
-      <div style="max-width:720px">
+      <div class="faq-grid">
         <details class="faq"><summary>Is this real?</summary><div class="fa">Completely. The items are real, the stickers are real die-cut vinyl, and every listing belongs to a real person who takes it where they work, study, and travel. The only fiction is the idea that a laptop lid or a suitcase isn't premium ad inventory.</div></details>
         <details class="faq"><summary>Does the owner make money?</summary><div class="fa">No, and that's the point. Once a listing is fully funded, IRLi LLC buys the item and ships it to the owner. Spot money funds that purchase, the platform fee runs the business, and cash never changes hands with the owner at any point.</div></details>
         <details class="faq"><summary>What does a brand actually get?</summary><div class="fa">Your logo printed on the item itself, visible everywhere it goes and in everything its owner posts, plus your spot on the listing page with a link to your site, for as long as the owner's chosen term runs (6, 12, or 18 months). No impressions promised, just real presence in real rooms your ads can't reach.</div></details>
@@ -1062,10 +1065,7 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
         </div></div>
       </aside>
       <main>
-        <div class="ticker">
-          <div class="ticker-h"><span class="badge badge-ok"><span class="pulse"></span>LIVE</span> Activity</div>
-          <div id="tickBody"></div>
-        </div>
+        <div class="home-live-feed" id="dashLiveFeed"></div>
         <div class="grid" id="dashGrid"></div>
       </main>
     </div>
@@ -1093,6 +1093,10 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
             </button>
           </div>
           <div class="variants-row" id="variantsRow" style="display:none">
+            <div class="variant-col" id="modelVariantCol" style="display:none">
+              <div class="variant-h"><b>Model.</b> <span id="modelQ">Pick your Pro V.</span></div>
+              <div class="size-pills" id="modelPills"></div>
+            </div>
             <div class="variant-col">
               <div class="variant-h"><b>Finish.</b> <span>Pick your favorite.</span></div>
               <div class="swatches" id="colorSwatches"></div>
@@ -1238,8 +1242,8 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
             </div>
             <div class="field" style="margin-top:14px"><div class="label">Who applies the branding?</div>
               <div class="choice-grid fulfillment-choice-grid" id="brandingChoices" role="radiogroup" aria-label="Branding fulfillment">
-                <button class="choice-card" type="button" data-choice-group="branding" data-value="assisted" aria-pressed="false"><strong>IRLi applied</strong><span>IRLi applies the approved sponsor branding.</span><small>+10% fulfillment fee · 60-day delivery target</small></button>
-                <button class="choice-card on" type="button" data-choice-group="branding" data-value="self" aria-pressed="true"><strong>You apply it</strong><span>You apply the approved sponsor branding after delivery.</span><small>Ships in about 23 days · 7-day branding window</small></button>
+                <button class="choice-card" type="button" data-choice-group="branding" data-value="assisted" aria-pressed="false"><strong>IRLi applied</strong><span>IRLi applies the approved sponsor branding.</span><small>+10% fulfillment fee · 60-day delivery window</small></button>
+                <button class="choice-card on" type="button" data-choice-group="branding" data-value="self" aria-pressed="true"><strong>You apply it</strong><span>You apply the approved sponsor branding after delivery.</span><small>Delivered in under 23 days · 7-day branding window</small></button>
               </div>
               <p class="choice-note">In both paths, BrandMyItem buys and ships the physical item. Only the branding application changes.</p>
               <p class="tax-note">Sales tax, if applicable, is calculated at checkout based on the transaction and buyer location. Listing proceeds may have tax implications for the owner; this demo does not determine filing obligations or provide tax advice.</p>
@@ -5422,7 +5426,8 @@ function pad(n){return n<10?'0'+n:''+n}
 var AUCTION_DAYS=60;
 var CATS=[
   {id:'All',item:null},{id:'Tech',item:'macbook'},{id:'Carry',item:'weekender'},
-  {id:'Hydration',item:'bottle'},{id:'Travel',item:'case'},{id:'Sports',item:'paddle'},{id:'Style',item:'suit'}
+  {id:'Event',item:'cooler'},{id:'Hydration',item:'bottle'},{id:'Travel',item:'case'},
+  {id:'Sports',item:'paddle'},{id:'Style',item:'suit'},{id:'Custom',item:null}
 ];
 var ITEMS={
   macbook:{label:'MacBook Pro',brand:'Apple',color:'Silver',cat:'Tech',retail:1599,maxSlots:8,surf:[28,18],verified:'2026-08-29',source:'https://www.apple.com/macbook-pro/specs/',
@@ -5439,14 +5444,14 @@ var ITEMS={
     specs:[['Type','Wireless over-ear headphones'],['Color','Midnight'],['Audio','Active Noise Cancellation, Adaptive Audio, Transparency'],['Connection','USB-C, Bluetooth 5.3'],['Battery','Up to 20 hours'],['Controls','Digital Crown and noise control button'],['Dimensions','7.37 × 6.64 × 3.28 in'],['Weight','13.6 oz (386.2 g)'],['Case','Smart Case included']]},
   golfbag:{label:'Deluxe Carry Stand Bag',brand:'PXG',color:'White / Black',cat:'Sports',retail:325,maxSlots:5,surf:[60,25],verified:'2026-08-29',source:'https://www.pxg.com/products/deluxe-carry-stand-bag',
     specs:[['Type','Deluxe carry stand golf bag'],['Color','White / Black'],['Top','4-way top'],['Storage','13 total pockets'],['Base','Magnetic stand feet'],['Carry','Padded dual carry straps'],['Protection','Lined valuables and rangefinder pockets']]},
-  weekender:{label:'Keepall Bandoulière 55',brand:'Louis Vuitton',color:'Monogram Eclipse',cat:'Carry',retail:2800,maxSlots:3,surf:[40,22],verified:'2026-08-29',source:'https://us.louisvuitton.com/eng-us/products/keepall-bandouliere-55-monogram-eclipse-014387/M40605',
-    specs:[['Model','Keepall Bandoulière 55 &middot; M40605'],['Canvas','Monogram Eclipse coated canvas'],['Trim','Cowhide-leather trim'],['Lining','Textile lining'],['Color','Monogram Eclipse'],['Dimensions','21.7 × 12.2 × 9.4 in'],['Hardware','Silver-color hardware'],['Carry','Removable, adjustable strap with shoulder patch'],['Origin','Made in France, Spain, Italy, or USA']]},
-  paddle:{label:'Perseus Pro V Pickleball Paddle',brand:'JOOLA',color:'Red',cat:'Sports',retail:299.95,maxSlots:2,surf:[20,25],verified:'2026-08-29',source:'https://joola.com/products/joola-perseus-pro-v-pickleball-paddle-1',
-    specs:[['Model','Perseus Pro V'],['Core thickness','16mm'],['Surface','Textured carbon-fiber face'],['Shape','Elongated Perseus shape'],['Color','Red'],['Length','16.5 in'],['Width','7.5 in'],['Handle','5.5 in long'],['Certification','USAP PBCoR .43 certified']]},
-  suit:{label:'Black Merino Wool Tuxedo Suit',brand:'StudioSuits',color:'Black',cat:'Style',retail:303,maxSlots:4,surf:[40,50],verified:'2026-08-29',source:'https://www.studiosuits.com/products/black-merino-wool-tuxedo-suit',
-    specs:[['Type','Two-piece tuxedo suit'],['Fit','Made to measure'],['Fabric','Merino wool'],['Color','Black'],['Jacket','Single-breasted, one-button tuxedo styling'],['Trousers','Matching black tuxedo trousers'],['Care','Professional dry clean']]},
-  backpack:{label:'The Commuter Backpack',brand:'Away',color:'Jet Black',cat:'Carry',retail:228,maxSlots:4,surf:[35,45],verified:'2026-08-29',source:'https://www.awaytravel.com/products/commuter-backpack-jet-black',
-    specs:[['Material','100% recycled nylon, 50% recycled leather trim'],['Capacity','25 L'],['Color','Jet Black'],['Laptop','Exterior padded sleeve fits up to 16-inch'],['Storage','4 exterior pockets, 2 bottle pockets'],['Carry','Padded straps, breathable mesh back, trolley sleeve'],['Dimensions','12.4 × 6.5 × 17.7 in'],['Weight','2.5 lb'],['Warranty','Limited one-year warranty']]}
+  weekender:{label:'Keepall Bandoulière',brand:'Louis Vuitton',color:'Monogram Canvas',cat:'Carry',retail:2800,maxSlots:3,surf:[40,22],verified:'2026-08-29',source:'https://us.louisvuitton.com/eng-us/men/bags/all-bags/keepall/_/N-t1uezqf4-ak1bl19y8',
+    specs:[['Model','Keepall Bandoulière'],['Canvas','Monogram coated canvas'],['Trim','Cowhide-leather trim'],['Lining','Textile lining'],['Color','Monogram Canvas'],['Dimensions','Size-specific official dimensions'],['Hardware','Silver-color hardware'],['Carry','Removable, adjustable strap with shoulder patch'],['Origin','Made in France, Spain, Italy, or USA']]},
+  paddle:{label:'Pro V Paddle',brand:'JOOLA',color:'Blaze Red (Ben Johns)',cat:'Sports',retail:299.95,maxSlots:2,surf:[20,25],verified:'2026-08-29',source:'https://joola.com/collections/pro-v',
+    specs:[['Series','Pro V'],['Model','Perseus Pro V'],['Core thickness','16mm'],['Surface','Textured carbon-fiber face'],['Shape','Elongated'],['Color','Blaze Red (Ben Johns)'],['Dimensions','Model-specific official dimensions'],['Certification','USAP PBCoR .43 certified']]},
+  suit:{label:'Luxury Twill O’Connor Tuxedo',brand:'Tom Ford',color:'Black',cat:'Style',retail:7490,maxSlots:4,surf:[40,50],verified:'2026-08-29',source:'https://www.tomfordfashion.com/en-us/luxury-twill-oconnor-tuxedo/2EYPT1-WOS09X5N.html',
+    specs:[['Style','O’Connor tuxedo'],['Lapel','Peak lapel with satin trim'],['Fabric','15-micron luxury twill &middot; 100% wool'],['Color','Black'],['Jacket','Single-breasted with double vent'],['Trousers','Matching trousers with satin side stripe'],['Jacket length','75.5 cm'],['Hem','19 cm'],['Origin','Made in Italy'],['Care','Professional dry clean']]},
+  backpack:{label:'Search Backpack',brand:'TUMI',color:'Black',cat:'Carry',retail:850,maxSlots:4,surf:[35,45],verified:'2026-08-29',source:'https://www.tumi.com/p/search-backpack-01470531041/',
+    specs:[['Collection','Alpha Bravo'],['Material','Smooth leather'],['Color','Black'],['Laptop','Padded compartment fits up to 15-inch screens'],['Storage','Main compartment, front zip pocket, side zip pockets'],['Carry','Top handle, padded mesh back panel, adjustable shoulder straps'],['Add-a-Bag','Sleeve for securing to luggage'],['Dimensions','43H × 21D × 35.5W cm'],['Weight','1.832 kg'],['Warranty','Limited five-year global warranty']]}
 };
 var HAB_BY_CAT={Tech:['Coffee shops','Office'],Event:['Events'],Hydration:['Gym'],Travel:['Airport'],Carry:['Campus','Office']};
 var ITEM_VARIANTS={
@@ -5457,10 +5462,32 @@ var ITEM_VARIANTS={
   case:{colors:[['Silver','#C7C9CC'],['Black','#26262A'],['Titanium','#8B8D90']],sizeLabel:'Size',sizeQ:'Official Original Cabin configuration.',sizes:[['Cabin',0]]},
   headphones:{colors:[['Midnight','#252B35'],['Starlight','#E7E2D3'],['Blue','#8FB3C9'],['Purple','#766D91'],['Orange','#D97843']],sizeLabel:'Fit',sizeQ:'One size, made to fit.',sizes:[['Standard',0]]},
   golfbag:{colors:[['White / Black','#F2F2F2'],['Black','#26262A'],['Darkness','#202126'],['White','#F7F7F7']],sizeLabel:'Style',sizeQ:'Official one-size carry stand bag.',sizes:[['Standard',0]]},
-  weekender:{colors:[['Monogram Eclipse','#26262A']],sizeLabel:'Size',sizeQ:'One size, 55 cm.',sizes:[['Keepall 55',0]]},
-  paddle:{colors:[['Red','#9D2E29'],['Breeze Blue','#477C9B']],sizeLabel:'Core thickness',sizeQ:'Pick the official paddle thickness.',sizes:[['16mm',0,{'Core thickness':'16mm'}],['14mm',0,{'Core thickness':'14mm'}]]},
-  suit:{colors:[['Black','#1D1D1F']],sizeLabel:'Fit',sizeQ:'Made to your measurements.',sizes:[['Made to measure',0]]},
-  backpack:{colors:[['Jet Black','#26262A']],sizeLabel:'Size',sizeQ:'One official 25 L size.',sizes:[['25 L',0]]}
+  weekender:{colors:[['Monogram Canvas','#8B5A3C'],['Monogram Eclipse','#26262A'],['Monogram Macassar','#4A2C22'],['Damier Graphite','#5C6066'],['Damier Azur','#D9E0E4']],sizeLabel:'Size',sizeQ:'Pick your Keepall size.',sizes:[
+    ['Keepall 45',-500,{Model:'Keepall Bandoulière 45',Dimensions:'17.7 × 10.6 × 8.3 in'}],
+    ['Keepall 50',-250,{Model:'Keepall Bandoulière 50',Dimensions:'19.7 × 11.4 × 8.7 in'}],
+    ['Keepall 55',0,{Model:'Keepall Bandoulière 55',Dimensions:'21.7 × 12.2 × 9.4 in'}],
+    ['Keepall 60',300,{Model:'Keepall Bandoulière 60',Dimensions:'23.6 × 13.0 × 9.8 in'}]
+  ]},
+  paddle:{
+    models:[
+      ['Perseus Pro V',{Model:'Perseus Pro V',Shape:'Elongated'},['16mm','14mm']],
+      ['Kosmos Pro V',{Model:'Kosmos Pro V',Shape:'Hybrid'},['16mm','14mm']],
+      ['Scorpeus Pro V',{Model:'Scorpeus Pro V',Shape:'Standard'},['16mm','14mm']],
+      ['Hyperion Pro V',{Model:'Hyperion Pro V',Shape:'Elongated'},['16mm','14mm']],
+      ['Agassi Pro V',{Model:'Agassi Pro V',Shape:'Elongated'},['16mm','14mm']],
+      ['Graf Pro V',{Model:'Graf Pro V',Shape:'Elongated'},['16mm']]
+    ],
+    colors:[
+      ['Blaze Red (Ben Johns)','#B53A31'],['Breeze Blue (Simone Jardim)','#5F8FAA'],
+      ['Surge Green (Federico Staksrud)','#2F765C'],['Surge Green (Tyson McGuffin)','#3E8164'],
+      ['JOOLA Yellow (Anna Bright)','#E7C83F'],['Club Green (Collin Johns)','#315E47'],
+      ['Bolt Blue','#315F91'],['Royal Blue','#34599A'],['Seaside Green','#6F9D91']
+    ],
+    sizeLabel:'Core thickness',sizeQ:'Pick an available thickness.',
+    sizes:[['16mm',0,{'Core thickness':'16mm'}],['14mm',0,{'Core thickness':'14mm'}]]
+  },
+  suit:{colors:[['Black','#1D1D1F']],sizeLabel:'Size',sizeQ:'Choose your size on the official product page.',sizes:[['Tom Ford sizing',0]]},
+  backpack:{colors:[['Black','#26262A']],sizeLabel:'Size',sizeQ:'One official 43 cm size.',sizes:[['43 cm',0]]}
 };
 var SIZE_TIERS=[[0.19,'Small'],[0.28,'Medium'],[1,'Large']];
 var HABITATS=['Campus','Coffee shops','Gym','Office','Airport','Events'];
@@ -5504,14 +5531,14 @@ if(!DB){
       prices:[130,90,90,45,45],claims:[{brand:'Fairway+',link:'',logo:null,amt:130},null,null,null,null],created:now-1000*60*60*8}
   ],
   activity:[
-    {txt:'<b>Dre</b> posted a <b>Wedding suit</b> &middot; 1 spot open',ts:now-1000*60*12},
-    {txt:'<b>Loopwear</b> bought the top spot on Sofia&rsquo;s <b>iPhone</b> &middot; $440',ts:now-1000*60*55},
-    {txt:'<b>Priya</b>&rsquo;s <b>Pickleball paddle</b> just sold out &middot; fully funded',ts:now-1000*60*60*29},
-    {txt:'<b>Driftly</b> bought an earcup on Ken&rsquo;s <b>Headphones</b> &middot; $300',ts:now-1000*60*60*4},
-    {txt:'<b>Outraised</b> bought a spot on Cam&rsquo;s <b>MacBook</b> &middot; $250',ts:now-1000*60*31},
-    {txt:'<b>Clipory</b> bought a spot on Cam&rsquo;s <b>MacBook</b> &middot; $165',ts:now-1000*60*38},
-    {txt:'<b>Cam</b> posted a <b>MacBook Pro 14"</b> &middot; 8 spots',ts:now-1000*60*42},
-    {txt:'<b>Gateline</b> bought a spot on Jordan&rsquo;s <b>Carry-on</b> &middot; $70',ts:now-1000*60*60*25}
+    {kind:'post',listingId:'demo4',owner:'Dre',label:'Black Merino Wool Tuxedo Suit',spots:1,ts:now-1000*60*12},
+    {kind:'post',listingId:'demo2',owner:'Maya',label:'Quencher H2.0 FlowState Tumbler',spots:2,ts:now-1000*60*60*5},
+    {kind:'post',listingId:'demo5',owner:'Sofia',label:'iPhone 17 Pro',spots:4,ts:now-1000*60*60*2},
+    {kind:'post',listingId:'demo8',owner:'Marcus',label:'Deluxe Carry Stand Bag',spots:5,ts:now-1000*60*60*8},
+    {kind:'post',listingId:'demo1',owner:'Cam',label:'MacBook Pro',spots:8,ts:now-1000*60*42},
+    {kind:'post',listingId:'demo6',owner:'Ken',label:'AirPods Max 2',spots:2,ts:now-1000*60*60*5},
+    {kind:'post',listingId:'demo7',owner:'Priya',label:'Pro V Paddle',spots:2,ts:now-1000*60*60*30},
+    {kind:'post',listingId:'demo3',owner:'Jordan',label:'Original Cabin',spots:4,ts:now-1000*60*60*26}
   ]};
   store.set('bmi_db4',DB);
 }
@@ -5553,6 +5580,7 @@ var DEMO_CONTEXT={
   });
   if(changed){
     (DB.activity||[]).forEach(function(a){
+      if(!a.txt)return;
       Object.keys(replacements).forEach(function(oldName){a.txt=a.txt.split(oldName).join(replacements[oldName])});
     });
     store.set('bmi_db4',DB);
@@ -5660,7 +5688,11 @@ if(HAS_CLOUD){
 }else{
   console.log('BMI shared database: unavailable here, running local-only');
 }
-function logAct(txt){DB.activity.unshift({txt:txt,ts:Date.now()});DB.activity=DB.activity.slice(0,20);saveDB()}
+function logAct(txt,meta){
+  var event={txt:txt,ts:Date.now()};
+  if(meta)Object.keys(meta).forEach(function(k){event[k]=meta[k]});
+  DB.activity.unshift(event);DB.activity=DB.activity.slice(0,20);saveDB()
+}
 function claimIsRefunded(c){return !!(c&&c.refunded)}
 function raisedOf(l){return (l.claims||[]).reduce(function(s,c){return s+(c&&!claimIsRefunded(c)?c.amt:0)},0)}
 function goalOf(l){return l.prices.reduce(function(s,p){return s+p},0)}
@@ -5760,12 +5792,26 @@ function suitFix(){try{
   });
 }catch(e){}}
 function LBLL(l){return l.custom?(l.title||((l.type&&ITEMS[l.type])?ITEMS[l.type].label:'Custom item')):(ITEMS[l.type]?ITEMS[l.type].label:l.type)}
+function listingCategory(l){
+  if(l&&l.type&&ITEMS[l.type])return ITEMS[l.type].cat;
+  return 'Custom';
+}
 function PHO(l){return listingPhoto(l)}
 function RETL(l){return l.retail||(l.custom?l.prices.reduce(function(a,b){return a+b},0):(ITEMS[l.type]&&ITEMS[l.type].retail))}
 function variantOption(type,size){
   var v=ITEM_VARIANTS[type];if(!v)return null;
   for(var i=0;i<v.sizes.length;i++)if(v.sizes[i][0]===size)return v.sizes[i];
   return v.sizes[0]||null;
+}
+function variantModelOption(type,model){
+  var v=ITEM_VARIANTS[type];if(!v||!v.models)return null;
+  for(var i=0;i<v.models.length;i++)if(v.models[i][0]===model)return v.models[i];
+  return v.models[0]||null;
+}
+function availableVariantSizes(type,model){
+  var v=ITEM_VARIANTS[type];if(!v)return [];
+  var selected=variantModelOption(type,model),allowed=selected&&selected[2];
+  return allowed?v.sizes.filter(function(size){return allowed.indexOf(size[0])>=0}):v.sizes;
 }
 function variantRetail(type,size){
   var item=ITEMS[type],option=variantOption(type,size);
@@ -5910,9 +5956,9 @@ var LOCAL_PRODUCT_PHOTOS={
   golfbag:'campaign/product-golfbag.png',
   bottle:'campaign/product-bottle.png',
   case:'campaign/product-case.png',
-  suit:'campaign/product-suit.png',
+  suit:'campaign/product-suit.png?v=tomford-oconnor',
   cooler:'campaign/product-cooler.png',
-  backpack:'campaign/product-backpack.png',
+  backpack:'campaign/product-backpack.png?v=tumi-search-147053',
   paddle:'campaign/product-paddle.png',
   weekender:'campaign/product-weekender.png'
 };
@@ -6698,8 +6744,8 @@ function homeLiveRows(){
   }
   return rows;
 }
-function renderHomeLiveFeed(){
-  var feed=document.getElementById('homeLiveFeed');
+function renderLiveFeed(feedId){
+  var feed=document.getElementById(feedId);
   if(!feed)return;
   var rows=homeLiveRows();
   if(!rows.length){
@@ -6720,6 +6766,8 @@ function renderHomeLiveFeed(){
   var tickerRows=rows.map(itemHtml).join('');
   feed.innerHTML='<div class="home-activity-viewport"><div class="home-activity-scroll">'+tickerRows+tickerRows+'</div></div>';
 }
+function renderHomeLiveFeed(){renderLiveFeed('homeLiveFeed')}
+function renderDashboardLiveFeed(){renderLiveFeed('dashLiveFeed')}
 function renderHomeCampaigns(){
   var host=document.getElementById('homeCampaignGrid');
   if(!host)return;
@@ -6742,8 +6790,8 @@ function renderHomeCampaigns(){
       '<div class="body">'+
       '<div class="who">'+ownerAvatarHtml(l)+'<span class="oname">'+l.owner+'</span><span class="when">&middot; '+ago(l.created)+'</span><span class="catic"><img src="'+PHO(l)+'" alt=""></span></div>'+
       listingContextHtml(l)+'<div class="iname">'+it.label+'</div>'+
-      '<div class="moneyrow"><span class="amts">'+money(raisedOf(l))+'<span>/'+money(goalOf(l))+'</span></span>'+
-      '<span class="chips"><span class="chipg">'+sponsorLogoStack(l)+'<span>'+sold+'/'+l.slots+' sold</span></span><span class="chipb">from '+money(minOpenPrice(l)===Infinity?Math.min.apply(null,l.prices):minOpenPrice(l))+'</span></span></div>'+
+       '<div class="moneyrow"><span class="amts">'+money(raisedOf(l))+'<span>/'+money(goalOf(l))+'</span></span>'+
+       '<span class="chips"><span class="chipg sold-count">'+sold+'/'+l.slots+' sold</span><span class="sponsor-price">'+sponsorLogoStack(l)+'<span class="chipb">from '+money(minOpenPrice(l)===Infinity?Math.min.apply(null,l.prices):minOpenPrice(l))+'</span></span></span></div>'+
       '<div class="pbar"><i style="width:'+pct+'%"></i></div>'+
       '</div>';
     card.onclick=function(){location.hash='item/'+l.id};
@@ -6993,7 +7041,56 @@ function minOpenPrice(l){
   l.prices.forEach(function(p,i){if(!l.claims[i]&&(m===null||p<m))m=p});
   return m===null?Infinity:m;
 }
+function listingSpotPrice(l){
+  var open=minOpenPrice(l);
+  return open===Infinity&&l.prices.length?Math.min.apply(null,l.prices):open;
+}
+function postActivityRows(){
+  var rows=[],seen={},listings=DB.listings||[];
+  function findListing(a){
+    if(a.listingId){
+      for(var i=0;i<listings.length;i++)if(listings[i].id===a.listingId)return listings[i];
+    }
+    if(a.owner){
+      for(var j=0;j<listings.length;j++)if(listings[j].owner===a.owner)return listings[j];
+    }
+    if(a.txt&&a.txt.toLowerCase().indexOf('posted')>=0){
+      for(var k=0;k<listings.length;k++)if(a.txt.indexOf(listings[k].owner||'')>=0)return listings[k];
+    }
+    return null;
+  }
+  (DB.activity||[]).forEach(function(a){
+    if(!a||!(a.kind==='post'||a.action==='posted'||(a.txt&&/\bposted\b/i.test(a.txt))))return;
+    var l=findListing(a),key=a.listingId||(l&&l.id)||('activity-'+(a.ts||0)+'-'+(a.txt||''));
+    if(seen[key])return;
+    seen[key]=true;
+    rows.push({listingId:l&&l.id||a.listingId||null,owner:a.owner||(l&&l.owner),label:a.label||(l&&LBLL(l)),spots:a.spots||(l&&l.slots),txt:a.txt,ts:a.ts||(l&&l.postedAt)||(l&&l.created)||0});
+  });
+  listings.forEach(function(l){
+    if(!l||!l.id||seen[l.id])return;
+    seen[l.id]=true;
+    rows.push({listingId:l.id,owner:l.owner,label:LBLL(l),spots:l.slots,ts:l.postedAt||l.created||0});
+  });
+  return rows.sort(function(a,b){return(b.ts||0)-(a.ts||0)}).slice(0,8);
+}
+function postActivityText(row){
+  var owner=row.owner||'Someone',label=row.label||'an item',spots=parseInt(row.spots,10);
+  if(row.owner&&row.label){
+    return '<b>'+safeCardText(owner)+'</b> posted a <b>'+safeCardText(label)+'</b> &middot; '+(isNaN(spots)?'':spots+' '+(spots===1?'spot':'spots'));
+  }
+  return row.txt||'A user posted an item';
+}
+function syncDashboardFilterState(){
+  var q=document.getElementById('dq'),min=document.getElementById('fmin'),max=document.getElementById('fmax'),sort=document.getElementById('fsort');
+  var status=document.querySelector('input[name=fst]:checked');
+  if(q)F.q=q.value;
+  if(min)F.min=min.value;
+  if(max)F.max=max.value;
+  if(sort)F.sort=sort.value;
+  if(status)F.status=status.value;
+}
 function renderDash(){
+  syncDashboardFilterState();
   var all=DB.listings.slice();
   var open=all.reduce(function(s,l){return s+openSlots(l)},0);
   var raised=all.reduce(function(s,l){return s+raisedOf(l)},0);
@@ -7004,28 +7101,24 @@ function renderDash(){
     '<div class="stat"><b>'+open+'</b><span>Open spots</span></div>'+
     '<div class="stat"><b>'+money(avg)+'</b><span>Avg open spot</span></div>'+
     '<div class="stat"><b>'+money(raised)+'</b><span>Raised so far</span></div>';
-  var tb=document.getElementById('tickBody');tb.innerHTML='';
-  DB.activity.slice(0,5).forEach(function(a){
-    var d=document.createElement('div');d.className='tick';
-    d.innerHTML='<div>'+a.txt+'</div><span>'+ago(a.ts)+'</span>';
-    tb.appendChild(d);
-  });
+  renderDashboardLiveFeed();
   var q=F.q.toLowerCase();
   var list=all.filter(function(l){
-    var it={label:LBLL(l)};
+    var it={label:LBLL(l),cat:listingCategory(l)};
     if(F.cat!=='All'&&it.cat!==F.cat)return false;
     if(F.status==='open'&&openSlots(l)===0)return false;
     if(F.status==='done'&&pctOf(l)<100)return false;
-    var searchable=[it.label,l.owner].concat(l.habs||[],l.cities||[],l.universities||[]).join(' ').toLowerCase();
+    var searchable=[it.label,it.cat,l.owner,l.purpose,l.social].concat(l.habs||[],l.cities||[],l.universities||[]).join(' ').toLowerCase();
     if(q&&!searchable.includes(q))return false;
-    var mo=minOpenPrice(l);
-    if(F.min!==''&&mo!==Infinity&&mo<parseFloat(F.min))return false;
-    if(F.max!==''&&mo!==Infinity&&mo>parseFloat(F.max))return false;
+    var mo=listingSpotPrice(l);
+    var min=F.min===''?null:parseFloat(F.min),max=F.max===''?null:parseFloat(F.max);
+    if(min!==null&&!isNaN(min)&&(mo===Infinity||mo<min))return false;
+    if(max!==null&&!isNaN(max)&&(mo===Infinity||mo>max))return false;
     return true;
   });
   if(F.sort==='new')list.sort(function(a,b){return b.created-a.created});
   if(F.sort==='close')list.sort(function(a,b){return pctOf(b)-pctOf(a)});
-  if(F.sort==='cheap')list.sort(function(a,b){return minOpenPrice(a)-minOpenPrice(b)});
+  if(F.sort==='cheap')list.sort(function(a,b){return listingSpotPrice(a)-listingSpotPrice(b)});
   if(F.sort==='rich')list.sort(function(a,b){return goalOf(b)-goalOf(a)});
   var g=document.getElementById('dashGrid');g.innerHTML='';
   if(!list.length){
@@ -7044,8 +7137,8 @@ function renderDash(){
       '<div class="body">'+
       '<div class="who">'+ownerAvatarHtml(l)+'<span class="oname">'+l.owner+'</span><span class="when">&middot; '+ago(l.created)+'</span><span class="catic"><img src="'+PHO(l)+'" alt=""></span></div>'+
       listingContextHtml(l)+'<div class="iname">'+it.label+'</div>'+
-      '<div class="moneyrow"><span class="amts">'+money(raisedOf(l))+'<span>/'+money(goalOf(l))+'</span></span>'+
-      '<span class="chips"><span class="chipg">'+sponsorLogoStack(l)+'<span>'+sold+'/'+l.slots+' sold</span></span><span class="chipb">from '+money(minOpenPrice(l)===Infinity?Math.min.apply(null,l.prices):minOpenPrice(l))+'</span></span></div>'+
+       '<div class="moneyrow"><span class="amts">'+money(raisedOf(l))+'<span>/'+money(goalOf(l))+'</span></span>'+
+       '<span class="chips"><span class="chipg sold-count">'+sold+'/'+l.slots+' sold</span><span class="sponsor-price">'+sponsorLogoStack(l)+'<span class="chipb">from '+money(listingSpotPrice(l))+'</span></span></span></div>'+
       '<div class="pbar"><i style="width:'+pct+'%"></i></div>'+
       '</div>';
     card.onclick=function(){openCampaignDetails(l)};
@@ -7058,7 +7151,7 @@ function renderDash(){
 }
 
 /* ============ BUILD ============ */
-var B={type:'macbook',slots:4,prices:[],habs:['Coffee shops'],cities:[],universities:[],purpose:'',freq:'Daily',social:'1K\u201310K',socialLinks:{},avatar:'',termMonths:12,brandingMode:'self'};
+var B={type:'macbook',slots:4,prices:[],habs:['Coffee shops'],cities:[],universities:[],purpose:'',freq:'Daily',social:'1K\u201310K',socialLinks:{},avatar:'',variantModel:'',termMonths:12,brandingMode:'self'};
 var AVATAR_COUNT=18;
 function setBuildChoiceCards(group,value){
   document.querySelectorAll('[data-choice-group="'+group+'"]').forEach(function(card){
@@ -7134,7 +7227,12 @@ function renderVariants(k){
   row.style.display='flex';
   B.color=v.colors[0][0];
   B.priceDelta=0;
-  B.variantSize=v.sizes[0][0];
+  B.variantModel=v.models?v.models[0][0]:'';
+  B.variantSize=availableVariantSizes(k,B.variantModel)[0][0];
+  var modelCol=document.getElementById('modelVariantCol');
+  var modelPills=document.getElementById('modelPills');
+  modelCol.style.display=v.models?'block':'none';
+  modelPills.innerHTML='';
   var cs=document.getElementById('colorSwatches');cs.innerHTML='';
   var sel=document.getElementById('colorSel');sel.textContent=v.colors[0][0];
   v.colors.forEach(function(c,i){
@@ -7153,27 +7251,44 @@ function renderVariants(k){
   });
   document.getElementById('sizeLabel').textContent=v.sizeLabel+'.';
   document.getElementById('sizeQ').textContent=v.sizeQ;
-  var sp=document.getElementById('sizePills');sp.innerHTML='';
-  v.sizes.forEach(function(s,i){
+  var sp=document.getElementById('sizePills');
+  function drawSizes(){
+    var sizes=availableVariantSizes(k,B.variantModel);
+    if(!sizes.some(function(size){return size[0]===B.variantSize}))B.variantSize=sizes[0][0];
+    sp.innerHTML='';
+    sizes.forEach(function(s,i){
+      var b=document.createElement('button');
+      b.type='button';
+      b.innerHTML=s[0]+(s[1]?'<small>'+(s[1]>0?'+':'')+money(s[1])+'</small>':(sizes.length>1?'<small>Included</small>':''));
+      b.className=s[0]===B.variantSize?'on':'';
+      b.onclick=function(){
+        sp.querySelectorAll('button').forEach(function(bb){bb.classList.remove('on')});
+        b.classList.add('on');
+        B.priceDelta=s[1];
+        B.variantSize=s[0];
+        var retailInput=document.getElementById('cuRetail');
+        if(retailInput){
+          retailInput.value=variantRetail(k,B.variantSize);
+          if(CU.template)cuApplyTemplate();
+        }
+        if(!CU.template){B.prices=suggest(k,B.slots);refreshBuild()}
+        renderBuildSpecs(k);
+      };
+      sp.appendChild(b);
+    });
+  }
+  if(v.models)v.models.forEach(function(model,i){
     var b=document.createElement('button');
-    b.type='button';
-    b.innerHTML=s[0]+(s[1]?'<small>'+(s[1]>0?'+':'')+money(s[1])+'</small>':(v.sizes.length>1?'<small>Included</small>':''));
-    b.className=i===0?'on':'';
+    b.type='button';b.textContent=model[0];b.className=i===0?'on':'';
     b.onclick=function(){
-      sp.querySelectorAll('button').forEach(function(bb){bb.classList.remove('on')});
-      b.classList.add('on');
-      B.priceDelta=s[1];
-      B.variantSize=s[0];
-      var retailInput=document.getElementById('cuRetail');
-      if(retailInput){
-        retailInput.value=variantRetail(k,B.variantSize);
-        if(CU.template)cuApplyTemplate();
-      }
+      modelPills.querySelectorAll('button').forEach(function(bb){bb.classList.remove('on')});
+      b.classList.add('on');B.variantModel=model[0];drawSizes();
       if(!CU.template){B.prices=suggest(k,B.slots);refreshBuild()}
       renderBuildSpecs(k);
     };
-    sp.appendChild(b);
+    modelPills.appendChild(b);
   });
+  drawSizes();
 }
 var SOCIAL_PLATFORMS=[
   {key:'x',label:'X',url:'https://x.com/',icon:'<path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817-5.965 6.817H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231L18.244 2.25Zm-1.161 17.52h1.833L7.084 4.126H5.117l11.966 15.644Z" fill="currentColor" stroke="none"/>'},
@@ -7472,6 +7587,8 @@ function renderBuildSpecs(k){
   var selectedColor=(B.type===k&&B.color)||(v&&v.colors[0][0])||sp.color;
   var selectedSize=(B.type===k&&B.variantSize)||(v&&v.sizes[0][0])||'';
   var option=variantOption(k,selectedSize);
+  var selectedModel=(B.type===k&&B.variantModel)||(v&&v.models&&v.models[0][0])||'';
+  var model=variantModelOption(k,selectedModel);
   var selectedRetail=variantRetail(k,selectedSize);
   var title=document.getElementById('buildSpecTitle');
   var price=document.getElementById('buildSpecPrice');
@@ -7484,6 +7601,7 @@ function renderBuildSpecs(k){
     var value=r[1];
     if(r[0]==='Color')value=selectedColor;
     if(option&&option[2]&&Object.prototype.hasOwnProperty.call(option[2],r[0]))value=option[2][r[0]];
+    if(model&&model[1]&&Object.prototype.hasOwnProperty.call(model[1],r[0]))value=model[1][r[0]];
     var tr=document.createElement('tr');
     tr.innerHTML='<td>'+r[0]+'</td><td>'+value+'</td>';
     table.appendChild(tr);
@@ -7575,7 +7693,8 @@ function cuDraw(){
   var fit=Math.min(1,availableWidth/iw,460/ih);
   var viewScale=fit*Math.max(0.5,Math.min(3,CU.zoom||1));
   cv.style.width=Math.max(1,Math.round(iw*viewScale))+'px';
-  cv.style.height=Math.max(1,Math.round(ih*viewScale))+'px';
+   cv.style.height=Math.max(1,Math.round(ih*viewScale))+'px';
+   cv.style.transform='translate3d('+(Math.round(CU.panX||0))+'px,'+(Math.round(CU.panY||0))+'px,0)';
   var g=cv.getContext('2d');
   g.clearRect(0,0,iw,ih);
   g.fillStyle='#fff';g.fillRect(0,0,iw,ih);
@@ -7715,7 +7834,7 @@ function cuInit(){
     rd.readAsDataURL(f);
   };
   var cv=document.getElementById('cuCanvas');
-  var DRAG=null;
+   var DRAG=null,PAN=null;
   function selUI(){
     var has=(CU.sel>=0&&CU.tiles[CU.sel]);
     document.getElementById('cuDel').style.display=has?'flex':'none';
@@ -7805,7 +7924,7 @@ function cuInit(){
     selUI();traceUI();cuDraw();
   }
   document.getElementById('cuZoomOut').onclick=function(){cuSetZoom((CU.zoom||1)-0.25)};
-  document.getElementById('cuZoomReset').onclick=function(){cuSetZoom(1)};
+   document.getElementById('cuZoomReset').onclick=function(){CU.panX=0;CU.panY=0;cuSetZoom(1)};
   document.getElementById('cuZoomIn').onclick=function(){cuSetZoom((CU.zoom||1)+0.25)};
   cv.addEventListener('wheel',function(e){
     if(!e.ctrlKey&&!e.metaKey)return;
@@ -7852,11 +7971,21 @@ function cuInit(){
         selUI();cuDraw();cv.setPointerCapture(e.pointerId);return;
       }
     }
-    CU.sel=-1;selUI();
-    cuDraw();
+     CU.sel=-1;selUI();
+     PAN={x:e.clientX,y:e.clientY,ox:CU.panX||0,oy:CU.panY||0};
+     cv.classList.add('is-panning');
+     cv.setPointerCapture(e.pointerId);
+     e.preventDefault();
+     cuDraw();
   });
   cv.addEventListener('pointermove',function(e){
-    var r=cv.getBoundingClientRect();
+     if(PAN){
+       CU.panX=PAN.ox+e.clientX-PAN.x;
+       CU.panY=PAN.oy+e.clientY-PAN.y;
+       cuDraw();
+       return;
+     }
+     var r=cv.getBoundingClientRect();
     var x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
     if(!DRAG&&CU.tracing&&CU.poly.length){
       CU.tracePointer=[x,y];cuDraw();return;
@@ -7881,10 +8010,19 @@ function cuInit(){
     }
     cuDraw();
   });
-  cv.addEventListener('pointerup',function(){
+   cv.addEventListener('pointerup',function(e){
+     if(PAN){
+       PAN=null;cv.classList.remove('is-panning');
+       if(cv.hasPointerCapture(e.pointerId))cv.releasePointerCapture(e.pointerId);
+       return;
+     }
     if(DRAG&&CU.tiles[DRAG.i]){nudgeOff(CU.tiles[DRAG.i],keepoutFor());cuDraw()}
     DRAG=null;
   });
+   cv.addEventListener('pointercancel',function(e){
+     PAN=null;DRAG=null;cv.classList.remove('is-panning');
+     if(cv.hasPointerCapture(e.pointerId))cv.releasePointerCapture(e.pointerId);
+   });
   cv.addEventListener('pointerleave',function(){if(CU.tracing&&CU.tracePointer){CU.tracePointer=null;cuDraw()}});
   cv.addEventListener('keydown',function(e){
     if(e.key==='Escape'&&CU.tracing){e.preventDefault();cancelTrace(true)}
@@ -8139,12 +8277,13 @@ function postListing(){
       termMonths:selectedTerm,termLocked:false,brandingMode:selectedBranding,status:'live',shipping:{}};
     CU.faces=[];cuFaceChips();
   }else{
-    l={id:uid(),type:B.type,owner:name,mail:mail,avatar:B.avatar,habs:B.habs.slice(),cities:B.cities.slice(),universities:B.universities.slice(),purpose:B.purpose.trim(),freq:B.freq,social:B.social,color:B.color,variantSize:B.variantSize,retail:variantRetail(B.type,B.variantSize),source:ITEMS[B.type].source,verified:ITEMS[B.type].verified,socialLinks:Object.assign({},B.socialLinks),slots:B.slots,
+    l={id:uid(),type:B.type,owner:name,mail:mail,avatar:B.avatar,habs:B.habs.slice(),cities:B.cities.slice(),universities:B.universities.slice(),purpose:B.purpose.trim(),freq:B.freq,social:B.social,color:B.color,variantModel:B.variantModel,variantSize:B.variantSize,retail:variantRetail(B.type,B.variantSize),source:ITEMS[B.type].source,verified:ITEMS[B.type].verified,socialLinks:Object.assign({},B.socialLinks),slots:B.slots,
       prices:B.prices.slice(),claims:B.prices.map(function(){return null}),created:Date.now(),postedAt:Date.now(),unsoldTimeoutDays:60,
       termMonths:selectedTerm,termLocked:false,brandingMode:selectedBranding,status:'live',shipping:{}};
   }
   DB.listings.unshift(l);
-  logAct('<b>'+name+'</b> posted a <b>'+LBLL(l)+'</b> &middot; '+l.slots+' spot'+(l.slots>1?'s':''));
+  logAct('<b>'+name+'</b> posted a <b>'+LBLL(l)+'</b> &middot; '+l.slots+' spot'+(l.slots>1?'s':''),
+    {kind:'post',listingId:l.id,owner:name,label:LBLL(l),spots:l.slots});
   saveDB();
   toast('Your item is live and unbranded');
   location.hash='item/'+l.id;
@@ -8181,6 +8320,7 @@ function mapTiles(type,n){
 }
 function migratePhoto(){
   DB.listings.forEach(function(l){
+    if((l.type==='suit'||l.type==='backpack')&&ITEM_PHOTOS[l.type]&&l.photo!==ITEM_PHOTOS[l.type])l.photo=ITEM_PHOTOS[l.type];
     if(l.custom&&l.mtv!==2&&ITEM_PHOTOS[l.type]&&!l.faces){
       var t2=mapTiles(l.type,l.slots);
       if(t2){l.tiles=t2;l.mtv=2}
@@ -8545,7 +8685,7 @@ function renderOwnerTools(){
   }
   if(!CUR.shippedAt){
     cb.innerHTML='<div class="fact"><span>Fulfillment</span><b>Ready for IRLi LLC shipment</b></div>'+
-      '<p class="finetext" style="margin:8px 0 12px">'+(CUR.brandingMode==='assisted'?'IRLi-applied branding has a 60-day delivery target.':'IRLi targets delivery in about 23 days. After delivery, the owner has 7 days to apply the approved branding and submit the first check-in.')+' Promised date: '+(CUR.promisedDeliveryAt?new Date(CUR.promisedDeliveryAt).toLocaleDateString():'being scheduled')+'.</p>'+
+      '<p class="finetext" style="margin:8px 0 12px">'+(CUR.brandingMode==='assisted'?'IRLi-applied branding has a 60-day delivery window.':'Once fully funded, the item is delivered in under 23 days. After delivery, the owner has a 7-day branding window to apply the approved branding and submit the first check-in.')+' Promised date: '+(CUR.promisedDeliveryAt?new Date(CUR.promisedDeliveryAt).toLocaleDateString():'being scheduled')+'.</p>'+
       '<button class="btn btn-primary btn-full" id="markShippedBtn" type="button">Mark item shipped to owner</button>'+
       '<button class="btn btn-outline btn-full" id="delayNoticeBtn" type="button" style="margin-top:8px">Send a delivery delay notice</button>'+
       (CUR.delayNotice?'<p class="finetext" style="margin:9px 0 0;color:#8A6D1D">Delay notice sent on '+new Date(CUR.delayNotice.sentAt).toLocaleDateString()+' · proposed date '+new Date(CUR.delayNotice.proposedAt).toLocaleDateString()+'</p>':'');
@@ -8731,9 +8871,9 @@ var HERO_SOURCE_FILES={
   golfbag:'hero/apple-golfbag.png',
   bottle:'hero/apple-bottle.png',
   case:'hero/apple-case.png',
-  suit:'hero/apple-suit.png',
+  suit:'hero/apple-suit.png?v=tomford-oconnor',
   cooler:'hero/apple-cooler.png',
-  backpack:'hero/apple-backpack.png',
+  backpack:'hero/apple-backpack.png?v=tumi-search-147053',
   paddle:'hero/apple-paddle.png',
   weekender:'hero/apple-weekender.png'
 };

@@ -15,7 +15,11 @@ test('removes the screenshot-only homepage and page headers', () => {
   assert.doesNotMatch(html, /font-size:clamp\(28px,4vw,40px\)[^>]*>Track my item</);
   assert.match(html, /class="home-bento"/);
   assert.match(html, /id="home-faq"/);
-  assert.match(html, />Asked and answered\.</);
+  assert.match(html, /class="faq-grid"/);
+  assert.match(html, /\.faq-grid\{[^}]*grid-template-rows:repeat\(5,auto\)[^}]*grid-auto-flow:column/);
+  assert.match(html, /@media\(max-width:640px\)\{\.faq-grid\{grid-template-columns:1fr;grid-template-rows:none;grid-auto-flow:row\}/);
+  assert.doesNotMatch(html, />Questions</);
+  assert.doesNotMatch(html, />Asked and answered\.</);
   assert.match(html, /home-flow-index">5<\/span><h3>Monthly check-in<\/h3>/);
   assert.match(html, /how-it-works-monthly-check-in\.png/);
   assert.match(html, /\.home-flow-icon\.photo\.monthly img\{object-fit:contain\}/);
@@ -31,4 +35,38 @@ test('uses transparent outline product art for category and item picker thumbnai
   assert.match(html, /\.cat\{display:flex;flex-direction:row;[^}]*border-radius:10px/);
   assert.match(html, /\.cat\.on\{background:var\(--bg\);color:var\(--fg\);border-color:var\(--border\);outline:none;box-shadow:none\}/);
   assert.match(html, /b\.innerHTML=catPhoto\?/);
+});
+
+test('dashboard filters use listing metadata and compose with displayed spot prices', () => {
+  assert.match(html, /\{id:'Event',item:'cooler'\}/);
+  assert.match(html, /\{id:'Custom',item:null\}/);
+  assert.match(html, /function listingCategory\(l\)\{\s+if\(l&&l\.type&&ITEMS\[l\.type\]\)return ITEMS\[l\.type\]\.cat;\s+return 'Custom';/);
+  assert.match(html, /var it=\{label:LBLL\(l\),cat:listingCategory\(l\)\}/);
+  assert.match(html, /function syncDashboardFilterState\(\)/);
+  assert.match(html, /function renderDash\(\)\{\s+syncDashboardFilterState\(\);/);
+  assert.match(html, /var mo=listingSpotPrice\(l\)/);
+  assert.match(html, /if\(F\.sort==='cheap'\)list\.sort\(function\(a,b\)\{return listingSpotPrice\(a\)-listingSpotPrice\(b\)\}\)/);
+});
+
+test('dashboard activity uses the same live ticker as the homepage', () => {
+  assert.match(html, /id="dashLiveFeed"/);
+  assert.match(html, /function renderLiveFeed\(feedId\)/);
+  assert.match(html, /function renderHomeLiveFeed\(\)\{renderLiveFeed\('homeLiveFeed'\)\}/);
+  assert.match(html, /function renderDashboardLiveFeed\(\)\{renderLiveFeed\('dashLiveFeed'\)\}/);
+  assert.match(html, /renderDashboardLiveFeed\(\);/);
+  assert.match(html, /function postActivityRows\(\)/);
+  assert.match(html, /\{kind:'post',listingId:l\.id,owner:name,label:LBLL\(l\),spots:l\.slots\}/);
+  assert.match(html, /\(DB\.activity\|\|\[\]\)\.forEach\(function\(a\)\{\s+if\(!a\.txt\)return;/);
+});
+
+test('fulfillment copy states the delivery and branding windows', () => {
+  assert.match(html, /\+10% fulfillment fee · 60-day delivery window/);
+  assert.match(html, /Delivered in under 23 days · 7-day branding window/);
+  assert.match(html, /Once fully funded, the item is delivered in under 23 days/);
+  assert.match(html, /IRLi-applied branding has a 60-day delivery window/);
+});
+
+test('sold and price pills keep the same compact height', () => {
+  assert.match(html, /\.lcard \.chips\{display:flex;align-items:flex-end;gap:5px/);
+  assert.match(html, /\.lcard \.chipg\.sold-count\{padding:4px 8px\}/);
 });
