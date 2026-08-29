@@ -188,6 +188,12 @@ h2.big{font-family:var(--serif);font-size:clamp(30px,3.8vw,42px);font-weight:500
 .spec-table td:last-child{font-weight:600}
 .build-product-layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(270px,.75fr);gap:20px;padding:20px;border-top:1px solid var(--border);align-items:start}
 .build-product-visual{min-width:0}
+.cu-viewport{max-width:100%;height:460px;overflow:auto;display:flex;align-items:flex-start;justify-content:center;background:#fff;border:1px solid rgba(60,60,67,.16);border-radius:14px}
+.cu-viewport canvas{flex:none;display:block;border-radius:14px;touch-action:none}
+.cu-zoom{display:flex;align-items:center;justify-content:center;gap:6px;margin:8px 0 0}
+.cu-zoom button{height:30px;min-width:30px;padding:0 9px;border:1px solid rgba(60,60,67,.18);border-radius:8px;background:#fff;color:#3f3f46;font-size:13px;font-weight:600}
+.cu-zoom button:hover{background:#f5f5f7}
+.cu-zoom-label{min-width:48px;text-align:center;color:#6e6e73;font-size:12px;font-weight:600}
 .build-spec-card{height:100%;border:1px solid var(--border);border-radius:20px;background:var(--bg);overflow:hidden}
 .build-spec-card .card-h{padding:20px 20px 14px}
 .build-spec-card .card-c{padding:6px 20px 20px}
@@ -726,8 +732,14 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
             <div class="build-product-visual">
               <input type="file" id="cuPhoto" accept="image/*" style="display:none">
               <div class="upl" id="cuUpl" style="display:none">Upload a photo of your item &middot; trace where ads may go</div>
-              <div id="cuWrap" style="display:none">
-                <canvas id="cuCanvas" style="max-width:100%;max-height:460px;width:auto;height:auto;display:block;margin:0 auto;border-radius:14px;touch-action:none;background:#fff;border:1px solid rgba(60,60,67,.16)"></canvas>
+               <div id="cuWrap" style="display:none">
+                 <div class="cu-viewport" id="cuViewport"><canvas id="cuCanvas" width="1" height="1"></canvas></div>
+                 <div class="cu-zoom" role="toolbar" aria-label="Photo zoom controls">
+                   <button id="cuZoomOut" type="button" title="Zoom out" aria-label="Zoom out">&minus;</button>
+                   <span class="cu-zoom-label" id="cuZoomLabel">100%</span>
+                   <button id="cuZoomReset" type="button" title="Fit photo to editor" aria-label="Fit photo to editor">Fit</button>
+                   <button id="cuZoomIn" type="button" title="Zoom in" aria-label="Zoom in">+</button>
+                 </div>
                 <div id="cuFaces" style="display:none;gap:6px;margin:8px 0"></div>
                 <p class="finetext" id="cuHint">Ad space is pre-placed for you. Drag any box to move it, or use the tools below to add your own.</p>
                 <div class="toolbox" role="toolbar" aria-label="Box editing tools">
@@ -6710,7 +6722,7 @@ function renderBuildSpecs(k){
   });
 }
 /* ============ CUSTOM ITEM: photo + trace ============ */
-var CU={img:null,photo:null,poly:[],closed:false,tiles:[],prices:[],mixed:true,retail:0,faces:[],shape:'rect',color:'#1D1D1F',tracing:false,sel:-1};
+var CU={img:null,photo:null,poly:[],closed:false,tiles:[],prices:[],mixed:true,retail:0,faces:[],shape:'rect',color:'#1D1D1F',tracing:false,sel:-1,zoom:1};
 var FACE_NAMES=['Front','Back','Left','Right'];
 function cuFaceChips(){
   var el=document.getElementById('cuFaces');if(!el)return;
@@ -6831,6 +6843,12 @@ function cuDraw(){
   if(!cv||!CU.img)return;
   var iw=CU.img.width,ih=CU.img.height;
   cv.width=iw;cv.height=ih;
+  var viewport=document.getElementById('cuViewport');
+  var availableWidth=viewport?Math.max(280,viewport.clientWidth-4):760;
+  var fit=Math.min(1,availableWidth/iw,460/ih);
+  var viewScale=fit*Math.max(0.5,Math.min(3,CU.zoom||1));
+  cv.style.width=Math.max(1,Math.round(iw*viewScale))+'px';
+  cv.style.height=Math.max(1,Math.round(ih*viewScale))+'px';
   var g=cv.getContext('2d');
   g.clearRect(0,0,iw,ih);
   g.fillStyle='#fff';g.fillRect(0,0,iw,ih);
@@ -6877,6 +6895,12 @@ function cuDraw(){
       g.fillRect(rx+rw/2-hs/2,ry+rh-hs/2,hs,hs);          /* bottom edge: height */
     }
   });
+}
+function cuSetZoom(value){
+  CU.zoom=Math.max(0.5,Math.min(3,Math.round(value*10)/10));
+  cuDraw();
+  var label=document.getElementById('cuZoomLabel');
+  if(label)label.textContent=Math.round(CU.zoom*100)+'%';
 }
 function renderCustomStage(el,l,onTap){
   el.innerHTML='';
@@ -6936,6 +6960,7 @@ function cuInit(){
         CU.photo=cuKnockout(im);
         var im2=new Image();
         im2.onload=function(){CU.img=im2;CU.template=null;CU.poly=[];CU.closed=false;CU.tiles=[];CU.prices=[];
+           CU.zoom=1;
           document.getElementById('cuWrap').style.display='block';
           upl.textContent='Photo loaded &middot; trace the ad area below';
           cuDraw()};
@@ -6963,6 +6988,14 @@ function cuInit(){
     CU.poly=[];
     cuDraw();
   }
+  document.getElementById('cuZoomOut').onclick=function(){cuSetZoom((CU.zoom||1)-0.25)};
+  document.getElementById('cuZoomReset').onclick=function(){cuSetZoom(1)};
+  document.getElementById('cuZoomIn').onclick=function(){cuSetZoom((CU.zoom||1)+0.25)};
+  cv.addEventListener('wheel',function(e){
+    if(!e.ctrlKey&&!e.metaKey)return;
+    e.preventDefault();
+    cuSetZoom((CU.zoom||1)+(e.deltaY<0?0.1:-0.1));
+  },{passive:false});
   cv.addEventListener('pointerdown',function(e){
     if(!CU.img)return;
     var r=cv.getBoundingClientRect();
@@ -7170,7 +7203,10 @@ function cuComposeAngles(list,done){
         var cv=document.createElement('canvas');cv.width=W;cv.height=CH;
         var g=cv.getContext('2d');
         g.fillStyle='#fff';g.fillRect(0,0,W,CH);
-        imgs.forEach(function(im2,k){g.drawImage(im2,k*CH,0,CH,CH)});
+        imgs.forEach(function(im2,k){
+          var fit=Math.min(CH/im2.width,CH/im2.height),dw=im2.width*fit,dh=im2.height*fit;
+          g.drawImage(im2,k*CH+(CH-dw)/2,(CH-dh)/2,dw,dh);
+        });
         g.strokeStyle='rgba(60,60,67,0.12)';g.lineWidth=2;
         for(var k=1;k<list.length;k++){g.beginPath();g.moveTo(k*CH,CH*0.10);g.lineTo(k*CH,CH*0.90);g.stroke()}
         g.fillStyle='#8e8e93';g.textAlign='center';g.font='600 22px Inter,sans-serif';
@@ -7189,11 +7225,13 @@ function cuPickTemplate(t){
   /* front photo only for now -- no side or back angles */
   CU.angles=[['Front',ITEM_PHOTOS[t]]];
   document.getElementById('cuRetail').value=ITEMS[t].retail;
-  cuComposeAngles(CU.angles,function(im,url){
-    CU.img=im;CU.photo=url;
+  var im=new Image();
+  im.onload=function(){
+    CU.img=im;CU.photo=CU.angles[0][1];CU.zoom=1;
     document.getElementById('cuWrap').style.display='block';
     cuApplyTemplate();
-  });
+  };
+  im.src=CU.angles[0][1];
 }
 function tmplInit(){
   var c=document.getElementById('tCat');if(!c||c._wired)return;c._wired=1;
