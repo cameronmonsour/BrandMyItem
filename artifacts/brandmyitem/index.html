@@ -151,7 +151,7 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;pointer-events:none}
 .lid-suit:before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);border-left:56px solid transparent;border-right:56px solid transparent;border-top:120px solid #F4F6F9;opacity:.92}
 
 /* home hero */
-.bighero{position:relative;background:#F5F5F7;color:var(--fg);height:min(100vh,900px);min-height:680px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.bighero{position:relative;background:#F5F5F7;color:var(--fg);height:min(calc(100vh - 104px),900px);min-height:600px;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .bighero:before,.bighero:after{content:'';position:absolute;top:0;bottom:0;width:0;border-left:1px dashed rgba(14,27,38,.22)}
 .bighero:before{left:13%}
 .bighero:after{right:13%}
@@ -520,7 +520,7 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
 .foot .disc{font-size:12px}
 
 @media(max-width:900px){
-  .bighero{height:min(92vh,760px);min-height:640px}
+  .bighero{height:min(calc(100vh - 104px),760px);min-height:560px}
   .bighero:before{left:6%}
   .bighero:after{right:6%}
   .nav .navchip{display:none}
@@ -585,15 +585,15 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
       </div>
     </div>
 
+    <section class="band" id="home-live-section" style="padding-top:10px">
+      <div class="home-live-feed" id="homeLiveFeed"></div>
+    </section>
+
     <section class="band" id="home-campaigns-section" style="padding-top:0">
       <div class="home-section-head">
         <a class="btn btn-secondary" href="#dashboard">View all campaigns</a>
       </div>
       <div class="home-campaign-grid" id="homeCampaignGrid"></div>
-    </section>
-
-    <section class="band" id="home-live-section" style="padding-top:10px">
-      <div class="home-live-feed" id="homeLiveFeed"></div>
     </section>
 
     <section class="band" style="padding-top:10px" id="home-onboard">
