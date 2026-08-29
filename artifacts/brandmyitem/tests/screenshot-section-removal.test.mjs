@@ -19,6 +19,8 @@ test('removes the screenshot-only homepage and page headers', () => {
   assert.match(html, /home-flow-index">5<\/span><h3>Monthly check-in<\/h3>/);
   assert.match(html, /how-it-works-monthly-check-in\.png/);
   assert.match(html, /\.home-flow-icon\.photo\.monthly img\{object-fit:contain\}/);
+  assert.match(html, /\.home-flow\{position:relative;margin:0 auto 48px/);
+  assert.match(html, /\.home-flow-step:nth-child\(3\)\{transform:translateY\(10px\)\}/);
 });
 
 test('uses transparent outline product art for category and item picker thumbnails', () => {

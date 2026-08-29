@@ -826,11 +826,12 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
 
 /* Homepage model explainer */
 .home-model-head{max-width:760px;text-align:center;margin:0 auto 46px}
-.home-flow{position:relative;margin:0 auto 168px;padding:12px 0 0}
+.home-flow{position:relative;margin:0 auto 48px;padding:12px 0 0}
 .home-flow-line{display:none}
 .home-flow-list{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px;list-style:none;margin:0;padding:0;position:relative}
 .home-flow-step{text-align:center;min-width:0}
-.home-flow-step:nth-child(2),.home-flow-step:nth-child(4){padding-top:28px}
+.home-flow-step:nth-child(2),.home-flow-step:nth-child(4){transform:translateY(6px)}
+.home-flow-step:nth-child(3){transform:translateY(10px)}
 .home-flow-icon{width:82px;height:82px;margin:0 auto 18px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--fg);color:var(--bg);box-shadow:0 0 0 8px var(--bg);position:relative}
 .home-flow-icon.photo{width:154px;height:126px;margin-bottom:4px;border:0;border-radius:0;background:transparent;box-shadow:none;overflow:hidden}
 .home-flow-icon.photo img{display:block;width:100%;height:100%;object-fit:cover;border-radius:0}
@@ -872,10 +873,10 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
 @keyframes bentoProduct{0%,100%{transform:rotate(-1.8deg)}50%{transform:rotate(1.8deg)}}
 .home-model-note{max-width:790px;margin:28px auto 0;text-align:center}
 @media(max-width:900px){
-  .home-flow{margin-bottom:116px}
+  .home-flow{margin-bottom:48px}
   .home-flow-line{display:none}
   .home-flow-list{grid-template-columns:1fr;gap:0;max-width:620px;margin:0 auto}
-  .home-flow-step,.home-flow-step:nth-child(2),.home-flow-step:nth-child(4){display:grid;grid-template-columns:72px minmax(0,1fr);column-gap:18px;text-align:left;padding:0 0 30px;position:relative}
+  .home-flow-step,.home-flow-step:nth-child(2),.home-flow-step:nth-child(4){display:grid;grid-template-columns:72px minmax(0,1fr);column-gap:18px;text-align:left;padding:0 0 30px;position:relative;transform:none}
   .home-flow-step:not(:last-child):after{display:none}
   .home-flow-icon{grid-row:1/4;width:70px;height:70px;margin:0;box-shadow:0 0 0 6px var(--bg)}
   .home-flow-icon.photo{width:108px;height:88px;margin:0 0 0 -18px;box-shadow:none}
