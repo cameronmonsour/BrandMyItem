@@ -585,24 +585,15 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
       </div>
     </div>
 
-    <section class="band" id="home-live-section" style="padding-top:10px">
-      <div class="home-section-head">
-        <div class="band-head">
-          <div class="eyebrow">Live now</div>
-        </div>
-        <span class="badge badge-ok"><span class="pulse"></span> LIVE</span>
-      </div>
-      <div class="home-live-feed" id="homeLiveFeed"></div>
-    </section>
-
     <section class="band" id="home-campaigns-section" style="padding-top:0">
       <div class="home-section-head">
-        <div class="band-head">
-          <div class="eyebrow">For brands</div>
-        </div>
         <a class="btn btn-secondary" href="#dashboard">View all campaigns</a>
       </div>
       <div class="home-campaign-grid" id="homeCampaignGrid"></div>
+    </section>
+
+    <section class="band" id="home-live-section" style="padding-top:10px">
+      <div class="home-live-feed" id="homeLiveFeed"></div>
     </section>
 
     <section class="band" style="padding-top:10px" id="home-onboard">
@@ -791,9 +782,8 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
         <div class="mapcap" style="display:none">Prices are editable right on each spot.</div>
       </div>
       <div class="panel">
-        <div class="card brand-profile-card"><div class="card-h"><div class="card-t">Why brands should brand this item</div><div class="card-d">Show brands why this item, its owner, and its everyday context are worth being part of.</div></div>
+        <div class="card brand-profile-card"><div class="card-h"><div class="card-t">Why brands should brand this item</div></div>
         <div class="card-c" style="padding-top:12px">
-          <div class="brand-profile-intro"><b>Make the brand fit obvious.</b> Share where the item travels, what it is used for, and how people can verify the person behind it.</div>
           <div class="directory-section">
             <div class="directory-title">Most visited cities <span class="muted">(up to 3)</span></div>
             <p class="directory-help">Search the location directory, then add the cities where brands will see this item most often.</p>
@@ -803,7 +793,6 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
             </div>
             <datalist id="cityOptions"></datalist>
             <div class="location-chips" id="cityChips"></div>
-            <div class="location-limit">Choose up to three cities.</div>
           </div>
           <div class="directory-section">
             <div class="directory-title">Universities <span class="muted">(up to 3)</span></div>
@@ -814,7 +803,6 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
             </div>
             <datalist id="universityOptions"></datalist>
             <div class="location-chips" id="universityChips"></div>
-            <div class="location-limit">Choose up to three universities.</div>
           </div>
           <div class="directory-section">
           <div class="label">Everyday settings</div>
