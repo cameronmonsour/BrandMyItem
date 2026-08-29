@@ -259,9 +259,9 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .lcard .who .catic{margin-left:auto;width:26px;height:26px;border-radius:50%;background:#fff;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden}
 .lcard .who .catic img{width:80%;height:80%;object-fit:contain}
 .lcard .iname{font-size:16px;font-weight:600;letter-spacing:-.012em;margin-bottom:6px}
-.lcard .card-context{display:flex;align-items:center;gap:6px;min-width:0;margin:0 0 9px;font-size:11.5px;line-height:1.25;color:var(--mfg)}
-.lcard .card-context-label{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;flex-shrink:0}
+.lcard .card-context{display:flex;align-items:center;min-width:0;margin:0 0 9px;font-size:11.5px;line-height:1.25;color:var(--mfg)}
 .lcard .card-context-value{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lcard .card-context-em{color:var(--fg);font-weight:600}
 .lcard .moneyrow{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .lcard .moneyrow .amts{font-size:15.5px;font-weight:600;font-variant-numeric:tabular-nums}
 .lcard .moneyrow .amts span{color:#A6B0BA;font-weight:500}
@@ -5073,6 +5073,16 @@ var DEMO_BIDDERS={
   'NetGain':{brand:'PayPal',link:'https://www.paypal.com',logo:'logos/paypal.svg'},
   'Fairway+':{brand:'Twitch',link:'https://www.twitch.tv',logo:'logos/twitch.svg'}
 };
+var DEMO_CONTEXT={
+  demo1:{social:'10K\u2013100K',cities:['Los Angeles, CA'],universities:['UCLA']},
+  demo2:{social:'1K\u201310K',cities:['Miami, FL']},
+  demo3:{social:'100K+',cities:['New York, NY'],universities:['New York University']},
+  demo4:{social:'10K\u2013100K',cities:['Los Angeles, CA'],universities:['University of Southern California']},
+  demo5:{social:'100K+',cities:['San Francisco, CA'],universities:['Stanford University']},
+  demo6:{social:'1K\u201310K',cities:['Seattle, WA'],universities:['University of Washington']},
+  demo7:{social:'10K\u2013100K',cities:['Austin, TX'],universities:['University of Texas at Austin']},
+  demo8:{social:'1K\u201310K',cities:['Toronto, ON'],universities:['University of Toronto']}
+};
 (function upgradeDemoBidders(){
   var changed=false,replacements={};
   Object.keys(DEMO_BIDDERS).forEach(function(oldName){replacements[oldName]=DEMO_BIDDERS[oldName].brand});
@@ -5089,6 +5099,17 @@ var DEMO_BIDDERS={
     });
     store.set('bmi_db4',DB);
   }
+})();
+(function upgradeDemoContext(){
+  var changed=false;
+  Object.keys(DEMO_CONTEXT).forEach(function(id){
+    var l=(DB.listings||[]).find(function(item){return item.id===id}),ctx=DEMO_CONTEXT[id];
+    if(!l)return;
+    if(!l.social){l.social=ctx.social;changed=true}
+    if(!Array.isArray(l.cities)||!l.cities.length){l.cities=ctx.cities.slice();changed=true}
+    if(ctx.universities&&(!Array.isArray(l.universities)||!l.universities.length)){l.universities=ctx.universities.slice();changed=true}
+  });
+  if(changed)store.set('bmi_db4',DB);
 })();
 function saveDB(){store.set('bmi_db4',DB);cloudPush()}
 /* ============ SHARED DATABASE (artifact storage) ============ */
@@ -5251,11 +5272,14 @@ function sponsorLogoStack(l){
 }
 function listingContextHtml(l){
   var parts=[];
-  (l.cities||[]).slice(0,2).forEach(function(v){if(v&&!parts.includes(v))parts.push(v)});
-  (l.universities||[]).slice(0,1).forEach(function(v){if(v&&!parts.includes(v))parts.push(v)});
-  if(parts.length<2)(l.habs||[]).slice(0,2).forEach(function(v){if(v&&!parts.includes(v))parts.push(v)});
+  var locations=[];
+  (l.cities||[]).slice(0,2).forEach(function(v){if(v&&!locations.includes(v))locations.push(v)});
+  (l.universities||[]).slice(0,1).forEach(function(v){if(v&&!locations.includes(v))locations.push(v)});
+  if(!locations.length)(l.habs||[]).slice(0,2).forEach(function(v){if(v&&!locations.includes(v))locations.push(v)});
+  if(l.social)parts.push('<span class="card-context-em">'+safeCardText(l.social)+' followers</span>');
+  locations.slice(0,2).forEach(function(v){parts.push(safeCardText(v))});
   if(!parts.length)return '';
-  return '<div class="card-context"><span class="card-context-label">Seen in</span><span class="card-context-value">'+safeCardText(parts.slice(0,3).join(' · '))+'</span></div>';
+  return '<div class="card-context" aria-label="'+safeCardText(parts.map(function(v){return v.replace(/<[^>]+>/g,'')}).join(' · '))+'"><span class="card-context-value">'+parts.join(' <span aria-hidden="true">&middot;</span> ')+'</span></div>';
 }
 function renderSpotMap(el,st){if(el)el.innerHTML='';return}
 function renderSpotMap_DEAD(el,st,opts){
