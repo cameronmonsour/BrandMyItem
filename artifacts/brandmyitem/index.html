@@ -345,6 +345,17 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .track-submit-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .track-submit .upl{min-height:72px;margin:0}
 .track-submit .btn{margin-top:14px}
+.track-order{overflow:hidden}
+.track-order>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:14px;padding:18px 22px;transition:background .15s}
+.track-order>summary::-webkit-details-marker{display:none}
+.track-order>summary:hover{background:var(--wash)}
+.track-order>summary:focus-visible{outline:2px solid #1D1D1F;outline-offset:-2px}
+.track-order-summary-copy{flex:1;min-width:0}
+.track-order-title{font-size:16px;font-weight:700;line-height:1.25}
+.track-order-meta{font-size:13px;color:#6e6e73;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:3px}
+.track-order-chevron{width:24px;height:24px;border-radius:50%;background:var(--wash);display:flex;align-items:center;justify-content:center;color:#6e6e73;font-size:18px;line-height:1;transition:transform .2s}
+.track-order[open] .track-order-chevron{transform:rotate(180deg)}
+.track-order-content{border-top:1px solid var(--border);padding:22px}
 @media(max-width:620px){.track-submit-grid{grid-template-columns:1fr}}
 @media(max-width:640px){.itempick-nav{display:none}.itemcard{width:132px}}
 .toolbox{display:flex;align-items:center;gap:4px;flex-wrap:wrap;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:5px;margin:10px 0}
@@ -6881,12 +6892,14 @@ function trackCardHtml(l,c){
     steps.push({done:!!ci,active:!ci&&funded&&i===checkins.length,label:'Month '+(i+1)+' check-in',sub:ci?('Photo received '+new Date(ci.date).toLocaleDateString()):'Not yet submitted'});
   }
   var badge=ESCROW_LABEL[c.escrow]||'Held';
-  return '<div class="card"><div class="card-c" style="padding:22px">'+
-      '<div style="display:flex;gap:14px;align-items:center;margin-bottom:22px">'+
-        (photo?'<img src="'+photo+'" style="width:56px;height:56px;object-fit:contain;background:#fff;border:1px solid var(--border);border-radius:12px;flex-shrink:0">':'')+
-        '<div style="flex:1;min-width:0"><div style="font-weight:700;font-size:16px">'+LBLL(l)+'</div><div style="font-size:13px;color:#6e6e73">'+c.brand+' \u00b7 Posted by '+l.owner+' \u00b7 '+c.subId+'</div></div>'+
+  return '<details class="card track-order">'+
+      '<summary class="track-order-summary">'+
+        (photo?'<img src="'+photo+'" style="width:56px;height:56px;object-fit:contain;background:#fff;border:1px solid var(--border);border-radius:12px;flex-shrink:0" alt="">':'')+
+        '<div class="track-order-summary-copy"><div class="track-order-title">'+LBLL(l)+'</div><div class="track-order-meta">'+c.brand+' \u00b7 '+c.subId+'</div></div>'+
         '<span class="escrow-badge '+(c.escrow||'held')+'">'+badge+'</span>'+
-      '</div>'+
+        '<span class="track-order-chevron" aria-hidden="true">&#8964;</span>'+
+      '</summary>'+
+      '<div class="track-order-content">'+
       '<div class="track-timeline">'+steps.map(function(s){
         return '<div class="track-step '+(s.done?'done':(s.active?'active':''))+'"><div class="track-dot"></div><div class="track-line"></div><div class="track-body"><b>'+s.label+'</b><span>'+s.sub+'</span></div></div>';
       }).join('')+'</div>'+
@@ -6902,7 +6915,7 @@ function trackCardHtml(l,c){
           '<div>Owner identity verified <b style="float:right">'+(l.ownerVerified?'Yes':'Not yet')+'</b></div>'+
         '</div>'+
       '</details>'+
-    '</div></div>';
+    '</div></details>';
 }
 function showItem(id){
   CUR=DB.listings.filter(function(l){return l.id===id})[0];
