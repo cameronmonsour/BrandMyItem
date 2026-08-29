@@ -415,6 +415,12 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .habs{display:flex;gap:8px;flex-wrap:wrap}
 .habs button{font-size:13px;font-weight:500;padding:7px 13px;border-radius:999px;border:1px solid var(--border);color:var(--mfg)}
 .habs button.on{background:#1D1D1F;border-color:#1D1D1F;color:#fff}
+.brand-profile-intro{padding:12px 14px;border-radius:14px;background:var(--wash2);color:var(--mfg);font-size:13px;line-height:1.55;margin-bottom:18px}
+.brand-profile-intro b{color:var(--fg);font-weight:600}
+.brand-profile-card .label{margin-top:16px}
+.brand-profile-card .label:first-of-type{margin-top:0}
+.brand-profile-card .finetext{margin:7px 0 10px}
+.profile-purpose{height:auto;min-height:78px;padding:11px 13px;line-height:1.45;resize:vertical}
 .fact{display:flex;justify-content:space-between;font-size:14px;padding:8px 0;border-bottom:1px solid var(--border)}
 .fact:last-child{border:none}
 .fact span{color:var(--mfg)}
@@ -424,7 +430,16 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .total .t2{font-size:24px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 
 /* item page extras */
-.itemgrid2{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:20px 0 90px}
+.itemgrid2{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:20px 0 14px}
+.brand-fit-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.brand-fit-stat{padding:13px 14px;border:1px solid var(--border);border-radius:13px;background:var(--wash2)}
+.brand-fit-stat span{display:block;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--mfg);margin-bottom:5px}
+.brand-fit-stat b{display:block;font-size:14px;line-height:1.4}
+.brand-social-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.brand-social-links a{display:inline-flex;align-items:center;gap:7px;padding:8px 11px;border:1px solid var(--border);border-radius:999px;font-size:13px;font-weight:600;background:var(--bg)}
+.brand-social-links a:hover{background:var(--wash)}
+.brand-social-links svg{width:14px;height:14px}
+.brand-social-links .finetext{margin:0}
 .backlnk{display:inline-block;margin:16px 0 0;font-size:13.5px;font-weight:500;color:var(--mfg)}
 .backlnk:hover{color:var(--fg)}
 .raise{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
@@ -472,6 +487,7 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
   .item3d{transform:rotateX(10deg) rotateY(-20deg) scale(.62)!important}
   .finalwrap{min-height:330px}
 }
+@media(max-width:620px){.brand-fit-grid{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -722,15 +738,22 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
         <div class="mapcap" style="display:none">Prices are editable right on each spot.</div>
       </div>
       <div class="panel">
-        <div class="card"><div class="card-h"><div class="card-t">Where it lives</div></div>
+        <div class="card brand-profile-card"><div class="card-h"><div class="card-t">Why brands should brand this item</div><div class="card-d">Show brands why this item, its owner, and its everyday context are worth being part of.</div></div>
         <div class="card-c" style="padding-top:12px">
+          <div class="brand-profile-intro"><b>Make the brand fit obvious.</b> Share where the item travels, what it is used for, and how people can verify the person behind it.</div>
+          <div class="label">Most used locations</div>
           <div class="habs" id="habs"></div>
-          <div class="label" style="margin-top:16px">How often</div>
+          <div class="field" style="margin:18px 0 0">
+            <label class="label" for="purposeInput">Purpose of the item</label>
+            <textarea class="input profile-purpose" id="purposeInput" maxlength="180" placeholder="Daily work in coffee shops, client meetings, and travel."></textarea>
+            <p class="finetext">Tell brands what this item helps you do and why it is a meaningful place for their logo.</p>
+          </div>
+          <div class="label">How often it is seen</div>
           <div class="habs" id="freqPills"></div>
-          <div class="label" style="margin-top:16px">Social following</div>
+          <div class="label">Social following</div>
           <div class="habs" id="socialPills"></div>
-          <div class="label" style="margin-top:16px">Link your accounts</div>
-          <p class="finetext" style="margin:0 0 10px">Add your handles so brands can check your reach themselves &mdash; we don&rsquo;t pull follower counts automatically.</p>
+          <div class="label">Verify identity and reach</div>
+          <p class="finetext" style="margin:0 0 10px">Link public profiles so brands can verify you&rsquo;re the person using the item and review your real audience. We never pull follower counts automatically.</p>
           <div class="social-connect" id="socialConnect"></div>
         </div></div>
         <div class="card"><div class="card-h"><div class="card-t">The deal</div></div>
@@ -776,6 +799,17 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
       <div class="card"><div class="card-h"><div class="card-t">The spots</div><div class="card-d">Exact prices, first come, first served. A 20% platform fee is added at checkout.</div></div>
       <div class="card-c" style="padding-top:10px;font-size:13.5px;color:var(--mfg);line-height:1.6" id="spotSummary"></div></div>
     </div>
+     <div class="card brand-fit-card" style="margin-top:14px">
+       <div class="card-h"><div class="card-t">Why brands should brand this item</div><div class="card-d">The person, purpose, and places behind the placement.</div></div>
+       <div class="card-c" style="padding-top:14px">
+         <div class="brand-fit-grid">
+           <div class="brand-fit-stat"><span>Most used locations</span><b id="iBrandLocations"></b></div>
+           <div class="brand-fit-stat"><span>Purpose</span><b id="iPurpose"></b></div>
+           <div class="brand-fit-stat"><span>Social following</span><b id="iSocial"></b></div>
+         </div>
+         <div id="iSocialLinks" class="brand-social-links"></div>
+       </div>
+     </div>
     <div class="card" style="margin-top:14px" id="ledgerCard">
       <div class="card-h"><div class="card-t">Escrow ledger</div><div class="card-d">Where every dollar sits right now.</div></div>
       <div class="card-c" style="padding-top:6px">
@@ -6158,7 +6192,7 @@ function renderDash(){
 }
 
 /* ============ BUILD ============ */
-var B={type:'macbook',slots:4,prices:[],habs:['Coffee shops'],freq:'Daily',social:'1K\u201310K',socialLinks:{}};
+var B={type:'macbook',slots:4,prices:[],habs:['Coffee shops'],purpose:'',freq:'Daily',social:'1K\u201310K',socialLinks:{}};
 function renderVariants(k){
   var v=ITEM_VARIANTS[k];
   var row=document.getElementById('variantsRow');
@@ -6310,6 +6344,11 @@ function showBuild(){
     };
     sb.appendChild(b);
   });
+  var purposeInput=document.getElementById('purposeInput');
+  if(purposeInput){
+    purposeInput.value=B.purpose||'';
+    purposeInput.oninput=function(){B.purpose=this.value.trim()};
+  }
   renderSocialConnect();
   cuPickTemplate(B.type);
   document.getElementById('slotMinus').onclick=function(){if(B.slots>1){B.slots--;B.prices=suggest(B.type,B.slots);refreshBuild();cuRepart()}};
@@ -6884,11 +6923,11 @@ function postListing(){
     pool.order.forEach(function(o,rank){prices[facesOut[o.fi].off+o.i]=pool.prices[rank]});
     var mdl=(document.getElementById('tModel')||{value:''}).value.trim();
     l={id:uid(),type:'custom',custom:true,photo:CU.faces[0].photo,faces:facesOut,tiles:CU.faces[0].tiles,
-      retail:retail,title:mdl||null,owner:name,mail:mail,habs:B.habs.slice(),freq:B.freq,social:B.social,color:B.color,socialLinks:Object.assign({},B.socialLinks),slots:flatTiles.length,
+      retail:retail,title:mdl||null,owner:name,mail:mail,habs:B.habs.slice(),purpose:B.purpose.trim(),freq:B.freq,social:B.social,color:B.color,socialLinks:Object.assign({},B.socialLinks),slots:flatTiles.length,
       prices:prices,claims:prices.map(function(){return null}),created:Date.now()};
     CU.faces=[];cuFaceChips();
   }else{
-    l={id:uid(),type:B.type,owner:name,mail:mail,habs:B.habs.slice(),freq:B.freq,social:B.social,color:B.color,socialLinks:Object.assign({},B.socialLinks),slots:B.slots,
+    l={id:uid(),type:B.type,owner:name,mail:mail,habs:B.habs.slice(),purpose:B.purpose.trim(),freq:B.freq,social:B.social,color:B.color,socialLinks:Object.assign({},B.socialLinks),slots:B.slots,
       prices:B.prices.slice(),claims:B.prices.map(function(){return null}),created:Date.now()};
   }
   DB.listings.unshift(l);
@@ -7195,6 +7234,19 @@ function refreshItemCards(){
   document.getElementById('iTag').innerHTML='<span class="badge '+(pct>=100?'badge-ok':'badge-sec')+'">'+(pct>=100?'BRANDED':'UNBRANDED')+'</span>';
   document.getElementById('iWho').textContent='Posted by '+CUR.owner;
   document.getElementById('iHab').textContent=[CUR.habs.join(' \u00b7 '),CUR.freq,CUR.social&&(CUR.social+' followers')].filter(Boolean).join(' \u00b7 ');
+  var locEl=document.getElementById('iBrandLocations'),purposeEl=document.getElementById('iPurpose'),socialEl=document.getElementById('iSocial'),linksEl=document.getElementById('iSocialLinks');
+  if(locEl)locEl.textContent=(CUR.habs&&CUR.habs.length?CUR.habs.join(' · '):'Not provided');
+  if(purposeEl)purposeEl.textContent=CUR.purpose||'The owner has not added a purpose statement yet.';
+  if(socialEl)socialEl.textContent=CUR.social?CUR.social+' followers':'Not provided';
+  if(linksEl){
+    var linked=SOCIAL_PLATFORMS.filter(function(p){return CUR.socialLinks&&CUR.socialLinks[p.key]});
+    linksEl.innerHTML=linked.length?'<span class="finetext" style="align-self:center">Verify the owner on</span>'+linked.map(function(p){
+      var handle=CUR.socialLinks[p.key];
+      return '<a href="'+p.url+handle+'" target="_blank" rel="noopener">'+
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">'+p.icon+'</svg>'+
+        p.label+' @'+handle+'</a>';
+    }).join(''):'<p class="finetext">No public profiles linked yet.</p>';
+  }
   document.getElementById('iCad').textContent=cadence(RETL(CUR));
   var claimed=CUR.slots-openSlots(CUR);
   document.getElementById('spotSummary').innerHTML=
