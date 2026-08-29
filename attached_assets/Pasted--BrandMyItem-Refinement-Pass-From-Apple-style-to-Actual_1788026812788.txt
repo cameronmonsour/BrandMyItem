@@ -1,0 +1,63 @@
+# BrandMyItem — Refinement Pass: From "Apple-style" to Actually Jony Ive
+
+The first build is a solid, functional v1 — structure, layout, and copy are all in the right place. What's missing is the specific thing that makes Ive-era Apple design read as inevitable rather than decorated: **extreme reduction, restraint in motion, and letting the object be the hero instead of an icon standing in for it.** Below is exactly what that means as concrete changes, not mood-board language.
+
+---
+
+## The core principle to apply everywhere below
+
+Ive's actual design discipline was never "make it clean" as a style choice — it was **remove everything that isn't the point, then remove some more.** Every fix below is an application of that one idea. If a change doesn't make something disappear (an icon, a word, a color, a movement), it's probably not actually in the spirit of this — it's just tidying.
+
+---
+
+## Fix 1 — The three generic icons in the bento grid are the biggest gap
+
+Card 1 ("Real items, not points") already does this right — it uses the actual MacBook photo, not an icon standing in for the idea of a laptop. That's the correct instinct. Cards 2, 3, and 4 use generic line-icons (a refund arrow, a camera outline, a sticker graphic) — this is the "clean SaaS dashboard" language, not the "let the real thing speak" language, and it's the single biggest thing pulling this toward generic-Apple-adjacent instead of actually Ive.
+
+**Fix:**
+- **Card 2 (Refunded automatically):** Drop the icon entirely. Replace it with a single, large, quiet number treatment — literally the text "60" in the same serif display font as the headline, oversized, with "days" in small text beneath it. A number this size, alone, in a lot of white space, says "bounded and certain" far more convincingly than a refund-arrow icon does. This is the single change most likely to make this card feel considered rather than templated.
+- **Card 3 (One photo a month):** Replace the camera-outline icon with an actual small photo — a real, soft, out-of-focus lifestyle-style photo of a branded item (the MacBook lid with a sticker on it, shot casually, like something someone would actually text). An icon of a camera describes the *mechanism*; a real photo shows the *result*, which is the more honest and more Ive thing to show.
+- **Card 4 (Your logo, actually on something):** Same fix — replace the sticker-application icon with a tight, real macro-style photo crop of an actual logo applied to an actual surface (a corner of a laptop lid with a die-cut sticker on it, shot close enough that you can see it's vinyl, not printed). Texture and material read as premium; a line-icon of "a hand applying a sticker" reads as an explainer diagram.
+
+**Net effect:** three of four cards should now be built from either real photography or pure typography — zero decorative iconography left in this section, which is the actual Ive move (Apple almost never illustrates a concept with a generic icon when the real object or a number can do the job instead).
+
+---
+
+## Fix 2 — Copy needs one more editing pass, specifically toward fewer words per card, not just shorter sentences
+
+Current copy is already good and clear. The remaining gap is length — Ive-era Apple copy is terse to the point of feeling almost withheld. Try these tighter versions:
+
+- Card 1: *"Real items, not points."* / **"An actual MacBook. An actual suit. Not credits — a real thing, shipped to a real address."**
+- Card 2: *"Refunded automatically, never held."* / **"Doesn't sell out in 60 days, you get it back. No request. No waiting."**
+- Card 3: *"One photo a month. That's it."* / **"No dashboard. No login. One photo, once a month."**
+- Card 4: *"Your logo, actually on something."* / **"Printed. Not pinned to a feed."**
+
+Each of these is now under 12 words for the body copy. If a sentence can lose a clause without losing meaning, cut it — that's the actual editing standard here, not a stylistic preference.
+
+---
+
+## Fix 3 — The timeline's five icons are each animating differently, which reads as busy rather than calm
+
+Right now (per the build): the laptop opens/closes, the tag flips, the van drifts, the package bounces, the shutter clicks — five different gestures, all running simultaneously and independently. Individually each is a nice idea; together, they compete for attention, which is the opposite of the restraint being asked for.
+
+**Fix:** Pick **one single motion language** and apply it to all five icons identically, rather than a bespoke gesture per icon:
+- Every icon does the exact same thing: a very slow (4-5 second), very subtle (2-3% scale) breathing pulse, staggered by 0.3s per icon left to right, so there's a gentle wave that passes across the row once every few seconds rather than five independent animations running on their own clocks.
+- Remove the bespoke gestures (opening lid, flipping tag, bouncing package, clicking shutter) entirely. They're clever in isolation and wrong in a row of five — cleverness per-element is exactly the kind of thing Ive's actual discipline cuts.
+
+---
+
+## Fix 4 — Whitespace between the two sections
+
+Per the current build, the timeline and the bento grid sit close together. Give this significantly more vertical breathing room — at minimum double whatever spacing currently separates them. These should read as two distinct, deliberate "chapters" someone scrolls between, not two components stacked to save space. Generous, almost uncomfortable-feeling whitespace between major sections is one of the most consistent, most copyable traits of actual Apple product pages, and one of the easiest to under-do.
+
+---
+
+## Fix 5 — Remove any residual color
+
+Confirm nothing beyond `#1D1D1F` (ink), `#FFFFFF`/`#F5F5F7` (backgrounds), and `#6E6E73` (muted gray) appears anywhere in either section — no blue accent on icons, no colored badges. If Fix 1 is applied, this mostly resolves itself since real photography replaces colored iconography, but double check the "60" number treatment in Fix 1 doesn't accidentally get a colored accent — it should be pure ink black, same weight as the surrounding headline type.
+
+---
+
+## What NOT to change
+
+The five-stop curved timeline structure, the 2×2 bento grid layout, the black circular icon badges for the three remaining timeline-only icons (laptop, ad-spot, van, house, camera stay as-is — Fix 3 only changes their *animation*, not their existence, since the timeline is explanatory and benefits from icons in a way the bento grid's *feature claims* don't), and all the underlying business-logic copy (60 days, 6/12/18 month term, 20%/30% fee) are correct as built. This is a refinement pass on visual restraint and motion, not a rebuild.

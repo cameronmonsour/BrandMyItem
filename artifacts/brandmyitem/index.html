@@ -336,11 +336,11 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .escrow-ic{font-size:20px;line-height:1;flex-shrink:0;width:28px;text-align:center}
 .escrow-row b{display:block;font-size:14px;margin-bottom:2px}
 .escrow-row span{display:block;font-size:13px;color:#6e6e73;line-height:1.4}
-.escrow-badge{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;text-transform:uppercase;letter-spacing:.02em}
+.escrow-badge,.status-badge{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;text-transform:uppercase;letter-spacing:.02em}
 .escrow-badge.held{background:#FFF4D6;color:#8A6D1D}
-.escrow-badge.active{background:#DDF2E4;color:#1F7A44}
+.escrow-badge.active,.status-badge.active{background:#DDF2E4;color:#1F7A44}
 .escrow-badge.complete{background:#E7E7EA;color:#3A3A3C}
-.escrow-badge.risk{background:#FCE4E2;color:#B23327}
+.escrow-badge.risk,.status-badge.risk{background:#FCE4E2;color:#B23327}
 .ledger{display:flex;flex-direction:column;gap:0}
 .ledger-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
 .ledger-row:last-child{border-bottom:none}
@@ -655,6 +655,253 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
   #v-build .wrap,#v-build .builder,#v-build .bstage,#customCard{width:100%;min-width:0;max-width:100%}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* Bento & Timeline Styles */
+.bento-explainer {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 20px;
+  margin-top: 48px;
+  margin-bottom: 80px;
+}
+.bento-card {
+  background: var(--wash2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+.bento-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--sh);
+}
+.bento-card .b-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  color: var(--fg);
+  box-shadow: var(--sh-sm);
+}
+.bento-card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  letter-spacing: -0.01em;
+}
+.bento-card p {
+  font-size: 14.5px;
+  color: var(--mfg);
+  line-height: 1.6;
+}
+.bento-wide { grid-column: span 8; }
+.bento-narrow { grid-column: span 4; }
+
+@media (max-width: 900px) {
+  .bento-wide, .bento-narrow { grid-column: span 12; }
+}
+
+.timeline-wrap {
+  position: relative;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 0;
+}
+.timeline-path {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  background: var(--border);
+  transform: translateX(-50%);
+  z-index: 1;
+}
+.timeline-step {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  margin-bottom: 80px;
+  width: 100%;
+}
+.timeline-step:last-child { margin-bottom: 0; }
+.timeline-step:nth-child(even) { flex-direction: row-reverse; }
+
+.timeline-content {
+  width: calc(50% - 40px);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 32px;
+  box-shadow: var(--sh-sm);
+}
+.timeline-step:nth-child(odd) .timeline-content { margin-left: 0; margin-right: auto; }
+.timeline-step:nth-child(even) .timeline-content { margin-right: 0; margin-left: auto; }
+
+.timeline-node {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #1D1D1F;
+  border: 4px solid var(--bg);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 16px;
+  box-shadow: 0 0 0 1px var(--border);
+  z-index: 3;
+}
+.timeline-step:hover .timeline-node {
+  transform: translateX(-50%) scale(1.1);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .timeline-step:hover .timeline-node { transform: translateX(-50%); }
+}
+
+.timeline-curve-1, .timeline-curve-2 {
+  position: absolute;
+  width: 50%;
+  height: calc(100% + 80px);
+  top: 50%;
+  z-index: 0;
+  pointer-events: none;
+}
+.timeline-curve-1 {
+  left: 50%;
+  border-right: 2px dashed var(--dash);
+  border-top: 2px dashed var(--dash);
+  border-bottom: 2px dashed var(--dash);
+  border-radius: 0 60px 60px 0;
+}
+.timeline-curve-2 {
+  right: 50%;
+  border-left: 2px dashed var(--dash);
+  border-top: 2px dashed var(--dash);
+  border-bottom: 2px dashed var(--dash);
+  border-radius: 60px 0 0 60px;
+}
+
+/* Hide strict center line, use curved SVG backgrounds instead for a fun look */
+.timeline-path { display: none; }
+.t-svg-curve {
+  position: absolute;
+  top: 44px; /* below node */
+  height: calc(100% + 36px);
+  width: 100px;
+  z-index: 1;
+  pointer-events: none;
+}
+.t-curve-right { left: 50%; transform: translateX(-50%); }
+.t-curve-left { left: 50%; transform: translateX(-50%) scaleX(-1); }
+.t-svg-curve path {
+  stroke: var(--dash);
+  stroke-width: 2;
+  stroke-dasharray: 6 6;
+  fill: none;
+  stroke-linecap: round;
+}
+
+.timeline-content h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+.timeline-content p { font-size: 14.5px; color: var(--mfg); line-height: 1.6; }
+
+@media (max-width: 768px) {
+  .timeline-wrap { padding-left: 20px; }
+  .timeline-step { flex-direction: column !important; align-items: flex-start; margin-bottom: 40px; }
+  .timeline-node { left: 0; transform: translateX(0) !important; width: 36px; height: 36px; font-size: 14px; margin-bottom: 16px; position: relative; border: 3px solid var(--bg); box-shadow: 0 0 0 1px var(--border); z-index: 3; }
+  .timeline-content { width: 100%; padding: 24px; margin: 0 !important; }
+  .t-svg-curve { display: none; }
+  .timeline-path-mob {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 18px;
+    width: 2px;
+    background: var(--dash);
+    z-index: 1;
+  }
+}
+
+/* Homepage model explainer */
+.home-model-head{max-width:760px;text-align:center;margin:0 auto 46px}
+.home-flow{position:relative;margin:0 auto 168px;padding:12px 0 0}
+.home-flow-line{position:absolute;left:5%;top:58px;width:90%;height:100px;overflow:visible;pointer-events:none}
+.home-flow-line path{fill:none;stroke:var(--border);stroke-width:2;stroke-linecap:round;stroke-dasharray:720;stroke-dashoffset:720;animation:homeFlowDraw 1.5s ease-out .15s forwards}
+.home-flow-list{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px;list-style:none;margin:0;padding:0;position:relative}
+.home-flow-step{text-align:center;min-width:0}
+.home-flow-step:nth-child(2),.home-flow-step:nth-child(4){padding-top:28px}
+.home-flow-icon{width:82px;height:82px;margin:0 auto 18px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--fg);color:var(--bg);box-shadow:0 0 0 8px var(--bg);position:relative}
+.home-flow-icon svg{width:47px;height:47px;overflow:visible}
+.home-flow-icon path,.home-flow-icon rect,.home-flow-icon circle,.home-flow-icon polyline,.home-flow-icon line{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.home-flow-index{display:inline-flex;align-items:center;justify-content:center;width:25px;height:25px;border:1px solid var(--border);border-radius:50%;font-size:11px;font-weight:700;color:var(--mfg);background:var(--bg);margin-bottom:10px}
+.home-flow-step h3{font-size:16px;font-weight:700;letter-spacing:-.01em;margin-bottom:7px}
+.home-flow-step p{font-size:13px;line-height:1.5;color:var(--mfg);max-width:185px;margin:0 auto}
+.home-flow-icon{animation:homeFlowPulse 5s ease-in-out infinite}
+.home-flow-step:nth-child(2) .home-flow-icon{animation-delay:.3s}
+.home-flow-step:nth-child(3) .home-flow-icon{animation-delay:.6s}
+.home-flow-step:nth-child(4) .home-flow-icon{animation-delay:.9s}
+.home-flow-step:nth-child(5) .home-flow-icon{animation-delay:1.2s}
+@keyframes homeFlowDraw{to{stroke-dashoffset:0}}
+@keyframes homeFlowPulse{0%,58%,76%,100%{transform:scale(1)}67%{transform:scale(1.025)}}
+.home-bento{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.home-bento-card{min-height:320px;border:1px solid var(--border);border-radius:24px;background:var(--wash2);overflow:hidden;position:relative;padding:28px;display:flex;flex-direction:column;justify-content:space-between;transition:transform .2s,box-shadow .2s}
+.home-bento-card:nth-child(2),.home-bento-card:nth-child(3){background:#F5F5F7}
+.home-bento-card:hover{transform:translateY(-3px);box-shadow:var(--sh)}
+.home-bento-copy{max-width:430px;position:relative;z-index:2}
+.home-bento-copy h3{font-family:var(--serif);font-size:clamp(26px,3vw,38px);font-weight:600;line-height:1;letter-spacing:-.02em;margin-bottom:10px}
+.home-bento-copy p{font-size:14.5px;line-height:1.58;color:var(--mfg)}
+.home-bento-art{height:145px;margin-top:26px;display:flex;align-items:flex-end;justify-content:center;position:relative}
+.home-bento-art svg{width:124px;height:124px;color:var(--fg);overflow:visible}
+.home-bento-art svg path,.home-bento-art svg circle,.home-bento-art svg rect,.home-bento-art svg polyline,.home-bento-art svg line{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.home-bento-product{width:min(78%,310px);height:145px;object-fit:contain;filter:drop-shadow(0 18px 14px rgba(0,0,0,.14));transform-origin:50% 80%;animation:bentoProduct 4.5s ease-in-out infinite}
+.home-bento-days{align-self:center;text-align:center;color:var(--fg);padding-bottom:8px}
+.home-bento-days strong{display:block;font-family:var(--serif);font-size:112px;font-weight:500;line-height:.72;letter-spacing:-.08em}
+.home-bento-days span{display:block;margin-top:14px;font-size:12px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--mfg)}
+.home-bento-photo{width:min(82%,330px);height:145px;border-radius:16px;overflow:hidden;position:relative;background:#fff;box-shadow:0 18px 36px rgba(0,0,0,.1)}
+.home-bento-photo img{width:100%;height:100%;object-fit:cover}
+.home-bento-photo.checkin img{filter:blur(.6px);transform:scale(1.06)}
+.home-bento-photo.macro img{transform:scale(1.8);transform-origin:58% 42%}
+.home-bento-sticker{position:absolute;left:54%;top:43%;display:flex;align-items:center;justify-content:center;width:52px;height:27px;background:var(--fg);color:#fff;border-radius:5px;font-size:8px;font-weight:800;letter-spacing:.08em;transform:rotate(-5deg);box-shadow:0 3px 8px rgba(0,0,0,.18)}
+.home-bento-photo.macro .home-bento-sticker{left:49%;top:37%;width:64px;height:32px;font-size:9px;transform:rotate(-4deg)}
+@keyframes bentoProduct{0%,100%{transform:rotate(-1.8deg)}50%{transform:rotate(1.8deg)}}
+.home-model-note{max-width:790px;margin:28px auto 0;text-align:center}
+@media(max-width:900px){
+  .home-flow{margin-bottom:116px}
+  .home-flow-line{display:none}
+  .home-flow-list{grid-template-columns:1fr;gap:0;max-width:620px;margin:0 auto}
+  .home-flow-step,.home-flow-step:nth-child(2),.home-flow-step:nth-child(4){display:grid;grid-template-columns:72px minmax(0,1fr);column-gap:18px;text-align:left;padding:0 0 30px;position:relative}
+  .home-flow-step:not(:last-child):after{content:'';position:absolute;left:35px;top:68px;bottom:2px;width:1px;background:var(--border)}
+  .home-flow-icon{grid-row:1/4;width:70px;height:70px;margin:0;box-shadow:0 0 0 6px var(--bg)}
+  .home-flow-icon svg{width:39px;height:39px}
+  .home-flow-index{margin:1px 0 7px}
+  .home-flow-step h3,.home-flow-step p{max-width:none;margin-left:0}
+}
+@media(max-width:680px){
+  .home-model-head{margin-bottom:34px}
+  .home-bento{grid-template-columns:1fr}
+  .home-bento-card{min-height:290px;padding:24px}
+  .home-bento-art{height:126px}
+  .home-bento-product{height:128px}
+}
+@media(prefers-reduced-motion:reduce){
+  .home-flow-line path{stroke-dashoffset:0}
+  .home-flow-icon, .home-flow-icon *, .home-bento-art *, .home-bento-product{animation:none!important}
+}
+
 </style>
 </head>
 <body>
@@ -714,19 +961,58 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
     </section>
 
     <section class="band" id="home-how">
-      <div class="band-head">
+      <div class="band-head home-model-head">
         <div class="eyebrow">How it works</div>
-        <h2 class="big">Four steps. No sales calls.</h2>
+        <h2 class="big">From post to proof.</h2>
+        <p>Owners choose a real item. Brands buy fixed-price spots. IRLi LLC handles the money, purchase, and shipment.</p>
       </div>
-      <div class="steps">
-        <div class="step"><div class="n">1</div><h3>Build it</h3><p>Pick the item you want. The surface splits into sticker spots sized to real print dimensions, and you set the starting price on each.</p></div>
-        <div class="step"><div class="n">2</div><h3>Post it live</h3><p>Your item lands in the live feed instantly, unbranded, with every spot open and a 60-day clock running. Sell out in time and it ships. Don't, and every spot already sold is refunded automatically — no listing sits open forever.</p></div>
-        <div class="step"><div class="n">3</div><h3>Brands buy spots</h3><p>Brands drop their logo on an open spot and are charged right then — the exact listed price plus a 20% platform fee, or 30% if you've chosen to have BrandMyItem apply the branding for you. First come, first served, no haggling.</p></div>
+
+      <div class="home-flow" aria-label="How BrandMyItem works in five steps">
+        <svg class="home-flow-line" viewBox="0 0 1000 100" preserveAspectRatio="none" aria-hidden="true"><path pathLength="720" d="M10 38 C115 12 165 82 270 56 S430 20 520 53 S690 88 760 48 S895 12 990 44"/></svg>
+        <ol class="home-flow-list">
+          <li class="home-flow-step">
+            <span class="home-flow-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path class="flow-moving" d="M11 15h26v17H11z M7 36h34 M15 36l2-4h14l2 4"/></svg></span>
+            <span class="home-flow-index">1</span><h3>Post your item</h3><p>Choose the real product and the 6, 12, or 18-month term.</p>
+          </li>
+          <li class="home-flow-step">
+            <span class="home-flow-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M9 11h28v28H9z"/><path class="flow-moving" d="M29 11h8v8z M17 27h13 M20 22c0-2 8-2 8 1s-8 2-8 5 8 3 8 1 M24 19v14"/></svg></span>
+            <span class="home-flow-index">2</span><h3>Brands buy spots</h3><p>They choose an open placement and pay the listed price plus fees immediately.</p>
+          </li>
+          <li class="home-flow-step">
+            <span class="home-flow-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><g class="flow-moving"><path d="M13 18h19l6 7v10H11V20c0-1 1-2 2-2z"/><circle cx="18" cy="36" r="3"/><circle cx="33" cy="36" r="3"/><path d="M32 20v6h6"/></g><path class="flow-speed" d="M4 23h5 M2 28h7"/></svg></span>
+            <span class="home-flow-index">3</span><h3>It ships</h3><p>At 100% funded, IRLi LLC buys the item and ships it to the owner.</p>
+          </li>
+          <li class="home-flow-step">
+            <span class="home-flow-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M7 23L24 9l17 14 M11 20v20h26V20 M20 40V28h8v12"/><g class="flow-moving"><rect x="30" y="31" width="10" height="9" rx="1"/><path d="M30 34h10"/></g></svg></span>
+            <span class="home-flow-index">4</span><h3>Arrives branded</h3><p>The owner applies the approved branding, or IRLi can do it for the added 10% fee.</p>
+          </li>
+          <li class="home-flow-step">
+            <span class="home-flow-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M9 18h8l3-4h9l3 4h7v20H9z"/><circle class="flow-moving" cx="24" cy="28" r="7"/><circle cx="36" cy="22" r="1"/></svg></span>
+            <span class="home-flow-index">5</span><h3>Monthly check-in</h3><p>One photo a month keeps the public trust signal current for the chosen term.</p>
+          </li>
+        </ol>
       </div>
-      <div class="steps" style="grid-template-columns:1fr;margin-top:16px">
-        <div class="step" style="display:flex;gap:18px;align-items:flex-start"><div class="n" style="margin:0;flex-shrink:0">4</div><div><h3>It ships branded</h3><p>At 100%, BrandMyItem buys the item and ships it — 30 days if you apply the sponsor branding yourself, 60 if BrandMyItem does it for you. Pick a term of 6, 12, or 18 months when you post; a quick monthly photo keeps the listing in good standing for as long as you chose.</p></div></div>
+
+      <div class="home-bento" aria-label="What makes BrandMyItem different">
+        <article class="home-bento-card">
+          <div class="home-bento-copy"><h3>Real items, not points.</h3><p>An actual MacBook. An actual suit. Not credits — a real thing, shipped to a real address.</p></div>
+          <div class="home-bento-art" aria-hidden="true"><img class="home-bento-product" src="campaign/product-macbook.png" alt=""></div>
+        </article>
+        <article class="home-bento-card home-bento-refund">
+          <div class="home-bento-copy"><h3>Refunded automatically, never held.</h3><p>Doesn't sell out in 60 days, you get it back. No request. No waiting.</p></div>
+          <div class="home-bento-art" aria-hidden="true"><div class="home-bento-days"><strong>60</strong><span>days</span></div></div>
+        </article>
+        <article class="home-bento-card home-bento-checkin">
+          <div class="home-bento-copy"><h3>One photo a month. That's it.</h3><p>No dashboard. No login. One photo, once a month.</p></div>
+          <div class="home-bento-art" aria-hidden="true"><div class="home-bento-photo checkin"><img src="campaign/product-macbook.png" alt=""><span class="home-bento-sticker">BRAND</span></div></div>
+        </article>
+        <article class="home-bento-card home-bento-logo">
+          <div class="home-bento-copy"><h3>Your logo, actually on something.</h3><p>Printed. Not pinned to a feed.</p></div>
+          <div class="home-bento-art" aria-hidden="true"><div class="home-bento-photo macro"><img src="campaign/product-macbook.png" alt=""><span class="home-bento-sticker">BRAND</span></div></div>
+        </article>
       </div>
-      <p class="finetext" style="max-width:720px;margin:22px 0 0"><b>What the money buys.</b> Every listing shows the real spec and real retail price of the item being funded. Spot prices sum to exactly that price, a 20% platform fee sits on top of each purchase (30% if BrandMyItem handles the branding for you), and the owner receives the item itself — never cash, and never before it's actually purchased and shipped.</p>
+
+      <p class="finetext home-model-note"><b>What the money buys.</b> Spot prices sum to the real retail price. Each purchase adds a 20% platform fee; IRLi-applied branding adds 10% more. Owners receive the item, never campaign cash. Sales tax and shipping may also apply at checkout.</p>
     </section>
 
     <section class="band" id="home-faq" style="padding-top:0">
@@ -736,7 +1022,7 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
       </div>
       <div style="max-width:720px">
         <details class="faq"><summary>Is this real?</summary><div class="fa">Completely. The items are real, the stickers are real die-cut vinyl, and every listing belongs to a real person who takes it where they work, study, and travel. The only fiction is the idea that a laptop lid or a suitcase isn't premium ad inventory.</div></details>
-        <details class="faq"><summary>Does the owner make money?</summary><div class="fa">No, and that's the point. BrandMyItem buys the item directly the moment a listing is fully funded and ships it to the owner. Spot money funds that purchase, the platform fee runs the business, and cash never changes hands with the owner at any point.</div></details>
+        <details class="faq"><summary>Does the owner make money?</summary><div class="fa">No, and that's the point. Once a listing is fully funded, IRLi LLC buys the item and ships it to the owner. Spot money funds that purchase, the platform fee runs the business, and cash never changes hands with the owner at any point.</div></details>
         <details class="faq"><summary>What does a brand actually get?</summary><div class="fa">Your logo printed on the item itself, visible everywhere it goes and in everything its owner posts, plus your spot on the listing page with a link to your site, for as long as the owner's chosen term runs (6, 12, or 18 months). No impressions promised, just real presence in real rooms your ads can't reach.</div></details>
         <details class="faq"><summary>How does payment work?</summary><div class="fa">Buying a spot charges your card immediately for the listed price plus the platform fee. No holds, no waiting. If a listing doesn't sell out within 60 days, every brand on it is refunded automatically. If it sells out but shipment runs late, you'll get a notice before the promised date passes, with the choice to wait or take a full refund. If the item can never be delivered, you're refunded in full without having to ask.</div></details>
         <details class="faq"><summary>Can any brand join?</summary><div class="fa">Almost. Every sponsor is approved by hand before anything is printed. Alcohol, cannabis, tobacco, and political ads aren't accepted, and the item's owner has the final say on what rides on their stuff. Refused purchases are refunded in full.</div></details>
@@ -744,7 +1030,7 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
         <details class="faq"><summary>What can I post?</summary><div class="fa">Objects and wearables. Laptops, phones, tumblers, luggage, coolers, wedding suits, graduation gowns. Nothing that needs insurance or permits, so no cars or property.</div></details>
         <details class="faq"><summary>What if the item never sells out?</summary><div class="fa">Every listing gets 60 days. Sell out in time and it ships. If it doesn't, every brand who bought a spot is refunded automatically and the listing closes — no request needed, no money left sitting indefinitely.</div></details>
         <details class="faq"><summary>Do I have to say it's sponsored if I post about it?</summary><div class="fa">Yes. Any post about a sponsored item needs to disclose that, and BrandMyItem's built-in share tool tags it for you automatically. That's not a house rule — it's an FTC requirement any time you post about something you received for free in exchange for showing a brand's logo.</div></details>
-        <details class="faq"><summary>Who actually buys the item?</summary><div class="fa">BrandMyItem does, directly, the moment a listing hits 100%. Neither the brand nor the owner ever fronts the cost — brands pay for ad space, BrandMyItem buys and ships the physical item, and the owner never touches money at any step.</div></details>
+        <details class="faq"><summary>Who actually buys the item?</summary><div class="fa">IRLi LLC does, once the listing reaches 100%. Neither the brand nor the owner fronts the item cost — brands pay for ad space, IRLi LLC buys and ships the physical item, and the owner never touches campaign money at any step.</div></details>
       </div>
     </section>
   </div>
@@ -965,8 +1251,8 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
             </div>
             <div class="field" style="margin-top:14px"><div class="label">Who applies the branding?</div>
               <div class="choice-grid fulfillment-choice-grid" id="brandingChoices" role="radiogroup" aria-label="Branding fulfillment">
-                <button class="choice-card" type="button" data-choice-group="branding" data-value="assisted" aria-pressed="false"><strong>BrandMyItem</strong><span>We apply the approved sponsor branding.</span><small>+10% fulfillment fee · 60-day target</small></button>
-                <button class="choice-card on" type="button" data-choice-group="branding" data-value="self" aria-pressed="true"><strong>You</strong><span>You apply the approved sponsor branding.</span><small>30-day target</small></button>
+                <button class="choice-card" type="button" data-choice-group="branding" data-value="assisted" aria-pressed="false"><strong>IRLi applied</strong><span>IRLi applies the approved sponsor branding.</span><small>+10% fulfillment fee · 60-day delivery target</small></button>
+                <button class="choice-card on" type="button" data-choice-group="branding" data-value="self" aria-pressed="true"><strong>You apply it</strong><span>You apply the approved sponsor branding after delivery.</span><small>Ships in about 23 days · 7-day branding window</small></button>
               </div>
               <p class="choice-note">In both paths, BrandMyItem buys and ships the physical item. Only the branding application changes.</p>
               <p class="tax-note">Sales tax, if applicable, is calculated at checkout based on the transaction and buyer location. Listing proceeds may have tax implications for the owner; this demo does not determine filing obligations or provide tax advice.</p>
@@ -1045,8 +1331,9 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
 
 <footer><div class="wrap foot">
   <div><a href="#home" class="logo">Brand<b>My</b>Item</a></div>
-  <div>Post the item you want. Brands pay for it. Built by Cam in Newport Beach. Questions or want a spot? <a href="mailto:hello@brandmyitem.com">hello@brandmyitem.com</a></div>
+  <div>Post the item you want. Brands pay for it. IRLi LLC buys and ships it. Built by Cam in Newport Beach. Questions or want a spot? <a href="mailto:hello@brandmyitem.com">hello@brandmyitem.com</a></div>
   <div class="disc">BrandMyItem is not affiliated with, endorsed by, or sponsored by Apple Inc. or any brand shown in demo listings. Product names are trademarks of their respective owners.</div>
+  <div class="disc">Terms and privacy language in this prototype are drafts only. They have not been reviewed or approved by legal counsel and are not legal advice.</div>
 </div></footer>
 
 <!-- TRACK -->
@@ -5399,14 +5686,20 @@ function openSlots(l){return l.closed?0:(l.claims||[]).filter(function(c){return
 function termOf(l){var n=parseInt(l&&l.termMonths,10);return n===6||n===18?n:12}
 function feeRateOf(l){return l&&l.brandingMode==='assisted'?0.30:0.20}
 function feeFor(l,price){return Math.round(price*feeRateOf(l))}
-function deliveryDaysOf(l){return l&&l.brandingMode==='assisted'?60:30}
+function deliveryDaysOf(l){return l&&l.brandingMode==='assisted'?60:23}
 function endOf(l){return (l.postedAt||l.created)+((l.unsoldTimeoutDays||AUCTION_DAYS)*86400000)}
 function checkinStatus(l){
-  var shipped=l&&l.shippedAt,submitted=(l&&l.checkins||[]).length;
-  if(!shipped)return {expected:0,missed:0,overdue:false,nonCompliant:!!(l&&l.nonCompliant)};
-  var expected=Math.min(termOf(l),Math.max(0,Math.floor((Date.now()-shipped)/(30*86400000))));
+  var shipped=l&&l.shippedAt,checkins=(l&&l.checkins)||[],submitted=checkins.length,now=Date.now(),month=30*86400000;
+  if(!shipped)return {expected:0,missed:0,overdue:false,nonCompliant:!!(l&&l.nonCompliant),firstDueAt:null,firstOverdue:false};
+  var firstDueAt=l.brandingMode==='self'?(l.brandingDueAt||shipped+7*86400000):shipped+month;
+  var expected=0;
+  if(submitted){
+    expected=Math.min(termOf(l),1+Math.max(0,Math.floor((now-checkins[0].date)/month)));
+  }else if(now>=firstDueAt){
+    expected=Math.min(termOf(l),1+Math.max(0,Math.floor((now-firstDueAt)/month)));
+  }
   var missed=Math.max(0,expected-submitted);
-  return {expected:expected,missed:missed,overdue:missed>=1&&missed<2,nonCompliant:missed>=2||!!(l&&l.nonCompliant)};
+  return {expected:expected,missed:missed,overdue:missed>=1&&missed<2,nonCompliant:missed>=2||!!(l&&l.nonCompliant),firstDueAt:firstDueAt,firstOverdue:submitted===0&&now>=firstDueAt};
 }
 function refreshCheckinStatus(l){
   if(!l)return;
@@ -5423,6 +5716,8 @@ function normalizeModelState(){
     if(!l.unsoldTimeoutDays){l.unsoldTimeoutDays=60;changed=true}
     if(!l.termMonths){l.termMonths=12;changed=true}
     if(!l.brandingMode){l.brandingMode='self';changed=true}
+    if(l.shippedAt&&l.brandingMode==='self'&&!l.brandingDueAt){l.brandingDueAt=l.shippedAt+7*86400000;changed=true}
+    if(l.brandingMode==='assisted'&&l.brandingDueAt){delete l.brandingDueAt;changed=true}
     if(!l.termLocked&&(l.claims||[]).some(function(c){return !!c&&!c.refunded})){l.termLocked=true;changed=true}
     if(!l.status)l.status=l.closed?'closed':'live';
     if(!Array.isArray(l.claims))l.claims=[];
@@ -6470,7 +6765,7 @@ function homeReferenceRowHtml(l,c){
   return '<button class="home-reference-row" type="button">'+
     (photo?'<img class="home-reference-thumb" src="'+photo+'" alt="">':'')+
     '<span class="home-reference-copy"><span class="home-reference-title">'+LBLL(l)+'</span><span class="home-reference-meta">'+c.brand+' &middot; '+c.subId+'</span></span>'+
-    '<span class="escrow-badge '+status+'">'+label+'</span><span class="home-reference-arrow" aria-hidden="true">&rsaquo;</span>'+
+    '<span class="status-badge '+(c.refunded?'risk':'active')+'">'+label+'</span><span class="home-reference-arrow" aria-hidden="true">&rsaquo;</span>'+
   '</button>';
 }
 function openTrackFromHome(mail){
@@ -7910,9 +8205,11 @@ function trackSubmitHtml(l,c){
       '<p class="track-submit-copy">Proof submissions unlock after the item has shipped to the owner.</p>'+
     '</div>';
   }
+  var status=checkinStatus(l);
+  var firstDeadline=first&&l.brandingMode==='self'&&status.firstDueAt?(' Apply the approved branding and submit both by <b>'+new Date(status.firstDueAt).toLocaleDateString()+'</b>.'):'';
   return '<div class="track-submit">'+
     '<div class="track-submit-title">'+(first?'Submit your receipt and first photo':'Submit month '+(checkins.length+1)+' photo')+'</div>'+
-     '<p class="track-submit-copy">'+(first?'Your receipt proves the item was purchased after funding. Add the first item photo to start the '+termOf(l)+'-month check-in timeline.':'Add the latest photo of the item to keep this month\\u2019s check-in on track.')+'</p>'+
+     '<p class="track-submit-copy">'+(first?'Your receipt proves the item was purchased after funding. Add the first item photo to start the '+termOf(l)+'-month check-in timeline.'+firstDeadline:'Add the latest photo of the item to keep this month\\u2019s check-in on track.')+'</p>'+
     (first?'<div class="track-submit-grid"><div class="field"><label class="label" for="trackDate_'+key+'">Purchase date on receipt</label><input class="input" id="trackDate_'+key+'" type="date"></div><div><label class="label" for="trackReceipt_'+key+'">Receipt</label><input id="trackReceipt_'+key+'" type="file" accept="image/*" class="input" style="padding:9px"></div></div>':'')+
     '<div class="field" style="margin-top:12px"><label class="label" for="trackPhoto_'+key+'">'+(first?'First item photo':'Month '+(checkins.length+1)+' photo')+'</label><input id="trackPhoto_'+key+'" type="file" accept="image/*" class="input" style="padding:9px"></div>'+
     '<p class="finetext" id="trackSubmitErr_'+key+'" style="display:none;color:#B23327;margin:10px 0 0"></p>'+
@@ -7993,25 +8290,25 @@ function delayActionHtml(l,c){
   return '<div class="track-submit" style="margin-top:12px"><div class="track-submit-title">Delivery delay notice</div><p class="track-submit-copy">IRLi has proposed delivery by <b>'+new Date(l.delayNotice.proposedAt).toLocaleDateString()+'</b>. Choose to wait, or receive a full refund now.</p><div class="mrow"><button class="btn btn-outline" type="button" onclick="respondDelay(\''+l.id+'\',\''+c.subId+'\',\'refund\')">Refund my spot</button><button class="btn btn-primary" type="button" onclick="respondDelay(\''+l.id+'\',\''+c.subId+'\',\'wait\')">I&rsquo;ll wait</button></div></div>';
 }
 function trackCardHtml(l,c){
-  updateEscrowStatuses(l);
   var photo=listingPhoto(l);
   var steps=[];
   steps.push({done:true,label:'Spot purchased',sub:new Date(c.purchasedAt).toLocaleDateString()+' \u00b7 '+money(c.amt+c.fee)+' charged'});
   var pct=pctOf(l);
   var funded=pct>=100;
   steps.push({done:!!l.shippedAt,active:funded&&!l.shippedAt,label:'Item fully funded & shipped',sub:l.shippedAt?'All spots sold \u2014 item purchased and shipped to the owner':(funded?'All spots sold \u2014 shipment is being prepared':Math.round(pct)+'% funded so far')});
-  var checkins=l.checkins||[];
+  var checkins=l.checkins||[],checkState=checkinStatus(l);
   for(var i=0;i<termOf(l);i++){
     var ci=checkins[i];
-    steps.push({done:!!ci,active:!ci&&funded&&i===checkins.length,label:'Month '+(i+1)+' check-in',sub:ci?('Photo received '+new Date(ci.date).toLocaleDateString()):'Not yet submitted'});
+    var firstSelf=i===0&&l.brandingMode==='self';
+    var dueCopy=firstSelf&&checkState.firstDueAt?((checkState.firstOverdue?'Overdue since ':'Due by ')+new Date(checkState.firstDueAt).toLocaleDateString()):'Not yet submitted';
+    steps.push({done:!!ci,active:!ci&&funded&&i===checkins.length,label:firstSelf?'Branding + first check-in':'Month '+(i+1)+' check-in',sub:ci?('Photo received '+new Date(ci.date).toLocaleDateString()):dueCopy});
   }
-  var checkState=checkinStatus(l);
-  var badge=c.refunded?'Refunded':(checkState.nonCompliant?'Non-compliant':(checkState.overdue?'Check-in overdue':(l.shippedAt?'Shipped':'Purchased')));
+  var badge=c.refunded?'Refunded':(checkState.nonCompliant?'Non-compliant':(checkState.overdue?(checkState.firstOverdue?'First check-in overdue':'Check-in overdue'):(l.shippedAt?'Shipped':'Purchased')));
   return '<details class="card track-order">'+
       '<summary class="track-order-summary">'+
         (photo?'<img src="'+photo+'" style="width:56px;height:56px;object-fit:contain;background:#fff;border:1px solid var(--border);border-radius:12px;flex-shrink:0" alt="">':'')+
         '<div class="track-order-summary-copy"><div class="track-order-title">'+LBLL(l)+'</div><div class="track-order-meta">'+c.brand+' \u00b7 '+c.subId+'</div></div>'+
-        '<span class="escrow-badge '+(c.refunded?'risk':(checkState.nonCompliant||checkState.overdue?'risk':'active'))+'">'+badge+'</span>'+
+        '<span class="status-badge '+(c.refunded?'risk':(checkState.nonCompliant||checkState.overdue?'risk':'active'))+'">'+badge+'</span>'+
         '<span class="track-order-chevron" aria-hidden="true">&#8964;</span>'+
       '</summary>'+
       '<div class="track-order-content">'+
@@ -8138,10 +8435,6 @@ function refreshItemCards(){
   if(lp)lp.onclick=function(e){e.preventDefault();downloadLogoPack()};
   renderOwnerTools();
 }
-var ESCROW_LABEL={};
-function renderLedger(){
-  var card=document.getElementById('ledgerCard');if(card)card.style.display='none';
-}
 function renderOwnerToolsLegacy(){
   var vb=document.getElementById('verifyBlock');if(!vb)return;
   if(CUR.ownerVerified){
@@ -8247,7 +8540,7 @@ function renderOwnerTools(){
   CUR.shipping=CUR.shipping||{};
   var sh=CUR.shipping;
   vb.innerHTML='<div class="campaign-label">Shipping details</div>'+
-    '<p class="finetext" style="margin:5px 0 12px">IRLi buys the item and ships it directly. This is fulfillment information, not identity verification.</p>'+
+    '<p class="finetext" style="margin:5px 0 12px">IRLi LLC buys the item and ships it directly. Owners never receive or handle campaign money.</p>'+
     '<div class="track-submit-grid">'+
       '<div class="field"><label class="label" for="shipName">Recipient name</label><input class="input" id="shipName" value="'+safeCardText(sh.name||CUR.owner||'')+'"></div>'+
       '<div class="field"><label class="label" for="shipPostal">Postal code</label><input class="input" id="shipPostal" value="'+safeCardText(sh.postal||'')+'"></div>'+
@@ -8270,18 +8563,22 @@ function renderOwnerTools(){
     return;
   }
   if(!CUR.shippedAt){
-    cb.innerHTML='<div class="fact"><span>Fulfillment</span><b>Ready for IRLi shipment</b></div>'+
-      '<p class="finetext" style="margin:8px 0 12px">Target delivery: '+deliveryDaysOf(CUR)+' days after funding ('+(CUR.promisedDeliveryAt?new Date(CUR.promisedDeliveryAt).toLocaleDateString():'being scheduled')+').</p>'+
+    cb.innerHTML='<div class="fact"><span>Fulfillment</span><b>Ready for IRLi LLC shipment</b></div>'+
+      '<p class="finetext" style="margin:8px 0 12px">'+(CUR.brandingMode==='assisted'?'IRLi-applied branding has a 60-day delivery target.':'IRLi targets delivery in about 23 days. After delivery, the owner has 7 days to apply the approved branding and submit the first check-in.')+' Promised date: '+(CUR.promisedDeliveryAt?new Date(CUR.promisedDeliveryAt).toLocaleDateString():'being scheduled')+'.</p>'+
       '<button class="btn btn-primary btn-full" id="markShippedBtn" type="button">Mark item shipped to owner</button>'+
       '<button class="btn btn-outline btn-full" id="delayNoticeBtn" type="button" style="margin-top:8px">Send a delivery delay notice</button>'+
       (CUR.delayNotice?'<p class="finetext" style="margin:9px 0 0;color:#8A6D1D">Delay notice sent on '+new Date(CUR.delayNotice.sentAt).toLocaleDateString()+' · proposed date '+new Date(CUR.delayNotice.proposedAt).toLocaleDateString()+'</p>':'');
     document.getElementById('markShippedBtn').onclick=function(){
-      CUR.shippedAt=Date.now();CUR.status='shipped';saveDB();refreshItemCards();toast('Shipment marked · check-ins are now available');
+      CUR.shippedAt=Date.now();CUR.status='shipped';
+      if(CUR.brandingMode==='self')CUR.brandingDueAt=CUR.shippedAt+7*86400000;
+      else if(CUR.brandingDueAt)delete CUR.brandingDueAt;
+      refreshCheckinStatus(CUR);saveDB();refreshItemCards();
+      toast(CUR.brandingMode==='self'?'Shipment marked · branding and first check-in due in 7 days':'Shipment marked · monthly check-ins are now available');
     };
     document.getElementById('delayNoticeBtn').onclick=function(){sendDelayNotice(CUR);renderOwnerTools()};
     return;
   }
-  var flag=status.nonCompliant?'NON-COMPLIANT':(status.overdue?'CHECK-IN OVERDUE':'On track');
+  var flag=status.nonCompliant?'NON-COMPLIANT':(status.overdue?(status.firstOverdue?'FIRST CHECK-IN OVERDUE':'CHECK-IN OVERDUE'):'On track');
   var flagColor=status.nonCompliant||status.overdue?'#B23327':'#1F7A44';
   var prog='<div class="fact"><span>Public check-in status</span><b style="color:'+flagColor+'">'+flag+'</b></div>'+
     '<div class="fact"><span>Check-ins submitted</span><b>'+checkins.length+' of '+term+'</b></div>'+
@@ -8290,7 +8587,7 @@ function renderOwnerTools(){
   if(status.nonCompliant)prog+='<p class="finetext" style="margin:0 0 12px;color:#B23327"><b>Posting restricted:</b> two consecutive missed check-ins restrict this owner from new listings.</p>';
   var isFirst=checkins.length===0,fundedDate=CUR.fundedAt?new Date(CUR.fundedAt).toLocaleDateString():'the funding date';
   if(isFirst){
-    cb.innerHTML=prog+'<p class="finetext" style="margin:0 0 12px">First check-in requires a receipt and purchase date on or after '+fundedDate+'.</p>'+
+    cb.innerHTML=prog+'<p class="finetext" style="margin:0 0 12px">First check-in requires a receipt and purchase date on or after '+fundedDate+'.'+(CUR.brandingMode==='self'&&status.firstDueAt?' Apply the approved branding and submit both by <b>'+new Date(status.firstDueAt).toLocaleDateString()+'</b>.':'')+'</p>'+
       '<div class="field"><label class="label" for="receiptDate">Purchase date on receipt</label><input class="input" id="receiptDate" type="date"></div>'+
       '<input type="file" id="receiptInput" accept="image/*" style="display:none"><div class="upl" id="receiptBox" style="margin-bottom:12px">Upload receipt · required</div>'+
       '<input type="file" id="checkinInput" accept="image/*" style="display:none"><div class="upl" id="checkinBox">Upload check-in photo · required</div>'+
@@ -8326,7 +8623,7 @@ function openBid(i){
   document.getElementById('mStep1').style.display='';
   document.getElementById('mStep3').style.display='none';
   document.getElementById('mTitle').textContent='Buy this spot';
-  document.getElementById('mSlotInfo').innerHTML=meta.pos+' &middot; '+meta.size+' ('+meta.dims+') on '+LBLL(CUR)+'. Your logo goes on the item itself and on this page. First come, first served.';
+  document.getElementById('mSlotInfo').innerHTML=meta.pos+' &middot; '+meta.size+' ('+meta.dims+') on '+LBLL(CUR)+'. Your logo goes on the item itself and on this page. First come, first served. You are charged today; if the listing does not sell out within 60 days, this spot is refunded automatically.';
   document.getElementById('mPrice').textContent=money(price);
   document.getElementById('mFee').textContent=money(fee);
   var feeLabel=document.getElementById('mFeeLabel');if(feeLabel)feeLabel.textContent='Total fee before tax & shipping ('+Math.round(feeRateOf(CUR)*100)+'%)';
