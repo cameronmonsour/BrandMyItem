@@ -7761,8 +7761,22 @@ function heroParallax(){
     });
   });
 }
+var HERO_SOURCE_FILES={
+  macbook:'hero/macbook.png',
+  iphone:'hero/iphone.png',
+  headphones:'hero/headphones.png',
+  golfbag:'hero/golfbag.png',
+  bottle:'hero/bottle.png',
+  case:'hero/case.png',
+  suit:'hero/suit.png',
+  cooler:'hero/cooler.png',
+  backpack:'hero/backpack.png',
+  paddle:'hero/paddle.png',
+  weekender:'hero/weekender.png'
+};
 document.querySelectorAll('.tile img.obj').forEach(function(im){
   var k=im.getAttribute('data-item');
+  if(HERO_SOURCE_FILES[k]){im.src=HERO_SOURCE_FILES[k];im.alt='';return}
   if(typeof HERO_CUTOUTS!=='undefined'&&HERO_CUTOUTS[k]){im.src=HERO_CUTOUTS[k];im.alt='';return}
   if(typeof HERO_PHOTOS!=='undefined'&&HERO_PHOTOS[k]){im.src=HERO_PHOTOS[k];im.alt='';return}
   if(ITEM_PHOTOS[k])im.src=ITEM_PHOTOS[k];
