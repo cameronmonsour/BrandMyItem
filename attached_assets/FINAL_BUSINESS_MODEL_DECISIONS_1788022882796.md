@@ -1,0 +1,54 @@
+# BrandMyItem — Final Business Model Decisions
+
+This is the single source of truth for how the business actually works, as of the end of the business/legal design conversation. Not a transcript, not a code spec — just every final decision, in order, with the reasoning kept short. If this document ever conflicts with `BRANDMYITEM_BIBLE.md`, **this document wins** — the Bible describes the original build; this describes what it's being migrated to. If this document conflicts with `REPLIT_SIMPLIFIED_MODEL_PROMPT.md` on a specific number, that prompt was written after this summary and reflects the same final decisions — treat them as one source, not competing ones.
+
+---
+
+## The model, in one paragraph
+
+A brand buys an ad spot on someone's item and is **charged immediately in full** (spot price + 20% fee, or +10% more if the owner opts for done-for-you branding). If a listing doesn't sell out within **60 days**, everyone who bought a spot on it is **automatically refunded** and the listing closes. If it sells out, **IRLi LLC buys the actual item and ships it** — the owner never handles money at any point. The owner picks a commitment length (6/12/18 months) once, at posting, before any money moves — it locks the moment the first spot sells. For that whole term, the owner posts a monthly check-in photo as a public trust signal; nothing financial is tied to it anymore. Missing check-ins leads to a public flag, then a posting ban — never a refund or a dispute, because the sale is already fully settled by the time check-ins start.
+
+---
+
+## Every decision, with the reasoning
+
+| Decision | Final answer | Why |
+|---|---|---|
+| When is the brand charged? | **Immediately**, at the moment they buy a spot | Card authorization holds expire in ~7 days; listings can take longer than that to sell out, so "hold now, charge at completion" doesn't work technically. A real charge doesn't expire. |
+| What if a listing never sells out? | **Auto-refund everyone after 60 days**, listing closes | This is the one rule that prevents "take payment with no bound on delivery," which is the exact pattern the FTC has brought enforcement action over (see the Chevalier/Kickstarter case researched during this conversation). Without this, instant-charging with no deadline recreates the original problem. |
+| Why 60 days and not 30 or 90? | **60** | 30 is too tight for expensive, multi-spot listings to realistically fill — cuts off real sales, not risk. 90 roughly doubles the exposure window for a marginal gain in completions past what 60 already captures. |
+| Who buys the physical item? | **IRLi LLC**, never the owner | Keeps the owner from ever needing to front cash (preserves the actual value proposition — this is for people who *don't* have $2,000 sitting around) and keeps IRLi LLC as a direct seller rather than a pass-through, which is what keeps this out of money-transmission territory in the first place. |
+| Who applies the sponsor branding? | **Owner by default (30-day target)**, or **IRLi LLC for +10% fee (60-day target)** — both live at launch | Originally the assisted option was going to be deferred, but since IRLi LLC already unboxes and repackages the item for shipping either way, adding branding application to that same process is a small incremental step, not a separate system — worth having from day one. |
+| Does the owner need identity verification? | **No — removed entirely** | Built originally for a version where the owner received money and needed KYC before payout. In this model the owner never touches money at all, so there's nothing left for it to gate. Only real shipping-address info is needed, which is a fulfillment detail, not identity verification. |
+| How long is the sponsorship term? | **Owner picks once at posting: 6, 12, or 18 months** — not editable afterward, not different per brand | Per-brand-editable terms were ruled out because branding physically exists on one object at once — there's no clean way to "un-brand" part of an item for one sponsor while another's term continues. A single locked-in term per listing avoids that entirely. |
+| What happens if the owner misses a check-in? | **1 missed → public "overdue" flag on the listing. 2+ consecutive → listing marked non-compliant, owner barred from posting new listings.** No refund, no dispute. | The sale is already fully settled by the time check-ins happen (item bought and shipped, brands already got what they paid for at that moment) — there's no live transaction left to reverse. The only real lever left is reputation and future access, so that's what enforces it. |
+| Does the owner get flagged/verified before receiving the item? | **No** | Same reasoning as the identity-verification removal — nothing financial is gating this anymore, so there's nothing left to verify against. |
+| What happens if IRLi LLC ships late? | **Automated delay notice before the promised date passes** — brand chooses to wait or get a full refund. Silence counts as consent only if the new delay is ≤30 days past the original promise; longer requires an actual response or auto-refund. | This exact mechanism is legally required — both the federal FTC Mail/Internet/Telephone Order Rule (16 CFR 435) and California's own version (Bus. & Prof. Code §17538, which carries misdemeanor penalties in California specifically) require it. Not a courtesy, an obligation. |
+| What if the item can never be delivered? | **Full automatic refund**, not on request | Same legal basis as above — silence/inaction isn't compliant if delivery fails outright. |
+| Does the owner's social share need a disclosure tag? | **Yes, always, automatically included in the generated caption** | FTC's 2023 Endorsement Guides (16 CFR Part 255) treat a free item given in exchange for displaying a brand's logo as a "material connection" requiring clear disclosure — and this applies the moment the owner posts, even though they're never required to post at all. |
+| Where is the LLC, and does the on-file business description need to change? | **IRLi LLC, California. Description left as-is (owner's call, not required).** | California LLCs generally aren't restricted to their one-line filed purpose — the mismatch matters only if it later affects specific licenses/permits, not a blocker today. |
+| Is there an arbitration clause? | **Yes, drafted with a McGill Rule carve-out** — cannot fully waive the right to seek public injunctive relief in any forum | California's Civil Code §3513 (per *McGill v. Citibank*, 2017) voids arbitration clauses that try to block this specific remedy entirely. Drafted correctly, but this is the one clause most worth a licensed second look given how much is riding on the exact wording. |
+| Money transmission exposure? | **Low, structurally** — IRLi LLC is the direct seller of goods, not a pass-through agent moving money between two other parties | Confirmed against California's own Money Transmission Act definitions: the "agent of payee" exemption exists for a different scenario than this one; here there's no separate payee being paid through you, because you are the payee. |
+| Sales tax? | **Applies, standard e-commerce obligation** — physical nexus in California from day one, economic nexus elsewhere only once state-specific thresholds are crossed | Post-*Wayfair* (2018) standard for all e-commerce; solved with software (Stripe Tax, TaxJar), not a legal gray area. |
+
+---
+
+## What still isn't answered by research or discussion (the real remaining list)
+
+1. **Whether IRLi LLC's actual formation paperwork is fit for this exact business** — not verifiable from a conversation; needs someone looking at the real documents.
+2. **Final confirmation that the drafted arbitration clause's specific wording is enforceable** — the structure is now right (McGill carve-out included), but structure and confirmed-correct wording are two different things.
+3. **A full read of the drafted Terms of Service and Privacy Policy by someone licensed** — both are complete and specific, neither has been reviewed by anyone but this conversation.
+
+Everything else discussed — money transmission, the shipping-delay rule, sales tax, FTC disclosure, retailer return-risk — has either a clear low-risk answer or a specific, already-built compliance mechanism. Those don't belong on a lawyer's list anymore; they belong on a build list.
+
+---
+
+## Documents that make up the complete picture
+
+| Document | What it's for |
+|---|---|
+| `FINAL_BUSINESS_MODEL_DECISIONS.md` (this file) | The decisions themselves, with reasoning. Start here. |
+| `REPLIT_SIMPLIFIED_MODEL_PROMPT.md` | The specific code changes needed to make the live app match these decisions — hand this to whoever writes the code. |
+| `BRANDMYITEM_DRAFT_TERMS.md` | Draft Terms of Service and Privacy Policy implementing these decisions in actual contract language. |
+| `BRANDMYITEM_BIBLE.md` | Technical reference for the app's existing architecture (data model, functions, file structure) — still accurate on *how the code is organized*, outdated on the business-logic sections it explicitly flags at the top. |
+| `BRANDMYITEM_CONVERSATION_HISTORY.md` | Full word-for-word conversation record, for anyone who wants the reasoning trail rather than just the conclusions. |
