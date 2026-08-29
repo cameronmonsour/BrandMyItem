@@ -1,9 +1,10 @@
-# [Project name]
+# BrandMyItem
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+BrandMyItem is a client-side marketplace concept where brands fund everyday items by buying logo spots.
 
 ## Run & Operate
 
+- `pnpm --filter @workspace/brandmyitem run dev` — run the static BrandMyItem web app
 - `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
 - `pnpm run typecheck` — full typecheck across all packages
 - `pnpm run build` — typecheck + build all packages
@@ -22,23 +23,32 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/brandmyitem/index.html` — source of truth for the single-file HTML app, including inline CSS, base64 product photos, and vanilla JavaScript
+- `artifacts/brandmyitem/vite.config.ts` — static Vite preview/build configuration
+- `artifacts/brandmyitem/public/` — favicon and crawler metadata
+- `artifacts/api-server/` — shared API scaffold; BrandMyItem currently runs local-only and does not depend on it
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- Preserve the supplied single-file HTML implementation unchanged so its hash routing, embedded assets, vanilla JS, and localStorage behavior remain intact.
+- Keep this first version static and client-side; payment checkout, identity verification, social connections, and escrow state changes are explicitly demos.
+- Use Vite only as the local preview/build wrapper; do not introduce a backend or database until real marketplace operations are requested.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+- Home page with owner/brand entry points and product education
+- Build-your-item flow with 11 real products, variants, habits, social reach, and ad-spot editing
+- Live items marketplace with seeded listings, filters, activity, spot purchase flow, 20% platform fee, and submission IDs
+- Local escrow ledger demo, owner identity/check-in tools, social share copy, and email/submission tracking timeline
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+_No project-specific preferences recorded._
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- This app intentionally has no real Stripe checkout, KYC, OAuth/social connection, backend persistence, or multi-user synchronization.
+- LocalStorage is the persistence layer for the demo; clearing site data resets local listings, claims, and check-ins.
 
 ## Pointers
 

@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "BrandMyItem"
+description = "A client-side marketplace concept where brands fund everyday items by buying logo spots, with live listings, escrow-state demos, owner check-ins, and submission tracking."
+version = "1.0.0"
+id = "artifacts/brandmyitem"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22686
+
+[services.development]
+run = "pnpm --filter @workspace/brandmyitem run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/brandmyitem", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/brandmyitem/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22686"
+BASE_PATH = "/"
