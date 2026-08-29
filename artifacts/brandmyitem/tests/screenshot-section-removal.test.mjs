@@ -6,6 +6,7 @@ const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
 
 test('removes the screenshot-only homepage and page headers', () => {
   assert.doesNotMatch(html, />From post to proof\.</);
+  assert.doesNotMatch(html, /<div class="eyebrow">How it works<\/div>/);
   assert.doesNotMatch(html, />Get your item paid for by brands</);
   assert.doesNotMatch(html, />See live items &rarr;</);
   assert.doesNotMatch(html, /<h2>Live items<\/h2>/);
