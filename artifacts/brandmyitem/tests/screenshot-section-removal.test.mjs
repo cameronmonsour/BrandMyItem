@@ -68,7 +68,8 @@ test('dashboard activity uses the same live ticker as the homepage', () => {
 });
 
 test('dashboard removes duplicate category controls and shows brand decision details', () => {
-  assert.doesNotMatch(html, /id="railCats"/);
+  assert.match(html, /id="railCats"/);
+  assert.match(html, /<h5>Category<\/h5>/);
   assert.match(html, /<h1>Live items<\/h1>/);
   assert.match(html, /id="dashLiveTitle">Brands are claiming spots now<\/h2>/);
   assert.match(html, /function listingBrandFitHtml\(l\)/);

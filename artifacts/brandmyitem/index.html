@@ -1077,6 +1077,10 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
     <div class="dash">
       <aside class="rail">
         <div class="card"><div class="card-c" style="padding:18px">
+          <h5>Category</h5>
+          <div id="railCats"></div>
+        </div></div>
+        <div class="card"><div class="card-c" style="padding:18px">
           <h5>Status</h5>
           <label class="check"><input type="radio" name="fst" value="all" checked>All items</label>
           <label class="check"><input type="radio" name="fst" value="open">Open spots</label>
@@ -7073,6 +7077,17 @@ function showDash(){
      b.innerHTML=catPhoto?'<span class="ic"><img src="'+catPhoto+'" alt=""></span>'+c.id:c.id;
     b.onclick=function(){F.cat=c.id;showDash()};
     cs.appendChild(b);
+  });
+  var rc=document.getElementById('railCats');rc.innerHTML='';
+  var la=document.createElement('label');la.className='check';
+  la.innerHTML='<input type="radio" name="frc" '+(F.cat==='All'?'checked':'')+'>All categories';
+  la.querySelector('input').onchange=function(){F.cat='All';showDash()};
+  rc.appendChild(la);
+  CATS.slice(1).forEach(function(c){
+    var l=document.createElement('label');l.className='check';
+    l.innerHTML='<input type="radio" name="frc" '+(F.cat===c.id?'checked':'')+'>'+c.id;
+    l.querySelector('input').onchange=function(){F.cat=c.id;showDash()};
+    rc.appendChild(l);
   });
   document.getElementById('dq').value=F.q;
   document.getElementById('dq').oninput=function(){F.q=this.value;renderDash()};
