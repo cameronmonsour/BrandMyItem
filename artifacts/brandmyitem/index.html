@@ -5426,7 +5426,10 @@ var store={
   set:function(k,v){mem[k]=v;try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 };
 function uid(){return Math.random().toString(36).slice(2,9)}
-function money(n){return '$'+Math.round(n).toLocaleString()}
+function money(n){
+  var value=Number(n)||0,hasCents=Math.abs(value-Math.round(value))>0.0001;
+  return '$'+value.toLocaleString('en-US',{minimumFractionDigits:hasCents?2:0,maximumFractionDigits:2});
+}
 function cadence(retail){return retail<100?'monthly photo':retail<=500?'photo every 2 weeks':'weekly photo'}
 function ago(ts){var s=Math.max(1,(Date.now()-ts)/1000);if(s<60)return Math.floor(s)+'s ago';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago'}
 function pad(n){return n<10?'0'+n:''+n}
@@ -5437,42 +5440,42 @@ var CATS=[
   {id:'Hydration',item:'bottle'},{id:'Travel',item:'case'},{id:'Sports',item:'paddle'},{id:'Style',item:'suit'}
 ];
 var ITEMS={
-  macbook:{label:'MacBook Pro',brand:'Apple',color:'Space Black',cat:'Tech',retail:1999,maxSlots:8,surf:[28,18],
-    specs:[['Chip','Apple M5 &middot; 10-core CPU, 10-core GPU'],['Memory','16 GB unified'],['Storage','512 GB SSD'],['Color','Space Black'],['Display','14.2" Liquid Retina XDR']]},
-  iphone:{label:'iPhone 17 Pro',brand:'Apple',color:'Deep Blue',cat:'Tech',retail:1099,maxSlots:4,surf:[7,15],
-    specs:[['Chip','A19 Pro'],['Storage','256 GB'],['Color','Deep Blue'],['Camera','48MP triple system']]},
-  cooler:{label:'Tundra Hard Cooler',brand:'YETI',color:'White',cat:'Event',retail:325,maxSlots:4,surf:[45,30],
-    specs:[['Capacity','45 qt rotomolded'],['Ice retention','Up to 5 days'],['Color','White'],['Build','Bear-resistant, rope handles']]},
-  bottle:{label:'Quencher H2.0 Tumbler',brand:'Stanley',color:'Cream',cat:'Hydration',retail:45,maxSlots:4,surf:[20,16],
-    specs:[['Capacity','40 oz, handle and straw lid'],['Insulation','Double-wall, 24 h cold'],['Color','Cream'],['Material','Stainless steel']]},
-  case:{label:'Original Carry-On',brand:'RIMOWA',color:'Silver',cat:'Travel',retail:420,maxSlots:8,surf:[34,46],
-    specs:[['Size','Cabin approved 55 cm'],['Shell','Grooved polycarbonate'],['Color','Silver'],['Wheels','4 spinner']]},
-  headphones:{label:'AirPods Max',brand:'Apple',color:'Space Gray',cat:'Tech',retail:549,maxSlots:2,surf:[8,8],
-    specs:[['Type','Wireless over-ear, ANC'],['Battery','30 h'],['Color','Space Gray'],['Build','Anodized aluminum earcups']]},
-  golfbag:{label:'PXG Deluxe Carry Stand Bag',brand:'PXG',color:'White / Black',cat:'Sports',retail:400,maxSlots:5,surf:[60,25],
-    specs:[['Type','Deluxe carry stand bag'],['Pockets','Multiple zip pockets'],['Color','White / Black'],['Where it lives','Golf courses, range days, tournaments']]},
-  weekender:{label:'Louis Vuitton Keepall Bandouliere 55 Monogram Eclipse',brand:'Louis Vuitton',color:'Monogram Eclipse',cat:'Carry',retail:2800,maxSlots:3,surf:[40,22],
-    specs:[['Canvas','Monogram Eclipse coated canvas'],['Size','55 cm'],['Hardware','Black hardware'],['Carry','Removable adjustable strap']]},
-  paddle:{label:'JOOLA Pro V Perseus Pickleball Paddle',brand:'JOOLA',color:'Black / Red',cat:'Sports',retail:280,maxSlots:2,surf:[20,25],
-    specs:[['Series','Pro V Perseus'],['Face','Carbon-friction textured surface'],['Weight','Approx. 8.0 oz'],['Where it lives','League nights and packed courts']]},
-  suit:{label:'Two-Piece Wool Tuxedo',brand:'Formalwear',color:'Black',cat:'Style',retail:750,maxSlots:4,surf:[40,50],
-    specs:[['Cut','Two-piece tuxedo'],['Fabric','Wool blend'],['Color','Black'],['The day','Weddings, galas, and formal events']]},
-  backpack:{label:'Commuter Backpack',brand:'Studio Line',color:'Black',cat:'Carry',retail:325,maxSlots:4,surf:[35,45],
-    specs:[['Material','Ballistic nylon'],['Capacity','24L, fits 16" laptop'],['Color','Black'],['Build','Weatherproof zips, luggage pass-through strap']]}
+  macbook:{label:'MacBook Pro',brand:'Apple',color:'Silver',cat:'Tech',retail:1599,maxSlots:8,surf:[28,18],verified:'2026-08-29',source:'https://www.apple.com/macbook-pro/specs/',
+    specs:[['Model','14-inch MacBook Pro (M5)'],['Chip','Apple M5 &middot; 10-core CPU, 10-core GPU'],['Memory','16GB unified memory'],['Storage','512GB SSD'],['Color','Silver'],['Display','14.2-inch Liquid Retina XDR &middot; 3024×1964'],['Battery','72.4Wh lithium-polymer'],['Ports','3× Thunderbolt 4, HDMI, SDXC, MagSafe 3'],['Dimensions','12.31 × 8.71 × 0.61 in'],['Weight','3.4 lb']]},
+  iphone:{label:'iPhone 17 Pro',brand:'Apple',color:'Silver',cat:'Tech',retail:1099,maxSlots:4,surf:[7,15],verified:'2026-08-29',source:'https://support.apple.com/en-us/125090',
+    specs:[['Chip','A19 Pro'],['Storage','256GB'],['Color','Silver'],['Display','6.3-inch Super Retina XDR OLED &middot; 2622×1206'],['Camera','48MP Fusion Pro camera system'],['Build','Aluminum unibody, Ceramic Shield 2 front'],['Dimensions','5.91 × 2.83 × 0.34 in'],['Weight','7.27 oz (206 g)']]},
+  cooler:{label:'Tundra 45 Hard Cooler',brand:'YETI',color:'White',cat:'Event',retail:325,maxSlots:4,surf:[45,30],verified:'2026-08-29',source:'https://www.yeti.com/coolers/hard-coolers/tundra/tundra-45.html',
+    specs:[['Model','Tundra 45'],['Capacity','45 size'],['Color','White'],['Construction','Rotomolded FatWall design'],['Insulation','PermaFrost polyurethane foam'],['Hardware','T-Rex lid latches, DoubleHaul handles'],['Outside','25.5 × 15.9 × 15.5 in'],['Empty weight','24.6 lb'],['Certification','IGBC bear-resistant when locked']]},
+  bottle:{label:'Quencher H2.0 FlowState Tumbler',brand:'Stanley 1913',color:'Cream 2.0',cat:'Hydration',retail:45,maxSlots:4,surf:[20,16],verified:'2026-08-29',source:'https://www.stanley1913.com/products/quencher-h2-0-flowstate-tumbler-40-oz',
+    specs:[['Capacity','40 oz'],['Color','Cream 2.0'],['Material','90% recycled 18/8 stainless steel'],['Insulation','Double-wall vacuum insulation'],['Lid','3-position FlowState lid with reusable straw'],['Fit','Car cupholder compatible'],['Care','Dishwasher safe'],['Dimensions','5.82 × 3.74 × 12.03 in'],['Weight','1.43 lb']]},
+  case:{label:'Original Cabin',brand:'RIMOWA',color:'Silver',cat:'Travel',retail:1550,maxSlots:8,surf:[34,46],verified:'2026-08-29',source:'https://www.rimowa.com/us/en/luggage/colour/silver/cabin/92553004.html',
+    specs:[['Collection','Original'],['Size','Cabin &middot; 21.7 × 15.8 × 9.1 in'],['Shell','High-end anodized aluminum'],['Color','Silver'],['Volume','35 L'],['Weight','9.5 lb (4.3 kg)'],['Wheels','RIMOWA Multiwheel system'],['Interior','Height-adjustable Flex Divider'],['Lock','TSA-approved locks'],['Guarantee','Lifetime guarantee']]},
+  headphones:{label:'AirPods Max 2',brand:'Apple',color:'Midnight',cat:'Tech',retail:549,maxSlots:2,surf:[8,8],verified:'2026-08-29',source:'https://www.apple.com/airpods-max/specs/',
+    specs:[['Type','Wireless over-ear headphones'],['Color','Midnight'],['Audio','Active Noise Cancellation, Adaptive Audio, Transparency'],['Connection','USB-C, Bluetooth 5.3'],['Battery','Up to 20 hours'],['Controls','Digital Crown and noise control button'],['Dimensions','7.37 × 6.64 × 3.28 in'],['Weight','13.6 oz (386.2 g)'],['Case','Smart Case included']]},
+  golfbag:{label:'Deluxe Carry Stand Bag',brand:'PXG',color:'White / Black',cat:'Sports',retail:325,maxSlots:5,surf:[60,25],verified:'2026-08-29',source:'https://www.pxg.com/products/deluxe-carry-stand-bag',
+    specs:[['Type','Deluxe carry stand golf bag'],['Color','White / Black'],['Top','4-way top'],['Storage','13 total pockets'],['Base','Magnetic stand feet'],['Carry','Padded dual carry straps'],['Protection','Lined valuables and rangefinder pockets']]},
+  weekender:{label:'Keepall Bandoulière 55',brand:'Louis Vuitton',color:'Monogram Eclipse',cat:'Carry',retail:2800,maxSlots:3,surf:[40,22],verified:'2026-08-29',source:'https://us.louisvuitton.com/eng-us/products/keepall-bandouliere-55-monogram-eclipse-014387/M40605',
+    specs:[['Model','Keepall Bandoulière 55 &middot; M40605'],['Canvas','Monogram Eclipse coated canvas'],['Trim','Cowhide-leather trim'],['Lining','Textile lining'],['Color','Monogram Eclipse'],['Dimensions','21.7 × 12.2 × 9.4 in'],['Hardware','Silver-color hardware'],['Carry','Removable, adjustable strap with shoulder patch'],['Origin','Made in France, Spain, Italy, or USA']]},
+  paddle:{label:'Perseus Pro V Pickleball Paddle',brand:'JOOLA',color:'Red',cat:'Sports',retail:299.95,maxSlots:2,surf:[20,25],verified:'2026-08-29',source:'https://joola.com/products/joola-perseus-pro-v-pickleball-paddle-1',
+    specs:[['Model','Perseus Pro V'],['Core thickness','16mm'],['Surface','Textured carbon-fiber face'],['Shape','Elongated Perseus shape'],['Color','Red'],['Length','16.5 in'],['Width','7.5 in'],['Handle','5.5 in long'],['Certification','USAP PBCoR .43 certified']]},
+  suit:{label:'Black Merino Wool Tuxedo Suit',brand:'StudioSuits',color:'Black',cat:'Style',retail:303,maxSlots:4,surf:[40,50],verified:'2026-08-29',source:'https://www.studiosuits.com/products/black-merino-wool-tuxedo-suit',
+    specs:[['Type','Two-piece tuxedo suit'],['Fit','Made to measure'],['Fabric','Merino wool'],['Color','Black'],['Jacket','Single-breasted, one-button tuxedo styling'],['Trousers','Matching black tuxedo trousers'],['Care','Professional dry clean']]},
+  backpack:{label:'The Commuter Backpack',brand:'Away',color:'Jet Black',cat:'Carry',retail:228,maxSlots:4,surf:[35,45],verified:'2026-08-29',source:'https://www.awaytravel.com/products/commuter-backpack-jet-black',
+    specs:[['Material','100% recycled nylon, 50% recycled leather trim'],['Capacity','25 L'],['Color','Jet Black'],['Laptop','Exterior padded sleeve fits up to 16-inch'],['Storage','4 exterior pockets, 2 bottle pockets'],['Carry','Padded straps, breathable mesh back, trolley sleeve'],['Dimensions','12.4 × 6.5 × 17.7 in'],['Weight','2.5 lb'],['Warranty','Limited one-year warranty']]}
 };
 var HAB_BY_CAT={Tech:['Coffee shops','Office'],Event:['Events'],Hydration:['Gym'],Travel:['Airport'],Carry:['Campus','Office']};
 var ITEM_VARIANTS={
-  macbook:{colors:[['Silver','#E3E3E6'],['Space Black','#3A3A3C']],sizeLabel:'Size',sizeQ:'Pick your screen size.',sizes:[['14"',0],['16"',400]]},
-  iphone:{colors:[['Black Titanium','#39393B'],['White Titanium','#EDEDEC'],['Blue Titanium','#3A4A5C'],['Natural Titanium','#B9AF9C']],sizeLabel:'Storage',sizeQ:'How much space do you need?',sizes:[['256GB',0],['512GB',200],['1TB',400]]},
-  cooler:{colors:[['White','#F2F2F2'],['Charcoal','#3F3F42'],['Navy','#2B3A54'],['Harvest Red','#9B2C22'],['Alpine Yellow','#E0B23C'],['Seafoam','#8FBFAE'],['Nordic Purple','#6A5A82'],['King Crab Orange','#D0642C']],sizeLabel:'Size',sizeQ:'How much do you need to carry?',sizes:[['35 qt',-60],['45 qt',0],['65 qt',120]]},
-  bottle:{colors:[['Cream','#EDE6DC'],['Charcoal','#3A3A3C'],['Lagoon','#4E7C8A'],['Rose Quartz','#D98A93'],['Fog','#B9BCC0'],['Plum','#5B4A63'],['Iris','#6E7FBF'],['Cloud Pink','#E8C9D0']],sizeLabel:'Size',sizeQ:'Pick your capacity.',sizes:[['30 oz',-8],['40 oz',0]]},
-  case:{colors:[['Silver','#C7C9CC'],['Black','#26262A'],['Titanium Grey','#8B8D90'],['Graphite','#4A4A4E'],['Coral','#D98878']],sizeLabel:'Size',sizeQ:'Cabin or check-in?',sizes:[['Cabin',0],['Check-In',150]]},
-  headphones:{colors:[['Space Gray','#4A4A4E'],['Silver','#D6D7DA'],['Sky Blue','#8FB3C9'],['Pink','#E3B6C2'],['Starlight','#E7E2D3'],['Midnight','#2B2E36']],sizeLabel:'Fit',sizeQ:'One size, made to fit.',sizes:[['Standard',0]]},
-  golfbag:{colors:[['White / Black','#F2F2F2'],['Black','#26262A'],['Navy','#28324A']],sizeLabel:'Style',sizeQ:'Choose your bag color.',sizes:[['Standard',0]]},
+  macbook:{colors:[['Silver','#E3E3E6'],['Space Black','#3A3A3C']],sizeLabel:'Size',sizeQ:'Pick your screen size.',sizes:[['14"',0,{Model:'14-inch MacBook Pro (M5)',Chip:'Apple M5 &middot; 10-core CPU, 10-core GPU',Memory:'16GB unified memory',Storage:'512GB SSD',Display:'14.2-inch Liquid Retina XDR &middot; 3024×1964',Battery:'72.4Wh lithium-polymer',Ports:'3× Thunderbolt 4, HDMI, SDXC, MagSafe 3',Dimensions:'12.31 × 8.71 × 0.61 in',Weight:'3.4 lb'}],['16"',900,{Model:'16-inch MacBook Pro (M5 Pro)',Chip:'Apple M5 Pro &middot; 15-core CPU, 16-core GPU',Memory:'24GB unified memory',Storage:'512GB SSD',Display:'16.2-inch Liquid Retina XDR &middot; 3456×2234',Battery:'100Wh lithium-polymer',Ports:'3× Thunderbolt 5, HDMI, SDXC, MagSafe 3',Dimensions:'14.01 × 9.77 × 0.66 in',Weight:'4.7 lb'}]]},
+  iphone:{colors:[['Silver','#E7E5E1'],['Cosmic Orange','#C96737'],['Deep Blue','#34465C']],sizeLabel:'Storage',sizeQ:'How much space do you need?',sizes:[['256GB',0,{Storage:'256GB'}],['512GB',200,{Storage:'512GB'}],['1TB',400,{Storage:'1TB'}]]},
+  cooler:{colors:[['White','#F2F2F2'],['Navy','#263852'],['Charcoal','#454548'],['Tan','#B7A17E']],sizeLabel:'Size',sizeQ:'Choose the official Tundra size.',sizes:[['Tundra 35',-50,{Model:'Tundra 35',Capacity:'35 size'}],['Tundra 45',0,{Model:'Tundra 45',Capacity:'45 size'}],['Tundra 65',50,{Model:'Tundra 65',Capacity:'65 size'}]]},
+  bottle:{colors:[['Cream 2.0','#EDE6DC'],['Black 2.0','#252527'],['Rose Quartz 2.0','#D98A93'],['Frost','#D9DBDD']],sizeLabel:'Size',sizeQ:'Pick your capacity.',sizes:[['30 oz',-10,{Capacity:'30 oz'}],['40 oz',0,{Capacity:'40 oz'}]]},
+  case:{colors:[['Silver','#C7C9CC'],['Black','#26262A'],['Titanium','#8B8D90']],sizeLabel:'Size',sizeQ:'Official Original Cabin configuration.',sizes:[['Cabin',0]]},
+  headphones:{colors:[['Midnight','#252B35'],['Starlight','#E7E2D3'],['Blue','#8FB3C9'],['Purple','#766D91'],['Orange','#D97843']],sizeLabel:'Fit',sizeQ:'One size, made to fit.',sizes:[['Standard',0]]},
+  golfbag:{colors:[['White / Black','#F2F2F2'],['Black','#26262A'],['Darkness','#202126'],['White','#F7F7F7']],sizeLabel:'Style',sizeQ:'Official one-size carry stand bag.',sizes:[['Standard',0]]},
   weekender:{colors:[['Monogram Eclipse','#26262A']],sizeLabel:'Size',sizeQ:'One size, 55 cm.',sizes:[['Keepall 55',0]]},
-  paddle:{colors:[['Black / Red','#2C2528'],['Black / Blue','#262A34']],sizeLabel:'Model',sizeQ:'Pick your Pro V model.',sizes:[['Perseus',0],['Scorpeus',0],['Kosmos',0]]},
-  suit:{colors:[['Black','#1D1D1F']],sizeLabel:'Size',sizeQ:'Pick your jacket size.',sizes:[['38R',0],['40R',0],['42R',0],['44R',0]]},
-  backpack:{colors:[['Black','#26262A'],['Graphite','#4A4A4E'],['Navy','#28324A']],sizeLabel:'Capacity',sizeQ:'How much do you carry daily?',sizes:[['22L',-30],['28L',0]]}
+  paddle:{colors:[['Red','#9D2E29'],['Breeze Blue','#477C9B']],sizeLabel:'Core thickness',sizeQ:'Pick the official paddle thickness.',sizes:[['16mm',0,{'Core thickness':'16mm'}],['14mm',0,{'Core thickness':'14mm'}]]},
+  suit:{colors:[['Black','#1D1D1F']],sizeLabel:'Fit',sizeQ:'Made to your measurements.',sizes:[['Made to measure',0]]},
+  backpack:{colors:[['Jet Black','#26262A']],sizeLabel:'Size',sizeQ:'One official 25 L size.',sizes:[['25 L',0]]}
 };
 var SIZE_TIERS=[[0.19,'Small'],[0.28,'Medium'],[1,'Large']];
 var HABITATS=['Campus','Coffee shops','Gym','Office','Airport','Events'];
@@ -5773,7 +5776,16 @@ function suitFix(){try{
 }catch(e){}}
 function LBLL(l){return l.custom?(l.title||((l.type&&ITEMS[l.type])?ITEMS[l.type].label:'Custom item')):(ITEMS[l.type]?ITEMS[l.type].label:l.type)}
 function PHO(l){return listingPhoto(l)}
-function RETL(l){return l.custom?(l.retail||l.prices.reduce(function(a,b){return a+b},0)):ITEMS[l.type].retail}
+function RETL(l){return l.retail||(l.custom?l.prices.reduce(function(a,b){return a+b},0):(ITEMS[l.type]&&ITEMS[l.type].retail))}
+function variantOption(type,size){
+  var v=ITEM_VARIANTS[type];if(!v)return null;
+  for(var i=0;i<v.sizes.length;i++)if(v.sizes[i][0]===size)return v.sizes[i];
+  return v.sizes[0]||null;
+}
+function variantRetail(type,size){
+  var item=ITEMS[type],option=variantOption(type,size);
+  return item?item.retail+(option?(option[1]||0):0):0;
+}
 function slotMeta(type,count,i){
   if(!ITEMS[type])return{pos:'Spot '+(i+1),size:'Placement',key:null};
   var key=ORDER[count][i];
@@ -5783,10 +5795,15 @@ function slotMeta(type,count,i){
   return{pos:POSNAME[key],size:tier,key:key}
 }
 function suggest(type,count){
-  var retail=ITEMS[type].retail;
+  var retail=variantRetail(type,(typeof B!=='undefined'&&B.type===type)?B.variantSize:null);
   /* geometric pricing: each box costs its share of the certified surface */
   var sd=(typeof SCANDATA!=='undefined')&&SCANDATA[type];
-  if(sd&&sd.prices&&sd.prices[count])return sd.prices[count].slice();
+  if(sd&&sd.prices&&sd.prices[count]){
+    var base=sd.prices[count],baseTotal=base.reduce(function(a,b){return a+b},0);
+    var scaled=base.map(function(p){return Math.max(1,Math.round(p*retail/baseTotal*100)/100)});
+    scaled[0]=Math.round((scaled[0]+retail-scaled.reduce(function(a,b){return a+b},0))*100)/100;
+    return scaled;
+  }
   var ws=ORDER[count].map(function(k){return(k==='t'||k==='b')?2:1});
   var tw=ws.reduce(function(a,b){return a+b},0);
   var out=ws.map(function(w){return Math.max(5,Math.round(retail*w/tw/5)*5)});
@@ -7163,7 +7180,7 @@ function renderVariants(k){
       B.variantSize=s[0];
       var retailInput=document.getElementById('cuRetail');
       if(retailInput){
-        retailInput.value=ITEMS[k].retail+B.priceDelta;
+        retailInput.value=variantRetail(k,B.variantSize);
         if(CU.template)cuApplyTemplate();
       }
       if(!CU.template){B.prices=suggest(k,B.slots);refreshBuild()}
@@ -7450,7 +7467,7 @@ function refreshBuild(){
   document.getElementById('slotSub').textContent=B.slots===1?'full sponsor':'faster funding';
   document.getElementById('slotMinus').disabled=B.slots<=1;
   document.getElementById('slotPlus').disabled=B.slots>=ITEMS[B.type].maxSlots;
-  document.getElementById('cadOut').textContent=cadence(ITEMS[B.type].retail);
+  document.getElementById('cadOut').textContent=cadence(variantRetail(B.type,B.variantSize));
   var termOut=document.getElementById('buildTermOut');if(termOut)termOut.textContent=termOf(B)+' months';
   var assisted=B.brandingMode==='assisted';
   var fulfillmentOut=document.getElementById('buildFulfillmentOut');if(fulfillmentOut)fulfillmentOut.textContent=assisted?'BrandMyItem applies branding':'You apply branding';
@@ -7468,7 +7485,8 @@ function renderBuildSpecs(k){
   var v=ITEM_VARIANTS[k];
   var selectedColor=(B.type===k&&B.color)||(v&&v.colors[0][0])||sp.color;
   var selectedSize=(B.type===k&&B.variantSize)||(v&&v.sizes[0][0])||'';
-  var selectedRetail=sp.retail+(B.type===k?(B.priceDelta||0):0);
+  var option=variantOption(k,selectedSize);
+  var selectedRetail=variantRetail(k,selectedSize);
   var title=document.getElementById('buildSpecTitle');
   var price=document.getElementById('buildSpecPrice');
   var table=document.getElementById('buildSpecTable');
@@ -7479,18 +7497,14 @@ function renderBuildSpecs(k){
   sp.specs.forEach(function(r){
     var value=r[1];
     if(r[0]==='Color')value=selectedColor;
-    if(v&&selectedSize){
-      if(k==='macbook'&&r[0]==='Display')value=(selectedSize==='14"'?'14.2"':selectedSize)+' Liquid Retina XDR';
-      if(k==='iphone'&&r[0]==='Storage')value=selectedSize;
-      if(k==='cooler'&&r[0]==='Capacity')value=selectedSize+' rotomolded';
-      if(k==='bottle'&&r[0]==='Capacity')value=selectedSize+', handle and straw lid';
-      if(k==='case'&&r[0]==='Size')value=selectedSize==='Cabin'?'Cabin approved 55 cm':'Check-in approved 65 cm';
-      if(k==='paddle'&&r[0]==='Series')value='Pro V '+selectedSize;
-    }
+    if(option&&option[2]&&Object.prototype.hasOwnProperty.call(option[2],r[0]))value=option[2][r[0]];
     var tr=document.createElement('tr');
     tr.innerHTML='<td>'+r[0]+'</td><td>'+value+'</td>';
     table.appendChild(tr);
   });
+  var sourceRow=document.createElement('tr');
+  sourceRow.innerHTML='<td>Source</td><td><a href="'+sp.source+'" target="_blank" rel="noopener">Official '+sp.brand+' product page</a></td>';
+  table.appendChild(sourceRow);
 }
 /* ============ CUSTOM ITEM: photo + trace ============ */
 var CU={img:null,photo:null,poly:[],tracePointer:null,closed:false,tiles:[],prices:[],mixed:true,retail:0,faces:[],shape:'rect',color:'#1D1D1F',tracing:false,customized:false,sel:-1,zoom:1};
@@ -7995,7 +8009,7 @@ function cuApplyTemplate(){
   var KO=null; /* logo keep-out retired */
   var mx=tmplMax(t);
   if(B.slots>mx)B.slots=mx;
-  var retail=Math.max(1,parseInt(document.getElementById('cuRetail').value||ITEMS[t].retail,10));
+  var retail=Math.max(1,parseFloat(document.getElementById('cuRetail').value||ITEMS[t].retail));
   CU.retail=retail;
   var base=(mapTiles(t,B.slots)||[]).map(function(tt){return nudgeOff(tt,KO)});
   var n=(CU.angles&&CU.angles.length)||1;
@@ -8065,7 +8079,7 @@ function cuPickTemplate(t){
   CU.template=t;CU.faces=[];CU.angleIx=0;CU.tracing=false;CU.customized=false;CU.poly=[];CU.tracePointer=null;CU.sel=-1;
   /* front photo only for now -- no side or back angles */
   CU.angles=[['Front',ITEM_PHOTOS[t]]];
-  document.getElementById('cuRetail').value=ITEMS[t].retail;
+  document.getElementById('cuRetail').value=variantRetail(t,(typeof B!=='undefined'&&B.type===t)?B.variantSize:null);
   var im=new Image();
   im.onload=function(){
     CU.img=im;CU.photo=CU.angles[0][1];CU.zoom=1;
@@ -8089,7 +8103,7 @@ function tmplInit(){
 }
 function cuRepart(){if(CU.template&&!CU.customized)cuApplyTemplate()}
 function boxPrices(){
-  var retail=Math.max(1,parseInt(document.getElementById('cuRetail').value||'100',10));
+  var retail=Math.max(1,parseFloat(document.getElementById('cuRetail').value||'100'));
   var tot=0;CU.tiles.forEach(function(t){tot+=t.w*t.h});
   if(!tot)return [];
   var unit=retail<200?1:5;
@@ -8114,7 +8128,7 @@ function postListing(){
   var l;
   if(CU.template&&CU.angles&&CU.angles.length>1&&!CU.faces.length&&CU.tiles.length){
     /* catalog item: same zone layout offered on each photographed face */
-    var retail0=Math.max(1,parseInt(document.getElementById('cuRetail').value||'100',10));
+    var retail0=Math.max(1,parseFloat(document.getElementById('cuRetail').value||'100'));
     var perFace=CU.tiles.slice();
     CU.faces=CU.angles.filter(function(a){return a[0]!=='Sides'}).map(function(a){
       return {photo:a[1],tiles:perFace.map(function(t){return {x:t.x,y:t.y,w:t.w,h:t.h,shape:t.shape,color:t.color,pts:t.pts}}),label:a[0]};
@@ -8122,7 +8136,7 @@ function postListing(){
   }
   if((CU.closed&&CU.tiles.length)||CU.faces.length){
     if(CU.closed&&CU.tiles.length)cuSaveFace();
-    var retail=Math.max(1,parseInt(document.getElementById('cuRetail').value||'100',10));
+    var retail=Math.max(1,parseFloat(document.getElementById('cuRetail').value||'100'));
     var pool=poolPrices(CU.faces,retail);
     var flatTiles=[],facesOut=[],off=0;
     CU.faces.forEach(function(f,fi){
@@ -8139,7 +8153,7 @@ function postListing(){
       termMonths:selectedTerm,termLocked:false,brandingMode:selectedBranding,status:'live',shipping:{}};
     CU.faces=[];cuFaceChips();
   }else{
-    l={id:uid(),type:B.type,owner:name,mail:mail,avatar:B.avatar,habs:B.habs.slice(),cities:B.cities.slice(),universities:B.universities.slice(),purpose:B.purpose.trim(),freq:B.freq,social:B.social,color:B.color,socialLinks:Object.assign({},B.socialLinks),slots:B.slots,
+    l={id:uid(),type:B.type,owner:name,mail:mail,avatar:B.avatar,habs:B.habs.slice(),cities:B.cities.slice(),universities:B.universities.slice(),purpose:B.purpose.trim(),freq:B.freq,social:B.social,color:B.color,variantSize:B.variantSize,retail:variantRetail(B.type,B.variantSize),source:ITEMS[B.type].source,verified:ITEMS[B.type].verified,socialLinks:Object.assign({},B.socialLinks),slots:B.slots,
       prices:B.prices.slice(),claims:B.prices.map(function(){return null}),created:Date.now(),postedAt:Date.now(),unsoldTimeoutDays:60,
       termMonths:selectedTerm,termLocked:false,brandingMode:selectedBranding,status:'live',shipping:{}};
   }

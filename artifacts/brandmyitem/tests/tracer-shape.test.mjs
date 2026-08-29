@@ -51,9 +51,19 @@ test('Delete and Backspace remove a selected shape when not tracing', () => {
 test('finish and size choices update the details card', () => {
   assert.match(html, /B\.color=c\[0\];\s*sel\.textContent=c\[0\];\s*renderBuildSpecs\(k\)/);
   assert.match(html, /B\.variantSize=s\[0\]/);
-  assert.match(html, /var selectedRetail=sp\.retail\+\(B\.type===k\?\(B\.priceDelta\|\|0\):0\)/);
+  assert.match(html, /var selectedRetail=variantRetail\(k,selectedSize\)/);
   assert.match(html, /if\(r\[0\]==='Color'\)value=selectedColor/);
-  assert.ok(
-    html.includes(`if(k==='macbook'&&r[0]==='Display')value=(selectedSize==='14"'?'14.2"':selectedSize)+' Liquid Retina XDR'`),
-  );
+  assert.match(html, /if\(option&&option\[2\]&&Object\.prototype\.hasOwnProperty\.call\(option\[2\],r\[0\]\)\)value=option\[2\]\[r\[0\]\]/);
+});
+
+test('official catalog data stores sources, verification dates, and exact option prices', () => {
+  assert.match(html, /case:\{label:'Original Cabin',brand:'RIMOWA'.*retail:1550/);
+  assert.match(html, /paddle:\{label:'Perseus Pro V Pickleball Paddle'.*retail:299\.95/);
+  assert.match(html, /suit:\{label:'Black Merino Wool Tuxedo Suit',brand:'StudioSuits'.*retail:303/);
+  assert.match(html, /backpack:\{label:'The Commuter Backpack',brand:'Away'.*retail:228/);
+  assert.match(html, /verified:'2026-08-29',source:'https:\/\//);
+  assert.match(html, /\['16"',900,\{Model:'16-inch MacBook Pro \(M5 Pro\)'/);
+  assert.match(html, /retail:variantRetail\(B\.type,B\.variantSize\)/);
+  assert.match(html, /minimumFractionDigits:hasCents\?2:0/);
+  assert.doesNotMatch(html, /parseInt\(document\.getElementById\('cuRetail'\)/);
 });
