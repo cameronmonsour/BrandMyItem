@@ -7468,7 +7468,8 @@ function showBuild(){
     var b=document.createElement('button');
     b.type='button';
     b.className='itemcard'+(k===B.type?' on':'');
-     var photo=(typeof HERO_SOURCE_FILES!=='undefined'&&HERO_SOURCE_FILES[k])?HERO_SOURCE_FILES[k]:((typeof HERO_CUTOUTS!=='undefined'&&HERO_CUTOUTS[k])?HERO_CUTOUTS[k]:((typeof ITEM_PHOTOS!=='undefined'&&ITEM_PHOTOS[k])?ITEM_PHOTOS[k]:''));
+     var productPhoto=(typeof ITEM_PHOTOS!=='undefined'&&ITEM_PHOTOS[k])?ITEM_PHOTOS[k]:'';
+     var photo=((k==='suit'||k==='backpack')&&productPhoto)?productPhoto:((typeof HERO_SOURCE_FILES!=='undefined'&&HERO_SOURCE_FILES[k])?HERO_SOURCE_FILES[k]:((typeof HERO_CUTOUTS!=='undefined'&&HERO_CUTOUTS[k])?HERO_CUTOUTS[k]:productPhoto));
     b.innerHTML=(photo?'<img src="'+photo+'" alt="">':'')+
       '<div class="itemcard-b">'+(it.brand?'<span class="itemcard-brand">'+it.brand+'</span>':'')+
       '<span class="itemcard-name">'+it.label+'</span>'+
@@ -8871,9 +8872,9 @@ var HERO_SOURCE_FILES={
   golfbag:'hero/apple-golfbag.png',
   bottle:'hero/apple-bottle.png',
   case:'hero/apple-case.png',
-  suit:'hero/apple-suit.png?v=tomford-oconnor',
+  suit:'hero/apple-suit.png?v=tomford-oconnor-outline',
   cooler:'hero/apple-cooler.png',
-  backpack:'hero/apple-backpack.png?v=tumi-search-147053',
+  backpack:'hero/apple-backpack.png?v=tumi-search-147053-outline',
   paddle:'hero/apple-paddle.png',
   weekender:'hero/apple-weekender.png'
 };

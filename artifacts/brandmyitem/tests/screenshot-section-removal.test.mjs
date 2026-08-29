@@ -27,9 +27,12 @@ test('removes the screenshot-only homepage and page headers', () => {
   assert.match(html, /\.home-flow-step:nth-child\(3\)\{transform:translateY\(10px\)\}/);
 });
 
-test('uses transparent outline product art for category and item picker thumbnails', () => {
+test('keeps outlined hero art while referenced suit and backpack photos remain in the picker', () => {
   assert.match(html, /var catPhoto=c\.item&&\(\(typeof HERO_SOURCE_FILES!=='undefined'&&HERO_SOURCE_FILES\[c\.item\]\)\|\|ITEM_PHOTOS\[c\.item\]\)/);
-  assert.match(html, /var photo=\(typeof HERO_SOURCE_FILES!=='undefined'&&HERO_SOURCE_FILES\[k\]\)\?HERO_SOURCE_FILES\[k\]/);
+  assert.match(html, /var productPhoto=\(typeof ITEM_PHOTOS!=='undefined'&&ITEM_PHOTOS\[k\]\)\?ITEM_PHOTOS\[k\]:''/);
+  assert.match(html, /var photo=\(\(k==='suit'\|\|k==='backpack'\)&&productPhoto\)\?productPhoto/);
+  assert.match(html, /suit:'hero\/apple-suit\.png\?v=tomford-oconnor-outline'/);
+  assert.match(html, /backpack:'hero\/apple-backpack\.png\?v=tumi-search-147053-outline'/);
   assert.match(html, /\.cat \.ic img\{[^}]*border:0;outline:0;background:transparent;box-shadow:none\}/);
   assert.match(html, /\.itemcard img\{[^}]*border:0;outline:0;box-shadow:none/);
   assert.match(html, /\.cat\{display:flex;flex-direction:row;[^}]*border-radius:10px/);
