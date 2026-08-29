@@ -838,6 +838,7 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
 .home-flow-icon.photo.phone img{object-fit:contain}
 .home-flow-icon.photo.truck img{object-fit:contain}
 .home-flow-icon.photo.house img{object-fit:contain}
+.home-flow-icon.photo.monthly img{object-fit:contain}
 .home-flow-icon svg{width:47px;height:47px;overflow:visible}
 .home-flow-icon path,.home-flow-icon rect,.home-flow-icon circle,.home-flow-icon polyline,.home-flow-icon line{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .home-flow-index{display:inline-flex;align-items:center;justify-content:center;width:25px;height:25px;border:1px solid var(--border);border-radius:50%;font-size:11px;font-weight:700;color:var(--mfg);background:var(--bg);margin-bottom:10px}
@@ -904,8 +905,6 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
       <a href="#home" class="logo">Brand<b>My</b>Item</a>
       <a href="#dashboard" class="lnk">Live items</a>
       <a href="#build" class="lnk">Build your item</a>
-      <a href="#home-how" class="lnk hidemob">How it works</a>
-      <a href="#home-faq" class="lnk hidemob">FAQ</a>
       <a href="#track" class="lnk">Track my item</a>
     </div>
   </div>
@@ -952,14 +951,11 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
       <div id="onboardHost"></div>
     </section>
 
-    <section class="band" id="home-how">
+    <section class="band" id="home-how" style="padding-top:18px">
       <div class="band-head home-model-head">
         <div class="eyebrow">How it works</div>
-        <h2 class="big">From post to proof.</h2>
       </div>
-
       <div class="home-flow" aria-label="How BrandMyItem works in five steps">
-        <svg class="home-flow-line" viewBox="0 0 1000 100" preserveAspectRatio="none" aria-hidden="true"><path pathLength="720" d="M10 38 C115 12 165 82 270 56 S430 20 520 53 S690 88 760 48 S895 12 990 44"/></svg>
         <ol class="home-flow-list">
           <li class="home-flow-step">
             <span class="home-flow-icon photo" aria-hidden="true"><img src="how-it-works-post-your-item.png" alt=""></span>
@@ -978,61 +974,19 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
             <span class="home-flow-index">4</span><h3>Arrives branded</h3><p>The owner applies the approved branding, or IRLi can do it for the added 10% fee.</p>
           </li>
           <li class="home-flow-step">
-            <span class="home-flow-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M9 18h8l3-4h9l3 4h7v20H9z"/><circle class="flow-moving" cx="24" cy="28" r="7"/><circle cx="36" cy="22" r="1"/></svg></span>
+            <span class="home-flow-icon photo monthly" aria-hidden="true"><img src="how-it-works-monthly-check-in.png" alt=""></span>
             <span class="home-flow-index">5</span><h3>Monthly check-in</h3><p>One photo a month keeps the public trust signal current for the chosen term.</p>
           </li>
         </ol>
       </div>
-
-      <div class="home-bento" aria-label="What makes BrandMyItem different">
-        <article class="home-bento-card">
-          <div class="home-bento-copy"><h3>Real items, not points.</h3><p>An actual MacBook. An actual suit. Not credits — a real thing, shipped to a real address.</p></div>
-          <div class="home-bento-art" aria-hidden="true"><img class="home-bento-product" src="campaign/product-macbook.png" alt=""></div>
-        </article>
-        <article class="home-bento-card home-bento-refund">
-          <div class="home-bento-copy"><h3>Refunded automatically, never held.</h3><p>Doesn't sell out in 60 days, you get it back. No request. No waiting.</p></div>
-          <div class="home-bento-art" aria-hidden="true"><div class="home-bento-days"><strong>60</strong><span>days</span></div></div>
-        </article>
-        <article class="home-bento-card home-bento-checkin">
-          <div class="home-bento-copy"><h3>One photo a month. That's it.</h3><p>No dashboard. No login. One photo, once a month.</p></div>
-          <div class="home-bento-art" aria-hidden="true"><div class="home-bento-photo checkin"><img src="campaign/product-macbook.png" alt=""><span class="home-bento-sticker">BRAND</span></div></div>
-        </article>
-        <article class="home-bento-card home-bento-logo">
-          <div class="home-bento-copy"><h3>Your logo, actually on something.</h3><p>Printed. Not pinned to a feed.</p></div>
-          <div class="home-bento-art" aria-hidden="true"><div class="home-bento-photo macro"><img src="campaign/product-macbook.png" alt=""><span class="home-bento-sticker">BRAND</span></div></div>
-        </article>
-      </div>
-
-      <p class="finetext home-model-note"><b>What the money buys.</b> Spot prices sum to the real retail price. Each purchase adds a 20% platform fee; IRLi-applied branding adds 10% more. Owners receive the item, never campaign cash. Sales tax and shipping may also apply at checkout.</p>
     </section>
 
-    <section class="band" id="home-faq" style="padding-top:0">
-      <div class="band-head">
-        <div class="eyebrow">Questions</div>
-        <h2 class="big">Asked and answered.</h2>
-      </div>
-      <div style="max-width:720px">
-        <details class="faq"><summary>Is this real?</summary><div class="fa">Completely. The items are real, the stickers are real die-cut vinyl, and every listing belongs to a real person who takes it where they work, study, and travel. The only fiction is the idea that a laptop lid or a suitcase isn't premium ad inventory.</div></details>
-        <details class="faq"><summary>Does the owner make money?</summary><div class="fa">No, and that's the point. Once a listing is fully funded, IRLi LLC buys the item and ships it to the owner. Spot money funds that purchase, the platform fee runs the business, and cash never changes hands with the owner at any point.</div></details>
-        <details class="faq"><summary>What does a brand actually get?</summary><div class="fa">Your logo printed on the item itself, visible everywhere it goes and in everything its owner posts, plus your spot on the listing page with a link to your site, for as long as the owner's chosen term runs (6, 12, or 18 months). No impressions promised, just real presence in real rooms your ads can't reach.</div></details>
-        <details class="faq"><summary>How does payment work?</summary><div class="fa">Buying a spot charges your card immediately for the listed price plus the platform fee. No holds, no waiting. If a listing doesn't sell out within 60 days, every brand on it is refunded automatically. If it sells out but shipment runs late, you'll get a notice before the promised date passes, with the choice to wait or take a full refund. If the item can never be delivered, you're refunded in full without having to ask.</div></details>
-        <details class="faq"><summary>Can any brand join?</summary><div class="fa">Almost. Every sponsor is approved by hand before anything is printed. Alcohol, cannabis, tobacco, and political ads aren't accepted, and the item's owner has the final say on what rides on their stuff. Refused purchases are refunded in full.</div></details>
-        <details class="faq"><summary>What keeps the owner honest?</summary><div class="fa">Monthly photo check-ins, public on the listing for anyone to see. The first one requires a receipt dated after the listing funded, so nobody can claim credit for an item they already owned. Miss a check-in and the listing gets flagged publicly; miss two in a row and that owner can't post another listing.</div></details>
-        <details class="faq"><summary>What can I post?</summary><div class="fa">Objects and wearables. Laptops, phones, tumblers, luggage, coolers, wedding suits, graduation gowns. Nothing that needs insurance or permits, so no cars or property.</div></details>
-        <details class="faq"><summary>What if the item never sells out?</summary><div class="fa">Every listing gets 60 days. Sell out in time and it ships. If it doesn't, every brand who bought a spot is refunded automatically and the listing closes — no request needed, no money left sitting indefinitely.</div></details>
-        <details class="faq"><summary>Do I have to say it's sponsored if I post about it?</summary><div class="fa">Yes. Any post about a sponsored item needs to disclose that, and BrandMyItem's built-in share tool tags it for you automatically. That's not a house rule — it's an FTC requirement any time you post about something you received for free in exchange for showing a brand's logo.</div></details>
-        <details class="faq"><summary>Who actually buys the item?</summary><div class="fa">IRLi LLC does, once the listing reaches 100%. Neither the brand nor the owner fronts the item cost — brands pay for ad space, IRLi LLC buys and ships the physical item, and the owner never touches campaign money at any step.</div></details>
-      </div>
-    </section>
   </div>
 </div>
 
 <!-- DASHBOARD -->
 <div class="view" id="v-dashboard">
   <div class="wrap">
-    <div class="dash-head">
-      <h2>Live items</h2>
-    </div>
     <div class="searchbar">
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <input class="input" id="dq" placeholder="Search items, owners, habitats&hellip;">
@@ -1083,10 +1037,6 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
 <!-- BUILD -->
 <div class="view" id="v-build">
   <div class="wrap">
-    <div style="text-align:center;padding:26px 0 6px">
-      <h1 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:clamp(34px,6vw,54px);letter-spacing:-0.02em;margin:0 0 8px">Get your item paid for by brands</h1>
-      <p style="margin:6px 0 0"><a href="#home" style="color:#1d1d1f;font-weight:600;text-decoration:underline">See live items &rarr;</a></p>
-    </div>
     <div class="builder" id="builderFlow">
       <div class="bstage">
         
@@ -1335,10 +1285,7 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
 <!-- TRACK -->
 <div class="view" id="v-track">
   <div class="wrap-narrow" style="max-width:640px">
-    <div style="text-align:center;padding:48px 0 8px">
-      <h1 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:clamp(28px,4vw,40px);margin:0 0 8px;letter-spacing:-0.01em">Track my item</h1>
-    </div>
-    <div class="card" style="margin:24px 0">
+    <div class="card" style="margin:0 0 24px">
       <div class="card-c" style="padding:22px">
         <div class="field"><label class="label" for="tkMail">Email</label><input class="input" id="tkMail" type="email" placeholder="you@brand.com"></div>
         <button class="btn btn-primary btn-full btn-lg" id="tkBtn" type="button">Track my item</button>
