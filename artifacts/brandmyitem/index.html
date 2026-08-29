@@ -738,6 +738,16 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
       </div>
     </div>
     <div id="tkResult" style="display:none;margin-bottom:60px"></div>
+    <div class="card" id="tkDemoCard" style="margin:24px 0 60px">
+      <div class="card-h">
+        <div class="card-t">See how tracking works <span class="badge" style="margin-left:6px;vertical-align:2px">DEMO</span></div>
+        <div class="card-d">A sample brand submission with the full purchase-to-check-in timeline.</div>
+      </div>
+      <div class="card-c" style="padding-top:12px">
+        <div id="tkDemoResult"></div>
+        <p class="finetext" style="margin:2px 0 0">This preview is illustrative. Enter the work email and optional submission ID from a real spot purchase above to look up your own item.</p>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -6710,6 +6720,19 @@ function migratePhoto(){
 }
 suitFix();migratePhoto();
 var CUR=null,itemMode='auction',claimSlot=-1,logoData=null;
+function demoTrackMatch(){
+  var listing=DB.listings.filter(function(l){return l.id==='demo1'})[0]||DB.listings[0];
+  if(!listing)return null;
+  return {l:listing,c:{
+    brand:'Northstar Studio',
+    mail:'demo@brandmyitem.com',
+    amt:listing.prices[3]||165,
+    fee:Math.round((listing.prices[3]||165)*0.2),
+    escrow:'active',
+    purchasedAt:Date.now()-1000*60*60*24*9,
+    subId:'BMI-DEMO01'
+  }};
+}
 function showTrack(){
   var btn=document.getElementById('tkBtn');
   if(btn&&!btn._wired){
@@ -6738,6 +6761,14 @@ function showTrack(){
       matches.sort(function(a,b){return (b.c.purchasedAt||0)-(a.c.purchasedAt||0)});
       renderTrackResults(matches);
     };
+  }
+  var demo=document.getElementById('tkDemoResult');
+  if(demo&&!demo._rendered){
+    var sample=demoTrackMatch();
+    if(sample){
+      demo.innerHTML=trackCardHtml(sample.l,sample.c);
+      demo._rendered=1;
+    }
   }
 }
 function renderTrackResults(matches){
