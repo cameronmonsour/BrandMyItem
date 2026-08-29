@@ -26,7 +26,7 @@ test('removes the screenshot-only homepage and page headers', () => {
   assert.match(html, /\.home-flow\{position:relative;margin:0 auto 48px/);
   assert.match(html, /\.home-flow-step:nth-child\(3\)\{transform:translateY\(10px\)\}/);
   assert.match(html, /Choose the item, the ad spots, and the term\. Pick whether BrandMyItem brands it for you \(\+10%\) or you handle it yourself\./);
-  assert.match(html, /They claim a placement, sticker, embroidered logo, printed patch, or engraving, and pay in full upfront\./);
+  assert.match(html, /They claim a placement and submit the logo file for the approved branding method, then pay in full upfront\./);
   assert.match(html, /Once fully funded, BrandMyItem buys the item and ships it straight to you\./);
   assert.match(html, /<h3>Shows up as you chose<\/h3><p>Pre-branded if you picked that option, or clean and ready for you to apply yourself\./);
   assert.match(html, /One photo a month keeps the whole thing verified and current\./);
@@ -72,6 +72,25 @@ test('fulfillment copy states the delivery and branding windows', () => {
   assert.match(html, /Delivered in under 23 days · 7-day branding window/);
   assert.match(html, /Once fully funded, the item is delivered in under 23 days/);
   assert.match(html, /IRLi-applied branding has a 60-day delivery window/);
+});
+
+test('every catalog item has an item-specific branding method', () => {
+  const itemsBlock = html.match(/var ITEMS=\{([\s\S]*?)\n\};/)?.[1];
+  const methodsBlock = html.match(/var BRANDING_METHODS=\{([\s\S]*?)\n\};/)?.[1];
+  assert.ok(itemsBlock, 'catalog items should be defined');
+  assert.ok(methodsBlock, 'branding methods should be defined');
+  const itemKeys = [...itemsBlock.matchAll(/^\s{2}([a-z]+):\{/gm)].map((match) => match[1]).sort();
+  const methodKeys = [...methodsBlock.matchAll(/^\s{2}([a-z]+):'[^']+'/gm)].map((match) => match[1]).sort();
+  assert.deepEqual(methodKeys, itemKeys);
+  assert.match(methodsBlock, /macbook:'adhesive sticker\/decal'/);
+  assert.match(methodsBlock, /bottle:'laser-engraved logo'/);
+  assert.match(methodsBlock, /golfbag:'embroidered logo'/);
+  assert.match(methodsBlock, /suit:'embroidered patch'/);
+  assert.match(methodsBlock, /paddle:'printed decal'/);
+  assert.match(methodsBlock, /weekender:'leather patch or debossed logo'/);
+  assert.match(html, /brandingMaterial\(B\.type,B\.brandingMode\)/);
+  assert.match(html, /<span>Branding method<\/span><b>'\+safeCardText\(brandingMaterial\(l\.type,l\.brandingMode\)\)/);
+  assert.match(html, /Branding method: '\+safeCardText\(brandingMethod\(CUR\.type\)\)/);
 });
 
 test('sold and price pills keep the same compact height', () => {

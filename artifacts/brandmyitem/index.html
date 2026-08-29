@@ -968,7 +968,7 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
           </li>
           <li class="home-flow-step">
             <span class="home-flow-icon photo phone" aria-hidden="true"><img src="how-it-works-brands-buy-spots.png" alt=""></span>
-            <span class="home-flow-index">2</span><h3>Brands buy spots</h3><p>They claim a placement, sticker, embroidered logo, printed patch, or engraving, and pay in full upfront.</p>
+            <span class="home-flow-index">2</span><h3>Brands buy spots</h3><p>They claim a placement and submit the logo file for the approved branding method, then pay in full upfront.</p>
           </li>
           <li class="home-flow-step">
             <span class="home-flow-icon photo truck" aria-hidden="true"><img src="how-it-works-ships.png" alt=""></span>
@@ -1224,7 +1224,7 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
           <div class="fact"><span>Check-in</span><b id="cadOut">monthly photo</b></div>
             <div class="fact"><span>Commitment term</span><b id="buildTermOut">12 months</b></div>
             <div class="fact"><span>Fulfillment</span><b id="buildFulfillmentOut">You apply branding</b></div>
-            <div class="fact"><span>Branded material</span><b id="buildMaterialOut">Sponsor decal, patch, or magnet</b></div>
+            <div class="fact"><span>Branded material</span><b id="buildMaterialOut">Adhesive sticker/decal for you to apply</b></div>
             <div class="fact"><span>Platform fee</span><b>20%</b></div>
             <div class="fact"><span>Total fee before tax &amp; shipping</span><b id="buildFeeOut">20%</b></div>
             <div class="fact"><span>Tax + shipping</span><b id="buildTaxOut">If applicable at checkout</b></div>
@@ -1287,7 +1287,7 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
         <div class="fact"><span>Check-in</span><b id="iCad"></b></div>
         <div class="fact"><span>Term</span><b id="iTerm">12 months</b></div>
          <div class="fact"><span>Fulfillment</span><b id="iFulfillment">You apply branding</b></div>
-         <div class="fact"><span>Branded material</span><b id="iMaterial">Sponsor decal, patch, or magnet</b></div>
+         <div class="fact"><span>Branded material</span><b id="iMaterial">Adhesive sticker/decal for you to apply</b></div>
          <div class="fact"><span>Platform fee</span><b>20%</b></div>
          <div class="fact"><span>Total fee before tax &amp; shipping</span><b id="iTotalFee">20%</b></div>
          <div class="fact"><span>Tax + shipping</span><b id="iTax">If applicable at checkout</b></div>
@@ -1381,7 +1381,7 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
         <button class="btn btn-outline" id="mCancel">Cancel</button>
         <button class="btn btn-primary" id="mNext">Continue</button>
       </div>
-      <p class="finetext">Your logo is the handoff: once the item fully funds, the owner downloads it and produces the sticker, patch, or magnet from your exact file. No back and forth needed.</p>
+      <p class="finetext">Your logo is the handoff: once the item fully funds, the owner downloads it and produces the approved branding from your exact file. No back and forth needed.</p>
     </div>
     <div id="mStep3" style="display:none">
       <h3>You&rsquo;re in &middot; save this ID</h3>
@@ -5453,6 +5453,24 @@ var ITEMS={
   backpack:{label:'Search Backpack',brand:'TUMI',color:'Black',cat:'Carry',retail:850,maxSlots:4,surf:[35,45],verified:'2026-08-29',source:'https://www.tumi.com/p/search-backpack-01470531041/',
     specs:[['Collection','Alpha Bravo'],['Material','Smooth leather'],['Color','Black'],['Laptop','Padded compartment fits up to 15-inch screens'],['Storage','Main compartment, front zip pocket, side zip pockets'],['Carry','Top handle, padded mesh back panel, adjustable shoulder straps'],['Add-a-Bag','Sleeve for securing to luggage'],['Dimensions','43H × 21D × 35.5W cm'],['Weight','1.832 kg'],['Warranty','Limited five-year global warranty']]}
 };
+var BRANDING_METHODS={
+  macbook:'adhesive sticker/decal',
+  iphone:'adhesive sticker/decal',
+  cooler:'vinyl decal',
+  bottle:'laser-engraved logo',
+  case:'adhesive sticker/decal',
+  headphones:'adhesive sticker/decal',
+  golfbag:'embroidered logo',
+  weekender:'leather patch or debossed logo',
+  paddle:'printed decal',
+  suit:'embroidered patch',
+  backpack:'embroidered patch'
+};
+function brandingMethod(type){return BRANDING_METHODS[type]||'custom branding method'}
+function brandingMaterial(type,mode){
+  var method=brandingMethod(type),label=method.charAt(0).toUpperCase()+method.slice(1);
+  return mode==='assisted'?label+' applied by BrandMyItem':label+' for you to apply';
+}
 var HAB_BY_CAT={Tech:['Coffee shops','Office'],Event:['Events'],Hydration:['Gym'],Travel:['Airport'],Carry:['Campus','Office']};
 var ITEM_VARIANTS={
   macbook:{colors:[['Silver','#E3E3E6'],['Space Black','#3A3A3C']],sizeLabel:'Size',sizeQ:'Pick your screen size.',sizes:[['14"',0,{Model:'14-inch MacBook Pro (M5)',Chip:'Apple M5 &middot; 10-core CPU, 10-core GPU',Memory:'16GB unified memory',Storage:'512GB SSD',Display:'14.2-inch Liquid Retina XDR &middot; 3024×1964',Battery:'72.4Wh lithium-polymer',Ports:'3× Thunderbolt 4, HDMI, SDXC, MagSafe 3',Dimensions:'12.31 × 8.71 × 0.61 in',Weight:'3.4 lb'}],['16"',900,{Model:'16-inch MacBook Pro (M5 Pro)',Chip:'Apple M5 Pro &middot; 15-core CPU, 16-core GPU',Memory:'24GB unified memory',Storage:'512GB SSD',Display:'16.2-inch Liquid Retina XDR &middot; 3456×2234',Battery:'100Wh lithium-polymer',Ports:'3× Thunderbolt 5, HDMI, SDXC, MagSafe 3',Dimensions:'14.01 × 9.77 × 0.66 in',Weight:'4.7 lb'}]]},
@@ -5885,6 +5903,7 @@ function listingContextHtml(l){
   (l.universities||[]).slice(0,1).forEach(function(v){if(v&&!locations.includes(v))locations.push(v)});
   if(!locations.length)(l.habs||[]).slice(0,2).forEach(function(v){if(v&&!locations.includes(v))locations.push(v)});
   if(l.social)parts.push('<span class="card-context-em">'+safeCardText(l.social)+' followers</span>');
+  if(l.type&&ITEMS[l.type])parts.push('<span class="card-context-em">'+safeCardText(brandingMethod(l.type))+'</span>');
   locations.slice(0,2).forEach(function(v){parts.push(safeCardText(v))});
   if(!parts.length)return '';
   return '<div class="card-context" aria-label="'+safeCardText(parts.map(function(v){return v.replace(/<[^>]+>/g,'')}).join(' · '))+'"><span class="card-context-value">'+parts.join(' <span aria-hidden="true">&middot;</span> ')+'</span></div>';
@@ -6885,10 +6904,10 @@ function drawHomeMap(f){
   if(homeMode==='auction'){
     if(f.custom){renderCustomStage(el,f,tap);return}
     renderFinal(el,f,{onTap:tap,showOpen:true,h:520,scan:true});
-    document.getElementById('homeCap').textContent='Tap any open spot on the item to buy it for your brand.';
+    document.getElementById('homeCap').textContent='Tap any open spot on the item to buy it for your brand. The '+brandingMethod(f.type)+' is made from your logo.';
   }else{
     renderFinal(el,f,{showOpen:false,h:520});
-    document.getElementById('homeCap').textContent='Fully funded: download the logo pack, get the materials made, apply, done. No messages, no coordination.';
+    document.getElementById('homeCap').textContent='Fully funded: download the logo pack, get the '+brandingMethod(f.type)+' made, apply, done. No messages, no coordination.';
   }
   renderSeg(document.getElementById('homeSeg'),homeMode,function(m){homeMode=m;drawHomeMap(f)});
 }
@@ -6945,6 +6964,7 @@ function renderCampaignDetails(l){
           '<div class="campaign-fact"><span>Item ships</span><b>'+safeCardText(l.closed?'Closed &middot; claims refunded':(l.shippedAt?'Shipped to owner':(pct>=100?'Funded · preparing shipment':'New at 100% funded')))+'</b></div>'+
           '<div class="campaign-fact"><span>Owner check-in</span><b>'+safeCardText(cadence(RETL(l)))+'</b></div>'+
           '<div class="campaign-fact"><span>Campaign term</span><b>'+termOf(l)+' months'+(l.termLocked?' · locked':'')+'</b></div>'+
+          '<div class="campaign-fact"><span>Branding method</span><b>'+safeCardText(brandingMaterial(l.type,l.brandingMode))+'</b></div>'+
         '</div>'+
       '</section>'+
       '<section class="campaign-panel">'+
@@ -7573,7 +7593,7 @@ function refreshBuild(){
   var termOut=document.getElementById('buildTermOut');if(termOut)termOut.textContent=termOf(B)+' months';
   var assisted=B.brandingMode==='assisted';
   var fulfillmentOut=document.getElementById('buildFulfillmentOut');if(fulfillmentOut)fulfillmentOut.textContent=assisted?'BrandMyItem applies branding':'You apply branding';
-  var materialOut=document.getElementById('buildMaterialOut');if(materialOut)materialOut.textContent=assisted?'Applied sponsor decal, patch, or magnet':'Sponsor decal, patch, or magnet for you to apply';
+  var materialOut=document.getElementById('buildMaterialOut');if(materialOut)materialOut.textContent=brandingMaterial(B.type,B.brandingMode);
   var feeOut=document.getElementById('buildFeeOut');if(feeOut)feeOut.textContent=Math.round(feeRateOf(B)*100)+'%';
   setBuildChoiceCards('term',B.termMonths||12);setBuildChoiceCards('branding',B.brandingMode||'self');
   refreshTermRunway();
@@ -8568,7 +8588,7 @@ function downloadLogoPack(){
     a.download=(c.brand||'sponsor').replace(/[^a-z0-9]/gi,'_').toLowerCase()+'_spot'+(i+1)+'.png';
     document.body.appendChild(a);a.click();a.remove();got++;
   });
-  toast(got?got+' logo file'+(got>1?'s':'')+' downloading · take them to any print shop':'No uploaded logo files on this listing yet');
+  toast(got?got+' logo file'+(got>1?'s':'')+' downloading · have the '+brandingMethod(CUR.type)+' made':'No uploaded logo files on this listing yet');
 }
 function drawItemMap(){
   var el=document.getElementById('itemMap');
@@ -8598,7 +8618,7 @@ function drawItemMap(){
       return;
     }
     renderFinal(el,CUR,{onTap:function(i){openBid(i)},showOpen:true,h:560});
-    document.getElementById('itemCap').textContent='Tap any open spot on the item to buy it for your brand.';
+    document.getElementById('itemCap').textContent='Tap any open spot on the item to buy it for your brand. The '+brandingMethod(CUR.type)+' is made from your logo.';
   }else{
     if(CUR.custom){
       var faces2=CUR.faces&&CUR.faces.length?CUR.faces:[{photo:CUR.photo,tiles:CUR.tiles,off:0}];
@@ -8606,7 +8626,7 @@ function drawItemMap(){
       return;
     }
     renderFinal(el,CUR,{showOpen:false,h:560});
-    document.getElementById('itemCap').textContent='Fully funded: download the logo pack, get the materials made, apply, done. No messages, no coordination.';
+    document.getElementById('itemCap').textContent='Fully funded: download the logo pack, get the '+brandingMethod(CUR.type)+' made, apply, done. No messages, no coordination.';
   }
   renderSeg(document.getElementById('itemSeg'),itemMode,function(m){itemMode=m;drawItemMap()});
 }
@@ -8644,14 +8664,14 @@ function refreshItemCards(){
     'Exact prices, first come, first served. The 20% platform fee is always included; BrandMyItem adds 10% fulfillment, making the total 30% before applicable tax and shipping.':
     'Exact prices, first come, first served. The 20% platform fee is always included. Applicable tax and shipping may also be added at checkout.';
   var fulfillmentEl=document.getElementById('iFulfillment');if(fulfillmentEl)fulfillmentEl.textContent=assisted?'BrandMyItem applies branding':'You apply branding';
-  var materialEl=document.getElementById('iMaterial');if(materialEl)materialEl.textContent=assisted?'Applied sponsor decal, patch, or magnet':'Sponsor decal, patch, or magnet for you to apply';
+  var materialEl=document.getElementById('iMaterial');if(materialEl)materialEl.textContent=brandingMaterial(CUR.type,CUR.brandingMode);
   var totalFeeEl=document.getElementById('iTotalFee');if(totalFeeEl)totalFeeEl.textContent=Math.round(feeRateOf(CUR)*100)+'%';
   var taxEl=document.getElementById('iTax');if(taxEl)taxEl.textContent='Sales tax if applicable at checkout';
   var termEl=document.getElementById('iTerm');if(termEl)termEl.textContent=termOf(CUR)+' months'+(CUR.termLocked?' · locked':'');
   var claimed=CUR.slots-openSlots(CUR);
   document.getElementById('spotSummary').innerHTML=
-    claimed+' of '+CUR.slots+' spots sold. Spots from '+money(Math.min.apply(null,CUR.prices))+' &middot; big banners carry a premium. Every sponsor submits their logo at purchase; that file is what gets produced.'+
-    (pct>=100?' <a href="#" id="logoPackBtn" style="font-weight:600;text-decoration:underline">Download the logo pack</a> and have your stickers or patches made at any print shop.':'');
+    claimed+' of '+CUR.slots+' spots sold. Spots from '+money(Math.min.apply(null,CUR.prices))+' &middot; big banners carry a premium. Every sponsor submits their logo at purchase; the '+safeCardText(brandingMethod(CUR.type))+' is produced from that file.'+
+    (pct>=100?' <a href="#" id="logoPackBtn" style="font-weight:600;text-decoration:underline">Download the logo pack</a> and have the '+safeCardText(brandingMethod(CUR.type))+' made.':'');
   var lp=document.getElementById('logoPackBtn');
   if(lp)lp.onclick=function(e){e.preventDefault();downloadLogoPack()};
   renderOwnerTools();
@@ -8745,7 +8765,7 @@ function openBid(i){
   document.getElementById('mStep1').style.display='';
   document.getElementById('mStep3').style.display='none';
   document.getElementById('mTitle').textContent='Buy this spot';
-  document.getElementById('mSlotInfo').innerHTML=meta.pos+' &middot; '+meta.size+' placement on '+LBLL(CUR)+'. Your logo goes on the item itself and on this page. First come, first served. You are charged today; if the listing does not sell out within 60 days, this spot is refunded automatically.';
+  document.getElementById('mSlotInfo').innerHTML=meta.pos+' &middot; '+meta.size+' placement on '+LBLL(CUR)+'. Branding method: '+safeCardText(brandingMethod(CUR.type))+', '+(CUR.brandingMode==='assisted'?'applied by BrandMyItem':'for you to apply')+'. Your logo goes on the item itself and on this page. First come, first served. You are charged today; if the listing does not sell out within 60 days, this spot is refunded automatically.';
   document.getElementById('mPrice').textContent=money(price);
   document.getElementById('mFee').textContent=money(fee);
   var feeLabel=document.getElementById('mFeeLabel');if(feeLabel)feeLabel.textContent='Total fee before tax & shipping ('+Math.round(feeRateOf(CUR)*100)+'%)';
