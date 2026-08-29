@@ -914,14 +914,16 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
           <div class="habs" id="freqPills"></div>
           <div class="label">Social following</div>
           <div class="habs" id="socialPills"></div>
-          <div class="label">Verify identity and reach</div>
+          <div class="label">Share your reach</div>
           <div class="social-connect" id="socialConnect"></div>
         </div></div>
         <div class="card"><div class="card-h"><div class="card-t">The deal</div></div>
         <div class="card-c" style="padding-top:8px">
           <div class="fact"><span>Item ships</span><b>new, at 100% claimed</b></div>
           <div class="fact"><span>Check-in</span><b id="cadOut">monthly photo</b></div>
-          <div class="fact"><span>Term</span><b>12 months</b></div>
+           <div class="fact"><span>Term</span><b id="buildTermOut">12 months</b></div>
+           <div class="field" style="margin-top:14px"><label class="label" for="termSelect">Commitment term</label><select class="input" id="termSelect"><option value="6">6 months</option><option value="12" selected>12 months</option><option value="18">18 months</option></select><p class="finetext" style="margin:5px 0 0">This applies to the whole listing and locks when the first spot sells.</p></div>
+           <div class="field" style="margin-top:14px"><label class="label" for="brandingSelect">Branding fulfillment</label><select class="input" id="brandingSelect"><option value="self" selected>I'll apply it myself · 20% platform fee</option><option value="assisted">IRLi applies it · 10% platform fee</option></select><p class="finetext" style="margin:5px 0 0">Self-applied target: 30 days. Assisted target: 60 days.</p></div>
           <div class="total"><span class="t1">Goal when fully claimed</span><span class="t2" id="totalOut">$0</span></div>
         </div></div>
         <div class="card"><div class="card-h"><div class="card-t">Post it</div></div>
@@ -957,11 +959,11 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
       </div></div>
       <div class="card"><div class="card-h"><div class="card-t">The deal</div></div>
       <div class="card-c" style="padding-top:8px">
-        <div class="fact"><span>Ships</span><b>new, at 100% claimed</b></div>
+         <div class="fact"><span>Ships</span><b id="iShips">new, at 100% claimed</b></div>
         <div class="fact"><span>Check-in</span><b id="iCad"></b></div>
-        <div class="fact"><span>Term</span><b>12 months</b></div>
+        <div class="fact"><span>Term</span><b id="iTerm">12 months</b></div>
       </div></div>
-      <div class="card"><div class="card-h"><div class="card-t">The spots</div><div class="card-d">Exact prices, first come, first served. A 20% platform fee is added at checkout.</div></div>
+       <div class="card"><div class="card-h"><div class="card-t">The spots</div><div class="card-d" id="iFeeCopy">Exact prices, first come, first served. A 20% platform fee is added at checkout.</div></div>
       <div class="card-c" style="padding-top:10px;font-size:13.5px;color:var(--mfg);line-height:1.6" id="spotSummary"></div></div>
     </div>
      <div class="card brand-fit-card" style="margin-top:14px">
@@ -979,16 +981,10 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
          <div id="iSocialLinks" class="brand-social-links"></div>
        </div>
      </div>
-    <div class="card" style="margin-top:14px" id="ledgerCard">
-      <div class="card-h"><div class="card-t">Escrow ledger</div><div class="card-d">Where every dollar sits right now.</div></div>
-      <div class="card-c" style="padding-top:6px">
-        <div class="ledger" id="ledgerBody"></div>
-      </div>
-    </div>
     <div class="card" style="margin-top:14px" id="ownerToolsCard">
-      <div class="card-h"><div class="card-t">Owner tools</div><div class="card-d">Only the item owner needs this section &mdash; shown here since this demo has no login.</div></div>
+       <div class="card-h"><div class="card-t">Owner tools</div><div class="card-d">Shipping, delivery, and public check-in tools for this demo listing.</div></div>
       <div class="card-c" style="padding-top:10px">
-        <div id="verifyBlock"></div>
+         <div id="verifyBlock"></div>
         <div id="checkinBlock" style="margin-top:16px"></div>
       </div>
     </div>
@@ -1057,27 +1053,12 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
       <div class="field"><label class="label" for="mBrand">Brand name</label><input class="input" id="mBrand" placeholder="Acme"></div>
       <div class="field"><label class="label" for="mMail">Work email</label><input class="input" id="mMail" type="email" placeholder="you@brand.com"></div>
       <div class="field"><label class="label" for="mLink">Link, optional</label><input class="input" id="mLink" placeholder="https://"></div>
-      <div class="card" style="border-radius:14px;margin-bottom:2px"><div class="card-c" style="padding:12px 14px"><div class="fact"><span>Spot price</span><b id="mPrice"></b></div><div class="fact"><span>Platform fee (20%)</span><b id="mFee"></b></div><div class="fact"><span>Total today</span><b id="mTotal"></b></div></div></div>
+       <div class="card" style="border-radius:14px;margin-bottom:2px"><div class="card-c" style="padding:12px 14px"><div class="fact"><span>Spot price</span><b id="mPrice"></b></div><div class="fact"><span id="mFeeLabel">Platform fee (20%)</span><b id="mFee"></b></div><div class="fact"><span>Total today</span><b id="mTotal"></b></div></div></div>
       <div class="mrow">
         <button class="btn btn-outline" id="mCancel">Cancel</button>
         <button class="btn btn-primary" id="mNext">Continue</button>
       </div>
       <p class="finetext">Your logo is the handoff: once the item fully funds, the owner downloads it and produces the sticker, patch, or magnet from your exact file. No back and forth needed.</p>
-    </div>
-    <div id="mStep2" style="display:none">
-      <h3>Your money is held, not handed over</h3>
-      <p class="mp">Here's exactly what protects you before you pay.</p>
-      <div class="escrow-explain">
-        <div class="escrow-row"><div class="escrow-ic">🔒</div><div><b>Funds sit in escrow</b><span>Stripe holds your payment. The owner never touches cash — it only ever pays for the item itself.</span></div></div>
-        <div class="escrow-row"><div class="escrow-ic">🪪</div><div><b>Owner identity is verified</b><span>Before any funds move, the owner completes ID verification tied to their real bank account.</span></div></div>
-        <div class="escrow-row"><div class="escrow-ic">📸</div><div><b>12 months of photo check-ins</b><span>The owner submits proof your logo is still on the item, on the cadence shown on the listing. Miss enough check-ins and your spend is flagged for a refund.</span></div></div>
-      </div>
-      <div class="card" style="border-radius:14px;margin:14px 0 2px"><div class="card-c" style="padding:12px 14px"><div class="fact"><span>Total charged today</span><b id="mTotal2"></b></div></div></div>
-      <div class="mrow">
-        <button class="btn btn-outline" id="mBack">Back</button>
-        <button class="btn btn-primary" id="mClaim">Continue to Stripe &rarr;</button>
-      </div>
-      <p class="finetext">This demo simulates the Stripe redirect — no real card is charged. In production this button opens Stripe Checkout, and the purchase only completes after Stripe confirms payment.</p>
     </div>
     <div id="mStep3" style="display:none">
       <h3>You&rsquo;re in &middot; save this ID</h3>
@@ -1090,7 +1071,7 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
         <button class="btn btn-outline" id="mCopyId">Copy ID</button>
         <button class="btn btn-primary" id="mDone">Done</button>
       </div>
-      <p class="finetext">Track your order any time from <b>Track order</b> in the top menu.</p>
+       <p class="finetext">Your spot was charged immediately in this demo. Track fulfillment and check-ins any time from <b>Track order</b>.</p>
     </div>
   </div>
 </div>
@@ -5116,10 +5097,10 @@ function cadence(retail){return retail<100?'monthly photo':retail<=500?'photo ev
 function ago(ts){var s=Math.max(1,(Date.now()-ts)/1000);if(s<60)return Math.floor(s)+'s ago';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago'}
 function pad(n){return n<10?'0'+n:''+n}
 
-var AUCTION_DAYS=14;
+var AUCTION_DAYS=60;
 var CATS=[
   {id:'All',item:null},{id:'Tech',item:'macbook'},{id:'Carry',item:'weekender'},
-  {id:'Hydration',item:'bottle'},{id:'Travel',item:'case'},{id:'Event',item:'golfbag'}
+  {id:'Hydration',item:'bottle'},{id:'Travel',item:'case'},{id:'Sports',item:'paddle'},{id:'Style',item:'suit'}
 ];
 var ITEMS={
   macbook:{label:'MacBook Pro',brand:'Apple',color:'Space Black',cat:'Tech',retail:1999,maxSlots:8,surf:[28,18],
@@ -5134,14 +5115,14 @@ var ITEMS={
     specs:[['Size','Cabin approved 55 cm'],['Shell','Grooved polycarbonate'],['Color','Silver'],['Wheels','4 spinner'],['Ad surface','Front shell &middot; 34 &times; 46 cm']]},
   headphones:{label:'AirPods Max',brand:'Apple',color:'Space Gray',cat:'Tech',retail:549,maxSlots:2,surf:[8,8],
     specs:[['Type','Wireless over-ear, ANC'],['Battery','30 h'],['Color','Space Gray'],['Build','Anodized aluminum earcups'],['Ad surface','Outer earcup plates &middot; 8 &times; 8 cm each']]},
-  golfbag:{label:'14-Way Cart Golf Bag',brand:'Sun Mountain',color:'Black/Charcoal',cat:'Event',retail:400,maxSlots:5,surf:[60,25],
-    specs:[['Type','14-way cart bag'],['Pockets','9, incl. cooler sleeve'],['Color','Black/Charcoal'],['Where it lives','Four hours a round, every weekend'],['Ad surface','Side panels &middot; 60 &times; 25 cm']]},
-  weekender:{label:'Leather Weekender Duffel',brand:'Studio Line',color:'Black',cat:'Carry',retail:650,maxSlots:3,surf:[40,22],
-    specs:[['Material','Full-grain leather'],['Hardware','Polished silver'],['Color','Black'],['Decoration','Stitched patches, not vinyl'],['Ad surface','Front face &middot; 40 &times; 22 cm']]},
-  paddle:{label:'Carbon Fiber Pickleball Paddle',brand:'Studio Line',color:'Charcoal Fade',cat:'Event',retail:150,maxSlots:2,surf:[20,25],
-    specs:[['Face','Carbon fiber, matte finish'],['Weight','7.9 oz'],['Color','Charcoal Fade'],['Where it lives','League nights, packed courts'],['Ad surface','Paddle face &middot; 20 &times; 25 cm']]},
-  suit:{label:'Two-Piece Wool Suit',brand:'Studio Line',color:'Navy',cat:'Event',retail:750,maxSlots:4,surf:[40,50],
-    specs:[['Cut','Slim, two-piece'],['Fabric','Wool blend'],['Color','Navy'],['The day','One wedding, 150 guests, photos forever'],['Ad surface','Jacket back &middot; 40 &times; 50 cm']]},
+  golfbag:{label:'PXG Deluxe Carry Stand Bag',brand:'PXG',color:'White / Black',cat:'Sports',retail:400,maxSlots:5,surf:[60,25],
+    specs:[['Type','Deluxe carry stand bag'],['Pockets','Multiple zip pockets'],['Color','White / Black'],['Where it lives','Golf courses, range days, tournaments'],['Ad surface','Side panels &middot; 60 &times; 25 cm']]},
+  weekender:{label:'Louis Vuitton Keepall Bandouliere 55 Monogram Eclipse',brand:'Louis Vuitton',color:'Monogram Eclipse',cat:'Carry',retail:2800,maxSlots:3,surf:[40,22],
+    specs:[['Canvas','Monogram Eclipse coated canvas'],['Size','55 cm'],['Hardware','Black hardware'],['Carry','Removable adjustable strap'],['Ad surface','Front face &middot; 40 &times; 22 cm']]},
+  paddle:{label:'JOOLA Pro V Perseus Pickleball Paddle',brand:'JOOLA',color:'Black / Red',cat:'Sports',retail:280,maxSlots:2,surf:[20,25],
+    specs:[['Series','Pro V Perseus'],['Face','Carbon-friction textured surface'],['Weight','Approx. 8.0 oz'],['Where it lives','League nights and packed courts'],['Ad surface','Paddle face &middot; 20 &times; 25 cm']]},
+  suit:{label:'Two-Piece Wool Tuxedo',brand:'Formalwear',color:'Black',cat:'Style',retail:750,maxSlots:4,surf:[40,50],
+    specs:[['Cut','Two-piece tuxedo'],['Fabric','Wool blend'],['Color','Black'],['The day','Weddings, galas, and formal events'],['Ad surface','Jacket back &middot; 40 &times; 50 cm']]},
   backpack:{label:'Commuter Backpack',brand:'Studio Line',color:'Black',cat:'Carry',retail:325,maxSlots:4,surf:[35,45],
     specs:[['Material','Ballistic nylon'],['Capacity','24L, fits 16" laptop'],['Color','Black'],['Build','Weatherproof zips, luggage pass-through strap'],['Ad surface','Front panel &middot; 35 &times; 45 cm']]}
 };
@@ -5153,10 +5134,10 @@ var ITEM_VARIANTS={
   bottle:{colors:[['Cream','#EDE6DC'],['Charcoal','#3A3A3C'],['Lagoon','#4E7C8A'],['Rose Quartz','#D98A93'],['Fog','#B9BCC0'],['Plum','#5B4A63'],['Iris','#6E7FBF'],['Cloud Pink','#E8C9D0']],sizeLabel:'Size',sizeQ:'Pick your capacity.',sizes:[['30 oz',-8],['40 oz',0]]},
   case:{colors:[['Silver','#C7C9CC'],['Black','#26262A'],['Titanium Grey','#8B8D90'],['Graphite','#4A4A4E'],['Coral','#D98878']],sizeLabel:'Size',sizeQ:'Cabin or check-in?',sizes:[['Cabin',0],['Check-In',150]]},
   headphones:{colors:[['Space Gray','#4A4A4E'],['Silver','#D6D7DA'],['Sky Blue','#8FB3C9'],['Pink','#E3B6C2'],['Starlight','#E7E2D3'],['Midnight','#2B2E36']],sizeLabel:'Fit',sizeQ:'One size, made to fit.',sizes:[['Standard',0]]},
-  golfbag:{colors:[['Black/Charcoal','#26262A'],['White','#F2F2F2'],['Navy','#28324A'],['Red','#9B2C22']],sizeLabel:'Style',sizeQ:'Cart or stand?',sizes:[['Cart',0],['Stand',-60]]},
-  weekender:{colors:[['Black','#26262A'],['Cognac','#7B4B32'],['Chocolate Brown','#4A362A']],sizeLabel:'Size',sizeQ:'One size, fits an overnight.',sizes:[['Standard',0]]},
-  paddle:{colors:[['Charcoal Fade','#54545A'],['Black','#26262A'],['Navy','#28324A']],sizeLabel:'Weight',sizeQ:'Pick your paddle weight.',sizes:[['7.6 oz',0],['7.9 oz',0],['8.2 oz',0]]},
-  suit:{colors:[['Navy','#242A38'],['Charcoal','#3A3A3C'],['Black','#1D1D1F']],sizeLabel:'Size',sizeQ:'Pick your jacket size.',sizes:[['38R',0],['40R',0],['42R',0],['44R',0]]},
+  golfbag:{colors:[['White / Black','#F2F2F2'],['Black','#26262A'],['Navy','#28324A']],sizeLabel:'Style',sizeQ:'Choose your bag color.',sizes:[['Standard',0]]},
+  weekender:{colors:[['Monogram Eclipse','#26262A']],sizeLabel:'Size',sizeQ:'One size, 55 cm.',sizes:[['Keepall 55',0]]},
+  paddle:{colors:[['Black / Red','#2C2528'],['Black / Blue','#262A34']],sizeLabel:'Model',sizeQ:'Pick your Pro V model.',sizes:[['Perseus',0],['Scorpeus',0],['Kosmos',0]]},
+  suit:{colors:[['Black','#1D1D1F']],sizeLabel:'Size',sizeQ:'Pick your jacket size.',sizes:[['38R',0],['40R',0],['42R',0],['44R',0]]},
   backpack:{colors:[['Black','#26262A'],['Graphite','#4A4A4E'],['Navy','#28324A']],sizeLabel:'Capacity',sizeQ:'How much do you carry daily?',sizes:[['22L',-30],['28L',0]]}
 };
 var SIZE_TIERS=[[0.19,'Small'],[0.28,'Medium'],[1,'Large']];
@@ -5358,11 +5339,83 @@ if(HAS_CLOUD){
   console.log('BMI shared database: unavailable here, running local-only');
 }
 function logAct(txt){DB.activity.unshift({txt:txt,ts:Date.now()});DB.activity=DB.activity.slice(0,20);saveDB()}
-function raisedOf(l){return l.claims.reduce(function(s,c){return s+(c?c.amt:0)},0)}
+function claimIsRefunded(c){return !!(c&&c.refunded)}
+function raisedOf(l){return (l.claims||[]).reduce(function(s,c){return s+(c&&!claimIsRefunded(c)?c.amt:0)},0)}
 function goalOf(l){return l.prices.reduce(function(s,p){return s+p},0)}
 function pctOf(l){var g=goalOf(l);return g?Math.min(100,raisedOf(l)/g*100):0}
-function openSlots(l){return l.claims.filter(function(c){return!c}).length}
-function endOf(l){return l.created+AUCTION_DAYS*86400000}
+function openSlots(l){return l.closed?0:(l.claims||[]).filter(function(c){return!c}).length}
+function termOf(l){var n=parseInt(l&&l.termMonths,10);return n===6||n===18?n:12}
+function feeRateOf(l){return l&&l.brandingMode==='assisted'?0.10:0.20}
+function feeFor(l,price){return Math.round(price*feeRateOf(l))}
+function deliveryDaysOf(l){return l&&l.brandingMode==='assisted'?60:30}
+function endOf(l){return (l.postedAt||l.created)+((l.unsoldTimeoutDays||AUCTION_DAYS)*86400000)}
+function checkinStatus(l){
+  var shipped=l&&l.shippedAt,submitted=(l&&l.checkins||[]).length;
+  if(!shipped)return {expected:0,missed:0,overdue:false,nonCompliant:!!(l&&l.nonCompliant)};
+  var expected=Math.min(termOf(l),Math.max(0,Math.floor((Date.now()-shipped)/(30*86400000))));
+  var missed=Math.max(0,expected-submitted);
+  return {expected:expected,missed:missed,overdue:missed>=1&&missed<2,nonCompliant:missed>=2||!!(l&&l.nonCompliant)};
+}
+function refreshCheckinStatus(l){
+  if(!l)return;
+  var s=checkinStatus(l);
+  l.missedCheckins=s.missed;
+  l.checkinOverdue=!!s.overdue;
+  if(s.nonCompliant)l.nonCompliant=true;
+  if(l.nonCompliant)l.ownerRestricted=true;
+}
+function normalizeModelState(){
+  var changed=false;
+  (DB.listings||[]).forEach(function(l){
+    if(!l.postedAt){l.postedAt=l.created||Date.now();changed=true}
+    if(!l.unsoldTimeoutDays){l.unsoldTimeoutDays=60;changed=true}
+    if(!l.termMonths){l.termMonths=12;changed=true}
+    if(!l.brandingMode){l.brandingMode='self';changed=true}
+    if(!l.termLocked&&(l.claims||[]).some(function(c){return !!c&&!c.refunded})){l.termLocked=true;changed=true}
+    if(!l.status)l.status=l.closed?'closed':'live';
+    if(!Array.isArray(l.claims))l.claims=[];
+    (l.claims||[]).forEach(function(c){
+      if(!c)return;
+      if(!c.feeRate)c.feeRate=feeRateOf(l);
+      if(c.fee===undefined)c.fee=feeFor(l,c.amt||0);
+      if(c.escrow){delete c.escrow;changed=true}
+    });
+    if(pctOf(l)>=100&&!l.fundedAt){l.fundedAt=Date.now();changed=true}
+    if(pctOf(l)>=100&&l.fundedAt&&!l.promisedDeliveryAt){
+      l.promisedDeliveryAt=l.fundedAt+deliveryDaysOf(l)*86400000;changed=true;
+    }
+    refreshCheckinStatus(l);
+  });
+  if(changed)store.set('bmi_db4',DB);
+}
+function processListingLifecycle(){
+  var changed=false,now=Date.now();
+  (DB.listings||[]).forEach(function(l){
+    if(l.closed){refreshCheckinStatus(l);return}
+    if(pctOf(l)>=100&&!l.fundedAt){
+      l.fundedAt=now;l.promisedDeliveryAt=now+deliveryDaysOf(l)*86400000;l.status='funded';changed=true;
+    }
+    if(pctOf(l)<100&&now>=endOf(l)){
+      l.closed=true;l.status='closed';l.closedAt=now;l.refundReason='unsold_timeout';
+      (l.claims||[]).forEach(function(c){if(c&&!c.refunded){c.refunded=true;c.refundedAt=now;c.refundReason='Listing did not sell out within 60 days';}});
+      DB.activity.unshift({txt:'<b>'+safeCardText(l.owner||'Owner')+'</b>&rsquo;s <b>'+safeCardText(LBLL(l))+'</b> expired after 60 days &middot; all sponsors refunded',ts:now});
+      changed=true;
+    }else if(pctOf(l)>=100&&!l.shippedAt&&l.promisedDeliveryAt&&now>=l.promisedDeliveryAt){
+      if(!l.delayNotice){
+        l.delayNotice={sentAt:now,proposedAt:now+30*86400000,automatic:true,requiresResponse:true};
+        DB.activity.unshift({txt:'<b>Delivery delay</b> reported for '+safeCardText(LBLL(l))+' · sponsors can wait or refund',ts:now});
+        changed=true;
+      }else if(now>=l.delayNotice.proposedAt){
+        l.closed=true;l.status='closed';l.closedAt=now;l.refundReason='Non-delivery after delay window';
+        (l.claims||[]).forEach(function(c){if(c&&!c.refunded){c.refunded=true;c.refundedAt=now;c.refundReason='Non-delivery after the delivery delay window';}});
+        DB.activity.unshift({txt:'<b>'+safeCardText(LBLL(l))+'</b> closed after non-delivery &middot; all sponsors refunded',ts:now});
+        changed=true;
+      }
+    }
+    refreshCheckinStatus(l);
+  });
+  if(changed){DB.activity=DB.activity.slice(0,20);store.set('bmi_db4',DB)}
+}
 
 /* spot geometry: cells around a 3x3 grid, center reserved for the item glyph.
    order ring: TL,T,TR,L,R,BL,B,BR — first N of a per-count order */
@@ -5379,6 +5432,7 @@ function LBLL(l){return l.custom?(l.title||((l.type&&ITEMS[l.type])?ITEMS[l.type
 function PHO(l){return listingPhoto(l)}
 function RETL(l){return l.custom?(l.retail||l.prices.reduce(function(a,b){return a+b},0)):ITEMS[l.type].retail}
 function slotMeta(type,count,i){
+  if(!ITEMS[type])return{pos:'Spot '+(i+1),size:'Placement',dims:'Exact size shown on listing',key:null};
   var key=ORDER[count][i];
   var big=(key==='t'||key==='b');
   var frac=big?0.32:0.16;
@@ -5433,6 +5487,10 @@ function sponsorLogoStack(l){
 }
 function listingContextHtml(l){
   var parts=[];
+  if(l.closed)parts.push('<span style="color:#B23327">Closed · refunded</span>');
+  else if(l.nonCompliant)parts.push('<span style="color:#B23327">Check-in overdue · posting restricted</span>');
+  else if(l.shippedAt)parts.push('<span style="color:#1F7A44">Shipped · check-ins active</span>');
+  else if(pctOf(l)>=100)parts.push('<span style="color:#1F7A44">Funded · preparing shipment</span>');
   var locations=[];
   (l.cities||[]).slice(0,2).forEach(function(v){if(v&&!locations.includes(v))locations.push(v)});
   (l.universities||[]).slice(0,1).forEach(function(v){if(v&&!locations.includes(v))locations.push(v)});
@@ -6354,7 +6412,8 @@ function renderHomeCampaigns(){
 }
 function homeReferenceRowHtml(l,c){
   var photo=listingPhoto(l);
-  var status=c.escrow||'held',label=ESCROW_LABEL[status]||'Held';
+  var status=c.refunded?'refunded':(l.shippedAt?'shipped':(pctOf(l)>=100?'funded':'purchased'));
+  var label=c.refunded?'Refunded':(l.shippedAt?'Shipped':(pctOf(l)>=100?'Funded':'Purchased'));
   return '<button class="home-reference-row" type="button">'+
     (photo?'<img class="home-reference-thumb" src="'+photo+'" alt="">':'')+
     '<span class="home-reference-copy"><span class="home-reference-title">'+LBLL(l)+'</span><span class="home-reference-meta">'+c.brand+' &middot; '+c.subId+'</span></span>'+
@@ -6492,9 +6551,9 @@ function renderCampaignDetails(l){
       '<section class="campaign-panel campaign-purpose">'+
         '<div class="campaign-label">Campaign brief</div><p>'+safeCardText(purpose)+'</p>'+
         '<div class="campaign-facts">'+
-          '<div class="campaign-fact"><span>Item ships</span><b>New at 100% funded</b></div>'+
+          '<div class="campaign-fact"><span>Item ships</span><b>'+safeCardText(l.closed?'Closed &middot; claims refunded':(l.shippedAt?'Shipped to owner':(pct>=100?'Funded · preparing shipment':'New at 100% funded')))+'</b></div>'+
           '<div class="campaign-fact"><span>Owner check-in</span><b>'+safeCardText(cadence(RETL(l)))+'</b></div>'+
-          '<div class="campaign-fact"><span>Campaign term</span><b>12 months</b></div>'+
+          '<div class="campaign-fact"><span>Campaign term</span><b>'+termOf(l)+' months'+(l.termLocked?' · locked':'')+'</b></div>'+
         '</div>'+
       '</section>'+
       '<section class="campaign-panel">'+
@@ -6655,7 +6714,7 @@ function renderDash(){
 }
 
 /* ============ BUILD ============ */
-var B={type:'macbook',slots:4,prices:[],habs:['Coffee shops'],cities:[],universities:[],purpose:'',freq:'Daily',social:'1K\u201310K',socialLinks:{},avatar:''};
+var B={type:'macbook',slots:4,prices:[],habs:['Coffee shops'],cities:[],universities:[],purpose:'',freq:'Daily',social:'1K\u201310K',socialLinks:{},avatar:'',termMonths:12,brandingMode:'self'};
 var AVATAR_COUNT=18;
 function canonicalAvatar(src){
   var value=String(src||''),match=value.match(/avatars\/avatar-(\d+)\.png$/);
@@ -6999,6 +7058,16 @@ function showBuild(){
   renderLocationPicker('universities');
   renderAvatarPicker();
   renderSocialConnect();
+  var termSelect=document.getElementById('termSelect');
+  if(termSelect){
+    termSelect.value=String(B.termMonths||12);
+    termSelect.onchange=function(){B.termMonths=termOf({termMonths:this.value});refreshBuild()};
+  }
+  var brandingSelect=document.getElementById('brandingSelect');
+  if(brandingSelect){
+    brandingSelect.value=B.brandingMode||'self';
+    brandingSelect.onchange=function(){B.brandingMode=this.value;refreshBuild()};
+  }
   cuPickTemplate(B.type);
   document.getElementById('slotMinus').onclick=function(){if(B.slots>1){B.slots--;B.prices=suggest(B.type,B.slots);refreshBuild();cuRepart()}};
   document.getElementById('slotPlus').onclick=function(){var cap=CU.template?tmplMax(CU.template):(CU.closed?8:ITEMS[B.type].maxSlots);if(B.slots<cap){B.slots++;if(!CU.template)B.prices=suggest(B.type,B.slots);refreshBuild();cuRepart()}};
@@ -7017,6 +7086,7 @@ function refreshBuild(){
   document.getElementById('slotMinus').disabled=B.slots<=1;
   document.getElementById('slotPlus').disabled=B.slots>=ITEMS[B.type].maxSlots;
   document.getElementById('cadOut').textContent=cadence(ITEMS[B.type].retail);
+  var termOut=document.getElementById('buildTermOut');if(termOut)termOut.textContent=termOf(B)+' months';
   renderSpotMap(document.getElementById('buildMap'),{type:B.type,slots:B.slots,prices:B.prices,claims:null},
     {mode:'edit',onPrice:function(i,v){B.prices[i]=v;totals()}});
   totals();
@@ -7582,6 +7652,11 @@ function postListing(){
   var mail=document.getElementById('pMail').value.trim();
   if(!name||!mail){toast('Add your name and email to post');return}
   if(!B.avatar){toast('Choose a Memoji before posting');return}
+  if(DB.listings.some(function(existing){return existing.ownerRestricted&&existing.mail&&existing.mail.toLowerCase()===mail.toLowerCase()})){
+    toast('This owner is restricted from posting after missed check-ins');return;
+  }
+  var selectedTerm=termOf({termMonths:(document.getElementById('termSelect')||{value:B.termMonths}).value});
+  var selectedBranding=(document.getElementById('brandingSelect')||{value:B.brandingMode}).value==='assisted'?'assisted':'self';
   var l;
   if(CU.template&&CU.angles&&CU.angles.length>1&&!CU.faces.length&&CU.tiles.length){
     /* catalog item: same zone layout offered on each photographed face */
@@ -7606,14 +7681,16 @@ function postListing(){
     var mdl=(document.getElementById('tModel')||{value:''}).value.trim();
     l={id:uid(),type:'custom',custom:true,photo:CU.faces[0].photo,faces:facesOut,tiles:CU.faces[0].tiles,
       retail:retail,title:mdl||null,owner:name,mail:mail,avatar:B.avatar,habs:B.habs.slice(),cities:B.cities.slice(),universities:B.universities.slice(),purpose:B.purpose.trim(),freq:B.freq,social:B.social,color:B.color,socialLinks:Object.assign({},B.socialLinks),slots:flatTiles.length,
-      prices:prices,claims:prices.map(function(){return null}),created:Date.now()};
+      prices:prices,claims:prices.map(function(){return null}),created:Date.now(),postedAt:Date.now(),unsoldTimeoutDays:60,
+      termMonths:selectedTerm,termLocked:false,brandingMode:selectedBranding,status:'live',shipping:{}};
     CU.faces=[];cuFaceChips();
   }else{
     l={id:uid(),type:B.type,owner:name,mail:mail,avatar:B.avatar,habs:B.habs.slice(),cities:B.cities.slice(),universities:B.universities.slice(),purpose:B.purpose.trim(),freq:B.freq,social:B.social,color:B.color,socialLinks:Object.assign({},B.socialLinks),slots:B.slots,
-      prices:B.prices.slice(),claims:B.prices.map(function(){return null}),created:Date.now()};
+      prices:B.prices.slice(),claims:B.prices.map(function(){return null}),created:Date.now(),postedAt:Date.now(),unsoldTimeoutDays:60,
+      termMonths:selectedTerm,termLocked:false,brandingMode:selectedBranding,status:'live',shipping:{}};
   }
   DB.listings.unshift(l);
-  logAct('<b>'+name+'</b> posted a <b>'+LBLL(l)+'</b> &middot; '+B.slots+' spot'+(B.slots>1?'s':''));
+  logAct('<b>'+name+'</b> posted a <b>'+LBLL(l)+'</b> &middot; '+l.slots+' spot'+(l.slots>1?'s':''));
   saveDB();
   toast('Your item is live and unbranded');
   location.hash='item/'+l.id;
@@ -7666,7 +7743,9 @@ function migratePhoto(){
   saveDB();
   console.log('BMI photo model: '+DB.listings.filter(function(l){return l.custom}).length+'/'+DB.listings.length+' listings on photos');
 }
+normalizeModelState();
 suitFix();migratePhoto();
+processListingLifecycle();
 var CUR=null,itemMode='auction',claimSlot=-1,logoData=null;
 var TRACK_MATCHES=[];
 function demoTrackMatches(){
@@ -7683,8 +7762,8 @@ function demoTrackMatches(){
       brand:row.brand,
       mail:'demo@brandmyitem.com',
       amt:amt,
-      fee:Math.round(amt*0.2),
-      escrow:'active',
+      fee:feeFor(listing,amt),
+      feeRate:feeRateOf(listing),
       purchasedAt:Date.now()-1000*60*60*24*row.days,
       subId:row.subId,
       demo:true
@@ -7745,16 +7824,16 @@ function trackSubmitHtml(l,c){
   var key=trackSubmitKey(c.subId);
   var checkins=l.checkins||[];
   var first=checkins.length===0;
-  var ready=!!c.demo||(!!l.ownerVerified&&pctOf(l)>=100);
+  var ready=!!c.demo||!!l.shippedAt;
   if(!ready){
     return '<div class="track-submit">'+
       '<div class="track-submit-title">Submit item proof</div>'+
-      '<p class="track-submit-copy">Proof submissions unlock after the item is fully funded, shipped, and identity verification is complete.</p>'+
+      '<p class="track-submit-copy">Proof submissions unlock after the item has shipped to the owner.</p>'+
     '</div>';
   }
   return '<div class="track-submit">'+
     '<div class="track-submit-title">'+(first?'Submit your receipt and first photo':'Submit month '+(checkins.length+1)+' photo')+'</div>'+
-    '<p class="track-submit-copy">'+(first?'Your receipt proves the item was purchased after funding. Add the first item photo to start the 12-month check-in timeline.':'Add the latest photo of the item to keep this month\\u2019s check-in on track.')+'</p>'+
+     '<p class="track-submit-copy">'+(first?'Your receipt proves the item was purchased after funding. Add the first item photo to start the '+termOf(l)+'-month check-in timeline.':'Add the latest photo of the item to keep this month\\u2019s check-in on track.')+'</p>'+
     (first?'<div class="track-submit-grid"><div class="field"><label class="label" for="trackDate_'+key+'">Purchase date on receipt</label><input class="input" id="trackDate_'+key+'" type="date"></div><div><label class="label" for="trackReceipt_'+key+'">Receipt</label><input id="trackReceipt_'+key+'" type="file" accept="image/*" class="input" style="padding:9px"></div></div>':'')+
     '<div class="field" style="margin-top:12px"><label class="label" for="trackPhoto_'+key+'">'+(first?'First item photo':'Month '+(checkins.length+1)+' photo')+'</label><input id="trackPhoto_'+key+'" type="file" accept="image/*" class="input" style="padding:9px"></div>'+
     '<p class="finetext" id="trackSubmitErr_'+key+'" style="display:none;color:#B23327;margin:10px 0 0"></p>'+
@@ -7809,6 +7888,31 @@ function submitTrackProof(itemId,subId,key){
     toast(first?'Receipt and first photo submitted · '+cid:'Month '+l.checkins.length+' photo submitted · '+cid);
   }
 }
+function sendDelayNotice(l){
+  if(!l||!l.fundedAt)return;
+  var promised=l.promisedDeliveryAt||l.fundedAt+deliveryDaysOf(l)*86400000;
+  l.promisedDeliveryAt=promised;
+  l.delayNotice={sentAt:Date.now(),proposedAt:promised+30*86400000,requiresResponse:false};
+  logAct('<b>Delivery delay notice</b> sent for '+LBLL(l)+' · brands can wait or receive a full refund');
+  saveDB();toast('Delay notice sent · brands can choose wait or refund');
+}
+function respondDelay(itemId,subId,choice){
+  var l=DB.listings.filter(function(x){return x.id===itemId})[0],c=null;
+  if(l)(l.claims||[]).forEach(function(x){if(x&&x.subId===subId)c=x});
+  if(!c&&/^BMI-DEMO/.test(subId)){var demo=demoTrackMatches().filter(function(m){return m.c.subId===subId})[0];if(demo){l=demo.l;c=demo.c}}
+  if(!l||!c)return;
+  c.delayResponse=choice;c.delayRespondedAt=Date.now();
+  if(choice==='refund'){c.refunded=true;c.refundedAt=Date.now();c.refundReason='Brand chose a full refund after a delivery delay';}
+  saveDB();toast(choice==='refund'?'Full refund recorded':'Thanks · your wait consent was recorded');
+  if(document.getElementById('tkResult')&&TRACK_MATCHES.length)renderTrackResults(TRACK_MATCHES);
+  if(document.getElementById('tkDemoResult'))renderTrackDemos();
+  if(CUR&&CUR.id===l.id){refreshItemCards();drawItemMap()}
+}
+function delayActionHtml(l,c){
+  if(!l.delayNotice||c.refunded)return '';
+  if(c.delayResponse)return '<div class="track-submit-copy" style="margin-top:12px">Delay response: <b>'+safeCardText(c.delayResponse==='wait'?'Waiting for the new delivery date':'Full refund recorded')+'</b>.</div>';
+  return '<div class="track-submit" style="margin-top:12px"><div class="track-submit-title">Delivery delay notice</div><p class="track-submit-copy">IRLi has proposed delivery by <b>'+new Date(l.delayNotice.proposedAt).toLocaleDateString()+'</b>. Choose to wait, or receive a full refund now.</p><div class="mrow"><button class="btn btn-outline" type="button" onclick="respondDelay(\''+l.id+'\',\''+c.subId+'\',\'refund\')">Refund my spot</button><button class="btn btn-primary" type="button" onclick="respondDelay(\''+l.id+'\',\''+c.subId+'\',\'wait\')">I&rsquo;ll wait</button></div></div>';
+}
 function trackCardHtml(l,c){
   updateEscrowStatuses(l);
   var photo=listingPhoto(l);
@@ -7816,34 +7920,34 @@ function trackCardHtml(l,c){
   steps.push({done:true,label:'Spot purchased',sub:new Date(c.purchasedAt).toLocaleDateString()+' \u00b7 '+money(c.amt+c.fee)+' charged'});
   var pct=pctOf(l);
   var funded=pct>=100;
-  steps.push({done:funded,active:!funded,label:'Item fully funded & shipped',sub:funded?'All spots sold \u2014 item purchased and shipped to the owner':Math.round(pct)+'% funded so far'});
+  steps.push({done:!!l.shippedAt,active:funded&&!l.shippedAt,label:'Item fully funded & shipped',sub:l.shippedAt?'All spots sold \u2014 item purchased and shipped to the owner':(funded?'All spots sold \u2014 shipment is being prepared':Math.round(pct)+'% funded so far')});
   var checkins=l.checkins||[];
-  for(var i=0;i<12;i++){
+  for(var i=0;i<termOf(l);i++){
     var ci=checkins[i];
     steps.push({done:!!ci,active:!ci&&funded&&i===checkins.length,label:'Month '+(i+1)+' check-in',sub:ci?('Photo received '+new Date(ci.date).toLocaleDateString()):'Not yet submitted'});
   }
-  var badge=ESCROW_LABEL[c.escrow]||'Held';
+  var checkState=checkinStatus(l);
+  var badge=c.refunded?'Refunded':(checkState.nonCompliant?'Non-compliant':(checkState.overdue?'Check-in overdue':(l.shippedAt?'Shipped':'Purchased')));
   return '<details class="card track-order">'+
       '<summary class="track-order-summary">'+
         (photo?'<img src="'+photo+'" style="width:56px;height:56px;object-fit:contain;background:#fff;border:1px solid var(--border);border-radius:12px;flex-shrink:0" alt="">':'')+
         '<div class="track-order-summary-copy"><div class="track-order-title">'+LBLL(l)+'</div><div class="track-order-meta">'+c.brand+' \u00b7 '+c.subId+'</div></div>'+
-        '<span class="escrow-badge '+(c.escrow||'held')+'">'+badge+'</span>'+
+        '<span class="escrow-badge '+(c.refunded?'risk':(checkState.nonCompliant||checkState.overdue?'risk':'active'))+'">'+badge+'</span>'+
         '<span class="track-order-chevron" aria-hidden="true">&#8964;</span>'+
       '</summary>'+
       '<div class="track-order-content">'+
       '<div class="track-timeline">'+steps.map(function(s){
         return '<div class="track-step '+(s.done?'done':(s.active?'active':''))+'"><div class="track-dot"></div><div class="track-line"></div><div class="track-body"><b>'+s.label+'</b><span>'+s.sub+'</span></div></div>';
       }).join('')+'</div>'+
-      trackSubmitHtml(l,c)+
+       trackSubmitHtml(l,c)+delayActionHtml(l,c)+
       '<details style="margin-top:4px"><summary style="cursor:pointer;font-size:13px;font-weight:600;color:#6e6e73">Advanced details</summary>'+
         '<div style="margin-top:10px;font-size:13px;color:#3a3a3c;line-height:2">'+
           '<div>Submission ID <b style="float:right">'+c.subId+'</b></div>'+
           '<div>Spot price <b style="float:right">'+money(c.amt)+'</b></div>'+
-          '<div>Platform fee (20%) <b style="float:right">'+money(c.fee)+'</b></div>'+
+          '<div>Platform fee ('+Math.round((c.feeRate===undefined?feeRateOf(l):c.feeRate)*100)+'%) <b style="float:right">'+money(c.fee)+'</b></div>'+
           '<div>Total charged <b style="float:right">'+money(c.amt+c.fee)+'</b></div>'+
-          '<div>Escrow status <b style="float:right">'+badge+'</b></div>'+
-          '<div>Check-ins on file <b style="float:right">'+checkins.length+' of 12</b></div>'+
-          '<div>Owner identity verified <b style="float:right">'+(l.ownerVerified?'Yes':'Not yet')+'</b></div>'+
+          '<div>Fulfillment status <b style="float:right">'+badge+'</b></div>'+
+          '<div>Check-ins on file <b style="float:right">'+checkins.length+' of '+termOf(l)+'</b></div>'+
         '</div>'+
       '</details>'+
     '</div></details>';
@@ -7910,11 +8014,14 @@ function drawItemMap(){
   renderSeg(document.getElementById('itemSeg'),itemMode,function(m){itemMode=m;drawItemMap()});
 }
 function refreshItemCards(){
+  processListingLifecycle();refreshCheckinStatus(CUR);
   var raised=raisedOf(CUR),goal=goalOf(CUR),pct=pctOf(CUR);
   document.getElementById('iRaised').textContent=money(raised);
   document.getElementById('iGoal').textContent=money(goal);
   document.getElementById('iBar').style.width=pct+'%';
-  document.getElementById('iTag').innerHTML='<span class="badge '+(pct>=100?'badge-ok':'badge-sec')+'">'+(pct>=100?'BRANDED':'UNBRANDED')+'</span>';
+  var checkState=checkinStatus(CUR);
+  document.getElementById('iTag').innerHTML='<span class="badge '+(pct>=100?'badge-ok':'badge-sec')+'">'+(CUR.closed?'CLOSED':(pct>=100?'FUNDED':'LIVE'))+'</span>'+
+    (checkState.nonCompliant?'<span class="badge" style="margin-left:6px;background:#FCE4E2;color:#B23327">NON-COMPLIANT</span>':(checkState.overdue?'<span class="badge" style="margin-left:6px;background:#FFF4D6;color:#8A6D1D">CHECK-IN OVERDUE</span>':''));
   document.getElementById('iWho').innerHTML=ownerAvatarHtml(CUR)+'<span>Posted by '+safeCardText(CUR.owner)+'</span>';
   document.getElementById('iHab').textContent=[CUR.habs.join(' \u00b7 '),CUR.freq,CUR.social&&(CUR.social+' followers')].filter(Boolean).join(' \u00b7 ');
   var locEl=document.getElementById('iBrandLocations'),purposeEl=document.getElementById('iPurpose'),socialEl=document.getElementById('iSocial'),linksEl=document.getElementById('iSocialLinks');
@@ -7934,29 +8041,22 @@ function refreshItemCards(){
     }).join(''):'<p class="finetext">No public profiles linked yet.</p>';
   }
   document.getElementById('iCad').textContent=cadence(RETL(CUR));
+  var shipEl=document.getElementById('iShips');if(shipEl)shipEl.textContent=CUR.closed?'closed · claims refunded':(CUR.shippedAt?'shipped to owner':(pct>=100?'funded · preparing shipment':'new, at 100% claimed'));
+  var feeCopy=document.getElementById('iFeeCopy');if(feeCopy)feeCopy.textContent='Exact prices, first come, first served. A '+Math.round(feeRateOf(CUR)*100)+'% platform fee is added at checkout.';
+  var termEl=document.getElementById('iTerm');if(termEl)termEl.textContent=termOf(CUR)+' months'+(CUR.termLocked?' · locked':'');
   var claimed=CUR.slots-openSlots(CUR);
   document.getElementById('spotSummary').innerHTML=
     claimed+' of '+CUR.slots+' spots sold. Spots from '+money(Math.min.apply(null,CUR.prices))+' &middot; big banners carry a premium. Every sponsor submits their logo at purchase; that file is what gets produced.'+
     (pct>=100?' <a href="#" id="logoPackBtn" style="font-weight:600;text-decoration:underline">Download the logo pack</a> and have your stickers or patches made at any print shop.':'');
   var lp=document.getElementById('logoPackBtn');
   if(lp)lp.onclick=function(e){e.preventDefault();downloadLogoPack()};
-  updateEscrowStatuses(CUR);
-  renderLedger();
   renderOwnerTools();
 }
-var ESCROW_LABEL={held:'Held',active:'Active',risk:'At risk',complete:'Complete'};
+var ESCROW_LABEL={};
 function renderLedger(){
-  var body=document.getElementById('ledgerBody');if(!body)return;
-  var claims=(CUR.claims||[]).filter(Boolean);
-  if(!claims.length){body.innerHTML='<p class="finetext" style="margin:0">No spots sold yet &mdash; nothing sits in escrow until the first purchase.</p>';return}
-  body.innerHTML=claims.map(function(c){
-    var st=c.escrow||'held';
-    return '<div class="ledger-row"><div><div class="ledger-brand">'+c.brand+'</div><div class="ledger-amt">'+money(c.amt+c.fee)+' total &middot; '+money(c.amt)+' toward the item</div></div>'+
-      '<span class="escrow-badge '+st+'">'+ESCROW_LABEL[st]+'</span></div>';
-  }).join('')+
-  '<p class="finetext" style="margin-top:12px">Held: waiting on full funding. Active: item shipped, 12-month check-ins on track. At risk: two or more check-ins missed, spend flagged for partial refund. Complete: all 12 months verified.</p>';
+  var card=document.getElementById('ledgerCard');if(card)card.style.display='none';
 }
-function renderOwnerTools(){
+function renderOwnerToolsLegacy(){
   var vb=document.getElementById('verifyBlock');if(!vb)return;
   if(CUR.ownerVerified){
     vb.innerHTML='<div class="fact"><span>Identity verification</span><b style="color:#1F7A44">Verified \u2713</b></div>'+
@@ -8055,21 +8155,96 @@ function renderOwnerTools(){
     r.readAsDataURL(f);
   };
 }
+function renderOwnerTools(){
+  var vb=document.getElementById('verifyBlock'),cb=document.getElementById('checkinBlock');
+  if(!vb||!cb||!CUR)return;
+  CUR.shipping=CUR.shipping||{};
+  var sh=CUR.shipping;
+  vb.innerHTML='<div class="campaign-label">Shipping details</div>'+
+    '<p class="finetext" style="margin:5px 0 12px">IRLi buys the item and ships it directly. This is fulfillment information, not identity verification.</p>'+
+    '<div class="track-submit-grid">'+
+      '<div class="field"><label class="label" for="shipName">Recipient name</label><input class="input" id="shipName" value="'+safeCardText(sh.name||CUR.owner||'')+'"></div>'+
+      '<div class="field"><label class="label" for="shipPostal">Postal code</label><input class="input" id="shipPostal" value="'+safeCardText(sh.postal||'')+'"></div>'+
+    '</div>'+
+    '<div class="field" style="margin-top:10px"><label class="label" for="shipAddress">Shipping address</label><input class="input" id="shipAddress" value="'+safeCardText(sh.address||'')+'" placeholder="Street address"></div>'+
+    '<div class="track-submit-grid" style="margin-top:10px"><div class="field"><label class="label" for="shipCity">City / state</label><input class="input" id="shipCity" value="'+safeCardText(sh.city||'')+'"></div><div class="field"><label class="label" for="shipCountry">Country</label><input class="input" id="shipCountry" value="'+safeCardText(sh.country||'United States')+'"></div></div>'+
+    '<button class="btn btn-outline btn-full" id="saveShippingBtn" type="button" style="margin-top:12px">Save shipping details</button>'+
+    '<p class="finetext" id="shippingStatus" style="display:none;color:#1F7A44;margin:8px 0 0"></p>';
+  document.getElementById('saveShippingBtn').onclick=function(){
+    CUR.shipping={name:document.getElementById('shipName').value.trim(),postal:document.getElementById('shipPostal').value.trim(),address:document.getElementById('shipAddress').value.trim(),city:document.getElementById('shipCity').value.trim(),country:document.getElementById('shipCountry').value.trim()};
+    saveDB();document.getElementById('shippingStatus').textContent='Shipping details saved';document.getElementById('shippingStatus').style.display='block';
+  };
+  var pct=pctOf(CUR),term=termOf(CUR),checkins=CUR.checkins||[],status=checkinStatus(CUR);
+  if(CUR.closed){
+    cb.innerHTML='<div class="fact"><span>Listing status</span><b style="color:#B23327">Closed · all sponsors refunded</b></div><p class="finetext" style="margin:8px 0 0">This listing did not sell out within 60 days. No item will be purchased or shipped.</p>';
+    return;
+  }
+  if(pct<100){
+    cb.innerHTML='<p class="finetext" style="margin:0;color:#8e8e93">Check-ins begin after all spots sell and the item ships. '+Math.round(pct)+'% funded so far.</p>';
+    return;
+  }
+  if(!CUR.shippedAt){
+    cb.innerHTML='<div class="fact"><span>Fulfillment</span><b>Ready for IRLi shipment</b></div>'+
+      '<p class="finetext" style="margin:8px 0 12px">Target delivery: '+deliveryDaysOf(CUR)+' days after funding ('+(CUR.promisedDeliveryAt?new Date(CUR.promisedDeliveryAt).toLocaleDateString():'being scheduled')+').</p>'+
+      '<button class="btn btn-primary btn-full" id="markShippedBtn" type="button">Mark item shipped to owner</button>'+
+      '<button class="btn btn-outline btn-full" id="delayNoticeBtn" type="button" style="margin-top:8px">Send a delivery delay notice</button>'+
+      (CUR.delayNotice?'<p class="finetext" style="margin:9px 0 0;color:#8A6D1D">Delay notice sent on '+new Date(CUR.delayNotice.sentAt).toLocaleDateString()+' · proposed date '+new Date(CUR.delayNotice.proposedAt).toLocaleDateString()+'</p>':'');
+    document.getElementById('markShippedBtn').onclick=function(){
+      CUR.shippedAt=Date.now();CUR.status='shipped';saveDB();refreshItemCards();toast('Shipment marked · check-ins are now available');
+    };
+    document.getElementById('delayNoticeBtn').onclick=function(){sendDelayNotice(CUR);renderOwnerTools()};
+    return;
+  }
+  var flag=status.nonCompliant?'NON-COMPLIANT':(status.overdue?'CHECK-IN OVERDUE':'On track');
+  var flagColor=status.nonCompliant||status.overdue?'#B23327':'#1F7A44';
+  var prog='<div class="fact"><span>Public check-in status</span><b style="color:'+flagColor+'">'+flag+'</b></div>'+
+    '<div class="fact"><span>Check-ins submitted</span><b>'+checkins.length+' of '+term+'</b></div>'+
+    '<div class="pbar" style="margin:8px 0 14px"><i style="display:block;height:100%;background:#1D1D1F;border-radius:99px;width:'+Math.min(100,Math.round(checkins.length/term*100))+'%"></i></div>'+
+    '<p class="finetext" style="margin:0 0 12px">The sale is settled. Check-ins are display-only trust signals; missed check-ins never trigger a refund.</p>';
+  if(status.nonCompliant)prog+='<p class="finetext" style="margin:0 0 12px;color:#B23327"><b>Posting restricted:</b> two consecutive missed check-ins restrict this owner from new listings.</p>';
+  var isFirst=checkins.length===0,fundedDate=CUR.fundedAt?new Date(CUR.fundedAt).toLocaleDateString():'the funding date';
+  if(isFirst){
+    cb.innerHTML=prog+'<p class="finetext" style="margin:0 0 12px">First check-in requires a receipt and purchase date on or after '+fundedDate+'.</p>'+
+      '<div class="field"><label class="label" for="receiptDate">Purchase date on receipt</label><input class="input" id="receiptDate" type="date"></div>'+
+      '<input type="file" id="receiptInput" accept="image/*" style="display:none"><div class="upl" id="receiptBox" style="margin-bottom:12px">Upload receipt · required</div>'+
+      '<input type="file" id="checkinInput" accept="image/*" style="display:none"><div class="upl" id="checkinBox">Upload check-in photo · required</div>'+
+      '<p class="finetext" id="receiptErr" style="display:none;color:#B23327;margin:10px 0 0"></p><button class="btn btn-primary btn-full" id="checkinBtn" type="button" style="margin-top:12px">Submit first check-in</button>';
+    var receiptData=null,checkinData=null,rbox=document.getElementById('receiptBox'),rinput=document.getElementById('receiptInput'),cbox=document.getElementById('checkinBox'),cinput=document.getElementById('checkinInput');
+    rbox.onclick=function(){rinput.click()};cbox.onclick=function(){cinput.click()};
+    rinput.onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){receiptData=r.result;rbox.innerHTML='<img src="'+receiptData+'" alt="receipt">'};r.readAsDataURL(f)};
+    cinput.onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){checkinData=r.result;cbox.innerHTML='<img src="'+checkinData+'" alt="check-in">'};r.readAsDataURL(f)};
+    document.getElementById('checkinBtn').onclick=function(){
+      var err=document.getElementById('receiptErr'),dateVal=document.getElementById('receiptDate').value;
+      err.style.display='none';
+      if(!dateVal){err.textContent='Enter the purchase date shown on your receipt.';err.style.display='block';return}
+      if(!receiptData){err.textContent='Upload your receipt.';err.style.display='block';return}
+      if(!checkinData){err.textContent='Upload your check-in photo.';err.style.display='block';return}
+      var receiptTime=new Date(dateVal+'T12:00:00').getTime();
+      if(CUR.fundedAt&&receiptTime<CUR.fundedAt-86400000){err.textContent='That date is before the campaign funded. Use the receipt from after funding.';err.style.display='block';return}
+      CUR.checkins=[{date:Date.now(),photo:checkinData,receipt:receiptData,receiptDate:receiptTime,confirmId:'CI-'+uid().toUpperCase().slice(0,6)}];
+      refreshCheckinStatus(CUR);logAct('<b>'+CUR.owner+'</b> submitted a check-in for <b>'+LBLL(CUR)+'</b>');saveDB();refreshItemCards();openShare(checkinData,CUR.checkins[0].confirmId);
+    };
+    return;
+  }
+  cb.innerHTML=prog+'<input type="file" id="checkinInput" accept="image/*" style="display:none"><button class="btn btn-primary btn-full" id="checkinBtn" type="button">Submit this month&rsquo;s check-in photo</button>'+
+    '<div style="margin-top:14px">'+checkins.slice().reverse().map(function(ci){return '<div class="checkin-item"><img src="'+ci.photo+'" alt=""><span class="ci-date">'+new Date(ci.date).toLocaleDateString()+'</span></div>'}).join('')+'</div>';
+  document.getElementById('checkinBtn').onclick=function(){document.getElementById('checkinInput').click()};
+  document.getElementById('checkinInput').onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){var cid='CI-'+uid().toUpperCase().slice(0,6);CUR.checkins.push({date:Date.now(),photo:r.result,confirmId:cid});refreshCheckinStatus(CUR);saveDB();refreshItemCards();openShare(r.result,cid)};r.readAsDataURL(f)};
+}
 function openBid(i){
   var c=CUR.claims[i];
-  if(c){toast('That spot is sold');return}
+  if(c||CUR.closed){toast(c?'That spot is sold':'This listing is closed');return}
   claimSlot=i;logoData=null;
   var meta=slotMeta(CUR.type,CUR.slots,i);
-  var price=CUR.prices[i],fee=Math.round(price*0.2),total=price+fee;
+  var price=CUR.prices[i],fee=feeFor(CUR,price),total=price+fee;
   document.getElementById('mStep1').style.display='';
-  document.getElementById('mStep2').style.display='none';
   document.getElementById('mStep3').style.display='none';
   document.getElementById('mTitle').textContent='Buy this spot';
   document.getElementById('mSlotInfo').innerHTML=meta.pos+' &middot; '+meta.size+' ('+meta.dims+') on '+LBLL(CUR)+'. Your logo goes on the item itself and on this page. First come, first served.';
   document.getElementById('mPrice').textContent=money(price);
   document.getElementById('mFee').textContent=money(fee);
+  var feeLabel=document.getElementById('mFeeLabel');if(feeLabel)feeLabel.textContent='Platform fee ('+Math.round(feeRateOf(CUR)*100)+'%)';
   document.getElementById('mTotal').textContent=money(total);
-  document.getElementById('mTotal2').textContent=money(total);
   document.getElementById('uplBox').innerHTML='Upload your logo · required (PNG, transparent works best)';
   document.getElementById('mBrand').value='';document.getElementById('mMail').value='';document.getElementById('mLink').value='';
   document.getElementById('modalBg').classList.add('on');
@@ -8088,30 +8263,26 @@ document.getElementById('mNext').onclick=function(){
   var mail=document.getElementById('mMail').value.trim();
   if(!brand||!mail){toast('Add your brand name and email');return}
   if(!logoData){toast('Upload your logo — it is the file the owner prints from');return}
-  document.getElementById('mStep1').style.display='none';
-  document.getElementById('mStep2').style.display='';
+   completePurchase();
 };
-document.getElementById('mBack').onclick=function(){
-  document.getElementById('mStep1').style.display='';
-  document.getElementById('mStep2').style.display='none';
-};
-document.getElementById('mClaim').onclick=function(){
+function completePurchase(){
   var brand=document.getElementById('mBrand').value.trim();
   var mail=document.getElementById('mMail').value.trim();
   if(CUR.claims[claimSlot]){toast('That spot just sold');document.getElementById('modalBg').classList.remove('on');return}
-  var price=CUR.prices[claimSlot],fee=Math.round(price*0.2);
+  var price=CUR.prices[claimSlot],fee=feeFor(CUR,price),now=Date.now();
   var subId='BMI-'+uid().toUpperCase().slice(0,6);
   CUR.claims[claimSlot]={brand:brand,mail:mail,link:document.getElementById('mLink').value.trim(),logo:logoData,amt:price,fee:fee,
-    escrow:'held',purchasedAt:Date.now(),subId:subId,itemId:CUR.id};
-  logAct('<b>'+brand+'</b> bought a spot on '+CUR.owner+'&rsquo;s <b>'+LBLL(CUR)+'</b> &middot; '+money(price));
-  updateEscrowStatuses(CUR);
+    feeRate:feeRateOf(CUR),purchasedAt:now,subId:subId,itemId:CUR.id,ts:now};
+  if(!CUR.termLocked){CUR.termLocked=true;CUR.termLockedAt=now}
+  if(pctOf(CUR)>=100&&!CUR.fundedAt){CUR.fundedAt=now;CUR.status='funded';CUR.promisedDeliveryAt=now+deliveryDaysOf(CUR)*86400000}
+  logAct('<b>'+brand+'</b> bought a spot on '+CUR.owner+'&rsquo;s <b>'+LBLL(CUR)+'</b> &middot; '+money(price)+' charged today');
   saveDB();
   drawItemMap();refreshItemCards();
-  document.getElementById('mStep2').style.display='none';
+  document.getElementById('mStep1').style.display='none';
   document.getElementById('mStep3').style.display='';
   document.getElementById('mSubId').textContent=subId;
   document.getElementById('mSubMail').textContent=mail;
-};
+}
 document.getElementById('mCopyId').onclick=function(){
   var id=document.getElementById('mSubId').textContent;
   var done=function(){toast('Submission ID copied')};
@@ -8119,24 +8290,10 @@ document.getElementById('mCopyId').onclick=function(){
   else done();
 };
 document.getElementById('mDone').onclick=function(){document.getElementById('modalBg').classList.remove('on')};
-function updateEscrowStatuses(l){
-  var pct=pctOf(l);
-  if(pct>=100&&!l.fundedAt)l.fundedAt=Date.now();
-  (l.claims||[]).forEach(function(c){
-    if(!c)return;
-    if(c.escrow==='held'&&pct>=100)c.escrow='active';
-    if(c.escrow==='active'){
-      var need=Math.min(12,Math.max(1,Math.ceil((Date.now()-(l.created||Date.now()))/(1000*60*60*24*30))));
-      var got=(l.checkins||[]).length;
-      if(got>=12)c.escrow='complete';
-      else if(need-got>=2)c.escrow='risk';
-      else c.escrow='active';
-    }
-  });
-}
+function updateEscrowStatuses(l){return l}
 var SITE_URL='brandmyitem.com';
 function openShare(photo,checkinId){
-  var caption='I got my '+LBLL(CUR)+' paid for by brands on '+SITE_URL+' \ud83c\udf89';
+  var caption='I got my '+LBLL(CUR)+' paid for by brands on '+SITE_URL+' \ud83c\udf89 #ad';
   var itemPhoto=listingPhoto(CUR)||photo||'';
   var img=document.getElementById('sharePreview');
   img.src=itemPhoto;
