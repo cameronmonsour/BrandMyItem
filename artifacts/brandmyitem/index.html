@@ -483,6 +483,18 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .fact:last-child{border:none}
 .fact span{color:var(--mfg)}
 .fact b{font-weight:600}
+.choice-grid{display:grid;gap:8px}
+.choice-grid.term-choice-grid{grid-template-columns:repeat(3,1fr)}
+.choice-grid.fulfillment-choice-grid{grid-template-columns:repeat(2,1fr)}
+.choice-card{appearance:none;text-align:left;border:1px solid var(--border);border-radius:12px;background:#fff;padding:11px 12px;min-height:70px;color:var(--fg);cursor:pointer;transition:border-color .15s,background .15s,box-shadow .15s}
+.choice-card:hover{border-color:#8e8e93}
+.choice-card.on{border-color:#1D1D1F;background:#F5F5F7;box-shadow:inset 0 0 0 1px #1D1D1F}
+.choice-card strong,.choice-card span,.choice-card small{display:block}
+.choice-card strong{font-size:14px;margin-bottom:4px}
+.choice-card span{font-size:12.5px;line-height:1.35;color:var(--mfg)}
+.choice-card small{font-size:11.5px;line-height:1.35;color:var(--mfg);margin-top:5px}
+.choice-note{font-size:12px;line-height:1.45;color:var(--mfg);margin:7px 0 0}
+.tax-note{font-size:11.5px;line-height:1.45;color:var(--mfg);margin:8px 0 0}
 .total{display:flex;justify-content:space-between;align-items:baseline;margin:6px 0 0}
 .total .t1{font-size:13px;font-weight:600;color:var(--mfg)}
 .total .t2{font-size:24px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
@@ -921,9 +933,27 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
         <div class="card-c" style="padding-top:8px">
           <div class="fact"><span>Item ships</span><b>new, at 100% claimed</b></div>
           <div class="fact"><span>Check-in</span><b id="cadOut">monthly photo</b></div>
-           <div class="fact"><span>Term</span><b id="buildTermOut">12 months</b></div>
-           <div class="field" style="margin-top:14px"><label class="label" for="termSelect">Commitment term</label><select class="input" id="termSelect"><option value="6">6 months</option><option value="12" selected>12 months</option><option value="18">18 months</option></select><p class="finetext" style="margin:5px 0 0">This applies to the whole listing and locks when the first spot sells.</p></div>
-           <div class="field" style="margin-top:14px"><label class="label" for="brandingSelect">Branding fulfillment</label><select class="input" id="brandingSelect"><option value="self" selected>I'll apply it myself · 20% platform fee</option><option value="assisted">IRLi applies it · 10% platform fee</option></select><p class="finetext" style="margin:5px 0 0">Self-applied target: 30 days. Assisted target: 60 days.</p></div>
+            <div class="fact"><span>Commitment term</span><b id="buildTermOut">12 months</b></div>
+            <div class="fact"><span>Fulfillment</span><b id="buildFulfillmentOut">You apply branding</b></div>
+            <div class="fact"><span>Branded material</span><b id="buildMaterialOut">Sponsor decal, patch, or magnet</b></div>
+            <div class="fact"><span>Platform fee</span><b id="buildFeeOut">20%</b></div>
+            <div class="fact"><span>Taxes</span><b id="buildTaxOut">Sales tax if applicable at checkout</b></div>
+            <div class="field" style="margin-top:14px"><div class="label">Commitment term</div>
+              <div class="choice-grid term-choice-grid" id="termChoices" role="radiogroup" aria-label="Commitment term">
+                <button class="choice-card" type="button" data-choice-group="term" data-value="6" aria-pressed="false"><strong>6 months</strong><span>Shorter commitment</span></button>
+                <button class="choice-card on" type="button" data-choice-group="term" data-value="12" aria-pressed="true"><strong>12 months</strong><span>Balanced commitment</span></button>
+                <button class="choice-card" type="button" data-choice-group="term" data-value="18" aria-pressed="false"><strong>18 months</strong><span>Longest visibility</span></button>
+              </div>
+              <p class="choice-note">This applies to the whole listing and locks permanently when the first spot sells.</p>
+            </div>
+            <div class="field" style="margin-top:14px"><div class="label">Who applies the branding?</div>
+              <div class="choice-grid fulfillment-choice-grid" id="brandingChoices" role="radiogroup" aria-label="Branding fulfillment">
+                <button class="choice-card" type="button" data-choice-group="branding" data-value="assisted" aria-pressed="false"><strong>BrandMyItem</strong><span>We apply the approved sponsor branding.</span><small>10% platform fee · 60-day target</small></button>
+                <button class="choice-card on" type="button" data-choice-group="branding" data-value="self" aria-pressed="true"><strong>You</strong><span>You apply the approved sponsor branding.</span><small>20% platform fee · 30-day target</small></button>
+              </div>
+              <p class="choice-note">In both paths, BrandMyItem buys and ships the physical item. Only the branding application changes.</p>
+              <p class="tax-note">Sales tax, if applicable, is calculated at checkout based on the transaction and buyer location. Listing proceeds may have tax implications for the owner; this demo does not determine filing obligations or provide tax advice.</p>
+            </div>
           <div class="total"><span class="t1">Goal when fully claimed</span><span class="t2" id="totalOut">$0</span></div>
         </div></div>
         <div class="card"><div class="card-h"><div class="card-t">Post it</div></div>
@@ -962,6 +992,9 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
          <div class="fact"><span>Ships</span><b id="iShips">new, at 100% claimed</b></div>
         <div class="fact"><span>Check-in</span><b id="iCad"></b></div>
         <div class="fact"><span>Term</span><b id="iTerm">12 months</b></div>
+         <div class="fact"><span>Fulfillment</span><b id="iFulfillment">You apply branding</b></div>
+         <div class="fact"><span>Branded material</span><b id="iMaterial">Sponsor decal, patch, or magnet</b></div>
+         <div class="fact"><span>Taxes</span><b id="iTax">Sales tax if applicable at checkout</b></div>
       </div></div>
        <div class="card"><div class="card-h"><div class="card-t">The spots</div><div class="card-d" id="iFeeCopy">Exact prices, first come, first served. A 20% platform fee is added at checkout.</div></div>
       <div class="card-c" style="padding-top:10px;font-size:13.5px;color:var(--mfg);line-height:1.6" id="spotSummary"></div></div>
@@ -6716,6 +6749,27 @@ function renderDash(){
 /* ============ BUILD ============ */
 var B={type:'macbook',slots:4,prices:[],habs:['Coffee shops'],cities:[],universities:[],purpose:'',freq:'Daily',social:'1K\u201310K',socialLinks:{},avatar:'',termMonths:12,brandingMode:'self'};
 var AVATAR_COUNT=18;
+function setBuildChoiceCards(group,value){
+  document.querySelectorAll('[data-choice-group="'+group+'"]').forEach(function(card){
+    var selected=String(card.getAttribute('data-value'))===String(value);
+    card.classList.toggle('on',selected);
+    card.setAttribute('aria-pressed',selected?'true':'false');
+  });
+}
+function wireBuildChoices(){
+  document.querySelectorAll('#termChoices .choice-card,#brandingChoices .choice-card').forEach(function(card){
+    if(card._wired)return;
+    card._wired=true;
+    card.onclick=function(){
+      var group=card.getAttribute('data-choice-group'),value=card.getAttribute('data-value');
+      if(group==='term')B.termMonths=termOf({termMonths:value});
+      if(group==='branding')B.brandingMode=value==='assisted'?'assisted':'self';
+      refreshBuild();
+    };
+  });
+  setBuildChoiceCards('term',B.termMonths||12);
+  setBuildChoiceCards('branding',B.brandingMode||'self');
+}
 function canonicalAvatar(src){
   var value=String(src||''),match=value.match(/avatars\/avatar-(\d+)\.png$/);
   if(!match)return value;
@@ -7058,16 +7112,7 @@ function showBuild(){
   renderLocationPicker('universities');
   renderAvatarPicker();
   renderSocialConnect();
-  var termSelect=document.getElementById('termSelect');
-  if(termSelect){
-    termSelect.value=String(B.termMonths||12);
-    termSelect.onchange=function(){B.termMonths=termOf({termMonths:this.value});refreshBuild()};
-  }
-  var brandingSelect=document.getElementById('brandingSelect');
-  if(brandingSelect){
-    brandingSelect.value=B.brandingMode||'self';
-    brandingSelect.onchange=function(){B.brandingMode=this.value;refreshBuild()};
-  }
+  wireBuildChoices();
   cuPickTemplate(B.type);
   document.getElementById('slotMinus').onclick=function(){if(B.slots>1){B.slots--;B.prices=suggest(B.type,B.slots);refreshBuild();cuRepart()}};
   document.getElementById('slotPlus').onclick=function(){var cap=CU.template?tmplMax(CU.template):(CU.closed?8:ITEMS[B.type].maxSlots);if(B.slots<cap){B.slots++;if(!CU.template)B.prices=suggest(B.type,B.slots);refreshBuild();cuRepart()}};
@@ -7087,6 +7132,11 @@ function refreshBuild(){
   document.getElementById('slotPlus').disabled=B.slots>=ITEMS[B.type].maxSlots;
   document.getElementById('cadOut').textContent=cadence(ITEMS[B.type].retail);
   var termOut=document.getElementById('buildTermOut');if(termOut)termOut.textContent=termOf(B)+' months';
+  var assisted=B.brandingMode==='assisted';
+  var fulfillmentOut=document.getElementById('buildFulfillmentOut');if(fulfillmentOut)fulfillmentOut.textContent=assisted?'BrandMyItem applies branding':'You apply branding';
+  var materialOut=document.getElementById('buildMaterialOut');if(materialOut)materialOut.textContent=assisted?'Applied sponsor decal, patch, or magnet':'Sponsor decal, patch, or magnet for you to apply';
+  var feeOut=document.getElementById('buildFeeOut');if(feeOut)feeOut.textContent=Math.round(feeRateOf(B)*100)+'%';
+  setBuildChoiceCards('term',B.termMonths||12);setBuildChoiceCards('branding',B.brandingMode||'self');
   renderSpotMap(document.getElementById('buildMap'),{type:B.type,slots:B.slots,prices:B.prices,claims:null},
     {mode:'edit',onPrice:function(i,v){B.prices[i]=v;totals()}});
   totals();
@@ -7655,8 +7705,8 @@ function postListing(){
   if(DB.listings.some(function(existing){return existing.ownerRestricted&&existing.mail&&existing.mail.toLowerCase()===mail.toLowerCase()})){
     toast('This owner is restricted from posting after missed check-ins');return;
   }
-  var selectedTerm=termOf({termMonths:(document.getElementById('termSelect')||{value:B.termMonths}).value});
-  var selectedBranding=(document.getElementById('brandingSelect')||{value:B.brandingMode}).value==='assisted'?'assisted':'self';
+  var selectedTerm=termOf(B);
+  var selectedBranding=B.brandingMode==='assisted'?'assisted':'self';
   var l;
   if(CU.template&&CU.angles&&CU.angles.length>1&&!CU.faces.length&&CU.tiles.length){
     /* catalog item: same zone layout offered on each photographed face */
@@ -8043,6 +8093,10 @@ function refreshItemCards(){
   document.getElementById('iCad').textContent=cadence(RETL(CUR));
   var shipEl=document.getElementById('iShips');if(shipEl)shipEl.textContent=CUR.closed?'closed · claims refunded':(CUR.shippedAt?'shipped to owner':(pct>=100?'funded · preparing shipment':'new, at 100% claimed'));
   var feeCopy=document.getElementById('iFeeCopy');if(feeCopy)feeCopy.textContent='Exact prices, first come, first served. A '+Math.round(feeRateOf(CUR)*100)+'% platform fee is added at checkout.';
+  var assisted=CUR.brandingMode==='assisted';
+  var fulfillmentEl=document.getElementById('iFulfillment');if(fulfillmentEl)fulfillmentEl.textContent=assisted?'BrandMyItem applies branding':'You apply branding';
+  var materialEl=document.getElementById('iMaterial');if(materialEl)materialEl.textContent=assisted?'Applied sponsor decal, patch, or magnet':'Sponsor decal, patch, or magnet for you to apply';
+  var taxEl=document.getElementById('iTax');if(taxEl)taxEl.textContent='Sales tax if applicable at checkout';
   var termEl=document.getElementById('iTerm');if(termEl)termEl.textContent=termOf(CUR)+' months'+(CUR.termLocked?' · locked':'');
   var claimed=CUR.slots-openSlots(CUR);
   document.getElementById('spotSummary').innerHTML=
