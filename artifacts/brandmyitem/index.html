@@ -416,6 +416,7 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .icontool:hover{background:var(--wash);border-color:var(--border)}
 .icontool.wide{width:auto;padding:0 10px}
 .icontool .lbl{font-size:12px;font-weight:600;white-space:nowrap}
+.icontool:disabled{opacity:.35;cursor:default;pointer-events:none}
 .tool-sep{width:1px;align-self:stretch;background:var(--border);margin:4px 2px}
 .icontool.on{background:#1D1D1F;color:#fff;border-color:#1D1D1F}
 .colorswatch{width:16px;height:16px;border-radius:50%;border:1px solid rgba(60,60,67,.3);background:#1D1D1F;display:block}
@@ -834,6 +835,9 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
 .home-flow-icon{width:82px;height:82px;margin:0 auto 18px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--fg);color:var(--bg);box-shadow:0 0 0 8px var(--bg);position:relative}
 .home-flow-icon.photo{width:154px;height:126px;margin-bottom:4px;border:0;border-radius:0;background:transparent;box-shadow:none;overflow:hidden}
 .home-flow-icon.photo img{display:block;width:100%;height:100%;object-fit:cover;border-radius:0}
+.home-flow-icon.photo.phone img{object-fit:contain}
+.home-flow-icon.photo.truck img{object-fit:contain}
+.home-flow-icon.photo.house img{object-fit:contain}
 .home-flow-icon svg{width:47px;height:47px;overflow:visible}
 .home-flow-icon path,.home-flow-icon rect,.home-flow-icon circle,.home-flow-icon polyline,.home-flow-icon line{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .home-flow-index{display:inline-flex;align-items:center;justify-content:center;width:25px;height:25px;border:1px solid var(--border);border-radius:50%;font-size:11px;font-weight:700;color:var(--mfg);background:var(--bg);margin-bottom:10px}
@@ -963,15 +967,15 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
             <span class="home-flow-index">1</span><h3>Post your item</h3><p>Choose the real product and the 6, 12, or 18-month term.</p>
           </li>
           <li class="home-flow-step">
-            <span class="home-flow-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M9 11h28v28H9z"/><path class="flow-moving" d="M29 11h8v8z M17 27h13 M20 22c0-2 8-2 8 1s-8 2-8 5 8 3 8 1 M24 19v14"/></svg></span>
+            <span class="home-flow-icon photo phone" aria-hidden="true"><img src="how-it-works-brands-buy-spots.png" alt=""></span>
             <span class="home-flow-index">2</span><h3>Brands buy spots</h3><p>They choose an open placement and pay the listed price plus fees immediately.</p>
           </li>
           <li class="home-flow-step">
-            <span class="home-flow-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><g class="flow-moving"><path d="M13 18h19l6 7v10H11V20c0-1 1-2 2-2z"/><circle cx="18" cy="36" r="3"/><circle cx="33" cy="36" r="3"/><path d="M32 20v6h6"/></g><path class="flow-speed" d="M4 23h5 M2 28h7"/></svg></span>
+            <span class="home-flow-icon photo truck" aria-hidden="true"><img src="how-it-works-ships.png" alt=""></span>
             <span class="home-flow-index">3</span><h3>It ships</h3><p>At 100% funded, IRLi LLC buys the item and ships it to the owner.</p>
           </li>
           <li class="home-flow-step">
-            <span class="home-flow-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M7 23L24 9l17 14 M11 20v20h26V20 M20 40V28h8v12"/><g class="flow-moving"><rect x="30" y="31" width="10" height="9" rx="1"/><path d="M30 34h10"/></g></svg></span>
+            <span class="home-flow-icon photo house" aria-hidden="true"><img src="how-it-works-arrives-branded.png" alt=""></span>
             <span class="home-flow-index">4</span><h3>Arrives branded</h3><p>The owner applies the approved branding, or IRLi can do it for the added 10% fee.</p>
           </li>
           <li class="home-flow-step">
@@ -1086,7 +1090,7 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
       <p style="color:#6e6e73;max-width:560px;margin:0 auto 4px;font-size:16px;line-height:1.5">Tap your item below. We fill in the name, price, spec sheet, and ad zones automatically &mdash; nothing to set up. Spots sum to your item&rsquo;s full price. First come, first served.</p>
       <p style="margin:6px 0 0"><a href="#home" style="color:#1d1d1f;font-weight:600;text-decoration:underline">See live items &rarr;</a></p>
     </div>
-    <div class="builder">
+    <div class="builder" id="builderFlow">
       <div class="bstage">
         
         <div class="card" id="customCard" style="margin-bottom:16px">
@@ -1119,7 +1123,7 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
               <input type="file" id="cuPhoto" accept="image/*" style="display:none">
               <div class="upl" id="cuUpl" style="display:none">Upload a photo of your item &middot; trace where ads may go</div>
                <div id="cuWrap" style="display:none">
-                 <div class="cu-viewport" id="cuViewport"><canvas id="cuCanvas" width="1" height="1"></canvas></div>
+                 <div class="cu-viewport" id="cuViewport"><canvas id="cuCanvas" width="1" height="1" tabindex="0" aria-label="Item photo tracing canvas"></canvas></div>
                  <div class="cu-zoom" role="toolbar" aria-label="Photo zoom controls">
                    <button id="cuZoomOut" type="button" title="Zoom out" aria-label="Zoom out">&minus;</button>
                    <span class="cu-zoom-label" id="cuZoomLabel">100%</span>
@@ -1128,9 +1132,19 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
                  </div>
                 <div id="cuFaces" style="display:none;gap:6px;margin:8px 0"></div>
                 <p class="finetext" id="cuHint">Ad space is pre-placed for you. Drag any box to move it, or use the tools below to add your own.</p>
+                <div class="finetext" id="cuTraceStatus" role="status" aria-live="polite" style="display:none;margin-top:4px"></div>
                 <div class="toolbox" role="toolbar" aria-label="Box editing tools">
-              <button class="icontool" id="cuUndo" type="button" title="Undo last traced point">
+              <button class="icontool wide" id="cuUndo" type="button" title="Undo the last traced point" aria-label="Undo the last traced point" disabled>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M9 7 4 12l5 5"/><path d="M4 12h11a5 5 0 0 1 0 10h-1"/></svg>
+                <span class="lbl">Undo point</span>
+              </button>
+              <button class="icontool wide" id="cuCancelTrace" type="button" title="Cancel the current trace" aria-label="Cancel the current trace" disabled>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="m7 7 10 10M17 7 7 17"/></svg>
+                <span class="lbl">Cancel trace</span>
+              </button>
+              <button class="icontool wide" id="cuReset" type="button" title="Reset all placement zones" aria-label="Reset all placement zones" disabled>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M5 7h14M8 7V5h8v2M7 7l1 13h8l1-13"/><path d="M10 10v7M14 10v7"/></svg>
+                <span class="lbl">Reset zones</span>
               </button>
               <button class="icontool" id="cuDel" type="button" title="Remove selected box" style="display:none">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M4 7h16"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
@@ -1145,7 +1159,7 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
               <button class="icontool" id="cuAdd" type="button" title="Add a box">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
               </button>
-              <button class="icontool" id="cuTrace" type="button" title="Trace a custom shape">
+              <button class="icontool" id="cuTrace" type="button" title="Trace a custom shape" aria-label="Trace a custom shape">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 4c4.5 0 8 2.7 8 6.5S16.5 17 12 17s-8-2.7-8-6.5S7.5 4 12 4Z" stroke-dasharray="2.6 2.2"/><circle cx="17.3" cy="15.6" r="1.3" fill="currentColor" stroke="none"/></svg>
               </button>
               <button class="icontool" id="cuCopy" type="button" title="Duplicate selected box" style="display:none">
@@ -5431,27 +5445,27 @@ var CATS=[
 ];
 var ITEMS={
   macbook:{label:'MacBook Pro',brand:'Apple',color:'Space Black',cat:'Tech',retail:1999,maxSlots:8,surf:[28,18],
-    specs:[['Chip','Apple M5 &middot; 10-core CPU, 10-core GPU'],['Memory','16 GB unified'],['Storage','512 GB SSD'],['Color','Space Black'],['Display','14.2" Liquid Retina XDR'],['Ad surface','The lid &middot; 28 &times; 18 cm']]},
+    specs:[['Chip','Apple M5 &middot; 10-core CPU, 10-core GPU'],['Memory','16 GB unified'],['Storage','512 GB SSD'],['Color','Space Black'],['Display','14.2" Liquid Retina XDR']]},
   iphone:{label:'iPhone 17 Pro',brand:'Apple',color:'Deep Blue',cat:'Tech',retail:1099,maxSlots:4,surf:[7,15],
-    specs:[['Chip','A19 Pro'],['Storage','256 GB'],['Color','Deep Blue'],['Camera','48MP triple system'],['Ad surface','Case back &middot; 7 &times; 15 cm']]},
+    specs:[['Chip','A19 Pro'],['Storage','256 GB'],['Color','Deep Blue'],['Camera','48MP triple system']]},
   cooler:{label:'Tundra Hard Cooler',brand:'YETI',color:'White',cat:'Event',retail:325,maxSlots:4,surf:[45,30],
-    specs:[['Capacity','45 qt rotomolded'],['Ice retention','Up to 5 days'],['Color','White'],['Build','Bear-resistant, rope handles'],['Ad surface','Front face and lid &middot; 45 &times; 30 cm']]},
+    specs:[['Capacity','45 qt rotomolded'],['Ice retention','Up to 5 days'],['Color','White'],['Build','Bear-resistant, rope handles']]},
   bottle:{label:'Quencher H2.0 Tumbler',brand:'Stanley',color:'Cream',cat:'Hydration',retail:45,maxSlots:4,surf:[20,16],
-    specs:[['Capacity','40 oz, handle and straw lid'],['Insulation','Double-wall, 24 h cold'],['Color','Cream'],['Material','Stainless steel'],['Ad surface','Wrap band &middot; 20 &times; 16 cm']]},
+    specs:[['Capacity','40 oz, handle and straw lid'],['Insulation','Double-wall, 24 h cold'],['Color','Cream'],['Material','Stainless steel']]},
   case:{label:'Original Carry-On',brand:'RIMOWA',color:'Silver',cat:'Travel',retail:420,maxSlots:8,surf:[34,46],
-    specs:[['Size','Cabin approved 55 cm'],['Shell','Grooved polycarbonate'],['Color','Silver'],['Wheels','4 spinner'],['Ad surface','Front shell &middot; 34 &times; 46 cm']]},
+    specs:[['Size','Cabin approved 55 cm'],['Shell','Grooved polycarbonate'],['Color','Silver'],['Wheels','4 spinner']]},
   headphones:{label:'AirPods Max',brand:'Apple',color:'Space Gray',cat:'Tech',retail:549,maxSlots:2,surf:[8,8],
-    specs:[['Type','Wireless over-ear, ANC'],['Battery','30 h'],['Color','Space Gray'],['Build','Anodized aluminum earcups'],['Ad surface','Outer earcup plates &middot; 8 &times; 8 cm each']]},
+    specs:[['Type','Wireless over-ear, ANC'],['Battery','30 h'],['Color','Space Gray'],['Build','Anodized aluminum earcups']]},
   golfbag:{label:'PXG Deluxe Carry Stand Bag',brand:'PXG',color:'White / Black',cat:'Sports',retail:400,maxSlots:5,surf:[60,25],
-    specs:[['Type','Deluxe carry stand bag'],['Pockets','Multiple zip pockets'],['Color','White / Black'],['Where it lives','Golf courses, range days, tournaments'],['Ad surface','Side panels &middot; 60 &times; 25 cm']]},
+    specs:[['Type','Deluxe carry stand bag'],['Pockets','Multiple zip pockets'],['Color','White / Black'],['Where it lives','Golf courses, range days, tournaments']]},
   weekender:{label:'Louis Vuitton Keepall Bandouliere 55 Monogram Eclipse',brand:'Louis Vuitton',color:'Monogram Eclipse',cat:'Carry',retail:2800,maxSlots:3,surf:[40,22],
-    specs:[['Canvas','Monogram Eclipse coated canvas'],['Size','55 cm'],['Hardware','Black hardware'],['Carry','Removable adjustable strap'],['Ad surface','Front face &middot; 40 &times; 22 cm']]},
+    specs:[['Canvas','Monogram Eclipse coated canvas'],['Size','55 cm'],['Hardware','Black hardware'],['Carry','Removable adjustable strap']]},
   paddle:{label:'JOOLA Pro V Perseus Pickleball Paddle',brand:'JOOLA',color:'Black / Red',cat:'Sports',retail:280,maxSlots:2,surf:[20,25],
-    specs:[['Series','Pro V Perseus'],['Face','Carbon-friction textured surface'],['Weight','Approx. 8.0 oz'],['Where it lives','League nights and packed courts'],['Ad surface','Paddle face &middot; 20 &times; 25 cm']]},
+    specs:[['Series','Pro V Perseus'],['Face','Carbon-friction textured surface'],['Weight','Approx. 8.0 oz'],['Where it lives','League nights and packed courts']]},
   suit:{label:'Two-Piece Wool Tuxedo',brand:'Formalwear',color:'Black',cat:'Style',retail:750,maxSlots:4,surf:[40,50],
-    specs:[['Cut','Two-piece tuxedo'],['Fabric','Wool blend'],['Color','Black'],['The day','Weddings, galas, and formal events'],['Ad surface','Jacket back &middot; 40 &times; 50 cm']]},
+    specs:[['Cut','Two-piece tuxedo'],['Fabric','Wool blend'],['Color','Black'],['The day','Weddings, galas, and formal events']]},
   backpack:{label:'Commuter Backpack',brand:'Studio Line',color:'Black',cat:'Carry',retail:325,maxSlots:4,surf:[35,45],
-    specs:[['Material','Ballistic nylon'],['Capacity','24L, fits 16" laptop'],['Color','Black'],['Build','Weatherproof zips, luggage pass-through strap'],['Ad surface','Front panel &middot; 35 &times; 45 cm']]}
+    specs:[['Material','Ballistic nylon'],['Capacity','24L, fits 16" laptop'],['Color','Black'],['Build','Weatherproof zips, luggage pass-through strap']]}
 };
 var HAB_BY_CAT={Tech:['Coffee shops','Office'],Event:['Events'],Hydration:['Gym'],Travel:['Airport'],Carry:['Campus','Office']};
 var ITEM_VARIANTS={
@@ -5768,14 +5782,12 @@ function LBLL(l){return l.custom?(l.title||((l.type&&ITEMS[l.type])?ITEMS[l.type
 function PHO(l){return listingPhoto(l)}
 function RETL(l){return l.custom?(l.retail||l.prices.reduce(function(a,b){return a+b},0)):ITEMS[l.type].retail}
 function slotMeta(type,count,i){
-  if(!ITEMS[type])return{pos:'Spot '+(i+1),size:'Placement',dims:'Exact size shown on listing',key:null};
+  if(!ITEMS[type])return{pos:'Spot '+(i+1),size:'Placement',key:null};
   var key=ORDER[count][i];
   var big=(key==='t'||key==='b');
   var frac=big?0.32:0.16;
-  var surf=ITEMS[type].surf;
   var tier='Small';for(var t=0;t<SIZE_TIERS.length;t++){if(frac<=SIZE_TIERS[t][0]){tier=SIZE_TIERS[t][1];break}}
-  var cmW=((big?0.86:0.41)*surf[0]).toFixed(1),cmH=(0.34*surf[1]).toFixed(1);
-  return{pos:POSNAME[key],size:tier,dims:cmW+' &times; '+cmH+' cm',key:key}
+  return{pos:POSNAME[key],size:tier,key:key}
 }
 function suggest(type,count){
   var retail=ITEMS[type].retail;
@@ -6641,7 +6653,7 @@ function route(){
   if(h==='track')showTrack();
 }
 function placeBuilder(){
-  var b=document.querySelector('#v-build .builder');
+  var b=document.getElementById('builderFlow');
   var host=document.getElementById('onboardHost');
   var homeOn=(location.hash||'#home').indexOf('home')>=0||location.hash===''||location.hash==='#';
   if(!b)return;
@@ -6848,7 +6860,7 @@ function campaignValues(values,fallback){
 }
 function campaignSpotMeta(l,i){
   if(ITEMS[l.type])return slotMeta(l.type,l.slots,i);
-  return{pos:'Spot '+(i+1),size:'Placement',dims:'Exact size shown on listing'};
+  return{pos:'Spot '+(i+1),size:'Placement'};
 }
 function campaignSocialLinks(l){
   if(typeof SOCIAL_PLATFORMS==='undefined')return '';
@@ -7470,7 +7482,7 @@ function renderBuildSpecs(k){
   });
 }
 /* ============ CUSTOM ITEM: photo + trace ============ */
-var CU={img:null,photo:null,poly:[],closed:false,tiles:[],prices:[],mixed:true,retail:0,faces:[],shape:'rect',color:'#1D1D1F',tracing:false,sel:-1,zoom:1};
+var CU={img:null,photo:null,poly:[],tracePointer:null,closed:false,tiles:[],prices:[],mixed:true,retail:0,faces:[],shape:'rect',color:'#1D1D1F',tracing:false,sel:-1,zoom:1};
 var FACE_NAMES=['Front','Back','Left','Right'];
 function cuFaceChips(){
   var el=document.getElementById('cuFaces');if(!el)return;
@@ -7486,7 +7498,8 @@ function cuSaveFace(){
   if(!CU.tiles.length){toast('Add boxes or trace this angle first');return false}
   CU.prices=boxPrices();
   CU.faces.push({photo:CU.photo,tiles:CU.tiles.slice(),cells:CU.tiles.length});
-  CU.img=null;CU.photo=null;CU.poly=[];CU.closed=false;CU.tiles=[];CU.prices=[];
+  CU.img=null;CU.photo=null;CU.poly=[];CU.tracePointer=null;CU.tracing=false;CU.closed=false;CU.tiles=[];CU.prices=[];
+  if(CU.syncControls)CU.syncControls();
   cuFaceChips();
   document.getElementById('cuUpl').innerHTML='Angle saved &middot; upload the next photo (up to 4)';
   var cv=document.getElementById('cuCanvas');
@@ -7516,7 +7529,7 @@ function cuKnockout(img){
   return c.toDataURL('image/png');
 }
 function cuPartition(n){
-  if(!CU.closed||CU.poly.length<3)return;
+  if(!CU.closed||CU.poly.length<3)return false;
   var G=40;
   var xs=CU.poly.map(function(p){return p[0]}),ys=CU.poly.map(function(p){return p[1]});
   var x0=Math.min.apply(null,xs),x1=Math.max.apply(null,xs);
@@ -7531,7 +7544,7 @@ function cuPartition(n){
   var cw=(x1-x0)/G,ch=(y1-y0)/G,cells=[],iy,ix;
   for(iy=0;iy<G;iy++)for(ix=0;ix<G;ix++)
     if(inside(x0+(ix+0.5)*cw,y0+(iy+0.5)*ch))cells.push(iy*G+ix);
-  if(cells.length<4)return;
+  if(cells.length<4)return false;
   var set={};cells.forEach(function(i){set[i]=1});
   var wts=[];for(var i2=0;i2<n;i2++)wts.push(CU.mixed?Math.pow(0.62,i2):1);
   function PX(i){return x0+((i%G)+0.5)*cw}
@@ -7585,6 +7598,7 @@ function cuPartition(n){
   CU.tiles=tiles.map(function(t){return {x:t.x,y:t.y,w:t.w,h:t.h}});
   CU.prices=pr;
   B.prices=pr.slice();
+  return true;
 }
 function cuDraw(){
   var cv=document.getElementById('cuCanvas');
@@ -7603,14 +7617,30 @@ function cuDraw(){
   g.drawImage(CU.img,0,0,iw,ih);
   function X(p){return p[0]*iw}
   function Y(p){return p[1]*ih}
-  if(CU.poly.length){
+   if(CU.poly.length){
     g.beginPath();g.moveTo(X(CU.poly[0]),Y(CU.poly[0]));
     CU.poly.slice(1).forEach(function(p){g.lineTo(X(p),Y(p))});
-    if(CU.closed)g.closePath();
-    if(CU.closed){g.fillStyle='rgba(48,209,88,0.20)';g.fill()}
-    g.strokeStyle='#30D158';g.lineWidth=1;
-    g.setLineDash(CU.closed?[]:[8,6]);g.stroke();g.setLineDash([]);
-    CU.poly.forEach(function(p){g.beginPath();g.arc(X(p),Y(p),Math.max(3,iw/160),0,7);g.fillStyle='#30D158';g.fill()});
+     var openTrace=CU.tracing;
+     if(!openTrace&&CU.closed)g.closePath();
+     if(!openTrace&&CU.closed){g.fillStyle='rgba(48,209,88,0.20)';g.fill()}
+     g.strokeStyle='#30D158';g.lineWidth=openTrace?2:1;
+     g.setLineDash(openTrace?[8,6]:[]);g.stroke();g.setLineDash([]);
+     if(openTrace&&CU.tracePointer){
+       g.beginPath();
+       g.moveTo(X(CU.poly[CU.poly.length-1]),Y(CU.poly[CU.poly.length-1]));
+       g.lineTo(X(CU.tracePointer[0]),Y(CU.tracePointer[1]));
+       g.strokeStyle='rgba(48,209,88,.7)';g.lineWidth=1.5;g.setLineDash([5,5]);g.stroke();g.setLineDash([]);
+     }
+     CU.poly.forEach(function(p,i){
+       g.beginPath();
+       g.arc(X(p),Y(p),i===0&&openTrace?Math.max(10,iw/48):Math.max(4,iw/150),0,7);
+       g.fillStyle=i===0&&openTrace?'#1D1D1F':'#30D158';g.fill();
+       if(i===0&&openTrace){
+         g.strokeStyle='#fff';g.lineWidth=Math.max(2,iw/300);g.stroke();
+         g.beginPath();g.arc(X(p),Y(p),Math.max(14,iw/38),0,7);
+         g.strokeStyle='rgba(48,209,88,.85)';g.lineWidth=Math.max(2,iw/300);g.stroke();
+       }
+     });
   }
   CU.tiles.forEach(function(t,i){
     var rx=(t.x-t.w/2)*iw,ry=(t.y-t.h/2)*ih,rw=t.w*iw,rh=t.h*ih;
@@ -7708,11 +7738,11 @@ function cuInit(){
       im.onload=function(){
         CU.photo=cuKnockout(im);
         var im2=new Image();
-        im2.onload=function(){CU.img=im2;CU.template=null;CU.poly=[];CU.closed=false;CU.tiles=[];CU.prices=[];
+        im2.onload=function(){CU.img=im2;CU.template=null;CU.poly=[];CU.tracePointer=null;CU.tracing=false;CU.closed=false;CU.tiles=[];CU.prices=[];
            CU.zoom=1;
           document.getElementById('cuWrap').style.display='block';
           upl.textContent='Photo loaded &middot; trace the ad area below';
-          cuDraw()};
+          traceUI();cuDraw()};
         im2.src=CU.photo;
       };
       im.src=rd.result;
@@ -7726,16 +7756,72 @@ function cuInit(){
     document.getElementById('cuDel').style.display=has?'flex':'none';
     document.getElementById('cuCopy').style.display=has?'flex':'none';
   }
+  function traceUI(){
+    var n=CU.poly.length;
+    var hint=document.getElementById('cuHint');
+    var status=document.getElementById('cuTraceStatus');
+    var undo=document.getElementById('cuUndo');
+    var cancel=document.getElementById('cuCancelTrace');
+    var reset=document.getElementById('cuReset');
+    if(CU.tracing){
+      if(!n){
+        hint.textContent='Tap the photo to place your first point. Tap the first dot to finish.';
+        status.textContent='0 points · Place the first point to begin.';
+      }else if(n<3){
+        hint.textContent=n+' point'+(n===1?'':'s')+' added. Add '+(3-n)+' more, then tap the first dot to finish.';
+        status.textContent=n+' point'+(n===1?'':'s')+' · At least 3 points are required.';
+      }else{
+        hint.textContent=n+' points added. Tap the first dot to finish.';
+        status.textContent='Tap the first dot to finish.';
+      }
+      status.style.display='block';
+    }else{
+      hint.textContent='Ad space is pre-placed for you. Drag any box to move it, or use the tools below to add your own.';
+      status.textContent='';
+      status.style.display='none';
+    }
+    undo.disabled=!(CU.tracing&&n);
+    cancel.disabled=!(CU.tracing||n);
+    reset.disabled=!(CU.tiles.length||CU.tracing||n);
+    cv.style.touchAction=CU.tracing?'none':'auto';
+  }
+  CU.syncControls=traceUI;
+  function cancelTrace(showMessage){
+    var hadTrace=CU.tracing||CU.poly.length;
+    CU.tracing=false;CU.poly=[];CU.tracePointer=null;CU.sel=-1;
+    selUI();traceUI();cuDraw();
+    if(showMessage&&hadTrace)toast('Trace canceled · no zone was added');
+  }
+  function traceStartHit(x,y,r){
+    if(!CU.poly.length)return false;
+    var sx=(x-CU.poly[0][0])*r.width,sy=(y-CU.poly[0][1])*r.height;
+    var target=Math.max(18,Math.min(28,Math.min(r.width,r.height)*0.04));
+    return Math.hypot(sx,sy)<=target;
+  }
+  function resetZones(){
+    if(!CU.tiles.length&&!CU.tracing&&!CU.poly.length)return;
+    cancelTrace(false);
+    if(CU.template){
+      cuApplyTemplate();
+      toast('Placement zones reset');
+      return;
+    }
+    CU.tiles=[];CU.prices=[];CU.closed=false;B.prices=[];CU.sel=-1;
+    selUI();traceUI();cuDraw();totals();
+    toast('Placement zones cleared');
+  }
   function setTool(tool){
-    CU.tracing=(tool==='trace');
+    if(tool==='trace'){
+      CU.tracing=true;CU.poly=[];CU.tracePointer=null;CU.sel=-1;
+    }else{
+      if(CU.tracing||CU.poly.length)cancelTrace(true);
+      CU.tracing=false;
+    }
     if(tool==='rect'||tool==='circle')CU.shape=tool;
     document.getElementById('cuShapeRect').classList.toggle('on',tool==='rect');
     document.getElementById('cuShapeCircle').classList.toggle('on',tool==='circle');
     document.getElementById('cuTrace').classList.toggle('on',tool==='trace');
-    var hint=document.getElementById('cuHint');
-    if(hint)hint.textContent=(tool==='trace')?'Click points around the ad area, then click near your first point to close the shape.':'Ad space is pre-placed for you. Drag any box to move it, or use a shape tool on the left to add your own.';
-    CU.poly=[];
-    cuDraw();
+    selUI();traceUI();cuDraw();
   }
   document.getElementById('cuZoomOut').onclick=function(){cuSetZoom((CU.zoom||1)-0.25)};
   document.getElementById('cuZoomReset').onclick=function(){cuSetZoom(1)};
@@ -7749,6 +7835,25 @@ function cuInit(){
     if(!CU.img)return;
     var r=cv.getBoundingClientRect();
     var x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+    if(CU.tracing){
+      cv.focus();
+      if(CU.poly.length>2&&traceStartHit(x,y,r)){
+        var wasClosed=CU.closed;
+        CU.closed=true;
+        if(!cuPartition(B.slots)){
+          CU.closed=wasClosed;CU.tracePointer=null;traceUI();cuDraw();
+          toast('Make the traced zone a little larger before closing it');
+          return;
+        }
+        CU.poly=[];CU.tracePointer=null;CU.tracing=false;
+        document.getElementById('cuTrace').classList.remove('on');
+        selUI();traceUI();cuDraw();totals();
+        toast('Zone closed · '+B.slots+' spot'+(B.slots>1?'s':'')+' auto-placed');
+        return;
+      }
+      CU.poly.push([x,y]);CU.tracePointer=null;traceUI();cuDraw();
+      return;
+    }
     /* boxes first: resize handle, then body */
     for(var i=CU.tiles.length-1;i>=0;i--){
       var t=CU.tiles[i];
@@ -7768,27 +7873,15 @@ function cuInit(){
       }
     }
     CU.sel=-1;selUI();
-    if(CU.tracing){
-      if(CU.poly.length>2){
-        var p0=CU.poly[0];
-        if(Math.abs(x-p0[0])<0.035&&Math.abs(y-p0[1])<0.035){
-          CU.closed=true;
-          cuPartition(B.slots);
-          CU.poly=[];CU.tracing=false;
-          document.getElementById('cuTrace').classList.remove('on');
-          selUI();cuDraw();totals();
-          toast('Ad space traced &middot; '+B.slots+' spot'+(B.slots>1?'s':'')+' auto-placed &middot; drag any box to adjust');
-          return;
-        }
-      }
-      CU.poly.push([x,y]);
-    }
     cuDraw();
   });
   cv.addEventListener('pointermove',function(e){
-    if(!DRAG)return;
     var r=cv.getBoundingClientRect();
     var x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+    if(!DRAG&&CU.tracing&&CU.poly.length){
+      CU.tracePointer=[x,y];cuDraw();return;
+    }
+    if(!DRAG)return;
     var t=CU.tiles[DRAG.i];if(!t)return;
     if(DRAG.mode==='move'){
       var nx=Math.min(0.98-t.w/2,Math.max(0.02+t.w/2,x-DRAG.dx));
@@ -7812,11 +7905,19 @@ function cuInit(){
     if(DRAG&&CU.tiles[DRAG.i]){nudgeOff(CU.tiles[DRAG.i],keepoutFor());cuDraw()}
     DRAG=null;
   });
+  cv.addEventListener('pointerleave',function(){if(CU.tracing&&CU.tracePointer){CU.tracePointer=null;cuDraw()}});
+  cv.addEventListener('keydown',function(e){
+    if(e.key==='Escape'&&CU.tracing){e.preventDefault();cancelTrace(true)}
+    if((e.key==='Backspace'||e.key==='Delete')&&CU.tracing&&CU.poly.length){
+      e.preventDefault();CU.poly.pop();CU.tracePointer=null;traceUI();cuDraw();
+      toast('Point removed · '+CU.poly.length+' point'+(CU.poly.length===1?'':'s')+' left');
+    }
+  });
   document.getElementById('cuAdd').onclick=function(){
     if(!CU.img){toast('Pick an item or upload a photo first');return}
     CU.tiles.push(nudgeOff({x:0.5,y:0.5,w:0.26,h:0.15,shape:CU.shape,color:CU.color},keepoutFor()));
     CU.sel=CU.tiles.length-1;CU.closed=true;
-    selUI();cuDraw();totals();
+    selUI();traceUI();cuDraw();totals();
   };
   document.getElementById('cuCopy').onclick=function(){
     if(CU.sel<0||!CU.tiles[CU.sel]){toast('Select a box first');return}
@@ -7825,17 +7926,25 @@ function cuInit(){
     if(src.pts)copy.pts=src.pts.map(function(p){return [Math.min(0.98,p[0]+0.05),Math.min(0.98,p[1]+0.05)]});
     CU.tiles.push(nudgeOff(copy,keepoutFor()));
     CU.sel=CU.tiles.length-1;
-    selUI();cuDraw();totals();
+    selUI();traceUI();cuDraw();totals();
   };
   document.getElementById('cuDel').onclick=function(){
     if(CU.sel<0)return;
     CU.tiles.splice(CU.sel,1);CU.prices.splice(CU.sel,1);
-    CU.sel=-1;selUI();cuDraw();totals();
+    CU.sel=-1;if(!CU.tiles.length)CU.closed=false;selUI();traceUI();cuDraw();totals();
   };
   document.getElementById('cuUndo').onclick=function(){
-    if(CU.tracing&&CU.poly.length){CU.poly.pop();cuDraw();return}
+    if(CU.tracing&&CU.poly.length){
+      CU.poly.pop();CU.tracePointer=null;traceUI();cuDraw();
+      toast('Point removed · '+CU.poly.length+' point'+(CU.poly.length===1?'':'s')+' left');
+    }
   };
-  document.getElementById('cuTrace').onclick=function(){setTool('trace')};
+  document.getElementById('cuCancelTrace').onclick=function(){cancelTrace(true)};
+  document.getElementById('cuReset').onclick=resetZones;
+  document.getElementById('cuTrace').onclick=function(){
+    if(CU.tracing){toast(CU.poly.length?'Trace in progress · tap the first dot to finish':'Trace mode is ready · place your first point');return}
+    setTool('trace');
+  };
   document.getElementById('cuShapeRect').onclick=function(){
     setTool('rect');
     if(CU.sel>=0&&CU.tiles[CU.sel]&&CU.tiles[CU.sel].shape!=='poly'){CU.tiles[CU.sel].shape='rect';cuDraw()}
@@ -7850,6 +7959,7 @@ function cuInit(){
     if(CU.sel>=0&&CU.tiles[CU.sel]){CU.tiles[CU.sel].color=CU.color;cuDraw()}
   };
   document.getElementById('cuRetail').onchange=function(){cuRepart()};
+  traceUI();
   document.getElementById('cuFace').onclick=function(){
     if(CU.template){toast('Every angle of this item is already shown');return}
     if(CU.faces.length>=4){toast('Four angles is the max');return}
@@ -7900,6 +8010,7 @@ function tmplMax(t){
 }
 function cuApplyTemplate(){
   var t=CU.template;if(!t)return;
+  CU.tracing=false;CU.poly=[];CU.tracePointer=null;CU.sel=-1;
   var KO=null; /* logo keep-out retired */
   var mx=tmplMax(t);
   if(B.slots>mx)B.slots=mx;
@@ -7917,7 +8028,7 @@ function cuApplyTemplate(){
   CU.prices=scaleP(t,B.slots,retail);
   B.prices=CU.prices.slice();
   CU.closed=true;CU.poly=[];
-  cuDraw();totals();
+  cuDraw();totals();if(CU.syncControls)CU.syncControls();
 }
 function cuAngleChips(){
   var el=document.getElementById('cuFaces');if(!el)return;
@@ -7970,7 +8081,7 @@ function cuComposeAngles(list,done){
   });
 }
 function cuPickTemplate(t){
-  CU.template=t;CU.faces=[];CU.angleIx=0;
+  CU.template=t;CU.faces=[];CU.angleIx=0;CU.tracing=false;CU.poly=[];CU.tracePointer=null;CU.sel=-1;
   /* front photo only for now -- no side or back angles */
   CU.angles=[['Front',ITEM_PHOTOS[t]]];
   document.getElementById('cuRetail').value=ITEMS[t].retail;
@@ -7995,7 +8106,7 @@ function tmplInit(){
   it.onchange=function(){cuPickTemplate(it.value)};
   fillItems();
 }
-function cuRepart(){if(CU.template){cuApplyTemplate()}else if(CU.closed){cuPartition(B.slots);cuDraw();totals()}}
+function cuRepart(){if(CU.template){cuApplyTemplate()}else if(CU.closed&&!CU.tracing){cuPartition(B.slots);cuDraw();totals()}}
 function boxPrices(){
   var retail=Math.max(1,parseInt(document.getElementById('cuRetail').value||'100',10));
   var tot=0;CU.tiles.forEach(function(t){tot+=t.w*t.h});
@@ -8512,7 +8623,7 @@ function openBid(i){
   document.getElementById('mStep1').style.display='';
   document.getElementById('mStep3').style.display='none';
   document.getElementById('mTitle').textContent='Buy this spot';
-  document.getElementById('mSlotInfo').innerHTML=meta.pos+' &middot; '+meta.size+' ('+meta.dims+') on '+LBLL(CUR)+'. Your logo goes on the item itself and on this page. First come, first served. You are charged today; if the listing does not sell out within 60 days, this spot is refunded automatically.';
+  document.getElementById('mSlotInfo').innerHTML=meta.pos+' &middot; '+meta.size+' placement on '+LBLL(CUR)+'. Your logo goes on the item itself and on this page. First come, first served. You are charged today; if the listing does not sell out within 60 days, this spot is refunded automatically.';
   document.getElementById('mPrice').textContent=money(price);
   document.getElementById('mFee').textContent=money(fee);
   var feeLabel=document.getElementById('mFeeLabel');if(feeLabel)feeLabel.textContent='Total fee before tax & shipping ('+Math.round(feeRateOf(CUR)*100)+'%)';
