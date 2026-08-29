@@ -6137,7 +6137,7 @@ function renderHomeCampaigns(){
     card.innerHTML='<div class="thumb" id="home-th-'+l.id+'"></div>'+
       '<div class="body">'+
       '<div class="who"><span class="avatarc">'+init+'</span><span class="oname">'+l.owner+'</span><span class="when">&middot; '+ago(l.created)+'</span><span class="catic"><img src="'+PHO(l)+'" alt=""></span></div>'+
-      '<div class="iname">'+it.label+'</div>'+listingContextHtml(l)+
+      listingContextHtml(l)+'<div class="iname">'+it.label+'</div>'+
       '<div class="moneyrow"><span class="amts">'+money(raisedOf(l))+'<span>/'+money(goalOf(l))+'</span></span>'+
       '<span class="chips"><span class="chipg">'+sponsorLogoStack(l)+'<span>'+sold+'/'+l.slots+' sold</span></span><span class="chipb">from '+money(minOpenPrice(l)===Infinity?Math.min.apply(null,l.prices):minOpenPrice(l))+'</span></span></div>'+
       '<div class="pbar"><i style="width:'+pct+'%"></i></div>'+
@@ -6326,7 +6326,7 @@ function renderDash(){
     card.innerHTML='<div class="thumb" id="th-'+l.id+'"></div>'+
       '<div class="body">'+
       '<div class="who"><span class="avatarc">'+init+'</span><span class="oname">'+l.owner+'</span><span class="when">&middot; '+ago(l.created)+'</span><span class="catic"><img src="'+PHO(l)+'" alt=""></span></div>'+
-      '<div class="iname">'+it.label+'</div>'+listingContextHtml(l)+
+      listingContextHtml(l)+'<div class="iname">'+it.label+'</div>'+
       '<div class="moneyrow"><span class="amts">'+money(raisedOf(l))+'<span>/'+money(goalOf(l))+'</span></span>'+
       '<span class="chips"><span class="chipg">'+sponsorLogoStack(l)+'<span>'+sold+'/'+l.slots+' sold</span></span><span class="chipb">from '+money(minOpenPrice(l)===Infinity?Math.min.apply(null,l.prices):minOpenPrice(l))+'</span></span></div>'+
       '<div class="pbar"><i style="width:'+pct+'%"></i></div>'+
