@@ -494,7 +494,15 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .choice-card span{font-size:12.5px;line-height:1.35;color:var(--mfg)}
 .choice-card small{font-size:11.5px;line-height:1.35;color:var(--mfg);margin-top:5px}
 .choice-note{font-size:12px;line-height:1.45;color:var(--mfg);margin:7px 0 0}
+.term-runway{margin-top:11px;padding:11px 12px 10px;border-radius:12px;background:var(--wash2)}
+.term-runway-head{display:flex;justify-content:space-between;gap:12px;align-items:baseline;font-size:11.5px;color:var(--mfg)}
+.term-runway-head b{font-size:12px;color:var(--fg);font-weight:600;text-align:right}
+.term-runway-track{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin:9px 0 6px}
+.term-runway-track i{display:block;height:4px;border-radius:99px;background:#D9D9DE;transition:background .2s}
+.term-runway-track i.on{background:#1D1D1F}
+.term-runway-caption{font-size:11px;color:var(--mfg)}
 .tax-note{font-size:11.5px;line-height:1.45;color:var(--mfg);margin:8px 0 0}
+@media(max-width:620px){.choice-grid.term-choice-grid,.choice-grid.fulfillment-choice-grid{grid-template-columns:1fr}.term-runway-head{display:block}.term-runway-head b{display:block;text-align:left;margin-top:3px}}
 .total{display:flex;justify-content:space-between;align-items:baseline;margin:6px 0 0}
 .total .t1{font-size:13px;font-weight:600;color:var(--mfg)}
 .total .t2{font-size:24px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
@@ -945,9 +953,14 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
             <div class="fact"><span>Tax + shipping</span><b id="buildTaxOut">If applicable at checkout</b></div>
             <div class="field" style="margin-top:14px"><div class="label">Commitment term</div>
               <div class="choice-grid term-choice-grid" id="termChoices" role="radiogroup" aria-label="Commitment term">
-                <button class="choice-card" type="button" data-choice-group="term" data-value="6" aria-pressed="false"><strong>6 months</strong><span>Shorter commitment</span></button>
-                <button class="choice-card on" type="button" data-choice-group="term" data-value="12" aria-pressed="true"><strong>12 months</strong><span>Balanced commitment</span></button>
-                <button class="choice-card" type="button" data-choice-group="term" data-value="18" aria-pressed="false"><strong>18 months</strong><span>Longest visibility</span></button>
+                <button class="choice-card" type="button" data-choice-group="term" data-value="6" aria-pressed="false"><strong>6 months</strong><span>Shorter runway</span><small>Lower completion odds</small></button>
+                <button class="choice-card on" type="button" data-choice-group="term" data-value="12" aria-pressed="true"><strong>12 months</strong><span>Balanced runway</span><small>Better completion odds</small></button>
+                <button class="choice-card" type="button" data-choice-group="term" data-value="18" aria-pressed="false"><strong>18 months</strong><span>Longest runway</span><small>Highest completion odds</small></button>
+              </div>
+              <div class="term-runway" aria-live="polite">
+                <div class="term-runway-head"><span>Completion chance</span><b id="termConfidenceOut">Better chance of filling</b></div>
+                <div class="term-runway-track" id="termRunwayTrack" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i></div>
+                <div class="term-runway-caption">More runway gives the listing more time to fill every spot. It improves the odds, but never guarantees completion.</div>
               </div>
               <p class="choice-note">This applies to the whole listing and locks permanently when the first spot sells.</p>
             </div>
@@ -6764,6 +6777,15 @@ function setBuildChoiceCards(group,value){
     card.setAttribute('aria-pressed',selected?'true':'false');
   });
 }
+function refreshTermRunway(){
+  var term=termOf(B),level=term===6?1:(term===18?3:2);
+  var labels={1:'Lower completion odds',2:'Better completion odds',3:'Highest completion odds'};
+  var label=document.getElementById('termConfidenceOut');
+  if(label)label.textContent=labels[level];
+  document.querySelectorAll('#termRunwayTrack i').forEach(function(segment,i){
+    segment.classList.toggle('on',i<level);
+  });
+}
 function wireBuildChoices(){
   document.querySelectorAll('#termChoices .choice-card,#brandingChoices .choice-card').forEach(function(card){
     if(card._wired)return;
@@ -7145,6 +7167,7 @@ function refreshBuild(){
   var materialOut=document.getElementById('buildMaterialOut');if(materialOut)materialOut.textContent=assisted?'Applied sponsor decal, patch, or magnet':'Sponsor decal, patch, or magnet for you to apply';
   var feeOut=document.getElementById('buildFeeOut');if(feeOut)feeOut.textContent=Math.round(feeRateOf(B)*100)+'%';
   setBuildChoiceCards('term',B.termMonths||12);setBuildChoiceCards('branding',B.brandingMode||'self');
+  refreshTermRunway();
   renderSpotMap(document.getElementById('buildMap'),{type:B.type,slots:B.slots,prices:B.prices,claims:null},
     {mode:'edit',onPrice:function(i,v){B.prices[i]=v;totals()}});
   totals();
