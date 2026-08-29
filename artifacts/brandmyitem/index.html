@@ -7131,6 +7131,7 @@ function renderVariants(k){
   row.style.display='flex';
   B.color=v.colors[0][0];
   B.priceDelta=0;
+  B.variantSize=v.sizes[0][0];
   var cs=document.getElementById('colorSwatches');cs.innerHTML='';
   var sel=document.getElementById('colorSel');sel.textContent=v.colors[0][0];
   v.colors.forEach(function(c,i){
@@ -7143,6 +7144,7 @@ function renderVariants(k){
       b.classList.add('on');
       B.color=c[0];
       sel.textContent=c[0];
+      renderBuildSpecs(k);
     };
     cs.appendChild(b);
   });
@@ -7158,12 +7160,14 @@ function renderVariants(k){
       sp.querySelectorAll('button').forEach(function(bb){bb.classList.remove('on')});
       b.classList.add('on');
       B.priceDelta=s[1];
+      B.variantSize=s[0];
       var retailInput=document.getElementById('cuRetail');
       if(retailInput){
         retailInput.value=ITEMS[k].retail+B.priceDelta;
         if(CU.template)cuApplyTemplate();
       }
       if(!CU.template){B.prices=suggest(k,B.slots);refreshBuild()}
+      renderBuildSpecs(k);
     };
     sp.appendChild(b);
   });
@@ -7461,16 +7465,30 @@ function refreshBuild(){
 function renderBuildSpecs(k){
   var sp=ITEMS[k]||ITEMS[B.type];
   if(!sp)return;
+  var v=ITEM_VARIANTS[k];
+  var selectedColor=(B.type===k&&B.color)||(v&&v.colors[0][0])||sp.color;
+  var selectedSize=(B.type===k&&B.variantSize)||(v&&v.sizes[0][0])||'';
+  var selectedRetail=sp.retail+(B.type===k?(B.priceDelta||0):0);
   var title=document.getElementById('buildSpecTitle');
   var price=document.getElementById('buildSpecPrice');
   var table=document.getElementById('buildSpecTable');
   if(!title||!price||!table)return;
   title.innerHTML=sp.label;
-  price.innerHTML='Retail '+money(sp.retail)+' &middot; funded by its sponsors';
+  price.innerHTML='Retail '+money(selectedRetail)+' &middot; funded by its sponsors';
   table.innerHTML='';
   sp.specs.forEach(function(r){
+    var value=r[1];
+    if(r[0]==='Color')value=selectedColor;
+    if(v&&selectedSize){
+      if(k==='macbook'&&r[0]==='Display')value=(selectedSize==='14"'?'14.2"':selectedSize)+' Liquid Retina XDR';
+      if(k==='iphone'&&r[0]==='Storage')value=selectedSize;
+      if(k==='cooler'&&r[0]==='Capacity')value=selectedSize+' rotomolded';
+      if(k==='bottle'&&r[0]==='Capacity')value=selectedSize+', handle and straw lid';
+      if(k==='case'&&r[0]==='Size')value=selectedSize==='Cabin'?'Cabin approved 55 cm':'Check-in approved 65 cm';
+      if(k==='paddle'&&r[0]==='Series')value='Pro V '+selectedSize;
+    }
     var tr=document.createElement('tr');
-    tr.innerHTML='<td>'+r[0]+'</td><td>'+r[1]+'</td>';
+    tr.innerHTML='<td>'+r[0]+'</td><td>'+value+'</td>';
     table.appendChild(tr);
   });
 }

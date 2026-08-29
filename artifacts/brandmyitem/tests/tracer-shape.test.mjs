@@ -47,3 +47,13 @@ test('Delete and Backspace remove a selected shape when not tracing', () => {
   );
   assert.match(html, /cv\.focus\(\);\s*\/\* boxes first: resize handle, then body \*\//);
 });
+
+test('finish and size choices update the details card', () => {
+  assert.match(html, /B\.color=c\[0\];\s*sel\.textContent=c\[0\];\s*renderBuildSpecs\(k\)/);
+  assert.match(html, /B\.variantSize=s\[0\]/);
+  assert.match(html, /var selectedRetail=sp\.retail\+\(B\.type===k\?\(B\.priceDelta\|\|0\):0\)/);
+  assert.match(html, /if\(r\[0\]==='Color'\)value=selectedColor/);
+  assert.ok(
+    html.includes(`if(k==='macbook'&&r[0]==='Display')value=(selectedSize==='14"'?'14.2"':selectedSize)+' Liquid Retina XDR'`),
+  );
+});
