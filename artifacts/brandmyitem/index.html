@@ -339,6 +339,13 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .track-body{padding-bottom:24px}
 .track-body b{display:block;font-size:14.5px}
 .track-body span{display:block;font-size:13px;color:#6e6e73;margin-top:2px}
+.track-submit{border-top:1px solid var(--border);margin-top:8px;padding-top:18px}
+.track-submit-title{font-size:14px;font-weight:600;margin-bottom:4px}
+.track-submit-copy{font-size:13px;color:#6e6e73;line-height:1.45;margin:0 0 14px}
+.track-submit-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.track-submit .upl{min-height:72px;margin:0}
+.track-submit .btn{margin-top:14px}
+@media(max-width:620px){.track-submit-grid{grid-template-columns:1fr}}
 @media(max-width:640px){.itempick-nav{display:none}.itemcard{width:132px}}
 .toolbox{display:flex;align-items:center;gap:4px;flex-wrap:wrap;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:5px;margin:10px 0}
 .icontool{display:flex;align-items:center;gap:6px;width:32px;height:32px;padding:0;border-radius:8px;border:1px solid transparent;background:transparent;color:var(--fg);cursor:pointer;transition:background .12s,border-color .12s;justify-content:center;flex-shrink:0}
@@ -6720,6 +6727,7 @@ function migratePhoto(){
 }
 suitFix();migratePhoto();
 var CUR=null,itemMode='auction',claimSlot=-1,logoData=null;
+var TRACK_MATCHES=[];
 function demoTrackMatch(){
   var listing=DB.listings.filter(function(l){return l.id==='demo1'})[0]||DB.listings[0];
   if(!listing)return null;
@@ -6730,7 +6738,8 @@ function demoTrackMatch(){
     fee:Math.round((listing.prices[3]||165)*0.2),
     escrow:'active',
     purchasedAt:Date.now()-1000*60*60*24*9,
-    subId:'BMI-DEMO01'
+    subId:'BMI-DEMO01',
+    demo:true
   }};
 }
 function showTrack(){
@@ -6758,8 +6767,9 @@ function showTrack(){
         document.getElementById('tkResult').style.display='none';
         return;
       }
-      matches.sort(function(a,b){return (b.c.purchasedAt||0)-(a.c.purchasedAt||0)});
-      renderTrackResults(matches);
+       matches.sort(function(a,b){return (b.c.purchasedAt||0)-(a.c.purchasedAt||0)});
+       TRACK_MATCHES=matches;
+       renderTrackResults(matches);
     };
   }
   var demo=document.getElementById('tkDemoResult');
@@ -6776,6 +6786,76 @@ function renderTrackResults(matches){
   el.style.display='block';
   el.innerHTML='<p class="finetext" style="margin:0 0 14px">'+matches.length+' submission'+(matches.length>1?'s':'')+' found.</p>'+
     matches.map(function(m){return trackCardHtml(m.l,m.c)}).join('<div style="height:14px"></div>');
+}
+function trackSubmitKey(subId){
+  return String(subId||'demo').replace(/[^a-z0-9_-]/gi,'_');
+}
+function trackSubmitHtml(l,c){
+  var key=trackSubmitKey(c.subId);
+  var checkins=l.checkins||[];
+  var first=checkins.length===0;
+  var ready=!!c.demo||(!!l.ownerVerified&&pctOf(l)>=100);
+  if(!ready){
+    return '<div class="track-submit">'+
+      '<div class="track-submit-title">Submit item proof</div>'+
+      '<p class="track-submit-copy">Proof submissions unlock after the item is fully funded, shipped, and identity verification is complete.</p>'+
+    '</div>';
+  }
+  return '<div class="track-submit">'+
+    '<div class="track-submit-title">'+(first?'Submit your receipt and first photo':'Submit month '+(checkins.length+1)+' photo')+'</div>'+
+    '<p class="track-submit-copy">'+(first?'Your receipt proves the item was purchased after funding. Add the first item photo to start the 12-month check-in timeline.':'Add the latest photo of the item to keep this month\\u2019s check-in on track.')+'</p>'+
+    (first?'<div class="track-submit-grid"><div class="field"><label class="label" for="trackDate_'+key+'">Purchase date on receipt</label><input class="input" id="trackDate_'+key+'" type="date"></div><div><label class="label" for="trackReceipt_'+key+'">Receipt</label><input id="trackReceipt_'+key+'" type="file" accept="image/*" class="input" style="padding:9px"></div></div>':'')+
+    '<div class="field" style="margin-top:12px"><label class="label" for="trackPhoto_'+key+'">'+(first?'First item photo':'Month '+(checkins.length+1)+' photo')+'</label><input id="trackPhoto_'+key+'" type="file" accept="image/*" class="input" style="padding:9px"></div>'+
+    '<p class="finetext" id="trackSubmitErr_'+key+'" style="display:none;color:#B23327;margin:10px 0 0"></p>'+
+    '<button class="btn btn-primary btn-full" type="button" onclick="submitTrackProof(\''+l.id+'\',\''+c.subId+'\',\''+key+'\')">'+(first?'Submit receipt + first photo':'Submit month '+(checkins.length+1)+' photo')+'</button>'+
+  '</div>';
+}
+function submitTrackProof(itemId,subId,key){
+  var l=DB.listings.filter(function(x){return x.id===itemId})[0];
+  if(!l)return;
+  var c=null;
+  (l.claims||[]).forEach(function(x){if(x&&x.subId===subId)c=x});
+  if(!c&&subId==='BMI-DEMO01')c={subId:subId,brand:'Northstar Studio',mail:'demo@brandmyitem.com',amt:l.prices[3]||165,fee:Math.round((l.prices[3]||165)*0.2),escrow:'active',demo:true};
+  if(!c)return;
+  var err=document.getElementById('trackSubmitErr_'+key);
+  var first=(l.checkins||[]).length===0;
+  var photoInput=document.getElementById('trackPhoto_'+key);
+  var receiptInput=document.getElementById('trackReceipt_'+key);
+  var dateInput=document.getElementById('trackDate_'+key);
+  var fail=function(msg){if(err){err.textContent=msg;err.style.display='block'}};
+  if(!photoInput||!photoInput.files||!photoInput.files[0]){fail('Upload the item photo for this check-in.');return}
+  if(first){
+    if(!dateInput||!dateInput.value){fail('Enter the purchase date shown on your receipt.');return}
+    if(!receiptInput||!receiptInput.files||!receiptInput.files[0]){fail('Upload your receipt.');return}
+    var receiptTime=new Date(dateInput.value+'T12:00:00').getTime();
+    if(l.fundedAt&&receiptTime<l.fundedAt-86400000){fail('That receipt date is before the item was fully funded. Use a receipt from after funding.');return}
+  }
+  var photoFile=photoInput.files[0],receiptFile=first?receiptInput.files[0]:null;
+  var photoReader=new FileReader(),receiptReader=first?new FileReader():null;
+  photoReader.onload=function(){
+    if(first){
+      receiptReader.onload=function(){finishTrackProof(photoReader.result,receiptReader.result,dateInput.value)};
+      receiptReader.readAsDataURL(receiptFile);
+    }else finishTrackProof(photoReader.result,null,null);
+  };
+  photoReader.readAsDataURL(photoFile);
+  function finishTrackProof(photo,receipt,date){
+    l.checkins=l.checkins||[];
+    var cid='CI-'+uid().toUpperCase().slice(0,6);
+    var entry={date:Date.now(),photo:photo,confirmId:cid};
+    if(first){entry.receipt=receipt;entry.receiptDate=new Date(date+'T12:00:00').getTime()}
+    l.checkins.push(entry);
+    updateEscrowStatuses(l);saveDB();
+    if(c.demo){
+      var demo=document.getElementById('tkDemoResult');
+      var next=demoTrackMatch();
+      if(demo&&next)demo.innerHTML=trackCardHtml(next.l,Object.assign(next.c,{demo:true}));
+    }else{
+      var found=TRACK_MATCHES.filter(function(m){return m.c&&m.c.subId===subId})[0];
+      if(found)renderTrackResults(TRACK_MATCHES);
+    }
+    toast(first?'Receipt and first photo submitted · '+cid:'Month '+l.checkins.length+' photo submitted · '+cid);
+  }
 }
 function trackCardHtml(l,c){
   updateEscrowStatuses(l);
@@ -6800,6 +6880,7 @@ function trackCardHtml(l,c){
       '<div class="track-timeline">'+steps.map(function(s){
         return '<div class="track-step '+(s.done?'done':(s.active?'active':''))+'"><div class="track-dot"></div><div class="track-line"></div><div class="track-body"><b>'+s.label+'</b><span>'+s.sub+'</span></div></div>';
       }).join('')+'</div>'+
+      trackSubmitHtml(l,c)+
       '<details style="margin-top:4px"><summary style="cursor:pointer;font-size:13px;font-weight:600;color:#6e6e73">Advanced details</summary>'+
         '<div style="margin-top:10px;font-size:13px;color:#3a3a3c;line-height:2">'+
           '<div>Submission ID <b style="float:right">'+c.subId+'</b></div>'+
