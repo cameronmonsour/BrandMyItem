@@ -387,6 +387,7 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .home-activity-icon.delivered{background:#E5F4D8;color:#4D8B35}
 .home-activity-icon.approved{background:#DDF2E4;color:#1F7A44}
 .home-activity-action{font-size:13px;white-space:nowrap}
+.home-activity-action b{font-weight:700}
 .home-activity-product{display:inline-flex;align-items:center;gap:6px;padding-left:9px;border-left:1px solid var(--border);font-size:12px;color:var(--mfg);white-space:nowrap}
 .home-activity-product img{width:28px;height:28px;object-fit:contain;border-radius:6px;background:#fff}
 .home-activity-time{font-size:12px;color:var(--mfg);white-space:nowrap}
@@ -4987,6 +4988,39 @@ if(!DB){
   ]};
   store.set('bmi_db4',DB);
 }
+var DEMO_BIDDERS={
+  'Outraised':{brand:'Nike',link:'https://www.nike.com',logo:'logos/nike.svg'},
+  'Northshore':{brand:'Adidas',link:'https://www.adidas.com',logo:'logos/adidas.svg'},
+  'Clipory':{brand:'Spotify',link:'https://www.spotify.com',logo:'logos/spotify.svg'},
+  'PingRoom':{brand:'GitHub',link:'https://github.com',logo:'logos/github.svg'},
+  'See.io':{brand:'Figma',link:'https://www.figma.com',logo:'logos/figma.svg'},
+  'SoldAsap':{brand:'Strava',link:'https://www.strava.com',logo:'logos/strava.svg'},
+  'LiftClub':{brand:'Airbnb',link:'https://www.airbnb.com',logo:'logos/airbnb.svg'},
+  'Juicebox':{brand:'Shopify',link:'https://www.shopify.com',logo:'logos/shopify.svg'},
+  'Gateline':{brand:'Notion',link:'https://www.notion.so',logo:'logos/notion.svg'},
+  'Loopwear':{brand:'Uber',link:'https://www.uber.com',logo:'logos/uber.svg'},
+  'Driftly':{brand:'Reddit',link:'https://www.reddit.com',logo:'logos/reddit.svg'},
+  'Rallyhouse':{brand:'Dropbox',link:'https://www.dropbox.com',logo:'logos/dropbox.svg'},
+  'NetGain':{brand:'PayPal',link:'https://www.paypal.com',logo:'logos/paypal.svg'},
+  'Fairway+':{brand:'Twitch',link:'https://www.twitch.tv',logo:'logos/twitch.svg'}
+};
+(function upgradeDemoBidders(){
+  var changed=false,replacements={};
+  Object.keys(DEMO_BIDDERS).forEach(function(oldName){replacements[oldName]=DEMO_BIDDERS[oldName].brand});
+  (DB.listings||[]).forEach(function(l){
+    (l.claims||[]).forEach(function(c){
+      var next=c&&DEMO_BIDDERS[c.brand];
+      if(!next)return;
+      c.brand=next.brand;c.link=next.link;c.logo=next.logo;changed=true;
+    });
+  });
+  if(changed){
+    (DB.activity||[]).forEach(function(a){
+      Object.keys(replacements).forEach(function(oldName){a.txt=a.txt.split(oldName).join(replacements[oldName])});
+    });
+    store.set('bmi_db4',DB);
+  }
+})();
 function saveDB(){store.set('bmi_db4',DB);cloudPush()}
 /* ============ SHARED DATABASE (artifact storage) ============ */
 var CLOUD={on:false,busy:false,dirty:false,last:0};
@@ -5947,20 +5981,13 @@ function renderHomeLiveFeed(){
     feed.innerHTML='<div class="empty" style="border:0;border-radius:0;padding:22px">The first campaign update will appear here when a listing goes live.</div>';
     return;
   }
-  var stages=[
-    {cls:'paid',icon:'$',label:function(row){return 'paid '+money(row.c.amt||row.l.prices[0])}},
-    {cls:'delivered',icon:'•',label:function(){return 'kit delivered'}},
-    {cls:'delivered',icon:'×2',label:function(){return 'kit delivered ×2'}},
-    {cls:'approved',icon:'✓',label:function(){return 'proof approved'}}
-  ];
-  function itemHtml(row,i){
-    var stage=stages[i%stages.length],brand=(row.c&&row.c.brand||'A brand').trim(),photo=PHO(row.l),label=LBLL(row.l);
+  function itemHtml(row){
+    var brand=(row.c&&row.c.brand||'A brand').trim(),photo=PHO(row.l),label=LBLL(row.l);
     var brandMark=row.c&&row.c.logo?'<img src="'+row.c.logo+'" alt="'+brand+' logo">':monoTile(brand);
     return '<a class="home-activity-item" href="#item/'+row.l.id+'" title="'+label+'">'+
       '<span class="home-activity-brand" aria-label="'+brand+'">'+brandMark+'</span>'+
       '<span class="home-activity-name">'+brand+'</span>'+
-      '<span class="home-activity-icon '+stage.cls+'">'+stage.icon+'</span>'+
-      '<span class="home-activity-action">'+stage.label(row)+'</span>'+
+      '<span class="home-activity-action">bidded <b>'+money(row.c.amt||row.l.prices[0])+'</b></span>'+
       '<span class="home-activity-product">'+(photo?'<img src="'+photo+'" alt="">':'')+'<span>'+label+'</span></span>'+
       '<span class="home-activity-time">&middot; '+ago(row.ts)+'</span>'+
     '</a>';
