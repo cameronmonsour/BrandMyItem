@@ -1,0 +1,1 @@
+- [BrandMyItem build environment](brandmyitem-build-environment.md) — Vite checks PORT and BASE_PATH during production builds.

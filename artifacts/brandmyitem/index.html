@@ -183,6 +183,16 @@ h2.big{font-family:var(--serif);font-size:clamp(30px,3.8vw,42px);font-weight:500
 .spec-table tr:last-child td{border-bottom:none}
 .spec-table td:first-child{color:var(--mfg);font-weight:500;width:38%}
 .spec-table td:last-child{font-weight:600}
+.build-product-layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(270px,.75fr);gap:20px;padding:20px;border-top:1px solid var(--border);align-items:start}
+.build-product-visual{min-width:0}
+.build-spec-card{height:100%;border:1px solid var(--border);border-radius:20px;background:var(--bg);overflow:hidden}
+.build-spec-card .card-h{padding:20px 20px 14px}
+.build-spec-card .card-c{padding:6px 20px 20px}
+.build-spec-card .card-t{font-size:20px}
+.build-spec-card .card-d{font-size:14px;margin-top:5px}
+.build-spec-card .spec-table{font-size:14px}
+.build-spec-card .spec-table td{padding:13px 0}
+@media(max-width:860px){.build-product-layout{grid-template-columns:1fr}}
 details.faq{border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;background:var(--bg)}
 details.faq summary{list-style:none;display:flex;justify-content:space-between;align-items:center;padding:16px 18px;font-size:14.5px;font-weight:600;cursor:pointer}
 details.faq summary::-webkit-details-marker{display:none}
@@ -360,25 +370,32 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .home-section-head .band-head{margin-bottom:0}
 .home-section-head .big{margin-bottom:7px}
 .home-live-feed{border:1px solid var(--border);border-radius:16px;overflow:hidden;background:#fff}
-.home-activity-scroll{display:flex;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
+.home-activity-viewport{overflow:hidden}
+.home-activity-scroll{display:flex;width:max-content;animation:homeTicker 38s linear infinite}
+.home-live-feed:hover .home-activity-scroll,.home-live-feed:focus-within .home-activity-scroll{animation-play-state:paused}
+@keyframes homeTicker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 .home-activity-scroll::-webkit-scrollbar{display:none}
-.home-activity-item{display:flex;align-items:center;gap:9px;flex:0 0 auto;padding:13px 18px;border-right:1px solid var(--border);text-decoration:none;color:var(--fg);transition:background .15s}
+.home-activity-item{display:flex;align-items:center;gap:9px;flex:0 0 auto;padding:11px 18px;border-right:1px solid var(--border);text-decoration:none;color:var(--fg);transition:background .15s}
 .home-activity-item:hover{background:var(--wash)}
 .home-activity-item:last-child{border-right:0}
-.home-activity-avatar{width:26px;height:26px;border-radius:50%;background:var(--fg);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+.home-activity-brand{width:28px;height:28px;border-radius:8px;background:#fff;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
+.home-activity-brand img{width:100%;height:100%;object-fit:contain;padding:3px}
+.home-activity-brand .mono{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--fg);color:#fff;font-size:9px;font-weight:700}
 .home-activity-name{font-size:13px;font-weight:700;white-space:nowrap}
 .home-activity-icon{width:16px;height:16px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
 .home-activity-icon.paid{background:#D9E8FF;color:#3766B1}
 .home-activity-icon.delivered{background:#E5F4D8;color:#4D8B35}
 .home-activity-icon.approved{background:#DDF2E4;color:#1F7A44}
 .home-activity-action{font-size:13px;white-space:nowrap}
+.home-activity-product{display:inline-flex;align-items:center;gap:6px;padding-left:9px;border-left:1px solid var(--border);font-size:12px;color:var(--mfg);white-space:nowrap}
+.home-activity-product img{width:28px;height:28px;object-fit:contain;border-radius:6px;background:#fff}
 .home-activity-time{font-size:12px;color:var(--mfg);white-space:nowrap}
 .home-campaign-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
 .home-campaign-card{width:100%;padding:0;cursor:pointer}
 .home-campaign-card .thumb{aspect-ratio:16/10}
 @media(max-width:900px){.home-campaign-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:620px){.track-submit-grid{grid-template-columns:1fr}}
-@media(max-width:640px){.home-section-head{display:block}.home-section-head .badge{display:inline-flex;margin-top:14px}.home-activity-item{padding:12px 14px}.home-activity-item:nth-child(n+5){display:none}.home-campaign-grid{grid-template-columns:1fr}}
+@media(max-width:640px){.home-section-head{display:block}.home-section-head .badge{display:inline-flex;margin-top:14px}.home-activity-item{padding:12px 14px}.home-campaign-grid{grid-template-columns:1fr}}
 @media(max-width:640px){.itempick-nav{display:none}.itemcard{width:132px}}
 .toolbox{display:flex;align-items:center;gap:4px;flex-wrap:wrap;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:5px;margin:10px 0}
 .icontool{display:flex;align-items:center;gap:6px;width:32px;height:32px;padding:0;border-radius:8px;border:1px solid transparent;background:transparent;color:var(--fg);cursor:pointer;transition:background .12s,border-color .12s;justify-content:center;flex-shrink:0}
@@ -465,9 +482,9 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
     <div class="nav-inner">
       <a href="#home" class="logo">Brand<b>My</b>Item</a>
       <a href="#dashboard" class="lnk">Live items</a>
+      <a href="#build" class="lnk">Build your item</a>
       <a href="#home-how" class="lnk hidemob">How it works</a>
       <a href="#home-faq" class="lnk hidemob">FAQ</a>
-      <a href="#build" class="lnk">Build your item</a>
       <a href="#track" class="lnk">Track my item</a>
     </div>
   </div>
@@ -535,18 +552,6 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
       </div>
       <div class="steps" style="grid-template-columns:1fr;margin-top:16px">
         <div class="step" style="display:flex;gap:18px;align-items:flex-start"><div class="n" style="margin:0;flex-shrink:0">4</div><div><h3>It ships branded</h3><p>At 100% your item ships factory new with the winning sponsors printed as quality die-cut vinyl. Quick photo check-ins keep the deal live for the 12-month term, weekly to monthly depending on the item price.</p></div></div>
-      </div>
-    </section>
-
-    <section class="band" style="padding-top:0">
-      <div class="band-head">
-        <div class="eyebrow">What the money buys</div>
-        <h2 class="big">The exact machine, no mystery.</h2>
-        <p>Every listing shows the real spec and real retail price of the item being funded. Spot prices sum to exactly that price, the 20% platform fee sits on top of each purchase, and the owner receives the item, never cash.</p>
-      </div>
-      <div class="card" style="max-width:620px">
-        <div class="card-h"><div class="card-t" id="specTitle"></div><div class="card-d" id="specPrice"></div></div>
-        <div class="card-c"><table class="spec-table" id="specTable"></table></div>
       </div>
     </section>
 
@@ -655,13 +660,15 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
               <div class="size-pills" id="sizePills"></div>
             </div>
           </div>
-          <input type="file" id="cuPhoto" accept="image/*" style="display:none">
-          <div class="upl" id="cuUpl" style="display:none">Upload a photo of your item &middot; trace where ads may go</div>
-          <div id="cuWrap" style="display:none">
-            <canvas id="cuCanvas" style="max-width:100%;max-height:460px;width:auto;height:auto;display:block;margin:0 auto;border-radius:14px;touch-action:none;background:#fff;border:1px solid rgba(60,60,67,.16)"></canvas>
-            <div id="cuFaces" style="display:none;gap:6px;margin:8px 0"></div>
-            <p class="finetext" id="cuHint">Ad space is pre-placed for you. Drag any box to move it, or use the tools below to add your own.</p>
-            <div class="toolbox" role="toolbar" aria-label="Box editing tools">
+          <div class="build-product-layout">
+            <div class="build-product-visual">
+              <input type="file" id="cuPhoto" accept="image/*" style="display:none">
+              <div class="upl" id="cuUpl" style="display:none">Upload a photo of your item &middot; trace where ads may go</div>
+              <div id="cuWrap" style="display:none">
+                <canvas id="cuCanvas" style="max-width:100%;max-height:460px;width:auto;height:auto;display:block;margin:0 auto;border-radius:14px;touch-action:none;background:#fff;border:1px solid rgba(60,60,67,.16)"></canvas>
+                <div id="cuFaces" style="display:none;gap:6px;margin:8px 0"></div>
+                <p class="finetext" id="cuHint">Ad space is pre-placed for you. Drag any box to move it, or use the tools below to add your own.</p>
+                <div class="toolbox" role="toolbar" aria-label="Box editing tools">
               <button class="icontool" id="cuUndo" type="button" title="Undo last traced point">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M9 7 4 12l5 5"/><path d="M4 12h11a5 5 0 0 1 0 10h-1"/></svg>
               </button>
@@ -693,7 +700,16 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M5 13l4 4L19 7"/></svg>
                 <span class="lbl">Save angle</span>
               </button>
-              <input id="cuRetail" type="number" min="1" placeholder="Item price $" style="display:none">
+                  <input id="cuRetail" type="number" min="1" placeholder="Item price $" style="display:none">
+                </div>
+              </div>
+            </div>
+            <div class="build-spec-card">
+              <div class="card-h">
+                <div class="card-t" id="buildSpecTitle"></div>
+                <div class="card-d" id="buildSpecPrice"></div>
+              </div>
+              <div class="card-c"><table class="spec-table" id="buildSpecTable"></table></div>
             </div>
           </div>
         </div>
@@ -5903,16 +5919,20 @@ function renderHomeLiveFeed(){
     {cls:'delivered',icon:'×2',label:function(){return 'kit delivered ×2'}},
     {cls:'approved',icon:'✓',label:function(){return 'proof approved'}}
   ];
-  feed.innerHTML='<div class="home-activity-scroll">'+rows.map(function(row,i){
-    var stage=stages[i%stages.length],name=(row.l.owner||row.c.brand||'A brand').trim(),initial=name.slice(0,1).toUpperCase();
-    return '<a class="home-activity-item" href="#item/'+row.l.id+'" title="'+LBLL(row.l)+'">'+
-      '<span class="home-activity-avatar">'+initial+'</span>'+
-      '<span class="home-activity-name">'+name+'</span>'+
+  function itemHtml(row,i){
+    var stage=stages[i%stages.length],brand=(row.c&&row.c.brand||'A brand').trim(),photo=PHO(row.l),label=LBLL(row.l);
+    var brandMark=row.c&&row.c.logo?'<img src="'+row.c.logo+'" alt="'+brand+' logo">':monoTile(brand);
+    return '<a class="home-activity-item" href="#item/'+row.l.id+'" title="'+label+'">'+
+      '<span class="home-activity-brand" aria-label="'+brand+'">'+brandMark+'</span>'+
+      '<span class="home-activity-name">'+brand+'</span>'+
       '<span class="home-activity-icon '+stage.cls+'">'+stage.icon+'</span>'+
       '<span class="home-activity-action">'+stage.label(row)+'</span>'+
+      '<span class="home-activity-product">'+(photo?'<img src="'+photo+'" alt="">':'')+'<span>'+label+'</span></span>'+
       '<span class="home-activity-time">&middot; '+ago(row.ts)+'</span>'+
     '</a>';
-  }).join('')+'</div>';
+  }
+  var tickerRows=rows.map(itemHtml).join('');
+  feed.innerHTML='<div class="home-activity-viewport"><div class="home-activity-scroll">'+tickerRows+tickerRows+'</div></div>';
 }
 function renderHomeCampaigns(){
   var host=document.getElementById('homeCampaignGrid');
@@ -6022,11 +6042,6 @@ function showHome(){
   else{document.getElementById('featOpen').textContent='View the full listing';document.getElementById('featOpen').href='#item/'+f.id}
   runCountdown('homeCount',f);
   drawHomeMap(f);
-  var sp=ITEMS[f.type];
-  document.getElementById('specTitle').innerHTML=sp.label;
-  document.getElementById('specPrice').innerHTML='Retail '+money(sp.retail)+' &middot; funded by its sponsors';
-  var st=document.getElementById('specTable');st.innerHTML='';
-  sp.specs.forEach(function(r){var tr=document.createElement('tr');tr.innerHTML='<td>'+r[0]+'</td><td>'+r[1]+'</td>';st.appendChild(tr)});
 }
 function drawHomeMap(f){
   var el=document.getElementById('homeMap');
@@ -6236,11 +6251,13 @@ function showBuild(){
       b.classList.add('on');
       cuPickTemplate(k);
       renderVariants(k);
+      renderBuildSpecs(k);
       refreshBuild();
     };
     pick.appendChild(b);
   });
   renderVariants(B.type);
+  renderBuildSpecs(B.type);
   (function(){
     var prev=document.getElementById('itemPickPrev'),next=document.getElementById('itemPickNext');
     if(prev&&!prev._wired){
@@ -6294,6 +6311,7 @@ function showBuild(){
     sb.appendChild(b);
   });
   renderSocialConnect();
+  cuPickTemplate(B.type);
   document.getElementById('slotMinus').onclick=function(){if(B.slots>1){B.slots--;B.prices=suggest(B.type,B.slots);refreshBuild();cuRepart()}};
   document.getElementById('slotPlus').onclick=function(){var cap=CU.template?tmplMax(CU.template):(CU.closed?8:ITEMS[B.type].maxSlots);if(B.slots<cap){B.slots++;if(!CU.template)B.prices=suggest(B.type,B.slots);refreshBuild();cuRepart()}};
   document.getElementById('postBtn').onclick=postListing;cuInit();
@@ -6314,6 +6332,22 @@ function refreshBuild(){
   renderSpotMap(document.getElementById('buildMap'),{type:B.type,slots:B.slots,prices:B.prices,claims:null},
     {mode:'edit',onPrice:function(i,v){B.prices[i]=v;totals()}});
   totals();
+}
+function renderBuildSpecs(k){
+  var sp=ITEMS[k]||ITEMS[B.type];
+  if(!sp)return;
+  var title=document.getElementById('buildSpecTitle');
+  var price=document.getElementById('buildSpecPrice');
+  var table=document.getElementById('buildSpecTable');
+  if(!title||!price||!table)return;
+  title.innerHTML=sp.label;
+  price.innerHTML='Retail '+money(sp.retail)+' &middot; funded by its sponsors';
+  table.innerHTML='';
+  sp.specs.forEach(function(r){
+    var tr=document.createElement('tr');
+    tr.innerHTML='<td>'+r[0]+'</td><td>'+r[1]+'</td>';
+    table.appendChild(tr);
+  });
 }
 /* ============ CUSTOM ITEM: photo + trace ============ */
 var CU={img:null,photo:null,poly:[],closed:false,tiles:[],prices:[],mixed:true,retail:0,faces:[],shape:'rect',color:'#1D1D1F',tracing:false,sel:-1};
