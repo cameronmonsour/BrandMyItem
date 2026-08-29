@@ -70,6 +70,9 @@ test('dashboard activity uses the same live ticker as the homepage', () => {
 test('dashboard keeps compact tracker cards without a duplicate left category box', () => {
   assert.doesNotMatch(html, /id="railCats"/);
   assert.doesNotMatch(html, /<h5>Category<\/h5>/);
+  assert.doesNotMatch(html, /id="statRow"/);
+  assert.doesNotMatch(html, /Items live<\/span>/);
+  assert.doesNotMatch(html, /Avg open spot<\/span>/);
   assert.match(html, /<h1>Live items<\/h1>/);
   assert.match(html, /id="dashLiveTitle">Brands are claiming spots now<\/h2>/);
   assert.doesNotMatch(html, /function listingBrandFitHtml\(l\)/);

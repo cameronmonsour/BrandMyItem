@@ -1066,7 +1066,6 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
       <input class="input" id="dq" placeholder="Search items, owners, habitats&hellip;">
     </div>
     <div class="catstrip" id="catStrip"></div>
-    <div class="statrow" id="statRow"></div>
     <div class="dash">
       <aside class="rail">
         <div class="card filter-card"><div class="card-c" style="padding:18px">
@@ -7242,15 +7241,6 @@ function syncDashboardFilterState(){
 function renderDash(){
   syncDashboardFilterState();
   var all=DB.listings.slice();
-  var open=all.reduce(function(s,l){return s+openSlots(l)},0);
-  var raised=all.reduce(function(s,l){return s+raisedOf(l)},0);
-  var prices=[];all.forEach(function(l){l.prices.forEach(function(p,i){if(!l.claims[i])prices.push(p)})});
-  var avg=prices.length?prices.reduce(function(a,b){return a+b},0)/prices.length:0;
-  document.getElementById('statRow').innerHTML=
-    '<div class="stat"><b>'+all.length+'</b><span>Items live</span></div>'+
-    '<div class="stat"><b>'+open+'</b><span>Open spots</span></div>'+
-    '<div class="stat"><b>'+money(avg)+'</b><span>Avg open spot</span></div>'+
-    '<div class="stat"><b>'+money(raised)+'</b><span>Raised so far</span></div>';
   renderDashboardLiveFeed();
   var q=F.q.toLowerCase();
   var list=all.filter(function(l){
