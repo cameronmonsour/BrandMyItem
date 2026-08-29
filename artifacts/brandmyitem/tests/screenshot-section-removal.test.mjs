@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import test from 'node:test';
 
 const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+const builderHtml = html.split('<!-- ITEM -->')[0];
 
 test('removes the screenshot-only homepage and page headers', () => {
   assert.doesNotMatch(html, />From post to proof\.</);
@@ -80,6 +81,11 @@ test('dashboard keeps compact tracker cards without a duplicate left category bo
   assert.doesNotMatch(html, /<div class="eyebrow">Live activity<\/div>/);
   assert.doesNotMatch(html, /class="dash-live-badge"/);
   assert.match(html, /class="home-live-feed" id="dashLiveFeed"/);
+  assert.match(html, /class="brand-deal-section"/);
+  assert.doesNotMatch(builderHtml, /<div class="card-t">The deal<\/div>/);
+  assert.match(builderHtml, /id="termChoices"/);
+  assert.match(builderHtml, /id="brandingChoices"/);
+  assert.match(builderHtml, /id="termConfidenceOut"/);
   assert.match(html, /\.dash-results\{min-width:0;display:flex;flex-direction:column;gap:18px\}/);
   assert.match(html, /\.rail\{position:sticky;top:76px;align-self:start;display:flex;flex-direction:column;gap:16px\}/);
   assert.match(html, /\.grid\{display:grid;grid-template-columns:repeat\(auto-fill,minmax\(236px,1fr\)\);gap:20px\}/);
