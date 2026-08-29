@@ -25,7 +25,7 @@
 html{scroll-behavior:smooth;overflow-x:hidden}
 body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--fg);-webkit-font-smoothing:antialiased;font-size:15px;line-height:1.5;font-weight:400;overflow-x:hidden}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
-input,select{font-family:inherit;color:inherit}
+input,select,textarea{font-family:inherit;color:inherit}
 a{color:inherit;text-decoration:none}
 img{display:block}
 :focus-visible{outline:2px solid var(--ring);outline-offset:2px}
@@ -1105,12 +1105,20 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
     <p class="mp">Tell us what you&rsquo;d like to see in the item picker. We&rsquo;ll review the request for a future drop.</p>
     <form id="requestForm">
       <div class="field">
-        <label class="label" for="requestItem">What item should we add?</label>
+        <label class="label" for="requestItem">What item should we add? <span style="font-weight:400;color:#8e8e93">(required)</span></label>
         <input class="input" id="requestItem" required placeholder="e.g. Noise-canceling headphones">
       </div>
       <div class="field">
-        <label class="label" for="requestNote">Anything specific? <span style="font-weight:400;color:#8e8e93">(optional)</span></label>
+        <label class="label" for="requestLink">Product link <span style="font-weight:400;color:#8e8e93">if you have one (optional)</span></label>
+        <input class="input" id="requestLink" type="url" autocomplete="url" placeholder="https://brand.com/product">
+      </div>
+      <div class="field">
+        <label class="label" for="requestNote">Anything else <span style="font-weight:400;color:#8e8e93">&mdash; brand, model, color, why you want it (optional)</span></label>
         <textarea class="input" id="requestNote" rows="3" placeholder="Brand, model, color, or why you want it"></textarea>
+      </div>
+      <div class="field">
+        <label class="label" for="requestEmail">Your email, so we can tell you if it goes live <span style="font-weight:400;color:#8e8e93">(optional)</span></label>
+        <input class="input" id="requestEmail" type="email" autocomplete="email" placeholder="you@email.com">
       </div>
       <div class="mrow">
         <button class="btn btn-outline" id="requestCancel" type="button">Cancel</button>
@@ -6883,6 +6891,16 @@ document.getElementById('requestForm').onsubmit=function(e){
     document.getElementById('requestItem').focus();
     return;
   }
+  var request={
+    item:item,
+    link:document.getElementById('requestLink').value.trim(),
+    note:document.getElementById('requestNote').value.trim(),
+    email:document.getElementById('requestEmail').value.trim(),
+    created:Date.now()
+  };
+  var requests=store.get('bmi_item_requests')||[];
+  requests.unshift(request);
+  store.set('bmi_item_requests',requests.slice(0,50));
   closeItemRequest();
   this.reset();
   toast('Item request submitted');
