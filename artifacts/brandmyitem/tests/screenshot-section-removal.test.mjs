@@ -25,6 +25,11 @@ test('removes the screenshot-only homepage and page headers', () => {
   assert.match(html, /\.home-flow-icon\.photo\.monthly img\{object-fit:contain\}/);
   assert.match(html, /\.home-flow\{position:relative;margin:0 auto 48px/);
   assert.match(html, /\.home-flow-step:nth-child\(3\)\{transform:translateY\(10px\)\}/);
+  assert.match(html, /Choose the item, the ad spots, and the term\. Pick whether BrandMyItem brands it for you \(\+10%\) or you handle it yourself\./);
+  assert.match(html, /They claim a placement, sticker, embroidered logo, printed patch, or engraving, and pay in full upfront\./);
+  assert.match(html, /Once fully funded, BrandMyItem buys the item and ships it straight to you\./);
+  assert.match(html, /<h3>Shows up as you chose<\/h3><p>Pre-branded if you picked that option, or clean and ready for you to apply yourself\./);
+  assert.match(html, /One photo a month keeps the whole thing verified and current\./);
 });
 
 test('keeps outlined hero art while referenced suit and backpack photos remain in the picker', () => {
