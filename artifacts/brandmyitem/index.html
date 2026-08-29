@@ -158,7 +158,13 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;pointer-events:none}
 .bighero .toprule{position:absolute;top:0;left:0;right:0;border-top:1px dashed rgba(14,27,38,.22)}
 .herocenter{position:relative;z-index:3;text-align:center;max-width:min(94vw,1400px)}
 .herotag{font-size:clamp(14px,1.4vw,19px);font-weight:400;color:var(--mfg);margin-bottom:6px;letter-spacing:.002em}
-.heroword{font-family:var(--serif);font-weight:500;font-size:clamp(44px,9vw,150px);line-height:.92;letter-spacing:-.015em;color:var(--fg);user-select:none;display:inline-block;transform:scaleX(.9);padding-bottom:.06em}
+.heroword{font-family:var(--serif);font-weight:500;font-size:clamp(44px,9vw,150px);line-height:.92;letter-spacing:-.015em;color:var(--fg);user-select:none;display:inline-block;transform:scaleX(.9);padding-bottom:.06em;white-space:nowrap}
+.hero-middle{display:inline-block;min-width:3.15ch;font-style:italic;transform-origin:50% 92%;will-change:transform,opacity}
+.hero-middle.is-slipping{animation:heroWordSlipOut .34s cubic-bezier(.65,0,.84,.18) forwards}
+.hero-middle.is-entering{animation:heroWordSlipIn .48s cubic-bezier(.16,1,.3,1) both}
+@keyframes heroWordSlipOut{0%{opacity:1;transform:translateY(0) rotateX(0) skewX(0)}100%{opacity:0;transform:translateY(-.48em) rotateX(-72deg) skewX(-8deg)}}
+@keyframes heroWordSlipIn{0%{opacity:0;transform:translateY(.48em) rotateX(72deg) skewX(8deg)}100%{opacity:1;transform:translateY(0) rotateX(0) skewX(0)}}
+@media (prefers-reduced-motion:reduce){.hero-middle.is-slipping,.hero-middle.is-entering{animation:none}.hero-middle{transition:opacity .2s ease}}
 .herobtns{display:flex;gap:14px;justify-content:center;margin-top:clamp(28px,5vh,64px)}
 .ghostpill{display:inline-flex;align-items:center;justify-content:center;height:54px;padding:0 30px;border-radius:999px;border:1.5px solid var(--fg);color:var(--fg);font-size:16px;font-weight:400;transition:background .15s,color .15s;background:#fff}
 .ghostpill:hover{background:var(--fg);color:#fff}
@@ -545,7 +551,7 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
       <div class="tile" style="right:7%;bottom:21%;width:12vw;max-width:200px;aspect-ratio:5/6;animation-duration:8.2s;animation-delay:1.8s" data-d="16"><img class="obj" data-item="paddle" alt=""></div>
       <div class="herocenter">
         <div class="herotag">BrandMyItem, the item you want, paid for by brands</div>
-        <div class="heroword">BrandMyItem</div>
+        <div class="heroword" aria-label="BrandMyItem, BrandAnyItem, BrandYourItem"><span class="hero-brand">Brand</span><span class="hero-middle" aria-live="polite">My</span><span class="hero-item">Item</span></div>
         <div class="herobtns">
           <a class="ghostpill" href="#build">I&rsquo;m a user</a>
           <a class="ghostpill solid" href="#dashboard">I&rsquo;m a brand</a>
@@ -7608,6 +7614,26 @@ function toast(msg){
 }
 
 var _hpx=false;
+var _heroWordCycle=false;
+function startHeroWordCycle(){
+  if(_heroWordCycle)return;
+  var middle=document.querySelector('.hero-middle');
+  if(!middle)return;
+  _heroWordCycle=true;
+  var words=['My','Any','Your'],index=0;
+  setInterval(function(){
+    middle.classList.remove('is-entering');
+    middle.classList.add('is-slipping');
+    setTimeout(function(){
+      index=(index+1)%words.length;
+      middle.textContent=words[index];
+      middle.classList.remove('is-slipping');
+      void middle.offsetWidth;
+      middle.classList.add('is-entering');
+      setTimeout(function(){middle.classList.remove('is-entering')},500);
+    },340);
+  },2800);
+}
 function heroParallax(){
   if(_hpx)return;_hpx=true;
   var h=document.getElementById('bigHero');
@@ -7630,6 +7656,7 @@ document.querySelectorAll('.tile img.obj').forEach(function(im){
 });
 loadItemLogos();
 /* 3D retired: photo model is the product */
+startHeroWordCycle();
 route();
 </script>
 </body>
