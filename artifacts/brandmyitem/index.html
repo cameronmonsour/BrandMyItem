@@ -220,10 +220,10 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .catstrip::-webkit-scrollbar{display:none}
 .cat{display:flex;flex-direction:column;align-items:center;gap:7px;min-width:82px;padding:12px 10px;border-radius:14px;border:1px solid var(--border);background:var(--bg);font-size:12.5px;font-weight:500;color:var(--fg)}
 .cat .ic{height:26px;display:flex;align-items:center;justify-content:center}
-.cat .ic img{max-height:26px;max-width:34px;object-fit:contain}
+.cat .ic img{max-height:26px;max-width:34px;object-fit:contain;border:0;outline:0;background:transparent;box-shadow:none}
 .allring{width:18px;height:18px;border-radius:50%;border:2px solid var(--fg);display:inline-block}
 .cat:hover{background:var(--wash)}
-.cat.on{background:#1D1D1F;color:#fff;border-color:#1D1D1F}
+.cat.on{background:#1D1D1F;color:#fff;border-color:var(--border)}
 .statrow{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
 .stat{background:var(--wash2);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px 18px}
 .stat b{display:block;font-size:22px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
@@ -304,7 +304,7 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .itemcard:hover{transform:translateY(-2px)}
 .itemcard.on .itemcard-name{color:#1D1D1F}
 .itemcard.on .itemcard-name:after{content:'';display:block;width:22px;height:2px;background:#1D1D1F;margin:5px auto 0;border-radius:2px}
-.itemcard img{width:92px;height:92px;object-fit:contain;background:transparent;padding:0;margin:0 auto;display:block;box-sizing:border-box}
+.itemcard img{width:92px;height:92px;object-fit:contain;background:transparent;border:0;outline:0;box-shadow:none;padding:0;margin:0 auto;display:block;box-sizing:border-box}
 .itemcard-b{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 2px 0}
 .itemcard-brand{font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#8e8e93}
 .itemcard-name{font-size:13.5px;font-weight:600;line-height:1.25;color:var(--fg)}
@@ -903,6 +903,8 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
   <div class="nav">
     <div class="nav-inner">
       <a href="#home" class="logo">Brand<b>My</b>Item</a>
+      <a href="#home-how" class="lnk hidemob">How it works</a>
+      <a href="#home-faq" class="lnk hidemob">FAQ</a>
       <a href="#dashboard" class="lnk">Live items</a>
       <a href="#build" class="lnk">Build your item</a>
       <a href="#track" class="lnk">Track my item</a>
@@ -978,6 +980,46 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
             <span class="home-flow-index">5</span><h3>Monthly check-in</h3><p>One photo a month keeps the public trust signal current for the chosen term.</p>
           </li>
         </ol>
+      </div>
+    </section>
+
+    <section class="band" style="padding-top:0">
+      <div class="home-bento" aria-label="What makes BrandMyItem different">
+        <article class="home-bento-card">
+          <div class="home-bento-copy"><h3>Real items, not points.</h3><p>An actual MacBook. An actual suit. Not credits — a real thing, shipped to a real address.</p></div>
+          <div class="home-bento-art" aria-hidden="true"><img class="home-bento-product" src="campaign/product-macbook.png" alt=""></div>
+        </article>
+        <article class="home-bento-card home-bento-refund">
+          <div class="home-bento-copy"><h3>Refunded automatically, never held.</h3><p>Doesn't sell out in 60 days, you get it back. No request. No waiting.</p></div>
+          <div class="home-bento-art" aria-hidden="true"><div class="home-bento-days"><strong>60</strong><span>days</span></div></div>
+        </article>
+        <article class="home-bento-card home-bento-checkin">
+          <div class="home-bento-copy"><h3>One photo a month. That's it.</h3><p>No dashboard. No login. One photo, once a month.</p></div>
+          <div class="home-bento-art" aria-hidden="true"><div class="home-bento-photo checkin"><img src="campaign/product-macbook.png" alt=""><span class="home-bento-sticker">BRAND</span></div></div>
+        </article>
+        <article class="home-bento-card home-bento-logo">
+          <div class="home-bento-copy"><h3>Your logo, actually on something.</h3><p>Printed. Not pinned to a feed.</p></div>
+          <div class="home-bento-art" aria-hidden="true"><div class="home-bento-photo macro"><img src="campaign/product-macbook.png" alt=""><span class="home-bento-sticker">BRAND</span></div></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="band" id="home-faq" style="padding-top:0">
+      <div class="band-head">
+        <div class="eyebrow">Questions</div>
+        <h2 class="big">Asked and answered.</h2>
+      </div>
+      <div style="max-width:720px">
+        <details class="faq"><summary>Is this real?</summary><div class="fa">Completely. The items are real, the stickers are real die-cut vinyl, and every listing belongs to a real person who takes it where they work, study, and travel. The only fiction is the idea that a laptop lid or a suitcase isn't premium ad inventory.</div></details>
+        <details class="faq"><summary>Does the owner make money?</summary><div class="fa">No, and that's the point. Once a listing is fully funded, IRLi LLC buys the item and ships it to the owner. Spot money funds that purchase, the platform fee runs the business, and cash never changes hands with the owner at any point.</div></details>
+        <details class="faq"><summary>What does a brand actually get?</summary><div class="fa">Your logo printed on the item itself, visible everywhere it goes and in everything its owner posts, plus your spot on the listing page with a link to your site, for as long as the owner's chosen term runs (6, 12, or 18 months). No impressions promised, just real presence in real rooms your ads can't reach.</div></details>
+        <details class="faq"><summary>How does payment work?</summary><div class="fa">Buying a spot charges your card immediately for the listed price plus the platform fee. No holds, no waiting. If a listing doesn't sell out within 60 days, every brand on it is refunded automatically. If it sells out but shipment runs late, you'll get a notice before the promised date passes, with the choice to wait or take a full refund. If the item can never be delivered, you're refunded in full without having to ask.</div></details>
+        <details class="faq"><summary>Can any brand join?</summary><div class="fa">Almost. Every sponsor is approved by hand before anything is printed. Alcohol, cannabis, tobacco, and political ads aren't accepted, and the item's owner has the final say on what rides on their stuff. Refused purchases are refunded in full.</div></details>
+        <details class="faq"><summary>What keeps the owner honest?</summary><div class="fa">Monthly photo check-ins, public on the listing for anyone to see. The first one requires a receipt dated after the listing funded, so nobody can claim credit for an item they already owned. Miss a check-in and the listing gets flagged publicly; miss two in a row and that owner can't post another listing.</div></details>
+        <details class="faq"><summary>What can I post?</summary><div class="fa">Objects and wearables. Laptops, phones, tumblers, luggage, coolers, wedding suits, graduation gowns. Nothing that needs insurance or permits, so no cars or property.</div></details>
+        <details class="faq"><summary>What if the item never sells out?</summary><div class="fa">Every listing gets 60 days. Sell out in time and it ships. If it doesn't, every brand who bought a spot is refunded automatically and the listing closes — no request needed, no money left sitting indefinitely.</div></details>
+        <details class="faq"><summary>Do I have to say it's sponsored if I post about it?</summary><div class="fa">Yes. Any post about a sponsored item needs to disclose that, and BrandMyItem's built-in share tool tags it for you automatically. That's not a house rule — it's an FTC requirement any time you post about something you received for free in exchange for showing a brand's logo.</div></details>
+        <details class="faq"><summary>Who actually buys the item?</summary><div class="fa">IRLi LLC does, once the listing reaches 100%. Neither the brand nor the owner fronts the item cost — brands pay for ad space, IRLi LLC buys and ships the physical item, and the owner never touches campaign money at any step.</div></details>
       </div>
     </section>
 
@@ -6921,7 +6963,8 @@ function showDash(){
   var cs=document.getElementById('catStrip');cs.innerHTML='';
   CATS.forEach(function(c){
     var b=document.createElement('button');b.className='cat'+(F.cat===c.id?' on':'');
-    b.innerHTML='<span class="ic">'+(c.item&&ITEM_PHOTOS[c.item]?'<img src="'+ITEM_PHOTOS[c.item]+'" alt="">':'<i class="allring"></i>')+'</span>'+c.id;
+     var catPhoto=c.item&&((typeof HERO_SOURCE_FILES!=='undefined'&&HERO_SOURCE_FILES[c.item])||ITEM_PHOTOS[c.item]);
+     b.innerHTML='<span class="ic">'+(catPhoto?'<img src="'+catPhoto+'" alt="">':'<i class="allring"></i>')+'</span>'+c.id;
     b.onclick=function(){F.cat=c.id;showDash()};
     cs.appendChild(b);
   });
@@ -7314,7 +7357,7 @@ function showBuild(){
     var b=document.createElement('button');
     b.type='button';
     b.className='itemcard'+(k===B.type?' on':'');
-    var photo=(typeof HERO_CUTOUTS!=='undefined'&&HERO_CUTOUTS[k])?HERO_CUTOUTS[k]:((typeof ITEM_PHOTOS!=='undefined'&&ITEM_PHOTOS[k])?ITEM_PHOTOS[k]:'');
+     var photo=(typeof HERO_SOURCE_FILES!=='undefined'&&HERO_SOURCE_FILES[k])?HERO_SOURCE_FILES[k]:((typeof HERO_CUTOUTS!=='undefined'&&HERO_CUTOUTS[k])?HERO_CUTOUTS[k]:((typeof ITEM_PHOTOS!=='undefined'&&ITEM_PHOTOS[k])?ITEM_PHOTOS[k]:''));
     b.innerHTML=(photo?'<img src="'+photo+'" alt="">':'')+
       '<div class="itemcard-b">'+(it.brand?'<span class="itemcard-brand">'+it.brand+'</span>':'')+
       '<span class="itemcard-name">'+it.label+'</span>'+
