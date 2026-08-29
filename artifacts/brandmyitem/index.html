@@ -287,8 +287,12 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 /* builder */
 .builder{display:grid;grid-template-columns:1fr;gap:22px;padding:20px 0 90px}
 .bstage{position:relative;min-width:0}
-.itempick-wrap{position:relative;margin-bottom:16px;padding:0 20px}
-.itempick{display:flex;overflow-x:auto;scroll-behavior:smooth;scroll-snap-type:x proximity;scrollbar-width:none;-ms-overflow-style:none;padding:4px 0}
+.itempick-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;min-width:0}
+.item-request-copy{display:flex;align-items:baseline;justify-content:flex-end;gap:7px;min-width:0;font-size:12px;color:var(--mfg);text-align:right}
+.item-request-link{font-size:12px;font-weight:600;color:var(--fg);text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
+.item-request-link:hover{color:#6e6e73}
+.itempick-wrap{position:relative;margin-bottom:16px;padding:0 20px;min-width:0;max-width:100%}
+.itempick{display:flex;overflow-x:auto;scroll-behavior:smooth;scroll-snap-type:x proximity;scrollbar-width:none;-ms-overflow-style:none;padding:4px 0;min-width:0;max-width:100%}
 .itempick::-webkit-scrollbar{display:none}
 .itempick-nav{position:absolute;top:38%;transform:translateY(-50%);width:32px;height:32px;border-radius:50%;background:#fff;border:1px solid rgba(60,60,67,.16);box-shadow:0 2px 10px rgba(0,0,0,.10);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:3;color:#1D1D1F;transition:background .15s}
 .itempick-nav:hover{background:var(--wash)}
@@ -510,8 +514,74 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .modal-bg{position:fixed;inset:0;background:rgba(17,17,19,.42);backdrop-filter:blur(5px);z-index:90;display:none;align-items:center;justify-content:center;padding:20px}
 .modal-bg.on{display:flex}
 .modal{background:#fff;border-radius:24px;padding:26px;width:100%;max-width:430px;box-shadow:0 30px 90px rgba(17,17,19,.3);max-height:92vh;overflow:auto}
+.modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.modal-head h3{flex:1}
+.modal-close{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--mfg);font-size:21px;line-height:1;flex-shrink:0}
+.modal-close:hover{background:var(--wash);color:var(--fg)}
 .modal h3{font-family:var(--serif);font-size:27px;font-weight:500;letter-spacing:-.01em;margin-bottom:4px;padding-bottom:2px}
 .modal .mp{font-size:13.5px;color:var(--mfg);margin-bottom:16px;line-height:1.55}
+.campaign-bg{position:fixed;inset:0;background:rgba(17,17,19,.48);backdrop-filter:blur(7px);z-index:85;display:none;align-items:center;justify-content:center;padding:20px}
+.campaign-bg.on{display:flex}
+.campaign-dialog{display:flex;flex-direction:column;width:100%;max-width:720px;max-height:min(88dvh,760px);background:#fff;border:1px solid rgba(60,60,67,.14);border-radius:26px;box-shadow:0 30px 90px rgba(17,17,19,.32);overflow:hidden}
+.campaign-scroll{overflow:auto;padding:26px 28px 24px}
+.campaign-top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
+.campaign-kicker{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--mfg)}
+.campaign-kicker .pulse{width:6px;height:6px;border-radius:50%;background:#1D1D1F}
+.campaign-close{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:1px solid var(--border);font-size:24px;font-weight:400;line-height:1;color:var(--mfg);flex:0 0 auto}
+.campaign-close:hover{background:var(--wash);color:var(--fg)}
+.campaign-intro{display:grid;grid-template-columns:154px minmax(0,1fr);gap:20px;align-items:center;margin-bottom:22px}
+.campaign-cover{aspect-ratio:1.08;background:var(--wash2);border:1px solid var(--border);border-radius:18px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.campaign-cover img{width:100%;height:100%;object-fit:contain}
+.campaign-cover-fallback{padding:14px;text-align:center;font-size:13px;font-weight:600;color:var(--mfg)}
+.campaign-category{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--mfg);margin-bottom:5px}
+.campaign-title{font-family:var(--serif);font-size:35px;font-weight:500;letter-spacing:-.018em;line-height:1.02;margin-bottom:10px}
+.campaign-owner{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--mfg)}
+.campaign-owner .avatarc{width:28px;height:28px;border-radius:50%;background:#1D1D1F;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;overflow:hidden;flex-shrink:0}
+.campaign-owner .avatarc.avatar-photo{background:var(--wash)}
+.campaign-owner .avatarc img{width:100%;height:100%;object-fit:cover}
+.campaign-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.campaign-panel{border:1px solid var(--border);border-radius:16px;padding:16px;background:var(--wash2);min-width:0}
+.campaign-panel-wide{grid-column:1/-1}
+.campaign-label{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--mfg);margin-bottom:8px}
+.campaign-purpose{font-size:14px;line-height:1.55}
+.campaign-purpose p{min-height:44px}
+.campaign-facts{margin-top:14px;border-top:1px solid var(--border)}
+.campaign-fact{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);font-size:12.5px}
+.campaign-fact:last-child{border-bottom:0;padding-bottom:0}
+.campaign-fact span{color:var(--mfg)}
+.campaign-fact b{text-align:right;font-weight:600}
+.campaign-reach{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.campaign-reach-stat{min-width:0}
+.campaign-reach-stat span{display:block;font-size:11px;color:var(--mfg);margin-bottom:3px}
+.campaign-reach-stat b{display:block;font-size:13px;line-height:1.35;overflow-wrap:anywhere}
+.campaign-profile-links{display:flex;gap:6px;flex-wrap:wrap;margin-top:13px}
+.campaign-profile-links a{font-size:11.5px;font-weight:600;padding:5px 8px;border:1px solid var(--border);border-radius:999px;background:#fff}
+.campaign-profile-links a:hover{background:var(--wash)}
+.campaign-funding-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.campaign-funding-amount{font-size:22px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.campaign-funding-amount span{font-size:13px;color:var(--mfg);font-weight:500}
+.campaign-percent{font-size:12px;font-weight:600;color:var(--mfg)}
+.campaign-progress{height:8px;border-radius:99px;background:#E9EAED;overflow:hidden;margin:12px 0 9px}
+.campaign-progress i{display:block;height:100%;border-radius:99px;background:#1D1D1F}
+.campaign-funding-meta{display:flex;justify-content:space-between;gap:12px;font-size:12px;color:var(--mfg)}
+.campaign-prices{display:flex;flex-wrap:wrap;gap:7px}
+.campaign-price{display:flex;flex-direction:column;gap:2px;min-width:108px;padding:9px 10px;border:1px solid var(--border);border-radius:11px;background:#fff}
+.campaign-price span{font-size:11px;color:var(--mfg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.campaign-price b{font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}
+.campaign-no-open{font-size:13px;color:var(--mfg)}
+.campaign-sponsors{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.campaign-sponsor{display:flex;align-items:center;gap:8px;min-width:0}
+.campaign-sponsor-mark{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#fff;border:1px solid var(--border);flex:0 0 auto}
+.campaign-sponsor-mark img{width:100%;height:100%;object-fit:contain;padding:3px}
+.campaign-sponsor-mark span{font-size:9px;font-weight:700}
+.campaign-sponsor-copy{min-width:0}
+.campaign-sponsor-copy b,.campaign-sponsor-copy span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.campaign-sponsor-copy b{font-size:12px;font-weight:600}
+.campaign-sponsor-copy span{font-size:11px;color:var(--mfg)}
+.campaign-more-sponsors{font-size:12px;color:var(--mfg);margin-top:10px}
+.campaign-footer{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 28px;border-top:1px solid var(--border);background:#fff}
+.campaign-footer-note{font-size:12px;line-height:1.4;color:var(--mfg)}
+.campaign-continue{flex:0 0 auto}
 .upl{border:1px solid rgba(60,60,67,.20);border-radius:14px;padding:18px;text-align:center;font-size:13px;font-weight:600;color:var(--mfg);cursor:pointer;margin-bottom:12px}
 .upl:hover{border-color:#1D1D1F}
 .upl img{max-height:52px;max-width:80%;margin:0 auto}
@@ -548,6 +618,22 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
 @media(max-width:620px){.brand-fit-grid{grid-template-columns:1fr}}
 @media(max-width:620px){.location-add-row{align-items:stretch}.location-add{padding:0 12px}}
 @media(max-width:620px){.brand-fit-location-grid{grid-template-columns:1fr}}
+@media(max-width:620px){
+  .campaign-bg{align-items:flex-end;padding:10px}
+  .campaign-dialog{max-height:88dvh;border-radius:24px 24px 14px 14px}
+  .campaign-scroll{padding:20px 18px 18px}
+  .campaign-intro{grid-template-columns:108px minmax(0,1fr);gap:14px;margin-bottom:16px}
+  .campaign-title{font-size:29px}
+  .campaign-grid{grid-template-columns:1fr;gap:10px}
+  .campaign-panel-wide{grid-column:auto}
+  .campaign-sponsors{grid-template-columns:1fr}
+  .campaign-footer{align-items:flex-end;padding:14px 18px;gap:10px}
+  .campaign-footer-note{max-width:58%}
+  .campaign-continue{width:auto}
+  .itempick-head{display:block;width:calc(100vw - 44px);max-width:calc(100vw - 44px);padding-bottom:12px}
+  .item-request-copy{justify-content:flex-end;gap:7px;margin-top:6px}
+  #v-build .wrap,#v-build .builder,#v-build .bstage,#customCard{width:100%;min-width:0;max-width:100%}
+}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -706,7 +792,10 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
       <div class="bstage">
         
         <div class="card" id="customCard" style="margin-bottom:16px">
-          <div class="card-h"><div class="card-t">Pick your item</div></div>
+          <div class="card-h itempick-head">
+            <div class="card-t">Pick your item</div>
+            <div class="item-request-copy"><span>Can&rsquo;t find it?</span><button class="item-request-link" id="itemRequestOpen" type="button">Request a new item</button></div>
+          </div>
           <div class="itempick-wrap">
             <div class="itempick" id="itemPick"></div>
             <button class="itempick-nav prev" id="itemPickPrev" type="button" aria-label="Previous items">
@@ -940,6 +1029,23 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
   </div>
 </div>
 
+<!-- CAMPAIGN DETAILS -->
+<div class="campaign-bg" id="campaignDetailsBg">
+  <div class="campaign-dialog" id="campaignDetailsDialog" role="dialog" aria-modal="true" aria-labelledby="campaignTitle" tabindex="-1">
+    <div class="campaign-scroll">
+      <div class="campaign-top">
+        <div class="campaign-kicker"><span class="pulse"></span> Campaign preview</div>
+        <button class="campaign-close" id="campaignClose" type="button" aria-label="Close campaign preview">&times;</button>
+      </div>
+      <div id="campaignDetails"></div>
+    </div>
+    <div class="campaign-footer">
+      <div class="campaign-footer-note">See exact placement sizes, then choose an open spot.</div>
+      <button class="btn btn-primary campaign-continue" id="campaignContinue" type="button">View full listing <span aria-hidden="true">&rarr;</span></button>
+    </div>
+  </div>
+</div>
+
 <!-- BUY MODAL -->
 <div class="modal-bg" id="modalBg">
   <div class="modal">
@@ -986,6 +1092,31 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
       </div>
       <p class="finetext">Track your order any time from <b>Track order</b> in the top menu.</p>
     </div>
+  </div>
+</div>
+
+<!-- ITEM REQUEST MODAL -->
+<div class="modal-bg" id="requestModalBg" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="requestTitle">
+    <div class="modal-head">
+      <h3 id="requestTitle">Request a new item</h3>
+      <button class="modal-close" id="requestClose" type="button" aria-label="Close request form">&times;</button>
+    </div>
+    <p class="mp">Tell us what you&rsquo;d like to see in the item picker. We&rsquo;ll review the request for a future drop.</p>
+    <form id="requestForm">
+      <div class="field">
+        <label class="label" for="requestItem">What item should we add?</label>
+        <input class="input" id="requestItem" required placeholder="e.g. Noise-canceling headphones">
+      </div>
+      <div class="field">
+        <label class="label" for="requestNote">Anything specific? <span style="font-weight:400;color:#8e8e93">(optional)</span></label>
+        <textarea class="input" id="requestNote" rows="3" placeholder="Brand, model, color, or why you want it"></textarea>
+      </div>
+      <div class="mrow">
+        <button class="btn btn-outline" id="requestCancel" type="button">Cancel</button>
+        <button class="btn btn-primary" type="submit">Submit request</button>
+      </div>
+    </form>
   </div>
 </div>
 
@@ -6306,6 +6437,114 @@ function drawHomeMap(f){
 
 /* ============ DASHBOARD ============ */
 var F={q:'',cat:'All',status:'all',min:'',max:'',sort:'new'};
+var campaignListing=null,campaignReturnFocus=null,campaignBodyOverflow='';
+function campaignValues(values,fallback){
+  var out=[];
+  (values||[]).forEach(function(v){if(v&&out.indexOf(v)<0)out.push(v)});
+  return out.length?out.join(' · '):(fallback||'Not provided');
+}
+function campaignSpotMeta(l,i){
+  if(ITEMS[l.type])return slotMeta(l.type,l.slots,i);
+  return{pos:'Spot '+(i+1),size:'Placement',dims:'Exact size shown on listing'};
+}
+function campaignSocialLinks(l){
+  if(typeof SOCIAL_PLATFORMS==='undefined')return '';
+  var linked=SOCIAL_PLATFORMS.filter(function(p){return l.socialLinks&&l.socialLinks[p.key]});
+  return linked.length?'<div class="campaign-profile-links">'+linked.map(function(p){
+    var handle=l.socialLinks[p.key];
+    return '<a href="'+p.url+safeCardText(handle)+'" target="_blank" rel="noopener">'+safeCardText(p.label)+' @'+safeCardText(handle)+'</a>';
+  }).join('')+'</div>':'';
+}
+function campaignSponsorHtml(c){
+  var brand=(c.brand||'Sponsor').trim()||'Sponsor';
+  var mark=c.logo?'<img src="'+c.logo+'" alt="'+safeCardText(brand)+' logo">':'<span>'+safeCardText(brand.slice(0,2).toUpperCase())+'</span>';
+  return '<div class="campaign-sponsor"><div class="campaign-sponsor-mark">'+mark+'</div>'+
+    '<div class="campaign-sponsor-copy"><b>'+safeCardText(brand)+'</b><span>'+money(c.amt||0)+' · '+ago(c.purchasedAt||Date.now())+'</span></div></div>';
+}
+function renderCampaignDetails(l){
+  var el=document.getElementById('campaignDetails');if(!el)return;
+  var photo=PHO(l),label=LBLL(l),category=ITEMS[l.type]&&ITEMS[l.type].cat?ITEMS[l.type].cat:'Custom';
+  var purpose=l.purpose||'The owner has not added a purpose statement yet.';
+  var claimed=(l.claims||[]).filter(Boolean).length,open=openSlots(l),raised=raisedOf(l),goal=goalOf(l),pct=Math.round(pctOf(l));
+  var openPrices=[];
+  (l.prices||[]).forEach(function(price,i){if(!(l.claims||[])[i])openPrices.push({price:price,meta:campaignSpotMeta(l,i)})});
+  var sponsors=(l.claims||[]).filter(Boolean).slice().sort(function(a,b){return(b.purchasedAt||0)-(a.purchasedAt||0)});
+  var shownSponsors=sponsors.slice(0,3),extraSponsors=Math.max(0,sponsors.length-shownSponsors.length);
+  var photoHtml=photo?'<img src="'+photo+'" alt="'+safeCardText(label)+'">':'<div class="campaign-cover-fallback">'+safeCardText(label)+'</div>';
+  var profile=ownerAvatarHtml(l);
+  el.innerHTML=
+    '<div class="campaign-intro">'+
+      '<div class="campaign-cover">'+photoHtml+'</div>'+
+      '<div><div class="campaign-category">'+safeCardText(category)+'</div>'+
+        '<h2 class="campaign-title" id="campaignTitle">'+safeCardText(label)+'</h2>'+
+        '<div class="campaign-owner">'+profile+'<span>Posted by <b>'+safeCardText(l.owner||'This owner')+'</b> · '+ago(l.created)+'</span></div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="campaign-grid">'+
+      '<section class="campaign-panel campaign-purpose">'+
+        '<div class="campaign-label">Campaign brief</div><p>'+safeCardText(purpose)+'</p>'+
+        '<div class="campaign-facts">'+
+          '<div class="campaign-fact"><span>Item ships</span><b>New at 100% funded</b></div>'+
+          '<div class="campaign-fact"><span>Owner check-in</span><b>'+safeCardText(cadence(RETL(l)))+'</b></div>'+
+          '<div class="campaign-fact"><span>Campaign term</span><b>12 months</b></div>'+
+        '</div>'+
+      '</section>'+
+      '<section class="campaign-panel">'+
+        '<div class="campaign-label">Audience & reach</div>'+
+        '<div class="campaign-reach">'+
+          '<div class="campaign-reach-stat"><span>Social following</span><b>'+safeCardText(l.social?l.social+' followers':'Not provided')+'</b></div>'+
+          '<div class="campaign-reach-stat"><span>Seen how often</span><b>'+safeCardText(l.freq||'Not provided')+'</b></div>'+
+          '<div class="campaign-reach-stat"><span>Most visited cities</span><b>'+safeCardText(campaignValues(l.cities))+'</b></div>'+
+          '<div class="campaign-reach-stat"><span>Universities</span><b>'+safeCardText(campaignValues(l.universities))+'</b></div>'+
+          '<div class="campaign-reach-stat"><span>Everyday settings</span><b>'+safeCardText(campaignValues(l.habs))+'</b></div>'+
+        '</div>'+campaignSocialLinks(l)+
+      '</section>'+
+      '<section class="campaign-panel campaign-panel-wide">'+
+        '<div class="campaign-funding-head"><div><div class="campaign-label">Funding progress</div><div class="campaign-funding-amount">'+money(raised)+' <span>of '+money(goal)+'</span></div></div><div class="campaign-percent">'+pct+'% funded</div></div>'+
+        '<div class="campaign-progress"><i style="width:'+pct+'%"></i></div>'+
+        '<div class="campaign-funding-meta"><span>'+claimed+' of '+(l.slots||0)+' spots sold</span><span>'+open+' open '+(open===1?'spot':'spots')+'</span></div>'+
+      '</section>'+
+      '<section class="campaign-panel">'+
+        '<div class="campaign-label">Open spot pricing</div>'+
+        (openPrices.length?'<div class="campaign-prices">'+openPrices.map(function(o){return '<div class="campaign-price"><span>'+safeCardText(o.meta.pos)+' · '+safeCardText(o.meta.size)+'</span><b>'+money(o.price)+'</b></div>'}).join('')+'</div>':'<p class="campaign-no-open">All spots are claimed. View the full listing to see the finished placement.</p>')+
+      '</section>'+
+      '<section class="campaign-panel">'+
+        '<div class="campaign-label">Sponsor activity</div>'+
+        (shownSponsors.length?'<div class="campaign-sponsors">'+shownSponsors.map(campaignSponsorHtml).join('')+'</div>'+'<div class="campaign-more-sponsors">'+(extraSponsors?'+ '+extraSponsors+' more sponsor'+(extraSponsors===1?'':'s'):'Latest sponsors on this campaign')+'</div>':'<p class="campaign-no-open">No sponsors yet.</p>')+
+      '</section>'+
+    '</div>';
+}
+function closeCampaignDetails(restoreFocus){
+  var bg=document.getElementById('campaignDetailsBg');
+  if(!bg||!bg.classList.contains('on'))return;
+  bg.classList.remove('on');
+  document.body.style.overflow=campaignBodyOverflow;
+  var focus=campaignReturnFocus;
+  campaignListing=null;campaignReturnFocus=null;
+  if(restoreFocus!==false&&focus&&document.contains(focus))focus.focus();
+}
+function openCampaignDetails(l){
+  var bg=document.getElementById('campaignDetailsBg'),dialog=document.getElementById('campaignDetailsDialog');
+  if(!bg||!dialog||!l)return;
+  campaignListing=l;
+  campaignReturnFocus=document.activeElement;
+  campaignBodyOverflow=document.body.style.overflow;
+  renderCampaignDetails(l);
+  bg.classList.add('on');
+  document.body.style.overflow='hidden';
+  setTimeout(function(){dialog.focus()},0);
+}
+document.getElementById('campaignClose').onclick=function(){closeCampaignDetails()};
+document.getElementById('campaignDetailsBg').onclick=function(e){if(e.target===this)closeCampaignDetails()};
+document.getElementById('campaignContinue').onclick=function(){
+  if(!campaignListing)return;
+  var id=campaignListing.id;
+  closeCampaignDetails(false);
+  location.hash='item/'+id;
+};
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'&&document.getElementById('campaignDetailsBg').classList.contains('on'))closeCampaignDetails();
+});
 function showDash(){
   var cs=document.getElementById('catStrip');cs.innerHTML='';
   CATS.forEach(function(c){
@@ -6386,7 +6625,10 @@ function renderDash(){
     var it={label:LBLL(l)},pct=pctOf(l),isNew=Date.now()-l.created<1000*60*60*24;
     var sold=l.slots-openSlots(l);
     var init=(l.owner||'?').trim().slice(0,1).toUpperCase();
-    var card=document.createElement('button');card.className='lcard';
+    var card=document.createElement('button');card.type='button';card.className='lcard';
+    card.setAttribute('data-listing-id',l.id);
+    card.setAttribute('aria-haspopup','dialog');
+    card.setAttribute('aria-label','Preview campaign for '+it.label+' by '+(l.owner||'this owner'));
     card.innerHTML='<div class="thumb" id="th-'+l.id+'"></div>'+
       '<div class="body">'+
       '<div class="who">'+ownerAvatarHtml(l)+'<span class="oname">'+l.owner+'</span><span class="when">&middot; '+ago(l.created)+'</span><span class="catic"><img src="'+PHO(l)+'" alt=""></span></div>'+
@@ -6395,7 +6637,7 @@ function renderDash(){
       '<span class="chips"><span class="chipg">'+sponsorLogoStack(l)+'<span>'+sold+'/'+l.slots+' sold</span></span><span class="chipb">from '+money(minOpenPrice(l)===Infinity?Math.min.apply(null,l.prices):minOpenPrice(l))+'</span></span></div>'+
       '<div class="pbar"><i style="width:'+pct+'%"></i></div>'+
       '</div>';
-    card.onclick=function(){location.hash='item/'+l.id};
+    card.onclick=function(){openCampaignDetails(l)};
     g.appendChild(card);
     var th=document.getElementById('th-'+l.id);
     renderFinal(th,l);
@@ -6609,6 +6851,47 @@ function renderLocationPicker(kind){
   add.onclick=function(){addValue()};
   draw();
 }
+var requestLastFocus=null;
+function closeItemRequest(){
+  var bg=document.getElementById('requestModalBg');
+  if(!bg)return;
+  bg.classList.remove('on');
+  bg.setAttribute('aria-hidden','true');
+  document.body.style.overflow='';
+  if(requestLastFocus&&requestLastFocus.focus)requestLastFocus.focus();
+  requestLastFocus=null;
+}
+function openItemRequest(){
+  var bg=document.getElementById('requestModalBg');
+  if(!bg)return;
+  requestLastFocus=document.activeElement;
+  bg.classList.add('on');
+  bg.setAttribute('aria-hidden','false');
+  document.body.style.overflow='hidden';
+  setTimeout(function(){document.getElementById('requestItem').focus()},0);
+}
+document.getElementById('itemRequestOpen').onclick=openItemRequest;
+document.getElementById('requestClose').onclick=closeItemRequest;
+document.getElementById('requestCancel').onclick=closeItemRequest;
+document.getElementById('requestModalBg').onclick=function(e){
+  if(e.target===this)closeItemRequest();
+};
+document.getElementById('requestForm').onsubmit=function(e){
+  e.preventDefault();
+  var item=document.getElementById('requestItem').value.trim();
+  if(!item){
+    document.getElementById('requestItem').focus();
+    return;
+  }
+  closeItemRequest();
+  this.reset();
+  toast('Item request submitted');
+};
+document.addEventListener('keydown',function(e){
+  var bg=document.getElementById('requestModalBg');
+  if(e.key==='Escape'&&bg.classList.contains('on'))closeItemRequest();
+});
+
 function showBuild(){
   var pick=document.getElementById('itemPick');pick.innerHTML='';pick.scrollLeft=0;
   Object.keys(ITEMS).forEach(function(k){
