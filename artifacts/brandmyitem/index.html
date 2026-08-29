@@ -238,6 +238,14 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .rail h5{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--mfg);margin-bottom:8px}
 .pricerow{display:flex;gap:8px;align-items:center}
 .pricerow .input{height:36px;font-size:13px;border-radius:10px}
+.filter-field{display:block;margin:0 0 12px}
+.filter-field:last-child{margin-bottom:0}
+.filter-field>span{display:block;font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--mfg);margin-bottom:6px}
+.filter-card .select{width:100%;height:38px;font-size:13px;border-radius:10px}
+.filter-card .input{height:38px;font-size:13px;border-radius:10px}
+.filter-card .pricerow .input{min-width:0}
+.filter-clear{width:100%;height:34px;margin-top:2px;border:1px solid var(--border);border-radius:10px;background:var(--bg);font-size:12px;font-weight:600;color:var(--mfg)}
+.filter-clear:hover{background:var(--wash);color:var(--fg)}
 .dash-live-panel{margin:0 0 18px;padding:16px;border:1px solid var(--border);border-radius:20px;background:var(--wash2)}
 .dash-live-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:12px}
 .dash-live-head .eyebrow{margin:0 0 3px;font-size:10.5px}
@@ -294,21 +302,6 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .lcard .sponsor-monogram{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#1D1D1F;color:#fff;font-size:6px;font-weight:700;letter-spacing:-.04em}
 .lcard .sponsor-more{display:inline-flex;align-items:center;justify-content:center;height:16px;margin-left:2px;color:var(--mfg);font-size:9px;font-weight:700}
 .lcard .chipb{display:inline-flex;align-items:center;font-size:11px;font-weight:500;background:#1D1D1F;color:#fff;border-radius:999px;padding:4px 8px;line-height:1.2;font-variant-numeric:tabular-nums;white-space:nowrap;flex-shrink:0}
-.lcard .listing-why{margin:12px 0 0;padding:12px;border:1px solid var(--border);border-radius:14px;background:var(--wash2)}
-.lcard .listing-why-head{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--mfg);margin-bottom:5px}
-.lcard .listing-purpose{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;min-height:34px;font-size:12px;line-height:1.42;color:var(--fg)}
-.lcard .listing-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 12px;margin-top:11px;padding-top:11px;border-top:1px solid var(--border)}
-.lcard .listing-fact{min-width:0}
-.lcard .listing-fact span{display:block;font-size:9.5px;font-weight:700;letter-spacing:.055em;text-transform:uppercase;color:var(--mfg);margin-bottom:2px}
-.lcard .listing-fact b{display:block;overflow:hidden;text-overflow:ellipsis;font-size:11.5px;font-weight:600;line-height:1.35}
-.lcard .listing-fact.wide{grid-column:1/-1}
-.lcard .listing-fact.wide b{white-space:normal}
-.lcard .listing-price-row{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-top:12px}
-.lcard .listing-price-row .amts{font-size:15.5px;font-weight:600;font-variant-numeric:tabular-nums}
-.lcard .listing-price-row .amts span{color:#A6B0BA;font-weight:500}
-.lcard .listing-price-row .spot-ask{text-align:right}
-.lcard .listing-price-row .spot-ask span{display:block;font-size:9.5px;font-weight:700;letter-spacing:.055em;text-transform:uppercase;color:var(--mfg)}
-.lcard .listing-price-row .spot-ask b{font-size:13px;font-weight:700}
 .pbar{height:5px;border-radius:99px;background:#EEF1F5;overflow:hidden;margin:10px 0 0}
 .pbar i{display:block;height:100%;border-radius:99px;background:#1D1D1F;transition:width .5s}
 .empty{border:1px solid rgba(60,60,67,.20);border-radius:var(--r-lg);padding:46px 20px;text-align:center;color:var(--mfg);font-size:14px;grid-column:1/-1}
@@ -1076,9 +1069,59 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
     <div class="statrow" id="statRow"></div>
     <div class="dash">
       <aside class="rail">
-        <div class="card"><div class="card-c" style="padding:18px">
-          <h5>Category</h5>
-          <div id="railCats"></div>
+        <div class="card filter-card"><div class="card-c" style="padding:18px">
+          <h5>Audience</h5>
+          <label class="filter-field"><span>Following</span><select class="select" id="fSocial">
+            <option value="">Any following</option>
+            <option value="Under 1K">Under 1K</option>
+            <option value="1K–10K">1K–10K</option>
+            <option value="10K–100K">10K–100K</option>
+            <option value="100K+">100K+</option>
+          </select></label>
+          <label class="filter-field"><span>Seen</span><select class="select" id="fFreq">
+            <option value="">Any frequency</option>
+            <option value="Daily">Daily</option>
+            <option value="Few times a week">Few times a week</option>
+            <option value="Weekly">Weekly</option>
+            <option value="Occasionally">Occasionally</option>
+          </select></label>
+        </div></div>
+        <div class="card filter-card"><div class="card-c" style="padding:18px">
+          <h5>Where it shows up</h5>
+          <label class="filter-field"><span>Location or setting</span><input class="input" id="fLocation" placeholder="City, campus, coffee shop"></label>
+          <label class="filter-field"><span>University</span><input class="input" id="fUniversity" placeholder="Search universities"></label>
+        </div></div>
+        <div class="card filter-card"><div class="card-c" style="padding:18px">
+          <h5>Item &amp; inventory</h5>
+          <label class="filter-field"><span>Exact item price</span><div class="pricerow">
+            <input class="input" id="fItemMin" type="number" placeholder="Min">
+            <span style="color:var(--mfg)">&ndash;</span>
+            <input class="input" id="fItemMax" type="number" placeholder="Max">
+          </div></label>
+          <label class="filter-field"><span>Open spots</span><input class="input" id="fOpenMin" type="number" min="0" placeholder="Minimum open spots"></label>
+          <label class="filter-field"><span>Branding method</span><select class="select" id="fMethod">
+            <option value="">Any method</option>
+          </select></label>
+        </div></div>
+        <div class="card filter-card"><div class="card-c" style="padding:18px">
+          <h5>Deal details</h5>
+          <label class="filter-field"><span>Fulfillment</span><select class="select" id="fFulfillment">
+            <option value="">Any fulfillment</option>
+            <option value="self">Owner applies</option>
+            <option value="assisted">BrandMyItem applies</option>
+          </select></label>
+          <label class="filter-field"><span>Commitment</span><select class="select" id="fTerm">
+            <option value="">Any term</option>
+            <option value="6">6 months</option>
+            <option value="12">12 months</option>
+            <option value="18">18 months</option>
+          </select></label>
+          <label class="filter-field"><span>Check-in</span><select class="select" id="fCadence">
+            <option value="">Any check-in</option>
+            <option value="monthly photo">Monthly photo</option>
+            <option value="photo every 2 weeks">Photo every 2 weeks</option>
+            <option value="weekly photo">Weekly photo</option>
+          </select></label>
         </div></div>
         <div class="card"><div class="card-c" style="padding:18px">
           <h5>Status</h5>
@@ -1103,6 +1146,7 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
             <option value="rich">Biggest goal</option>
           </select>
         </div></div>
+        <button class="filter-clear" id="clearDashFilters" type="button">Clear all filters</button>
       </aside>
       <main class="dash-results">
         <section class="dash-live-panel" aria-labelledby="dashLiveTitle">
@@ -6959,7 +7003,11 @@ function drawHomeMap(f){
 }
 
 /* ============ DASHBOARD ============ */
-var F={q:'',cat:'All',status:'all',min:'',max:'',sort:'new'};
+var F={
+  q:'',cat:'All',status:'all',min:'',max:'',sort:'new',
+  social:'',freq:'',location:'',university:'',itemMin:'',itemMax:'',
+  openMin:'',method:'',fulfillment:'',term:'',checkin:''
+};
 var campaignListing=null,campaignReturnFocus=null,campaignBodyOverflow='';
 function campaignValues(values,fallback){
   var out=[];
@@ -7078,19 +7126,38 @@ function showDash(){
     b.onclick=function(){F.cat=c.id;showDash()};
     cs.appendChild(b);
   });
-  var rc=document.getElementById('railCats');rc.innerHTML='';
-  var la=document.createElement('label');la.className='check';
-  la.innerHTML='<input type="radio" name="frc" '+(F.cat==='All'?'checked':'')+'>All categories';
-  la.querySelector('input').onchange=function(){F.cat='All';showDash()};
-  rc.appendChild(la);
-  CATS.slice(1).forEach(function(c){
-    var l=document.createElement('label');l.className='check';
-    l.innerHTML='<input type="radio" name="frc" '+(F.cat===c.id?'checked':'')+'>'+c.id;
-    l.querySelector('input').onchange=function(){F.cat=c.id;showDash()};
-    rc.appendChild(l);
-  });
   document.getElementById('dq').value=F.q;
   document.getElementById('dq').oninput=function(){F.q=this.value;renderDash()};
+  var methodSelect=document.getElementById('fMethod');
+  if(methodSelect&&methodSelect.options.length===1){
+    var methods=[];
+    Object.keys(BRANDING_METHODS).forEach(function(type){
+      var method=BRANDING_METHODS[type];
+      if(methods.indexOf(method)<0)methods.push(method);
+    });
+    methods.sort().forEach(function(method){
+      var option=document.createElement('option');
+      option.value=method;
+      option.textContent=method.charAt(0).toUpperCase()+method.slice(1);
+      methodSelect.appendChild(option);
+    });
+    var customOption=document.createElement('option');
+    customOption.value='custom branding method';
+    customOption.textContent='Custom branding method';
+    methodSelect.appendChild(customOption);
+  }
+  [
+    ['fSocial','social','change'],['fFreq','freq','change'],
+    ['fLocation','location','input'],['fUniversity','university','input'],
+    ['fItemMin','itemMin','input'],['fItemMax','itemMax','input'],
+    ['fOpenMin','openMin','input'],['fMethod','method','change'],
+    ['fFulfillment','fulfillment','change'],['fTerm','term','change'],
+    ['fCadence','checkin','change']
+  ].forEach(function(binding){
+    var el=document.getElementById(binding[0]);if(!el)return;
+    el.value=F[binding[1]];
+    el['on'+binding[2]]=function(){F[binding[1]]=this.value;renderDash()};
+  });
   document.querySelectorAll('input[name=fst]').forEach(function(r){
     r.checked=r.value===F.status;
     r.onchange=function(){F.status=this.value;renderDash()};
@@ -7100,6 +7167,14 @@ function showDash(){
   document.getElementById('fmax').oninput=function(){F.max=this.value;renderDash()};
   var fs=document.getElementById('fsort');fs.value=F.sort;
   fs.onchange=function(){F.sort=this.value;renderDash()};
+  document.getElementById('clearDashFilters').onclick=function(){
+    F={
+      q:'',cat:'All',status:'all',min:'',max:'',sort:'new',
+      social:'',freq:'',location:'',university:'',itemMin:'',itemMax:'',
+      openMin:'',method:'',fulfillment:'',term:'',checkin:''
+    };
+    showDash();
+  };
   renderDash();
 }
 function minOpenPrice(l){
@@ -7110,31 +7185,6 @@ function minOpenPrice(l){
 function listingSpotPrice(l){
   var open=minOpenPrice(l);
   return open===Infinity&&l.prices.length?Math.min.apply(null,l.prices):open;
-}
-function listingBrandFitHtml(l){
-  var cities=campaignValues(l.cities,(l.habs&&l.habs.length?l.habs.slice(0,2).join(' · '):'Not provided'));
-  var universities=campaignValues(l.universities);
-  var purpose=l.purpose||('Visible '+(l.freq||'regularly').toLowerCase()+' in '+campaignValues(l.habs,'everyday settings').toLowerCase()+'.');
-  var fulfillment=l.brandingMode==='assisted'?'BrandMyItem applies':'Owner applies';
-  var openCount=openSlots(l),sold=(l.slots||0)-openCount;
-  var spotPrice=listingSpotPrice(l);
-  var spotLabel=openCount?(money(spotPrice)+' minimum'):'All spots sold';
-  return '<div class="listing-why">'+
-    '<div class="listing-why-head">Why brands buy this placement</div>'+
-    '<p class="listing-purpose">'+safeCardText(purpose)+'</p>'+
-    '<div class="listing-facts">'+
-      '<div class="listing-fact"><span>Following</span><b>'+safeCardText(l.social?l.social+' followers':'Not provided')+'</b></div>'+
-      '<div class="listing-fact"><span>Seen</span><b>'+safeCardText(l.freq||'Not provided')+'</b></div>'+
-      '<div class="listing-fact"><span>Location</span><b>'+safeCardText(cities)+'</b></div>'+
-      '<div class="listing-fact"><span>University</span><b>'+safeCardText(universities)+'</b></div>'+
-      '<div class="listing-fact"><span>Exact item price</span><b>'+money(RETL(l))+'</b></div>'+
-      '<div class="listing-fact"><span>Spots</span><b>'+sold+' sold · '+openCount+' open</b></div>'+
-      '<div class="listing-fact wide"><span>Fulfillment</span><b>'+safeCardText(fulfillment+' · '+brandingMethod(l.type))+'</b></div>'+
-      '<div class="listing-fact"><span>Commitment</span><b>'+termOf(l)+' months</b></div>'+
-      '<div class="listing-fact"><span>Check-in</span><b>'+safeCardText(cadence(RETL(l)))+'</b></div>'+
-    '</div>'+
-    '<div class="listing-price-row"><span class="amts">'+money(raisedOf(l))+'<span>/'+money(goalOf(l))+'</span></span><span class="spot-ask"><span>Open spot</span><b>'+spotLabel+'</b></span></div>'+
-  '</div>';
 }
 function postActivityRows(){
   var rows=[],seen={},listings=DB.listings||[];
@@ -7179,6 +7229,15 @@ function syncDashboardFilterState(){
   if(max)F.max=max.value;
   if(sort)F.sort=sort.value;
   if(status)F.status=status.value;
+  [
+    ['fSocial','social'],['fFreq','freq'],['fLocation','location'],
+    ['fUniversity','university'],['fItemMin','itemMin'],['fItemMax','itemMax'],
+    ['fOpenMin','openMin'],['fMethod','method'],['fFulfillment','fulfillment'],
+    ['fTerm','term'],['fCadence','checkin']
+  ].forEach(function(binding){
+    var el=document.getElementById(binding[0]);
+    if(el)F[binding[1]]=el.value;
+  });
 }
 function renderDash(){
   syncDashboardFilterState();
@@ -7199,6 +7258,22 @@ function renderDash(){
     if(F.cat!=='All'&&it.cat!==F.cat)return false;
     if(F.status==='open'&&openSlots(l)===0)return false;
     if(F.status==='done'&&pctOf(l)<100)return false;
+    if(F.social&&l.social!==F.social)return false;
+    if(F.freq&&l.freq!==F.freq)return false;
+    var locationText=(l.cities||[]).concat(l.habs||[]).join(' ').toLowerCase();
+    if(F.location&&!locationText.includes(F.location.toLowerCase()))return false;
+    var universityText=(l.universities||[]).join(' ').toLowerCase();
+    if(F.university&&!universityText.includes(F.university.toLowerCase()))return false;
+    var retail=RETL(l);
+    var itemMin=F.itemMin===''?null:parseFloat(F.itemMin),itemMax=F.itemMax===''?null:parseFloat(F.itemMax);
+    if(itemMin!==null&&!isNaN(itemMin)&&retail<itemMin)return false;
+    if(itemMax!==null&&!isNaN(itemMax)&&retail>itemMax)return false;
+    var openMin=F.openMin===''?null:parseInt(F.openMin,10);
+    if(openMin!==null&&!isNaN(openMin)&&openSlots(l)<openMin)return false;
+    if(F.method&&brandingMethod(l.type)!==F.method)return false;
+    if(F.fulfillment&&(l.brandingMode||'self')!==F.fulfillment)return false;
+    if(F.term&&String(termOf(l))!==F.term)return false;
+    if(F.checkin&&cadence(retail)!==F.checkin)return false;
     var searchable=[it.label,it.cat,l.owner,l.purpose,l.social].concat(l.habs||[],l.cities||[],l.universities||[]).join(' ').toLowerCase();
     if(q&&!searchable.includes(q))return false;
     var mo=listingSpotPrice(l);
@@ -7218,6 +7293,7 @@ function renderDash(){
   }
   list.forEach(function(l){
     var it={label:LBLL(l)},pct=pctOf(l),isNew=Date.now()-l.created<1000*60*60*24;
+    var sold=l.slots-openSlots(l);
     var card=document.createElement('button');card.type='button';card.className='lcard';
     card.setAttribute('data-listing-id',l.id);
     card.setAttribute('aria-haspopup','dialog');
@@ -7225,8 +7301,9 @@ function renderDash(){
     card.innerHTML='<div class="thumb" id="th-'+l.id+'"></div>'+
       '<div class="body">'+
       '<div class="who">'+ownerAvatarHtml(l)+'<span class="oname">'+l.owner+'</span><span class="when">&middot; '+ago(l.created)+'</span><span class="catic"><img src="'+PHO(l)+'" alt=""></span></div>'+
-      '<div class="iname">'+it.label+'</div>'+
-      listingBrandFitHtml(l)+
+      listingContextHtml(l)+'<div class="iname">'+it.label+'</div>'+
+      '<div class="moneyrow"><span class="amts">'+money(raisedOf(l))+'<span>/'+money(goalOf(l))+'</span></span>'+
+      '<span class="chips"><span class="chipg sold-count">'+sold+'/'+l.slots+' sold</span><span class="sponsor-price">'+sponsorLogoStack(l)+'<span class="chipb">from '+money(listingSpotPrice(l))+'</span></span></span></div>'+
       '<div class="pbar"><i style="width:'+pct+'%"></i></div>'+
       '</div>';
     card.onclick=function(){openCampaignDetails(l)};

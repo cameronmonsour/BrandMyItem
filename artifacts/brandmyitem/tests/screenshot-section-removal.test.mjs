@@ -67,20 +67,25 @@ test('dashboard activity uses the same live ticker as the homepage', () => {
   assert.match(html, /\(DB\.activity\|\|\[\]\)\.forEach\(function\(a\)\{\s+if\(!a\.txt\)return;/);
 });
 
-test('dashboard removes duplicate category controls and shows brand decision details', () => {
-  assert.match(html, /id="railCats"/);
-  assert.match(html, /<h5>Category<\/h5>/);
+test('dashboard keeps compact tracker cards without a duplicate left category box', () => {
+  assert.doesNotMatch(html, /id="railCats"/);
+  assert.doesNotMatch(html, /<h5>Category<\/h5>/);
   assert.match(html, /<h1>Live items<\/h1>/);
   assert.match(html, /id="dashLiveTitle">Brands are claiming spots now<\/h2>/);
-  assert.match(html, /function listingBrandFitHtml\(l\)/);
-  assert.match(html, />Why brands buy this placement</);
-  assert.match(html, />Following<\/span>/);
-  assert.match(html, />Location<\/span>/);
-  assert.match(html, />University<\/span>/);
-  assert.match(html, />Exact item price<\/span>/);
-  assert.match(html, />Spots<\/span>/);
-  assert.match(html, />Fulfillment<\/span>/);
-  assert.match(html, />Open spot<\/span>/);
+  assert.doesNotMatch(html, /function listingBrandFitHtml\(l\)/);
+  assert.doesNotMatch(html, /class="listing-why"/);
+  assert.match(html, /id="fSocial"/);
+  assert.match(html, /id="fFreq"/);
+  assert.match(html, /id="fLocation"/);
+  assert.match(html, /id="fUniversity"/);
+  assert.match(html, /id="fItemMin"/);
+  assert.match(html, /id="fOpenMin"/);
+  assert.match(html, /id="fMethod"/);
+  assert.match(html, /id="fFulfillment"/);
+  assert.match(html, /id="fTerm"/);
+  assert.match(html, /id="fCadence"/);
+  assert.match(html, /listingContextHtml\(l\)\+'<div class="iname">/);
+  assert.match(html, /<span class="chipg sold-count">/);
 });
 
 test('fulfillment copy states the delivery and branding windows', () => {
