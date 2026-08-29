@@ -89,6 +89,10 @@ test('dashboard keeps compact tracker cards without a duplicate left category bo
   assert.match(builderHtml, /class="card details-card"/);
   assert.match(builderHtml, /<div class="card-t">Details<\/div>/);
   assert.match(builderHtml, /id="totalOut"/);
+  assert.match(builderHtml, /Choose your character/);
+  assert.doesNotMatch(builderHtml, /avatarPickStatus/);
+  assert.doesNotMatch(builderHtml, /Memoji selected/);
+  assert.match(builderHtml, /\.avatar-option\.on\{border:1px solid var\(--fg\);box-shadow:none\}/);
   assert.match(html, /\.dash-results\{min-width:0;display:flex;flex-direction:column;gap:18px\}/);
   assert.match(html, /\.rail\{position:sticky;top:76px;align-self:start;display:flex;flex-direction:column;gap:16px\}/);
   assert.match(html, /\.grid\{display:grid;grid-template-columns:repeat\(auto-fill,minmax\(236px,1fr\)\);gap:20px\}/);

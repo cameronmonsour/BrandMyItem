@@ -455,11 +455,10 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .avatar-picker{padding:14px;border:1px solid var(--border);border-radius:16px;background:#fff;margin-bottom:16px}
 .avatar-picker-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
 .avatar-picker-head .label{margin:0}
-.avatar-picker-status{font-size:11.5px;color:var(--mfg);white-space:nowrap}
 .avatar-grid{display:flex;flex-wrap:nowrap;gap:9px;overflow-x:auto;padding:2px 3px 5px;scrollbar-width:thin}
 .avatar-option{position:relative;flex:0 0 42px;width:42px;height:42px;border:1px solid transparent;border-radius:50%;padding:2px;background:#fff;overflow:hidden;cursor:pointer;transition:transform .15s,border-color .15s,box-shadow .15s}
 .avatar-option:hover{transform:translateY(-2px);border-color:var(--mfg)}
-.avatar-option.on{border:2px solid var(--fg);box-shadow:0 0 0 3px #fff,0 0 0 5px var(--fg)}
+.avatar-option.on{border:1px solid var(--fg);box-shadow:none}
 .avatar-option img{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%}
 .item-owner{display:inline-flex;align-items:center;gap:8px}
 .item-owner .avatarc{width:28px;height:28px;border-radius:50%;background:#1D1D1F;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;overflow:hidden;flex-shrink:0}
@@ -1326,8 +1325,8 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
         <div class="card"><div class="card-h"><div class="card-t">Post it</div></div>
         <div class="card-c" style="padding-top:12px">
            <div class="avatar-picker">
-             <div class="avatar-picker-head"><label class="label" for="avatarGrid">Choose your Memoji</label><span class="avatar-picker-status" id="avatarPickStatus">Selected</span></div>
-             <div class="avatar-grid" id="avatarGrid" role="group" aria-label="Choose your Memoji"></div>
+             <div class="avatar-picker-head"><label class="label" for="avatarGrid">Choose your character</label></div>
+             <div class="avatar-grid" id="avatarGrid" role="group" aria-label="Choose your character"></div>
            </div>
           <div class="field"><label class="label" for="pName">Your name</label><input class="input" id="pName" placeholder="Cam"></div>
           <div class="field"><label class="label" for="pMail">Email for purchases and shipping</label><input class="input" id="pMail" type="email" placeholder="you@email.com"></div>
@@ -7347,7 +7346,7 @@ function renderAvatarPicker(){
     var b=document.createElement('button');
     b.type='button';
     b.className='avatar-option'+(B.avatar===src?' on':'');
-    b.setAttribute('aria-label','Choose Memoji '+i);
+    b.setAttribute('aria-label','Choose character '+i);
     b.setAttribute('aria-pressed',B.avatar===src?'true':'false');
     b.innerHTML='<img src="'+src+'" alt="">';
     b.onclick=function(){
@@ -7356,8 +7355,6 @@ function renderAvatarPicker(){
     };
     grid.appendChild(b);
   }
-  var status=document.getElementById('avatarPickStatus');
-  if(status)status.textContent=B.avatar?'Memoji selected':'';
 }
 function renderVariants(k){
   var v=ITEM_VARIANTS[k];
@@ -8383,7 +8380,7 @@ function postListing(){
   var name=document.getElementById('pName').value.trim();
   var mail=document.getElementById('pMail').value.trim();
   if(!name||!mail){toast('Add your name and email to post');return}
-  if(!B.avatar){toast('Select a Memoji before posting');return}
+  if(!B.avatar){toast('Select a character before posting');return}
   if(DB.listings.some(function(existing){return existing.ownerRestricted&&existing.mail&&existing.mail.toLowerCase()===mail.toLowerCase()})){
     toast('This owner is restricted from posting after missed check-ins');return;
   }
