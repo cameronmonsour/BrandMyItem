@@ -5231,7 +5231,7 @@ function suitFix(){try{
   });
 }catch(e){}}
 function LBLL(l){return l.custom?(l.title||((l.type&&ITEMS[l.type])?ITEMS[l.type].label:'Custom item')):(ITEMS[l.type]?ITEMS[l.type].label:l.type)}
-function PHO(l){return l.custom?l.photo:(ITEM_PHOTOS[l.type]||'')}
+function PHO(l){return listingPhoto(l)}
 function RETL(l){return l.custom?(l.retail||l.prices.reduce(function(a,b){return a+b},0)):ITEMS[l.type].retail}
 function slotMeta(type,count,i){
   var key=ORDER[count][i];
@@ -5377,6 +5377,21 @@ ITEM_PHOTOS=LOCAL_PRODUCT_PHOTOS;
 HERO_PHOTOS=LOCAL_PRODUCT_PHOTOS;
 HERO_CUTOUTS=LOCAL_PRODUCT_PHOTOS;
 HERO_SUIT=LOCAL_PRODUCT_PHOTOS.suit;
+function listingPhoto(l){
+  if(!l)return '';
+  var p=(typeof LOCAL_PRODUCT_PHOTOS!=='undefined'&&LOCAL_PRODUCT_PHOTOS[l.type])||'';
+  var isDemo=!!(typeof DEMO_CONTEXT!=='undefined'&&(DEMO_CONTEXT[l.id]||String(l.id).indexOf('demo')===0));
+  if(p&&(!l.custom||isDemo))return p;
+  return l.photo||p||'';
+}
+function normalizeListingPhoto(l){
+  if(!l)return l;
+  var p=listingPhoto(l);
+  if(!p||p===l.photo)return l;
+  var next=Object.assign({},l,{photo:p});
+  if(next.faces)next.faces=next.faces.map(function(f){return Object.assign({},f,{photo:p})});
+  return next;
+}
 var LOGO_SPEC={macbook:{x:0,y:1.6,z:0.16,w:0.5},iphone:{x:0,y:1.9,z:0.09,w:0.34},
   bottle:{x:0,y:1.35,z:0.62,w:0.45},'case':{x:0,y:1.9,z:0.42,w:0.4},
   cooler:{x:0,y:1.05,z:0.83,w:0.55},headphones:{x:0.85,y:1.15,z:0.23,w:0.4},
