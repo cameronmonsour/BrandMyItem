@@ -1753,7 +1753,7 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
       <div id="campaignDetails"></div>
     </div>
     <div class="campaign-footer">
-      <div class="campaign-footer-note">See exact placement sizes, then choose an open spot.</div>
+      <div class="campaign-footer-note">See spot sizes, then choose an open spot.</div>
       <button class="btn btn-primary campaign-continue" id="campaignContinue" type="button">View full listing <span aria-hidden="true">&rarr;</span></button>
     </div>
   </div>
@@ -7336,11 +7336,11 @@ function campaignSponsorHtml(c){
   return '<div class="campaign-sponsor"><div class="campaign-sponsor-mark">'+mark+'</div>'+
     '<div class="campaign-sponsor-copy"><b>'+safeCardText(brand)+'</b><span>'+money(c.amt||0)+' · '+ago(c.purchasedAt||Date.now())+'</span></div></div>';
 }
-function campaignSpotHtml(price,meta,claim){
+function campaignSpotHtml(price,meta,claim,index){
   var brand=claim&&claim.brand?(claim.brand.trim()||'Sponsor'):'';
   var mark=claim?(claim.logo?'<img src="'+claim.logo+'" alt="'+safeCardText(brand)+' logo">':'<span>'+safeCardText(brand.slice(0,2).toUpperCase())+'</span>'):'';
   return '<div class="campaign-price'+(claim?' claimed':'')+'">'+
-    '<div class="campaign-price-top"><span>'+safeCardText(meta.pos)+' · '+safeCardText(meta.size)+'</span>'+
+    '<div class="campaign-price-top"><span>Spot '+(index+1)+'</span>'+
       (claim?'<span class="campaign-price-status">Claimed</span>':'<span class="campaign-price-status">Open</span>')+
     '</div>'+
     '<div class="campaign-price-main">'+
@@ -7394,7 +7394,7 @@ function renderCampaignDetails(l){
       '</section>'+
       '<section class="campaign-panel">'+
         '<div class="campaign-label">Spot pricing</div>'+
-        (spotPrices.length?'<div class="campaign-prices">'+spotPrices.map(function(o){return campaignSpotHtml(o.price,o.meta,o.claim)}).join('')+'</div>':'<p class="campaign-no-open">No placements have been added yet.</p>')+
+        (spotPrices.length?'<div class="campaign-prices">'+spotPrices.map(function(o,i){return campaignSpotHtml(o.price,o.meta,o.claim,i)}).join('')+'</div>':'<p class="campaign-no-open">No placements have been added yet.</p>')+
       '</section>'+
       '<section class="campaign-panel">'+
         '<div class="campaign-label">Sponsor activity</div>'+
