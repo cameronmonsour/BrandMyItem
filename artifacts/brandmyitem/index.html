@@ -446,7 +446,7 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .avatar-picker-head .label{margin:0}
 .avatar-picker-status{font-size:11.5px;color:var(--mfg);white-space:nowrap}
 .avatar-picker .finetext{margin:5px 0 12px}
-.avatar-grid{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px;max-height:238px;overflow-y:auto;padding:2px;scrollbar-width:thin}
+.avatar-grid{display:grid;grid-template-columns:repeat(9,42px);gap:9px;max-height:none;overflow:visible;padding:2px}
 .avatar-option{position:relative;aspect-ratio:1;border:1px solid transparent;border-radius:50%;padding:2px;background:#fff;overflow:hidden;cursor:pointer;transition:transform .15s,border-color .15s,box-shadow .15s}
 .avatar-option:hover{transform:translateY(-2px);border-color:var(--mfg)}
 .avatar-option.on{border:2px solid var(--fg);box-shadow:0 0 0 3px #fff,0 0 0 5px var(--fg)}
@@ -455,7 +455,7 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .item-owner .avatarc{width:28px;height:28px;border-radius:50%;background:#1D1D1F;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;overflow:hidden;flex-shrink:0}
 .item-owner .avatarc.avatar-photo{background:#F5F5F7}
 .item-owner .avatarc img{width:100%;height:100%;object-fit:cover}
-@media(max-width:640px){.avatar-grid{grid-template-columns:repeat(6,minmax(0,1fr));gap:7px}}
+@media(max-width:640px){.avatar-grid{grid-template-columns:repeat(6,40px);gap:8px}}
 .profile-purpose{height:auto;min-height:78px;padding:11px 13px;line-height:1.45;resize:vertical}
 .profile-purpose{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
 .directory-section{margin-top:18px;padding-top:16px;border-top:1px solid var(--border)}
@@ -5093,13 +5093,13 @@ var DEMO_BIDDERS={
 };
 var DEMO_CONTEXT={
   demo1:{social:'10K\u2013100K',cities:['Los Angeles, CA'],universities:['UCLA'],avatar:'avatars/avatar-01.png'},
-  demo2:{social:'1K\u201310K',cities:['Miami, FL'],avatar:'avatars/avatar-19.png'},
-  demo3:{social:'100K+',cities:['New York, NY'],universities:['New York University'],avatar:'avatars/avatar-37.png'},
-  demo4:{social:'10K\u2013100K',cities:['Los Angeles, CA'],universities:['University of Southern California'],avatar:'avatars/avatar-22.png'},
-  demo5:{social:'100K+',cities:['San Francisco, CA'],universities:['Stanford University'],avatar:'avatars/avatar-07.png'},
-  demo6:{social:'1K\u201310K',cities:['Seattle, WA'],universities:['University of Washington'],avatar:'avatars/avatar-30.png'},
-  demo7:{social:'10K\u2013100K',cities:['Austin, TX'],universities:['University of Texas at Austin'],avatar:'avatars/avatar-40.png'},
-  demo8:{social:'1K\u201310K',cities:['Toronto, ON'],universities:['University of Toronto'],avatar:'avatars/avatar-16.png'}
+  demo2:{social:'1K\u201310K',cities:['Miami, FL'],avatar:'avatars/avatar-02.png'},
+  demo3:{social:'100K+',cities:['New York, NY'],universities:['New York University'],avatar:'avatars/avatar-03.png'},
+  demo4:{social:'10K\u2013100K',cities:['Los Angeles, CA'],universities:['University of Southern California'],avatar:'avatars/avatar-04.png'},
+  demo5:{social:'100K+',cities:['San Francisco, CA'],universities:['Stanford University'],avatar:'avatars/avatar-05.png'},
+  demo6:{social:'1K\u201310K',cities:['Seattle, WA'],universities:['University of Washington'],avatar:'avatars/avatar-06.png'},
+  demo7:{social:'10K\u2013100K',cities:['Austin, TX'],universities:['University of Texas at Austin'],avatar:'avatars/avatar-07.png'},
+  demo8:{social:'1K\u201310K',cities:['Toronto, ON'],universities:['University of Toronto'],avatar:'avatars/avatar-08.png'}
 };
 (function upgradeDemoBidders(){
   var changed=false,replacements={};
@@ -6408,7 +6408,24 @@ function renderDash(){
 
 /* ============ BUILD ============ */
 var B={type:'macbook',slots:4,prices:[],habs:['Coffee shops'],cities:[],universities:[],purpose:'',freq:'Daily',social:'1K\u201310K',socialLinks:{},avatar:''};
-var AVATAR_COUNT=48;
+var AVATAR_COUNT=18;
+function canonicalAvatar(src){
+  var value=String(src||''),match=value.match(/avatars\/avatar-(\d+)\.png$/);
+  if(!match)return value;
+  var number=parseInt(match[1],10);
+  if(!number)return '';
+  number=((number-1)%AVATAR_COUNT+AVATAR_COUNT)%AVATAR_COUNT+1;
+  return 'avatars/avatar-'+pad(number)+'.png';
+}
+(function migrateAvatarLibrary(){
+  var changed=false;
+  (DB.listings||[]).forEach(function(l){
+    if(!l.avatar)return;
+    var next=canonicalAvatar(l.avatar);
+    if(next!==l.avatar){l.avatar=next;changed=true}
+  });
+  if(changed)store.set('bmi_db4',DB);
+})();
 function renderAvatarPicker(){
   var grid=document.getElementById('avatarGrid');
   if(!grid)return;
