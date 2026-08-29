@@ -734,12 +734,11 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
   <div class="wrap-narrow" style="max-width:640px">
     <div style="text-align:center;padding:48px 0 8px">
       <h1 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:clamp(28px,4vw,40px);margin:0 0 8px;letter-spacing:-0.01em">Track my item</h1>
-      <p style="color:#6e6e73;font-size:15px;margin:0">Enter the email you used. Every submission tied to it shows up below.</p>
+      <p style="color:#6e6e73;font-size:15px;margin:0">Enter the email you used. Every item purchased with it shows up below.</p>
     </div>
     <div class="card" style="margin:24px 0">
       <div class="card-c" style="padding:22px">
         <div class="field"><label class="label" for="tkMail">Email</label><input class="input" id="tkMail" type="email" placeholder="you@brand.com"></div>
-        <div class="field"><label class="label" for="tkId">Submission ID <span style="font-weight:400;color:#8e8e93">(optional, narrows it down)</span></label><input class="input" id="tkId" placeholder="BMI-XXXXXX" style="text-transform:uppercase"></div>
         <button class="btn btn-primary btn-full btn-lg" id="tkBtn" type="button">Track my item</button>
         <p class="finetext" id="tkErr" style="display:none;color:#B23327;margin-top:10px"></p>
       </div>
@@ -748,11 +747,11 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
     <div class="card" id="tkDemoCard" style="margin:24px 0 60px">
       <div class="card-h">
         <div class="card-t">See how tracking works <span class="badge" style="margin-left:6px;vertical-align:2px">DEMO</span></div>
-        <div class="card-d">A sample brand submission with the full purchase-to-check-in timeline.</div>
+        <div class="card-d">Multiple sample purchases tied to one email, each with its own purchase-to-check-in timeline.</div>
       </div>
       <div class="card-c" style="padding-top:12px">
         <div id="tkDemoResult"></div>
-        <p class="finetext" style="margin:2px 0 0">This preview is illustrative. Enter the work email and optional submission ID from a real spot purchase above to look up your own item.</p>
+        <p class="finetext" style="margin:2px 0 0">This preview is illustrative. Enter the work email from a real spot purchase above to see every item connected to that email.</p>
       </div>
     </div>
   </div>
@@ -6728,26 +6727,40 @@ function migratePhoto(){
 suitFix();migratePhoto();
 var CUR=null,itemMode='auction',claimSlot=-1,logoData=null;
 var TRACK_MATCHES=[];
-function demoTrackMatch(){
-  var listing=DB.listings.filter(function(l){return l.id==='demo1'})[0]||DB.listings[0];
-  if(!listing)return null;
-  return {l:listing,c:{
-    brand:'Northstar Studio',
-    mail:'demo@brandmyitem.com',
-    amt:listing.prices[3]||165,
-    fee:Math.round((listing.prices[3]||165)*0.2),
-    escrow:'active',
-    purchasedAt:Date.now()-1000*60*60*24*9,
-    subId:'BMI-DEMO01',
-    demo:true
-  }};
+function demoTrackMatches(){
+  var demoRows=[
+    {id:'demo1',subId:'BMI-DEMO01',brand:'Northstar Studio',days:9,slot:3},
+    {id:'demo2',subId:'BMI-DEMO02',brand:'LiftClub',days:4,slot:0},
+    {id:'demo5',subId:'BMI-DEMO03',brand:'Loopwear',days:2,slot:0}
+  ];
+  return demoRows.map(function(row){
+    var listing=DB.listings.filter(function(l){return l.id===row.id})[0];
+    if(!listing)return null;
+    var amt=listing.prices[row.slot]||listing.prices[0]||0;
+    return {l:listing,c:{
+      brand:row.brand,
+      mail:'demo@brandmyitem.com',
+      amt:amt,
+      fee:Math.round(amt*0.2),
+      escrow:'active',
+      purchasedAt:Date.now()-1000*60*60*24*row.days,
+      subId:row.subId,
+      demo:true
+    }};
+  }).filter(Boolean);
+}
+function renderTrackDemos(){
+  var demo=document.getElementById('tkDemoResult');
+  if(!demo)return;
+  var matches=demoTrackMatches();
+  demo.innerHTML='<p class="finetext" style="margin:0 0 14px">'+matches.length+' items linked to <b>demo@brandmyitem.com</b>.</p>'+
+    matches.map(function(m){return trackCardHtml(m.l,m.c)}).join('<div style="height:14px"></div>');
 }
 function showTrack(){
   var btn=document.getElementById('tkBtn');
   if(btn&&!btn._wired){
     btn._wired=1;
     btn.onclick=function(){
-      var id=document.getElementById('tkId').value.trim().toUpperCase();
       var mail=document.getElementById('tkMail').value.trim().toLowerCase();
       var err=document.getElementById('tkErr');
       err.style.display='none';
@@ -6757,12 +6770,11 @@ function showTrack(){
         (l.claims||[]).forEach(function(c){
           if(!c)return;
           if((c.mail||'').toLowerCase()!==mail)return;
-          if(id&&c.subId!==id)return;
           matches.push({l:l,c:c});
         });
       });
       if(!matches.length){
-        err.textContent=id?'No submission found for that ID and email \u2014 double check both.':'No submissions found for that email.';
+        err.textContent='No items found for that email yet.';
         err.style.display='block';
         document.getElementById('tkResult').style.display='none';
         return;
@@ -6774,17 +6786,14 @@ function showTrack(){
   }
   var demo=document.getElementById('tkDemoResult');
   if(demo&&!demo._rendered){
-    var sample=demoTrackMatch();
-    if(sample){
-      demo.innerHTML=trackCardHtml(sample.l,sample.c);
-      demo._rendered=1;
-    }
+    renderTrackDemos();
+    demo._rendered=1;
   }
 }
 function renderTrackResults(matches){
   var el=document.getElementById('tkResult');
   el.style.display='block';
-  el.innerHTML='<p class="finetext" style="margin:0 0 14px">'+matches.length+' submission'+(matches.length>1?'s':'')+' found.</p>'+
+  el.innerHTML='<p class="finetext" style="margin:0 0 14px">'+matches.length+' item'+(matches.length>1?'s':'')+' linked to this email.</p>'+
     matches.map(function(m){return trackCardHtml(m.l,m.c)}).join('<div style="height:14px"></div>');
 }
 function trackSubmitKey(subId){
@@ -6815,7 +6824,10 @@ function submitTrackProof(itemId,subId,key){
   if(!l)return;
   var c=null;
   (l.claims||[]).forEach(function(x){if(x&&x.subId===subId)c=x});
-  if(!c&&subId==='BMI-DEMO01')c={subId:subId,brand:'Northstar Studio',mail:'demo@brandmyitem.com',amt:l.prices[3]||165,fee:Math.round((l.prices[3]||165)*0.2),escrow:'active',demo:true};
+   if(!c&&/^BMI-DEMO/.test(subId)){
+     var demoMatch=demoTrackMatches().filter(function(m){return m.c.subId===subId})[0];
+     if(demoMatch)c=demoMatch.c;
+   }
   if(!c)return;
   var err=document.getElementById('trackSubmitErr_'+key);
   var first=(l.checkins||[]).length===0;
@@ -6847,9 +6859,7 @@ function submitTrackProof(itemId,subId,key){
     l.checkins.push(entry);
     updateEscrowStatuses(l);saveDB();
     if(c.demo){
-      var demo=document.getElementById('tkDemoResult');
-      var next=demoTrackMatch();
-      if(demo&&next)demo.innerHTML=trackCardHtml(next.l,Object.assign(next.c,{demo:true}));
+      renderTrackDemos();
     }else{
       var found=TRACK_MATCHES.filter(function(m){return m.c&&m.c.subId===subId})[0];
       if(found)renderTrackResults(TRACK_MATCHES);
