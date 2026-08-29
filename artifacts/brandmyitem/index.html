@@ -953,16 +953,15 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
             <div class="fact"><span>Tax + shipping</span><b id="buildTaxOut">If applicable at checkout</b></div>
             <div class="field" style="margin-top:14px"><div class="label">Commitment term</div>
               <div class="choice-grid term-choice-grid" id="termChoices" role="radiogroup" aria-label="Commitment term">
-                <button class="choice-card" type="button" data-choice-group="term" data-value="6" aria-pressed="false"><strong>6 months</strong><span>Shorter runway</span><small>Lower completion odds</small></button>
-                <button class="choice-card on" type="button" data-choice-group="term" data-value="12" aria-pressed="true"><strong>12 months</strong><span>Balanced runway</span><small>Better completion odds</small></button>
-                <button class="choice-card" type="button" data-choice-group="term" data-value="18" aria-pressed="false"><strong>18 months</strong><span>Longest runway</span><small>Highest completion odds</small></button>
+                <button class="choice-card" type="button" data-choice-group="term" data-value="6" aria-pressed="false"><strong>6 months</strong><span>Shorter runway</span></button>
+                <button class="choice-card on" type="button" data-choice-group="term" data-value="12" aria-pressed="true"><strong>12 months</strong><span>Balanced runway</span></button>
+                <button class="choice-card" type="button" data-choice-group="term" data-value="18" aria-pressed="false"><strong>18 months</strong><span>Longest runway</span></button>
               </div>
               <div class="term-runway" aria-live="polite">
-                <div class="term-runway-head"><span>Completion chance</span><b id="termConfidenceOut">Better chance of filling</b></div>
+                <div class="term-runway-head"><span>Completion chance</span><b id="termConfidenceOut"></b></div>
                 <div class="term-runway-track" id="termRunwayTrack" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i></div>
                 <div class="term-runway-caption">More runway gives the listing more time to fill every spot. It improves the odds, but never guarantees completion.</div>
               </div>
-              <p class="choice-note">This applies to the whole listing and locks permanently when the first spot sells.</p>
             </div>
             <div class="field" style="margin-top:14px"><div class="label">Who applies the branding?</div>
               <div class="choice-grid fulfillment-choice-grid" id="brandingChoices" role="radiogroup" aria-label="Branding fulfillment">
@@ -6779,9 +6778,8 @@ function setBuildChoiceCards(group,value){
 }
 function refreshTermRunway(){
   var term=termOf(B),level=term===6?1:(term===18?3:2);
-  var labels={1:'Lower completion odds',2:'Better completion odds',3:'Highest completion odds'};
   var label=document.getElementById('termConfidenceOut');
-  if(label)label.textContent=labels[level];
+  if(label)label.textContent='';
   document.querySelectorAll('#termRunwayTrack i').forEach(function(segment,i){
     segment.classList.toggle('on',i<level);
   });
@@ -6836,7 +6834,7 @@ function renderAvatarPicker(){
     grid.appendChild(b);
   }
   var status=document.getElementById('avatarPickStatus');
-  if(status)status.textContent=B.avatar?'Memoji selected':'Choose a Memoji';
+  if(status)status.textContent=B.avatar?'Memoji selected':'';
 }
 function renderVariants(k){
   var v=ITEM_VARIANTS[k];
@@ -7732,7 +7730,7 @@ function postListing(){
   var name=document.getElementById('pName').value.trim();
   var mail=document.getElementById('pMail').value.trim();
   if(!name||!mail){toast('Add your name and email to post');return}
-  if(!B.avatar){toast('Choose a Memoji before posting');return}
+  if(!B.avatar){toast('Select a Memoji before posting');return}
   if(DB.listings.some(function(existing){return existing.ownerRestricted&&existing.mail&&existing.mail.toLowerCase()===mail.toLowerCase()})){
     toast('This owner is restricted from posting after missed check-ins');return;
   }
