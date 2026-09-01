@@ -185,6 +185,7 @@ test.describe('item-specific branding methods', () => {
         openIndex,
         price: money(item.prices[openIndex]),
         rawPrice: item.prices[openIndex],
+        total: money(item.prices[openIndex] + feeFor(item, item.prices[openIndex])),
       };
     });
     expect(listing.openIndex).toBeGreaterThanOrEqual(0);
@@ -270,5 +271,36 @@ test.describe('item-specific branding methods', () => {
       price: listing.rawPrice,
       subId: submissionId,
     });
+
+    const itemLabel = await page.evaluate(() => {
+      const item = DB.listings.find((candidate) => candidate.id === 'demo1');
+      return LBLL(item);
+    });
+    const verifyTrackedPurchase = async () => {
+      await expect(page.locator('#v-track')).toHaveClass(/on/);
+      await expect(page.locator('#tkResult')).toBeHidden();
+      await page.locator('#tkMail').fill(email);
+      await page.locator('#tkBtn').click();
+
+      const trackCard = page.locator('#tkResult .track-order');
+      await expect(trackCard).toHaveCount(1);
+      await expect(trackCard.locator('.track-order-title')).toHaveText(itemLabel);
+      await expect(trackCard.locator('.track-order-meta')).toHaveText(
+        `${brand} · ${submissionId}`,
+      );
+      await expect(trackCard).toContainText('Spot purchased');
+
+      await trackCard.locator('.track-order-summary').click();
+      await trackCard.getByText('Advanced details', { exact: true }).click();
+      await expect(trackCard).toContainText(`Spot price ${listing.price}`);
+      await expect(trackCard).toContainText(`Total charged ${listing.total}`);
+      await expect(trackCard).toContainText(`Submission ID ${submissionId}`);
+    };
+
+    await page.goto('/#track');
+    await verifyTrackedPurchase();
+
+    await page.reload();
+    await verifyTrackedPurchase();
   });
 });
