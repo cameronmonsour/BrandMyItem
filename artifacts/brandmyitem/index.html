@@ -1562,6 +1562,12 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
 .ap-owner-tools .ap-card-body { padding: 18px 28px 24px; }
 .ap-owner-tools .ap-card-title { font-size: 17px; }
 .ap-owner-tools .ap-card-desc { font-size: 13px; }
+.ap-product-name { max-width: 1080px; margin: -24px auto 0; padding: 0 0 68px; text-align: center; }
+.ap-product-name h1 {
+  color: #1D1D1F; font-family: 'Inter', -apple-system, sans-serif; font-size: clamp(24px, 3vw, 34px);
+  font-weight: 600; letter-spacing: -.035em; line-height: 1.1;
+}
+.ap-product-name h1:focus { outline: none; }
 @media(max-width: 900px) {
   .ap-reframe-shell { padding-bottom: 72px; }
   .ap-product-stage { padding-bottom: 58px; }
@@ -1577,6 +1583,8 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
   .ap-campaign-lead .ap-owner-hab { text-align: left; padding-left: 42px; }
   .ap-product-stage { padding-bottom: 51px; }
   .ap-product-stage .ap-stage-box { min-height: 310px; border-radius: 22px; }
+  .ap-product-name { margin-top: -14px; padding-bottom: 46px; }
+  .ap-product-name h1 { font-size: 24px; }
   .ap-section + .ap-section { margin-top: 58px; }
   .ap-section-title { font-size: 34px; }
   .ap-spot-table-head { display: none; }
@@ -2128,16 +2136,6 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
     </div>
   </div>
 
-  <!-- Hero Section -->
-  <div class="ap-hero">
-    <div class="ap-hero-bg"></div>
-    <div class="ap-hero-content">
-      <div class="ap-hero-eyebrow">SPONSOR INVENTORY</div>
-      <h1 class="ap-hero-title" id="iHeroTitle" tabindex="-1"></h1>
-      <div id="itemCount" class="countstrip ap-countdown"></div>
-    </div>
-  </div>
-
   <main class="ap-reframe-shell">
     <!-- Funding and seller context lead the decision -->
     <section class="ap-campaign-lead" aria-label="Campaign funding and seller">
@@ -2157,41 +2155,28 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
     </section>
 
     <!-- Product stage -->
-    <section class="ap-product-stage" aria-label="Item and placement map">
+    <section class="ap-product-stage" aria-label="Product image">
       <div class="ap-stage-box">
         <div id="itemMap"></div>
       </div>
       <div class="segwrap ap-segwrap"><div class="seg" id="itemSeg"></div></div>
-      <div class="mapcap ap-mapcap" id="itemCap">Tap any open spot to buy it.</div>
     </section>
+    <div class="ap-product-name">
+      <h1 id="iHeroTitle" tabindex="-1"></h1>
+    </div>
 
     <!-- Transactional sponsor inventory -->
-    <section class="ap-section ap-spot-section" aria-labelledby="spotSectionTitle">
-      <div class="ap-section-head">
-        <div>
-          <div class="ap-section-kicker">Choose your placement</div>
-          <h2 class="ap-section-title" id="spotSectionTitle">Open spots, exact prices.</h2>
-        </div>
-        <p class="ap-section-lede" id="iFeeCopy">Exact prices, first come, first served. A 20% platform fee is added at checkout.</p>
-      </div>
+    <section class="ap-section ap-spot-section" aria-label="Sponsor inventory">
       <div class="ap-spot-table-wrap">
         <div class="ap-spot-table-head" aria-hidden="true">
           <span></span><span>Spot</span><span>Placement &amp; size</span><span>Price</span><span>Action</span>
         </div>
         <div class="ap-spot-list" id="iSpotList" aria-label="Sponsor spot availability"></div>
       </div>
-      <div class="ap-spot-summary" id="spotSummary"></div>
     </section>
 
     <!-- Details and buyer protection -->
-    <section class="ap-section ap-details-section" aria-labelledby="detailsSectionTitle">
-      <div class="ap-section-head">
-        <div>
-          <div class="ap-section-kicker">Before you buy</div>
-          <h2 class="ap-section-title" id="detailsSectionTitle">The details.</h2>
-        </div>
-        <p class="ap-section-lede">Know the item, the owner, and what happens after you claim a sponsor spot.</p>
-      </div>
+    <section class="ap-section ap-details-section" aria-label="Listing details">
       <div class="ap-details-grid">
         <article class="ap-detail-panel">
           <h3>The owner</h3>
@@ -2249,18 +2234,6 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
             <div class="ap-fit-box ap-col-span-2"><span>Buyer protection</span><b>Automatic refund if the campaign does not fund in 60 days. Delivery delays include a wait-or-refund choice.</b></div>
           </div>
         </article>
-      </div>
-
-      <!-- Owner Tools -->
-      <div class="ap-card ap-owner-tools" id="ownerToolsCard">
-        <div class="ap-card-header">
-          <h3 class="ap-card-title">Owner tools</h3>
-          <p class="ap-card-desc">Shipping, delivery, and public check-in tools for this listing.</p>
-        </div>
-        <div class="ap-card-body">
-          <div id="verifyBlock"></div>
-          <div id="checkinBlock" style="margin-top:16px"></div>
-        </div>
       </div>
     </section>
   </main>
@@ -7701,6 +7674,7 @@ var countTimers={};
 function runCountdown(elId,l){
   clearInterval(countTimers[elId]);
   var el=document.getElementById(elId);
+  if(!el)return;
   function tick(){
     var ms=endOf(l)-Date.now();
     if(ms<=0){el.innerHTML='Listing closed &middot; final look locked';clearInterval(countTimers[elId]);return}
@@ -9701,7 +9675,8 @@ function drawItemMap(){
       return;
     }
     renderFinal(el,CUR,{onTap:function(i){openBid(i)},showOpen:true,h:560});
-    document.getElementById('itemCap').textContent='Tap any open spot on the item to buy it for your brand. The '+brandingMethod(CUR.type)+' is made from your logo.';
+    var itemCap=document.getElementById('itemCap');
+    if(itemCap)itemCap.textContent='Tap any open spot on the item to buy it for your brand. The '+brandingMethod(CUR.type)+' is made from your logo.';
   }else{
     if(CUR.custom){
       var faces2=CUR.faces&&CUR.faces.length?CUR.faces:[{photo:CUR.photo,tiles:CUR.tiles,off:0}];
@@ -9709,7 +9684,8 @@ function drawItemMap(){
       return;
     }
     renderFinal(el,CUR,{showOpen:false,h:560});
-    document.getElementById('itemCap').textContent='Fully funded: download the logo pack, get the '+brandingMethod(CUR.type)+' made, apply, done. No messages, no coordination.';
+    var fundedItemCap=document.getElementById('itemCap');
+    if(fundedItemCap)fundedItemCap.textContent='Fully funded: download the logo pack, get the '+brandingMethod(CUR.type)+' made, apply, done. No messages, no coordination.';
   }
   renderSeg(document.getElementById('itemSeg'),itemMode,function(m){itemMode=m;drawItemMap()});
 }
@@ -9796,7 +9772,8 @@ function refreshItemCards(){
   if(brandingWindowEl)brandingWindowEl.textContent=CUR.brandingMode==='assisted'?'BrandMyItem applies branding · 60-day delivery window':'Owner applies branding within 7 days of delivery';
   if(proofCadenceEl)proofCadenceEl.textContent=cadence(RETL(CUR))+' check-ins';
   var claimed=CUR.slots-openSlots(CUR);
-  document.getElementById('spotSummary').innerHTML=
+  var spotSummary=document.getElementById('spotSummary');
+  if(spotSummary)spotSummary.innerHTML=
     claimed+' of '+CUR.slots+' spots sold. Spots from '+money(Math.min.apply(null,CUR.prices))+' &middot; big banners carry a premium. Every sponsor submits their logo at purchase; the '+safeCardText(brandingMethod(CUR.type))+' is produced from that file.'+
     (pct>=100?' <a href="#" id="logoPackBtn" style="font-weight:600;text-decoration:underline">Download the logo pack</a> and have the '+safeCardText(brandingMethod(CUR.type))+' made.':'');
   renderItemSpotList();
