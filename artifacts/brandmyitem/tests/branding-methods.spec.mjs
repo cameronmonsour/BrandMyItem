@@ -173,7 +173,20 @@ test.describe('item-specific branding methods', () => {
     expect(widths.bodyWidth).toBeLessThanOrEqual(widths.viewport);
   });
 
-  test('keeps a completed sponsor purchase claimed on the same spot after reload', async ({ page }) => {
+  test('shows no-results guidance for an unknown Track order email', async ({ page }) => {
+    await page.goto('/#track');
+    await expect(page.locator('#v-track')).toHaveClass(/on/);
+    await expect(page.locator('#tkResult')).toBeHidden();
+
+    await page.locator('#tkMail').fill('unknown-sponsor@example.com');
+    await page.locator('#tkBtn').click();
+
+    await expect(page.locator('#tkErr')).toBeVisible();
+    await expect(page.locator('#tkErr')).toHaveText('No items found for that email yet.');
+    await expect(page.locator('#tkResult')).toBeHidden();
+  });
+
+  test('keeps a completed sponsor purchase trackable with case-insensitive email after reload', async ({ page }) => {
     await page.goto('/#item/demo1');
     await expect(page.locator('#v-item')).toHaveClass(/on/);
     await expect(page.locator('#iSpotList')).toBeVisible();
@@ -279,7 +292,7 @@ test.describe('item-specific branding methods', () => {
     const verifyTrackedPurchase = async () => {
       await expect(page.locator('#v-track')).toHaveClass(/on/);
       await expect(page.locator('#tkResult')).toBeHidden();
-      await page.locator('#tkMail').fill(email);
+      await page.locator('#tkMail').fill(email.toUpperCase());
       await page.locator('#tkBtn').click();
 
       const trackCard = page.locator('#tkResult .track-order');
