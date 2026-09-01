@@ -3,5 +3,7 @@
 - [Ticker activity semantics](brandmyitem-ticker-activity.md) — live activity should describe one clear bid event with amount and sponsored item, not rotate through fulfillment stages.
 - [Catalog photo replacement](catalog-photo-replacement.md) — outlined cutouts are hero-only; campaign surfaces use untouched photos fitted proportionally.
 - [Custom tracer semantics](custom-tracer-semantics.md) — tracing creates the customer-drawn polygon itself; it must never partition the outline into rectangular boxes.
+- [Placement builder defaults](placement-builder-defaults.md) — start with one selected box; users intentionally add placements with Copy box or shape tools.
 - [Dashboard filter language](dashboard-filter-language.md) — filters use compact Apple-style inset groups, not separate floating form cards.
 - [Campaign preview hierarchy](campaign-preview-hierarchy.md) — campaign details use one editorial surface with dividers, not nested gray cards.
+- [Product-page purchase hierarchy](product-page-purchase-hierarchy.md) — keep the product contained and make an explicit spot selector the primary buying path.

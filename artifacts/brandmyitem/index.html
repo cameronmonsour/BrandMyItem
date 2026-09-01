@@ -1151,6 +1151,295 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
   .home-flow-icon, .home-flow-icon *, .home-bento-art *, .home-bento-product{animation:none!important}
 }
 
+
+/* ============ APPLE-STYLE ITEM PAGE ============ */
+#v-item {
+  background: #F2F2F7;
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+
+/* Nav */
+.ap-nav {
+  position: sticky; top: 0; z-index: 100;
+  height: 54px;
+  background: rgba(242, 242, 247, 0.75);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+.ap-nav-inner {
+  max-width: 1140px; margin: 0 auto; padding: 0 22px;
+  height: 100%; display: flex; align-items: center; justify-content: space-between;
+}
+.ap-back {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 14px; font-weight: 500; color: #1D1D1F; text-decoration: none;
+  opacity: 0.8; transition: opacity 0.15s, transform 0.15s;
+}
+.ap-back:hover { opacity: 1; transform: translateX(-2px); }
+.ap-status-badge { display: flex; align-items: center; }
+
+/* Hero */
+.ap-hero {
+  position: relative;
+  text-align: center;
+  padding: 60px 22px 40px;
+  overflow: hidden;
+}
+.ap-hero-bg {
+  position: absolute; top: -150px; left: 50%; transform: translateX(-50%);
+  width: 1000px; height: 300px;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.04) 0%, transparent 60%);
+  pointer-events: none; z-index: 0;
+}
+.ap-hero-content {
+  position: relative; z-index: 1;
+  max-width: 800px; margin: 0 auto;
+}
+.ap-hero-eyebrow {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
+  color: #86868B; margin-bottom: 12px;
+}
+.ap-hero-title {
+  font-family: var(--serif);
+  font-size: clamp(38px, 6vw, 56px); font-weight: 500;
+  letter-spacing: -0.02em; line-height: 1.1; color: #1D1D1F;
+  margin-bottom: 10px;
+  display: inline-block; transform: scaleX(0.95); transform-origin: center;
+}
+.ap-hero-title:focus { outline: none; }
+.ap-countdown {
+  font-size: 15px; color: #86868B; padding: 0; font-weight: 400;
+}
+
+/* Grid Layout */
+.ap-grid {
+  max-width: 1140px; margin: 0 auto; padding: 0 22px;
+  display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(320px, 0.6fr); gap: 40px; align-items: start;
+}
+@media(max-width: 900px) {
+  .ap-grid { grid-template-columns: 1fr; gap: 32px; }
+  .ap-hero { padding-top: 40px; padding-bottom: 24px; }
+}
+
+/* Stage */
+.ap-col-stage { position: sticky; top: 80px; }
+@media(max-width: 900px) { .ap-col-stage { position: static; } }
+
+.ap-stage-box {
+  background: #FFFFFF; border-radius: 28px; overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
+  border: 1px solid rgba(0,0,0,0.04);
+  display: flex; align-items: center; justify-content: center;
+  min-height: 480px;
+}
+.ap-stage-box .mapstage {
+  border: none; border-radius: 0; box-shadow: none; margin: 0; background: transparent;
+  width: 100%; display: flex; justify-content: center;
+}
+.ap-stage-box .item3d {
+  transform: rotateX(10deg) rotateY(-20deg) scale(0.9) !important;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ap-stage-box:hover .item3d {
+  transform: rotateX(8deg) rotateY(-16deg) scale(0.95) !important;
+}
+
+.ap-segwrap { margin-top: 24px; display: flex; justify-content: center; }
+.ap-segwrap .seg { background: #E5E5EA; padding: 4px; border-radius: 999px; }
+.ap-segwrap .seg button.on { box-shadow: 0 2px 8px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04); }
+.ap-mapcap { margin-top: 14px; font-size: 14px; color: #86868B; text-align: center; }
+
+/* Info Column */
+.ap-col-info {
+  display: flex; flex-direction: column; gap: 24px;
+}
+.ap-card {
+  background: #FFFFFF; border-radius: 24px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.02), 0 1px 2px rgba(0,0,0,0.02);
+  border: 1px solid rgba(0,0,0,0.04);
+  overflow: hidden;
+}
+.ap-card-primary {
+  padding: 32px 28px;
+  background: linear-gradient(180deg, #FFFFFF 0%, #FAFAFC 100%);
+}
+.ap-card-header { padding: 28px 28px 16px; border-bottom: 1px solid #F2F2F7; }
+.ap-card-body { padding: 20px 28px 28px; }
+
+.ap-card-title { font-size: 20px; font-weight: 600; color: #1D1D1F; letter-spacing: -0.015em; margin-bottom: 6px; }
+.ap-card-desc { font-size: 14px; color: #86868B; line-height: 1.5; }
+
+/* Funding Top */
+.ap-funding-top { display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px; }
+.ap-raised { font-size: 36px; font-weight: 600; color: #1D1D1F; letter-spacing: -0.02em; line-height: 1; }
+.ap-goal { font-size: 15px; font-weight: 500; color: #86868B; }
+
+.ap-bar-track { height: 8px; background: #E5E5EA; border-radius: 4px; overflow: hidden; margin-bottom: 24px; }
+.ap-bar-fill { height: 100%; background: #1D1D1F; border-radius: 4px; display: block; transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+
+/* Owner */
+.ap-owner-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.ap-owner-who { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 500; color: #1D1D1F; }
+.ap-owner-who .avatarc { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #1D1D1F; color: #fff; font-size: 13px; font-weight: 600; overflow: hidden; }
+.ap-owner-who .avatarc img { width: 100%; height: 100%; object-fit: cover; }
+.ap-owner-hab { font-size: 14px; color: #86868B; font-weight: 400; text-align: right; }
+
+/* Spec Table */
+.ap-table { width: 100%; border-collapse: collapse; font-size: 14.5px; line-height: 1.5; }
+.ap-table td { padding: 14px 0; border-bottom: 1px solid #F2F2F7; }
+.ap-table tr:last-child td { border-bottom: none; padding-bottom: 0; }
+.ap-table tr:first-child td { padding-top: 0; }
+.ap-table td:first-child { color: #86868B; width: 38%; font-weight: 400; }
+.ap-table td:last-child { color: #1D1D1F; font-weight: 500; text-align: right; }
+
+/* Spot Summary */
+.ap-spot-summary { font-size: 14.5px; color: #1D1D1F; line-height: 1.6; }
+.ap-spot-summary a { color: #0071E3; text-decoration: none; font-weight: 500; }
+.ap-spot-summary a:hover { text-decoration: underline; }
+.ap-spot-list { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 18px; }
+.ap-spot-option {
+  min-width: 0; min-height: 76px; padding: 13px 14px;
+  display: grid; grid-template-columns: 38px minmax(0, 1fr) auto; align-items: center; gap: 11px;
+  border: 1px solid #D2D2D7; border-radius: 16px; background: #FFFFFF;
+  text-align: left; transition: border-color .18s, box-shadow .18s, transform .18s, background .18s;
+}
+.ap-spot-option:not(:disabled):hover {
+  border-color: #0071E3; box-shadow: 0 8px 24px rgba(0,113,227,.1); transform: translateY(-1px);
+}
+.ap-spot-option:not(:disabled):active { transform: scale(.985); }
+.ap-spot-option:disabled { cursor: default; color: inherit; opacity: 1; background: #FAFAFC; }
+.ap-spot-mark {
+  width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  overflow: hidden; flex-shrink: 0; background: #F2F2F7; color: #1D1D1F; font-size: 12px; font-weight: 700;
+}
+.ap-spot-option.open .ap-spot-mark { border: 1.5px dashed #86868B; background: #FFFFFF; color: #0071E3; font-size: 22px; font-weight: 400; }
+.ap-spot-mark img { width: 100%; height: 100%; object-fit: contain; padding: 5px; background: #FFFFFF; }
+.ap-spot-copy { min-width: 0; }
+.ap-spot-copy strong { display: block; font-size: 14px; line-height: 1.2; font-weight: 600; color: #1D1D1F; }
+.ap-spot-copy span { display: block; margin-top: 4px; font-size: 11.5px; line-height: 1.25; color: #86868B; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ap-spot-price { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; font-variant-numeric: tabular-nums; }
+.ap-spot-price b { font-size: 14px; font-weight: 600; color: #1D1D1F; }
+.ap-spot-price span { font-size: 10px; line-height: 1; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: #86868B; }
+.ap-spot-option.open .ap-spot-price span { color: #0071E3; }
+.ap-spot-help { color: #86868B; }
+
+/* Fit Grid */
+.ap-fit-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.ap-col-span-2 { grid-column: 1 / -1; }
+.ap-fit-box { background: #FAFAFC; border-radius: 14px; padding: 16px 20px; border: 1px solid rgba(0,0,0,0.03); }
+.ap-fit-box span { display: block; font-size: 11.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #86868B; margin-bottom: 6px; }
+.ap-fit-box b { display: block; font-size: 15px; font-weight: 500; color: #1D1D1F; line-height: 1.4; }
+
+/* Product story */
+.ap-story { max-width: 1140px; margin: 110px auto 0; padding: 0 22px; }
+.ap-story-intro { max-width: 780px; margin-bottom: 34px; }
+.ap-story-kicker { font-size: 13px; font-weight: 600; color: #0071E3; margin-bottom: 12px; }
+.ap-story-title { max-width: 760px; font-size: clamp(42px, 6vw, 70px); line-height: .98; letter-spacing: -.045em; font-weight: 600; color: #1D1D1F; }
+.ap-story-lede { max-width: 690px; margin-top: 22px; font-size: clamp(18px, 2vw, 23px); line-height: 1.42; letter-spacing: -.02em; color: #6E6E73; }
+.ap-story-lede strong { color: #1D1D1F; font-weight: 600; }
+.ap-feature-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 18px; }
+.ap-feature {
+  position: relative; min-height: 330px; padding: 34px; border-radius: 28px; overflow: hidden;
+  background: #FFFFFF; border: 1px solid rgba(0,0,0,.04); box-shadow: 0 8px 34px rgba(0,0,0,.035);
+}
+.ap-feature-wide { grid-column: span 7; }
+.ap-feature-narrow { grid-column: span 5; }
+.ap-feature-half { grid-column: span 6; min-height: 290px; }
+.ap-feature.dark { background: #1D1D1F; color: #F5F5F7; }
+.ap-feature.blue { background: linear-gradient(145deg,#E8F3FF,#F7FAFF 68%); }
+.ap-feature-label { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #86868B; }
+.ap-feature.dark .ap-feature-label { color: #A1A1A6; }
+.ap-feature h2 { max-width: 560px; margin-top: 13px; font-size: clamp(28px, 3vw, 42px); line-height: 1.05; letter-spacing: -.035em; font-weight: 600; }
+.ap-feature p { max-width: 520px; margin-top: 14px; font-size: 16px; line-height: 1.55; color: #6E6E73; }
+.ap-feature.dark p { color: #A1A1A6; }
+.ap-feature-value { position: absolute; left: 34px; right: 34px; bottom: 30px; font-size: clamp(24px, 3vw, 40px); line-height: 1.05; letter-spacing: -.035em; font-weight: 600; color: #1D1D1F; }
+.ap-feature.dark .ap-feature-value { color: #F5F5F7; }
+.ap-feature-orbit { position: absolute; right: -62px; bottom: -78px; width: 250px; height: 250px; border: 1px solid rgba(0,113,227,.25); border-radius: 50%; }
+.ap-feature-orbit:before,.ap-feature-orbit:after { content:''; position:absolute; border:1px solid rgba(0,113,227,.2); border-radius:50%; inset:28px; }
+.ap-feature-orbit:after { inset:66px; background:#0071E3; border:0; box-shadow:0 0 70px rgba(0,113,227,.28); }
+.ap-steps { margin-top: 18px; padding: 36px; border-radius: 28px; background: #FFFFFF; border: 1px solid rgba(0,0,0,.04); }
+.ap-steps-head { display:flex; align-items:flex-end; justify-content:space-between; gap:30px; padding-bottom:26px; border-bottom:1px solid #E5E5EA; }
+.ap-steps-head h2 { font-size: clamp(28px,4vw,46px); line-height:1; letter-spacing:-.04em; }
+.ap-steps-head p { max-width:440px; color:#6E6E73; line-height:1.55; }
+.ap-step-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:0; }
+.ap-step { padding:28px 24px 4px 0; }
+.ap-step + .ap-step { padding-left:24px; border-left:1px solid #E5E5EA; }
+.ap-step-num { display:flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:50%; background:#1D1D1F; color:#fff; font-size:12px; font-weight:700; margin-bottom:20px; }
+.ap-step h3 { font-size:16px; letter-spacing:-.015em; }
+.ap-step p { margin-top:8px; color:#6E6E73; font-size:13.5px; line-height:1.55; }
+
+/* Overrides for dynamic content injected by JS */
+.view#v-item .card { border: none; box-shadow: none; border-radius: 0; background: transparent; padding: 0; }
+.view#v-item .card-h, .view#v-item .card-c { padding: 0; }
+
+
+/* Micro-interactions & Reduced Motion */
+.ap-card {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@media (hover: hover) {
+  .ap-card:not(.ap-card-primary):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.02);
+  }
+}
+.ap-stage-box .item3d {
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.ap-stage-box:hover .item3d {
+  transform: rotateX(8deg) rotateY(-16deg) scale(0.92) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ap-card { transition: none; transform: none !important; box-shadow: 0 4px 24px rgba(0,0,0,0.02), 0 1px 2px rgba(0,0,0,0.02) !important; }
+  .ap-stage-box .item3d { transition: none !important; transform: rotateX(10deg) rotateY(-20deg) scale(0.9) !important; }
+  .ap-bar-fill { transition: none; }
+  .ap-spot-option { transition: none; }
+}
+@media(max-width: 640px) {
+  #v-item { padding-bottom: 54px; }
+  .ap-nav { height: 48px; }
+  .ap-nav-inner { padding: 0 16px; }
+  .ap-hero { padding: 30px 16px 22px; }
+  .ap-hero-eyebrow { margin-bottom: 8px; }
+  .ap-hero-title { font-size: 36px; }
+  .ap-countdown { font-size: 13px; }
+  .ap-grid { padding: 0 14px; gap: 24px; }
+  .ap-stage-box { min-height: 310px; border-radius: 22px; }
+  .ap-segwrap { margin-top: 14px; }
+  .ap-mapcap { margin: 10px auto 0; max-width: 330px; font-size: 12.5px; line-height: 1.45; }
+  .ap-col-info { gap: 14px; }
+  .ap-card { border-radius: 20px; }
+  .ap-card-primary { padding: 24px 20px; }
+  .ap-card-header { padding: 23px 20px 14px; }
+  .ap-card-body { padding: 18px 20px 22px; }
+  .ap-raised { font-size: 31px; }
+  .ap-owner-row { align-items: flex-start; flex-direction: column; gap: 10px; }
+  .ap-owner-hab { text-align: left; }
+  .ap-spot-list { grid-template-columns: 1fr; gap: 8px; }
+  .ap-spot-option { min-height: 70px; }
+  .ap-table td { display: block; width: 100% !important; text-align: left !important; border: 0; padding: 0; }
+  .ap-table tr { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 14px; padding: 13px 0; border-bottom: 1px solid #F2F2F7; }
+  .ap-table tr:first-child { padding-top: 0; }
+  .ap-table tr:last-child { border-bottom: 0; padding-bottom: 0; }
+  .ap-story { margin-top: 72px; padding: 0 14px; }
+  .ap-story-intro { margin-bottom: 24px; }
+  .ap-story-title { font-size: 42px; }
+  .ap-story-lede { font-size: 18px; }
+  .ap-feature-grid { grid-template-columns: 1fr; gap: 12px; }
+  .ap-feature-wide,.ap-feature-narrow,.ap-feature-half { grid-column: 1; min-height: 280px; }
+  .ap-feature { padding: 26px; border-radius: 22px; }
+  .ap-feature-value { left:26px; right:26px; bottom:24px; }
+  .ap-steps { padding: 26px; border-radius: 22px; }
+  .ap-steps-head { display:block; padding-bottom:22px; }
+  .ap-steps-head p { margin-top:12px; }
+  .ap-step-grid { grid-template-columns:1fr; }
+  .ap-step { padding:22px 0; }
+  .ap-step + .ap-step { padding-left:0; border-left:0; border-top:1px solid #E5E5EA; }
+}
+
 </style>
 </head>
 <body>
@@ -1542,8 +1831,9 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
               <button class="icontool" id="cuTrace" type="button" title="Trace a custom shape" aria-label="Trace a custom shape">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 4c4.5 0 8 2.7 8 6.5S16.5 17 12 17s-8-2.7-8-6.5S7.5 4 12 4Z" stroke-dasharray="2.6 2.2"/><circle cx="17.3" cy="15.6" r="1.3" fill="currentColor" stroke="none"/></svg>
               </button>
-              <button class="icontool" id="cuCopy" type="button" title="Duplicate selected shape" style="display:none">
+              <button class="icontool wide" id="cuCopy" type="button" title="Copy selected box" aria-label="Copy selected box" style="display:none">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
+                <span class="lbl">Copy box</span>
               </button>
               <span class="tool-sep"></span>
               <label class="icontool" title="Shape color" style="cursor:pointer;position:relative">
@@ -1618,7 +1908,7 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
               <div class="term-runway" aria-live="polite">
                 <div class="term-runway-head"><span>Check-in duration</span><b id="termConfidenceOut"></b></div>
                 <div class="term-runway-track" id="termRunwayTrack" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i></div>
-                <div class="term-runway-caption">This sets how long you want to send check-ins after delivery. The listing stays posted for 60 days, until it is completed or deleted.</div>
+                <div class="term-runway-caption">Longer check-in terms are more likely to be selected by brands.</div>
               </div>
             </div>
             <div class="field" style="margin-top:14px"><div class="label">Who applies the branding?</div>
@@ -1661,57 +1951,172 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
 
 <!-- ITEM -->
 <div class="view" id="v-item">
-  <div class="wrap-narrow">
-    <a class="backlnk" href="#dashboard">&larr; All live items</a>
-    <div id="itemCount" class="countstrip"></div>
-    <div id="itemMap"></div>
-    <div class="segwrap"><div class="seg" id="itemSeg"></div></div>
-    <div class="mapcap" id="itemCap">Tap any open spot to buy it.</div>
-  </div>
-  <div class="wrap">
-    <div class="itemgrid2">
-      <div class="card"><div class="card-c">
-        <div class="raise"><span class="r1"><span id="iRaised">$0</span> <span>of <span id="iGoal">$0</span></span></span><span id="iTag"></span></div>
-        <div class="bigbar"><i id="iBar" style="width:0%"></i></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--mfg);font-weight:600"><span id="iWho" class="item-owner"></span><span id="iHab"></span></div>
-      </div></div>
-      <div class="card"><div class="card-h"><div class="card-t">The deal</div></div>
-      <div class="card-c" style="padding-top:8px">
-         <div class="fact"><span>Ships</span><b id="iShips">new, at 100% claimed</b></div>
-        <div class="fact"><span>Check-in</span><b id="iCad"></b></div>
-        <div class="fact"><span>Term</span><b id="iTerm">12 months</b></div>
-         <div class="fact"><span>Fulfillment</span><b id="iFulfillment">You apply branding</b></div>
-         <div class="fact"><span>Branded material</span><b id="iMaterial">Adhesive sticker/decal for you to apply</b></div>
-         <div class="fact"><span>Platform fee</span><b>20%</b></div>
-         <div class="fact"><span>Total fee before tax &amp; shipping</span><b id="iTotalFee">20%</b></div>
-         <div class="fact"><span>Tax + shipping</span><b id="iTax">If applicable at checkout</b></div>
-      </div></div>
-       <div class="card"><div class="card-h"><div class="card-t">The spots</div><div class="card-d" id="iFeeCopy">Exact prices, first come, first served. A 20% platform fee is added at checkout.</div></div>
-      <div class="card-c" style="padding-top:10px;font-size:13.5px;color:var(--mfg);line-height:1.6" id="spotSummary"></div></div>
+  <!-- Sticky Nav -->
+  <div class="ap-nav">
+    <div class="ap-nav-inner">
+      <a class="ap-back" href="#dashboard">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        All live items
+      </a>
+      <div id="iTag" class="ap-status-badge"></div>
     </div>
-     <div class="card brand-fit-card" style="margin-top:14px">
-       <div class="card-h"><div class="card-t">Why brands should brand this item</div><div class="card-d">The person, purpose, and places behind the placement.</div></div>
-       <div class="card-c" style="padding-top:14px">
-         <div class="brand-fit-grid">
-           <div class="brand-fit-stat"><span>Most used locations</span><b id="iBrandLocations"></b></div>
-           <div class="brand-fit-stat"><span>Purpose</span><b id="iPurpose"></b></div>
-           <div class="brand-fit-stat"><span>Social following</span><b id="iSocial"></b></div>
-         </div>
-         <div class="brand-fit-location-grid">
-           <div><span>Most visited cities</span><b id="iCities"></b></div>
-           <div><span>Universities</span><b id="iUniversities"></b></div>
-         </div>
-         <div id="iSocialLinks" class="brand-social-links"></div>
-       </div>
-     </div>
-    <div class="card" style="margin-top:14px" id="ownerToolsCard">
-       <div class="card-h"><div class="card-t">Owner tools</div><div class="card-d">Shipping, delivery, and public check-in tools for this demo listing.</div></div>
-      <div class="card-c" style="padding-top:10px">
-         <div id="verifyBlock"></div>
-        <div id="checkinBlock" style="margin-top:16px"></div>
+  </div>
+
+  <!-- Hero Section -->
+  <div class="ap-hero">
+    <div class="ap-hero-bg"></div>
+    <div class="ap-hero-content">
+      <div class="ap-hero-eyebrow">SPONSOR INVENTORY</div>
+      <h1 class="ap-hero-title" id="iHeroTitle" tabindex="-1"></h1>
+      <div id="itemCount" class="countstrip ap-countdown"></div>
+    </div>
+  </div>
+
+  <!-- Main Split Grid -->
+  <div class="ap-grid">
+
+    <!-- Left: Stage -->
+    <div class="ap-col-stage">
+      <div class="ap-stage-box">
+        <div id="itemMap"></div>
+      </div>
+      <div class="segwrap ap-segwrap"><div class="seg" id="itemSeg"></div></div>
+      <div class="mapcap ap-mapcap" id="itemCap">Tap any open spot to buy it.</div>
+    </div>
+
+    <!-- Right: Specs & Action -->
+    <div class="ap-col-info">
+
+      <!-- Funding Card -->
+      <div class="ap-card ap-card-primary">
+        <div class="ap-funding-top">
+          <div class="ap-raised"><span id="iRaised">$0</span></div>
+          <div class="ap-goal">of <span id="iGoal">$0</span></div>
+        </div>
+        <div class="ap-bar-track">
+          <i id="iBar" class="ap-bar-fill" style="width:0%"></i>
+        </div>
+
+        <div class="ap-owner-row">
+          <span id="iWho" class="item-owner ap-owner-who"></span>
+          <span id="iHab" class="ap-owner-hab"></span>
+        </div>
+      </div>
+
+      <!-- The Spots -->
+      <div class="ap-card">
+        <div class="ap-card-header">
+          <h3 class="ap-card-title">Sponsor spots</h3>
+          <p class="ap-card-desc" id="iFeeCopy">Exact prices, first come, first served. A 20% platform fee is added at checkout.</p>
+        </div>
+        <div class="ap-card-body">
+          <div class="ap-spot-list" id="iSpotList" aria-label="Sponsor spot availability"></div>
+          <div class="ap-spot-summary" id="spotSummary"></div>
+        </div>
+      </div>
+
+      <!-- The Deal -->
+      <div class="ap-card">
+        <div class="ap-card-header">
+          <h3 class="ap-card-title">The deal</h3>
+        </div>
+        <div class="ap-card-body">
+          <table class="ap-table">
+            <tbody>
+              <tr><td>Ships</td><td id="iShips">new, at 100% claimed</td></tr>
+              <tr><td>Check-in</td><td id="iCad"></td></tr>
+              <tr><td>Term</td><td id="iTerm">12 months</td></tr>
+              <tr><td>Fulfillment</td><td id="iFulfillment">You apply branding</td></tr>
+              <tr><td>Branded material</td><td id="iMaterial">Adhesive sticker/decal for you to apply</td></tr>
+              <tr><td>Platform fee</td><td>20%</td></tr>
+              <tr><td>Total fee before tax &amp; shipping</td><td id="iTotalFee">20%</td></tr>
+              <tr><td>Tax + shipping</td><td id="iTax">If applicable at checkout</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Brand Fit -->
+      <div class="ap-card brand-fit-card">
+        <div class="ap-card-header">
+          <h3 class="ap-card-title">Why brands should brand this item</h3>
+          <p class="ap-card-desc">The person, purpose, and places behind the placement.</p>
+        </div>
+        <div class="ap-card-body">
+          <div class="ap-fit-grid">
+            <div class="ap-fit-box"><span>Locations</span><b id="iBrandLocations"></b></div>
+            <div class="ap-fit-box"><span>Following</span><b id="iSocial"></b></div>
+            <div class="ap-fit-box ap-col-span-2"><span>Purpose</span><b id="iPurpose"></b></div>
+          </div>
+          <div class="ap-fit-grid" style="margin-top:10px;">
+            <div class="ap-fit-box"><span>Cities</span><b id="iCities"></b></div>
+            <div class="ap-fit-box"><span>Universities</span><b id="iUniversities"></b></div>
+          </div>
+          <div id="iSocialLinks" class="brand-social-links" style="margin-top:20px;"></div>
+        </div>
+      </div>
+
+      <!-- Owner Tools -->
+      <div class="ap-card" id="ownerToolsCard">
+        <div class="ap-card-header">
+          <h3 class="ap-card-title">Owner tools</h3>
+          <p class="ap-card-desc">Shipping, delivery, and public check-in tools for this listing.</p>
+        </div>
+        <div class="ap-card-body">
+          <div id="verifyBlock"></div>
+          <div id="checkinBlock" style="margin-top:16px"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <section class="ap-story" aria-labelledby="itemStoryTitle">
+    <div class="ap-story-intro">
+      <div class="ap-story-kicker">Designed for real-world attention</div>
+      <h2 class="ap-story-title" id="itemStoryTitle">A real item. A visible commitment.</h2>
+      <p class="ap-story-lede">This is more than a logo on a page. <strong>Your brand travels with the owner</strong>, stays visible for the full term, and is verified with recurring photo proof.</p>
+    </div>
+    <div class="ap-feature-grid">
+      <article class="ap-feature ap-feature-wide blue">
+        <div class="ap-feature-label">Everyday visibility</div>
+        <h2>Made to be seen where life actually happens.</h2>
+        <p>The owner has described the settings, cities, and communities where this item will appear.</p>
+        <div class="ap-feature-value" id="iStoryVisibility">Real places. Repeated exposure.</div>
+        <div class="ap-feature-orbit" aria-hidden="true"></div>
+      </article>
+      <article class="ap-feature ap-feature-narrow dark">
+        <div class="ap-feature-label">Locked commitment</div>
+        <h2>Visibility with a defined term.</h2>
+        <p>The owner agrees to keep the approved branding in place and submit public proof on schedule.</p>
+        <div class="ap-feature-value" id="iStoryCommitment">12 months of check-ins</div>
+      </article>
+      <article class="ap-feature ap-feature-half">
+        <div class="ap-feature-label">Made from your file</div>
+        <h2>Branding that fits the item.</h2>
+        <p>Your uploaded logo becomes the approved physical treatment for the purchased spot.</p>
+        <div class="ap-feature-value" id="iStoryMethod">Item-specific branding</div>
+      </article>
+      <article class="ap-feature ap-feature-half">
+        <div class="ap-feature-label">Buyer protection</div>
+        <h2>Clear timing. Clear outcomes.</h2>
+        <p>If the campaign does not sell out in 60 days, your spot is refunded automatically. Delivery delays include a wait-or-refund choice.</p>
+        <div class="ap-feature-value" id="iStoryDelivery">Protected from purchase to proof.</div>
+      </article>
+    </div>
+    <div class="ap-steps">
+      <div class="ap-steps-head">
+        <h2>From open spot to public proof.</h2>
+        <p>One purchase flow, one approved logo file, and a transparent record that follows the item through delivery and the full campaign term.</p>
+      </div>
+      <div class="ap-step-grid">
+        <div class="ap-step"><span class="ap-step-num">1</span><h3>Choose an open spot</h3><p>Select the exact location and price shown above. Availability is first come, first served.</p></div>
+        <div class="ap-step"><span class="ap-step-num">2</span><h3>Upload your logo</h3><p>Submit the production-ready file, brand name, work email, and destination link during checkout.</p></div>
+        <div class="ap-step"><span class="ap-step-num">3</span><h3>Campaign funds</h3><p>Once every spot is claimed, BrandMyItem purchases the new item and begins fulfillment.</p></div>
+        <div class="ap-step"><span class="ap-step-num">4</span><h3>Follow the proof</h3><p>Track shipment, receipt confirmation, and monthly owner photos from the same purchase record.</p></div>
       </div>
     </div>
-  </div>
+  </section>
 </div>
 
 <footer><div class="wrap foot">
@@ -6297,7 +6702,6 @@ function listingContextHtml(l){
   (l.universities||[]).slice(0,1).forEach(function(v){if(v&&!locations.includes(v))locations.push(v)});
   if(!locations.length)(l.habs||[]).slice(0,2).forEach(function(v){if(v&&!locations.includes(v))locations.push(v)});
   if(l.social)parts.push('<span class="card-context-em">'+safeCardText(l.social)+' followers</span>');
-  if(l.type&&ITEMS[l.type])parts.push('<span class="card-context-em">'+safeCardText(brandingMethod(l.type))+'</span>');
   locations.slice(0,2).forEach(function(v){parts.push(safeCardText(v))});
   if(!parts.length)return '';
   return '<div class="card-context" aria-label="'+safeCardText(parts.map(function(v){return v.replace(/<[^>]+>/g,'')}).join(' · '))+'"><span class="card-context-value">'+parts.join(' <span aria-hidden="true">&middot;</span> ')+'</span></div>';
@@ -7946,7 +8350,7 @@ function showBuild(){
       '<span class="itemcard-price">'+money(it.retail)+'</span></div>';
     b.onclick=function(){
       B.type=k;
-      B.slots=it.maxSlots;
+      B.slots=1;
       B.prices=suggest(k,B.slots);
       B.habs=(HAB_BY_CAT[it.cat]||[]).slice();
       document.querySelectorAll('#itemPick button').forEach(function(bb){bb.classList.remove('on')});
@@ -7978,7 +8382,7 @@ function showBuild(){
       setTimeout(function(){pick.scrollLeft=0;prev._updateNav&&prev._updateNav()},60);
     }
   })();
-  if(!B.prices.length){B.slots=ITEMS[B.type].maxSlots;B.prices=suggest(B.type,B.slots);B.habs=(HAB_BY_CAT[ITEMS[B.type].cat]||[]).slice()}
+  if(!B.prices.length){B.slots=1;B.prices=suggest(B.type,B.slots);B.habs=(HAB_BY_CAT[ITEMS[B.type].cat]||[]).slice()}
   var hb=document.getElementById('habs');hb.innerHTML='';
   HABITATS.forEach(function(h){
     var b=document.createElement('button');b.textContent=h;
@@ -8311,6 +8715,7 @@ function cuInit(){
     document.getElementById('cuDel').style.display=has?'flex':'none';
     document.getElementById('cuCopy').style.display=has?'flex':'none';
   }
+  CU.syncSelection=selUI;
   function traceUI(){
     var n=CU.poly.length;
     var hint=document.getElementById('cuHint');
@@ -8615,10 +9020,11 @@ function cuApplyTemplate(){
     });
   }
   CU.tiles=all;
+  CU.sel=CU.tiles.length?0:-1;
   CU.prices=scaleP(t,B.slots,retail);
   B.prices=CU.prices.slice();
   CU.closed=true;CU.poly=[];
-  cuDraw();totals();if(CU.syncControls)CU.syncControls();
+  cuDraw();totals();if(CU.syncSelection)CU.syncSelection();if(CU.syncControls)CU.syncControls();
 }
 function cuAngleChips(){
   var el=document.getElementById('cuFaces');if(!el)return;
@@ -9027,6 +9433,10 @@ function showItem(id){
   runCountdown('itemCount',CUR);
   drawItemMap();
   refreshItemCards();
+  setTimeout(function(){
+    var heading=document.getElementById('iHeroTitle');
+    if(heading)heading.focus({preventScroll:true});
+  },0);
 }
 function downloadLogoPack(){
   if(!CUR)return;
@@ -9080,9 +9490,35 @@ function drawItemMap(){
   }
   renderSeg(document.getElementById('itemSeg'),itemMode,function(m){itemMode=m;drawItemMap()});
 }
+function renderItemSpotList(){
+  var host=document.getElementById('iSpotList');
+  if(!host||!CUR)return;
+  host.innerHTML='';
+  (CUR.prices||[]).forEach(function(price,i){
+    var claim=CUR.claims&&CUR.claims[i],meta=slotMeta(CUR.type,CUR.slots,i);
+    var button=document.createElement('button');
+    button.type='button';
+    button.className='ap-spot-option '+(claim?'claimed':'open');
+    button.disabled=!!claim||!!CUR.closed;
+    button.setAttribute('aria-label',claim?
+      ('Spot '+(i+1)+' claimed by '+(claim.brand||'a sponsor')):
+      ('Buy Spot '+(i+1)+' for '+money(price)));
+    var brand=(claim&&claim.brand||'Sponsor').trim();
+    var mark=claim?
+      (claim.logo?'<img src="'+claim.logo+'" alt="'+safeCardText(brand)+' logo">':'<span>'+safeCardText(brand.slice(0,2).toUpperCase())+'</span>'):
+      '<span aria-hidden="true">+</span>';
+    button.innerHTML=
+      '<span class="ap-spot-mark">'+mark+'</span>'+
+      '<span class="ap-spot-copy"><strong>Spot '+(i+1)+'</strong><span>'+safeCardText(meta.pos)+' &middot; '+safeCardText(meta.size)+'</span></span>'+
+      '<span class="ap-spot-price"><b>'+money(price)+'</b><span>'+(claim?'Claimed':'Open')+'</span></span>';
+    if(!claim&&!CUR.closed)button.onclick=function(){openBid(i)};
+    host.appendChild(button);
+  });
+}
 function refreshItemCards(){
   processListingLifecycle();refreshCheckinStatus(CUR);
   var raised=raisedOf(CUR),goal=goalOf(CUR),pct=pctOf(CUR);
+  var ht=document.getElementById('iHeroTitle');if(ht)ht.textContent=LBLL(CUR);
   document.getElementById('iRaised').textContent=money(raised);
   document.getElementById('iGoal').textContent=money(goal);
   document.getElementById('iBar').style.width=pct+'%';
@@ -9118,10 +9554,19 @@ function refreshItemCards(){
   var totalFeeEl=document.getElementById('iTotalFee');if(totalFeeEl)totalFeeEl.textContent=Math.round(feeRateOf(CUR)*100)+'%';
   var taxEl=document.getElementById('iTax');if(taxEl)taxEl.textContent='Sales tax if applicable at checkout';
   var termEl=document.getElementById('iTerm');if(termEl)termEl.textContent=termOf(CUR)+' months'+(CUR.termLocked?' · locked':'');
+  var storyVisibility=document.getElementById('iStoryVisibility');
+  if(storyVisibility)storyVisibility.textContent=(CUR.habs&&CUR.habs.length?CUR.habs.join(' · '):'Everyday settings')+(CUR.cities&&CUR.cities.length?' across '+CUR.cities.join(' · '):'');
+  var storyCommitment=document.getElementById('iStoryCommitment');
+  if(storyCommitment)storyCommitment.textContent=termOf(CUR)+' months · monthly photo proof';
+  var storyMethod=document.getElementById('iStoryMethod');
+  if(storyMethod)storyMethod.textContent=brandingMaterial(CUR.type,CUR.brandingMode);
+  var storyDelivery=document.getElementById('iStoryDelivery');
+  if(storyDelivery)storyDelivery.textContent=(CUR.brandingMode==='assisted'?'60-day delivery window':'Under 23 days to delivery')+' · automatic refund protection';
   var claimed=CUR.slots-openSlots(CUR);
   document.getElementById('spotSummary').innerHTML=
     claimed+' of '+CUR.slots+' spots sold. Spots from '+money(Math.min.apply(null,CUR.prices))+' &middot; big banners carry a premium. Every sponsor submits their logo at purchase; the '+safeCardText(brandingMethod(CUR.type))+' is produced from that file.'+
     (pct>=100?' <a href="#" id="logoPackBtn" style="font-weight:600;text-decoration:underline">Download the logo pack</a> and have the '+safeCardText(brandingMethod(CUR.type))+' made.':'');
+  renderItemSpotList();
   var lp=document.getElementById('logoPackBtn');
   if(lp)lp.onclick=function(e){e.preventDefault();downloadLogoPack()};
   renderOwnerTools();
