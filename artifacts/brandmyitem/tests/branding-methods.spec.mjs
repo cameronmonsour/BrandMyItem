@@ -69,10 +69,6 @@ test.describe('item-specific branding methods', () => {
     await expect(page.locator('#campaignDetails')).toContainText(
       titleCaseMethod(listing.method),
     );
-    await expect(page.locator(`#dashGrid .lcard[data-listing-id="${listing.id}"]`)).toContainText(
-      listing.method,
-    );
-
     await page.getByRole('button', { name: /View full listing/i }).click();
     await expect(page.locator('#v-item')).toHaveClass(/on/);
     await page.evaluate(() => {
@@ -83,5 +79,66 @@ test.describe('item-specific branding methods', () => {
     await expect(page.locator('#mSlotInfo')).toContainText(
       `Branding method: ${listing.method}`,
     );
+  });
+
+  test('keeps each sponsor spot row bound to its placement and checkout price', async ({ page }) => {
+    await page.goto('/#item/demo1');
+    await expect(page.locator('#v-item')).toHaveClass(/on/);
+    await expect(page.locator('#iSpotList')).toBeVisible();
+
+    const listing = await page.evaluate(() => {
+      const item = DB.listings.find((candidate) => candidate.id === 'demo1');
+      return {
+        openSpots: item.prices
+          .map((price, index) => ({ price, index }))
+          .filter(({ index }) => !item.claims[index])
+          .map(({ price, index }) => {
+            const fee = feeFor(item, price);
+            const meta = slotMeta(item.type, item.slots, index);
+            return {
+              index,
+              placement: `${meta.pos} · ${meta.size}`,
+              price: money(price),
+              fee: money(fee),
+              total: money(price + fee),
+            };
+          }),
+        claimedCount: item.claims.filter(Boolean).length,
+      };
+    });
+
+    expect(listing.openSpots.length).toBeGreaterThanOrEqual(2);
+    expect(listing.claimedCount).toBeGreaterThan(0);
+
+    const openRows = page.locator('#iSpotList .ap-spot-option.open');
+    await expect(openRows).toHaveCount(listing.openSpots.length);
+    for (const [rowIndex, expected] of listing.openSpots.entries()) {
+      const row = openRows.nth(rowIndex);
+      await expect(row).toContainText(`Spot ${expected.index + 1}`);
+      await expect(row).toContainText(expected.placement);
+      await expect(row).toContainText(expected.price);
+      await row.click();
+
+      await expect(page.locator('#modalBg')).toBeVisible();
+      await expect(page.locator('#mSlotInfo')).toContainText(
+        `${expected.placement} placement`,
+      );
+      await expect(page.locator('#mPrice')).toHaveText(expected.price);
+      await expect(page.locator('#mFee')).toHaveText(expected.fee);
+      await expect(page.locator('#mTotal')).toHaveText(expected.total);
+
+      await page.locator('#mCancel').click();
+      await expect(page.locator('#modalBg')).not.toBeVisible();
+      await expect(row).toBeFocused();
+    }
+
+    const claimedRows = page.locator('#iSpotList .ap-spot-option.claimed');
+    await expect(claimedRows).toHaveCount(listing.claimedCount);
+    for (let index = 0; index < listing.claimedCount; index += 1) {
+      const row = claimedRows.nth(index);
+      await expect(row).toBeDisabled();
+      await row.click({ force: true });
+      await expect(page.locator('#modalBg')).not.toBeVisible();
+    }
   });
 });

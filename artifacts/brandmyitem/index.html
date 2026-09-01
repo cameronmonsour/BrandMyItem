@@ -9409,7 +9409,7 @@ function migratePhoto(){
 normalizeModelState();
 suitFix();migratePhoto();
 processListingLifecycle();
-var CUR=null,itemMode='auction',claimSlot=-1,logoData=null;
+var CUR=null,itemMode='auction',claimSlot=-1,logoData=null,buyReturnFocus=null;
 var TRACK_MATCHES=[];
 function demoTrackMatches(){
   var demoRows=[
@@ -9711,7 +9711,7 @@ function renderItemSpotList(){
       '<span class="ap-spot-mark">'+mark+'</span>'+
       '<span class="ap-spot-copy"><strong>Spot '+(i+1)+'</strong><span>'+safeCardText(meta.pos)+' &middot; '+safeCardText(meta.size)+'</span></span>'+
       '<span class="ap-spot-price"><b>'+money(price)+'</b><span>'+stateLabel+'</span></span>';
-    if(!claim&&!CUR.closed)button.onclick=function(){openBid(i)};
+    if(!claim&&!CUR.closed)button.onclick=function(){openBid(i,button)};
     host.appendChild(button);
   });
 }
@@ -9861,9 +9861,28 @@ function renderOwnerTools(){
   document.getElementById('checkinBtn').onclick=function(){document.getElementById('checkinInput').click()};
   document.getElementById('checkinInput').onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){var cid='CI-'+uid().toUpperCase().slice(0,6);CUR.checkins.push({date:Date.now(),photo:r.result,confirmId:cid});refreshCheckinStatus(CUR);saveDB();refreshItemCards();openShare(r.result,cid)};r.readAsDataURL(f)};
 }
-function openBid(i){
+function closeBuyModal(){
+  var modal=document.getElementById('modalBg');
+  if(!modal)return;
+  modal.classList.remove('on');
+  var focus=buyReturnFocus;
+  buyReturnFocus=null;
+  if(focus&&document.contains(focus)&&!focus.disabled){
+    focus.focus();
+    return;
+  }
+  var fallback=document.querySelector('#iSpotList .ap-spot-option:not(:disabled)');
+  if(fallback){
+    fallback.focus();
+    return;
+  }
+  var heading=document.getElementById('iHeroTitle');
+  if(heading)heading.focus();
+}
+function openBid(i,trigger){
   var c=CUR.claims[i];
   if(c||CUR.closed){toast(c?'That spot is sold':'This listing is closed');return}
+  buyReturnFocus=trigger||document.activeElement;
   claimSlot=i;logoData=null;
   var meta=slotMeta(CUR.type,CUR.slots,i);
   var price=CUR.prices[i],fee=feeFor(CUR,price),total=price+fee;
@@ -9889,8 +9908,8 @@ document.getElementById('uplInput').onchange=function(e){
   r.onload=function(){logoData=r.result;document.getElementById('uplBox').innerHTML='<img src="'+logoData+'" alt="logo">'};
   r.readAsDataURL(f);
 };
-document.getElementById('mCancel').onclick=function(){document.getElementById('modalBg').classList.remove('on')};
-document.getElementById('modalBg').onclick=function(e){if(e.target===this)this.classList.remove('on')};
+document.getElementById('mCancel').onclick=closeBuyModal;
+document.getElementById('modalBg').onclick=function(e){if(e.target===this)closeBuyModal()};
 document.getElementById('mNext').onclick=function(){
   var brand=document.getElementById('mBrand').value.trim();
   var mail=document.getElementById('mMail').value.trim();
@@ -9901,7 +9920,7 @@ document.getElementById('mNext').onclick=function(){
 function completePurchase(){
   var brand=document.getElementById('mBrand').value.trim();
   var mail=document.getElementById('mMail').value.trim();
-  if(CUR.claims[claimSlot]){toast('That spot just sold');document.getElementById('modalBg').classList.remove('on');return}
+  if(CUR.claims[claimSlot]){toast('That spot just sold');closeBuyModal();return}
   var price=CUR.prices[claimSlot],fee=feeFor(CUR,price),now=Date.now();
   var subId='BMI-'+uid().toUpperCase().slice(0,6);
   CUR.claims[claimSlot]={brand:brand,mail:mail,link:document.getElementById('mLink').value.trim(),logo:logoData,amt:price,fee:fee,
@@ -9923,7 +9942,7 @@ document.getElementById('mCopyId').onclick=function(){
   if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(id).then(done,done);
   else done();
 };
-document.getElementById('mDone').onclick=function(){document.getElementById('modalBg').classList.remove('on')};
+document.getElementById('mDone').onclick=closeBuyModal;
 var SITE_URL='brandmyitem.com';
 function openShare(photo,checkinId){
   var caption='I got my '+LBLL(CUR)+' paid for by brands on '+SITE_URL+' \ud83c\udf89 #ad';
