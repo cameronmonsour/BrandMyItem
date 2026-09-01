@@ -65,8 +65,8 @@ img{display:block}
 header{position:fixed;top:0;left:0;right:0;z-index:50;pointer-events:none}
 .nav{pointer-events:auto;height:48px;width:100%;box-sizing:border-box;background:rgba(255,255,255,.92);backdrop-filter:blur(20px) saturate(1.4);border-bottom:1px solid rgba(60,60,67,.12)}
 .nav-inner{max-width:1140px;margin:0 auto;padding:0 22px;height:100%;box-sizing:border-box;display:flex;align-items:center;justify-content:space-between}
-.logo{font-family:var(--serif);font-weight:600;font-size:17px;letter-spacing:-.01em;color:var(--fg);display:inline-block;transform:scaleX(.94);transform-origin:left center}
-.logo b{color:var(--fg);font-weight:600;font-style:italic}
+.logo{display:inline-flex;align-items:center;color:var(--fg);line-height:0}
+.logo img{display:block;width:124px;height:auto}
 .nav .lnk{font-size:13px;font-weight:400;color:var(--fg);opacity:.82}
 .nav .lnk:hover{opacity:1}
 .navicon{color:var(--fg);opacity:.82;display:flex;align-items:center}
@@ -1621,7 +1621,7 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
 <header>
   <div class="nav">
     <div class="nav-inner">
-      <a href="#home" class="logo">Brand<b>My</b>Item</a>
+      <a href="#home" class="logo" aria-label="BrandMyItem"><img src="brandmyitem-logo.svg" alt="BrandMyItem"></a>
       <a href="#home-how" class="lnk hidemob">How it works</a>
       <a href="#home-faq" class="lnk hidemob">FAQ</a>
       <a href="#dashboard" class="lnk">Live items</a>
@@ -2287,7 +2287,7 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
 </div>
 
 <footer><div class="wrap foot">
-  <div><a href="#home" class="logo">Brand<b>My</b>Item</a></div>
+  <div><a href="#home" class="logo" aria-label="BrandMyItem"><img src="brandmyitem-logo.svg" alt="BrandMyItem"></a></div>
 </div></footer>
 
 <!-- TRACK -->
