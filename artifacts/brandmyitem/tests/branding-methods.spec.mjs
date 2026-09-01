@@ -7,8 +7,11 @@ function titleCaseMethod(method) {
 test.describe('item-specific branding methods', () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => {
-      localStorage.clear();
-      sessionStorage.clear();
+      if (!sessionStorage.getItem('branding-methods-e2e-initialized')) {
+        localStorage.clear();
+        sessionStorage.clear();
+        sessionStorage.setItem('branding-methods-e2e-initialized', 'true');
+      }
     });
     await page.goto('/#build');
     await expect(page.locator('#v-build')).toHaveClass(/on/);
@@ -168,5 +171,104 @@ test.describe('item-specific branding methods', () => {
     }));
     expect(widths.documentWidth).toBeLessThanOrEqual(widths.viewport);
     expect(widths.bodyWidth).toBeLessThanOrEqual(widths.viewport);
+  });
+
+  test('keeps a completed sponsor purchase claimed on the same spot after reload', async ({ page }) => {
+    await page.goto('/#item/demo1');
+    await expect(page.locator('#v-item')).toHaveClass(/on/);
+    await expect(page.locator('#iSpotList')).toBeVisible();
+
+    const listing = await page.evaluate(() => {
+      const item = DB.listings.find((candidate) => candidate.id === 'demo1');
+      const openIndex = item.claims.findIndex((claim) => !claim);
+      return {
+        openIndex,
+        price: money(item.prices[openIndex]),
+        rawPrice: item.prices[openIndex],
+      };
+    });
+    expect(listing.openIndex).toBeGreaterThanOrEqual(0);
+
+    const row = page.locator('#iSpotList .ap-spot-option').nth(listing.openIndex);
+    await expect(row).toBeEnabled();
+    await expect(row).toContainText(listing.price);
+    await row.click();
+    await expect(page.locator('#mStep1')).toBeVisible();
+    await expect(page.locator('#uplBox')).toContainText('Upload your logo');
+    await expect(page.locator('#mPrice')).toHaveText(listing.price);
+
+    await page.locator('#uplInput').setInputFiles({
+      name: 'fixture-logo.svg',
+      mimeType: 'image/svg+xml',
+      buffer: Buffer.from(
+        '<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"><rect width="80" height="80" rx="16" fill="#1d1d1f"/><path d="M20 40h40M40 20v40" stroke="#fff" stroke-width="8" stroke-linecap="round"/></svg>',
+      ),
+    });
+    await expect(page.locator('#uplBox img[alt="logo"]')).toBeVisible();
+
+    const brand = 'Fixture Sponsor';
+    const email = 'fixture-sponsor@example.com';
+    await page.locator('#mBrand').fill(brand);
+    await page.locator('#mMail').fill(email);
+    await page.locator('#mLink').fill('https://fixture-sponsor.example.com');
+    await page.getByRole('button', { name: 'Continue' }).click();
+
+    await expect(page.locator('#mStep1')).toBeHidden();
+    await expect(page.locator('#mStep3')).toBeVisible();
+    await expect(page.locator('#mSubMail')).toHaveText(email);
+    const submissionId = await page.locator('#mSubId').textContent();
+    expect(submissionId).toMatch(/^BMI-[A-Z0-9]{6}$/);
+
+    await page.getByRole('button', { name: 'Done' }).click();
+    await expect(page.locator('#modalBg')).not.toBeVisible();
+    await expect(row).toBeDisabled();
+    await expect(row).toContainText(listing.price);
+    await expect(row.locator('.ap-spot-price span')).toHaveText('Claimed');
+    await expect(row).toHaveAttribute(
+      'aria-label',
+      `Spot ${listing.openIndex + 1} claimed by ${brand}`,
+    );
+
+    const completedClaim = await page.evaluate((spotIndex) => {
+      const item = DB.listings.find((candidate) => candidate.id === 'demo1');
+      const claim = item.claims[spotIndex];
+      return {
+        brand: claim.brand,
+        mail: claim.mail,
+        amount: claim.amt,
+        price: item.prices[spotIndex],
+        subId: claim.subId,
+      };
+    }, listing.openIndex);
+    expect(completedClaim).toMatchObject({
+      brand,
+      mail: email,
+      amount: listing.rawPrice,
+      price: listing.rawPrice,
+      subId: submissionId,
+    });
+
+    await page.reload();
+    await expect(page.locator('#v-item')).toHaveClass(/on/);
+    await expect(page.locator('#iSpotList')).toBeVisible();
+    const reloadedRow = page.locator('#iSpotList .ap-spot-option').nth(listing.openIndex);
+    await expect(reloadedRow).toBeDisabled();
+    await expect(reloadedRow).toContainText(listing.price);
+    await expect(reloadedRow.locator('.ap-spot-price span')).toHaveText('Claimed');
+    await expect(reloadedRow).toHaveAttribute(
+      'aria-label',
+      `Spot ${listing.openIndex + 1} claimed by ${brand}`,
+    );
+
+    const reloadedClaim = await page.evaluate((spotIndex) => {
+      const item = DB.listings.find((candidate) => candidate.id === 'demo1');
+      const claim = item.claims[spotIndex];
+      return { amount: claim.amt, price: item.prices[spotIndex], subId: claim.subId };
+    }, listing.openIndex);
+    expect(reloadedClaim).toEqual({
+      amount: listing.rawPrice,
+      price: listing.rawPrice,
+      subId: submissionId,
+    });
   });
 });
