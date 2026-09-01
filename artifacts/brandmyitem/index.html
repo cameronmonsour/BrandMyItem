@@ -6218,6 +6218,28 @@ function money(n){
   var value=Number(n)||0,hasCents=Math.abs(value-Math.round(value))>0.0001;
   return '$'+value.toLocaleString('en-US',{minimumFractionDigits:hasCents?2:0,maximumFractionDigits:2});
 }
+/* Replit injects the Umami tracker into published website HTML; keep development safe
+   and never add a script, website ID, or analytics credential to the app. */
+function trackEvent(name,data){
+  if(typeof window==='undefined')return;
+  try{if(window.umami&&typeof window.umami.track==='function')window.umami.track(name,data)}catch(e){}
+}
+function priceBand(price){
+  var value=Number(price)||0;
+  if(value<50)return 'under_50';
+  if(value<200)return '50_199';
+  if(value<500)return '200_499';
+  if(value<1000)return '500_999';
+  return '1000_plus';
+}
+function viewportCategory(){
+  var width=window.innerWidth||0;
+  return width<768?'mobile':(width<1024?'tablet':'desktop');
+}
+function spotAnalyticsData(slot,price){
+  return {item_type:String(CUR&&CUR.type||'custom'),spot_number:slot+1,
+    price_band:priceBand(price),viewport_category:viewportCategory()};
+}
 function cadence(retail){return retail<100?'monthly photo':retail<=500?'photo every 2 weeks':'weekly photo'}
 function ago(ts){var s=Math.max(1,(Date.now()-ts)/1000);if(s<60)return Math.floor(s)+'s ago';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago'}
 function pad(n){return n<10?'0'+n:''+n}
@@ -7496,12 +7518,14 @@ function runCountdown(elId,l){
 
 /* ============ ROUTER ============ */
 var views=['home','dashboard','build','item','track'];
+var LAST_PRODUCT_VIEW_KEY='';
 function route(){
   var h=location.hash.replace('#','')||'home';
   var itemId=null;
   if(h.indexOf('item/')===0){itemId=h.split('/')[1];h='item'}
   if(h==='feed')h='dashboard';
   if(h.indexOf('home-')===0)h='home';
+  if(h!=='item')LAST_PRODUCT_VIEW_KEY='';
   views.forEach(function(v){document.getElementById('v-'+v).classList.toggle('on',v===h)});
   if(location.hash.indexOf('home-')<0)window.scrollTo(0,0);
   if(h==='home')showHome();
@@ -9429,6 +9453,11 @@ function showItem(id){
   CUR=DB.listings.filter(function(l){return l.id===id})[0];
   if(!CUR){location.hash='dashboard';return}
   CUR=normalizeListingPhoto(CUR);
+  var viewKey=String(CUR.id);
+  if(LAST_PRODUCT_VIEW_KEY!==viewKey){
+    LAST_PRODUCT_VIEW_KEY=viewKey;
+    trackEvent('product_page_viewed',{item_type:String(CUR.type||'custom')});
+  }
   itemMode='auction';
   runCountdown('itemCount',CUR);
   drawItemMap();
@@ -9657,6 +9686,8 @@ function openBid(i){
   claimSlot=i;logoData=null;
   var meta=slotMeta(CUR.type,CUR.slots,i);
   var price=CUR.prices[i],fee=feeFor(CUR,price),total=price+fee;
+  var analyticsData=spotAnalyticsData(i,price);
+  trackEvent('spot_selected',analyticsData);
   document.getElementById('mStep1').style.display='';
   document.getElementById('mStep3').style.display='none';
   document.getElementById('mTitle').textContent='Buy this spot';
@@ -9668,6 +9699,7 @@ function openBid(i){
   document.getElementById('uplBox').innerHTML='Upload your logo · required (PNG, transparent works best)';
   document.getElementById('mBrand').value='';document.getElementById('mMail').value='';document.getElementById('mLink').value='';
   document.getElementById('modalBg').classList.add('on');
+  trackEvent('checkout_opened',analyticsData);
 }
 document.getElementById('uplBox').onclick=function(){document.getElementById('uplInput').click()};
 document.getElementById('uplInput').onchange=function(e){
@@ -9697,6 +9729,7 @@ function completePurchase(){
   if(pctOf(CUR)>=100&&!CUR.fundedAt){CUR.fundedAt=now;CUR.status='funded';CUR.promisedDeliveryAt=now+deliveryDaysOf(CUR)*86400000}
   logAct('<b>'+brand+'</b> bought a spot on '+CUR.owner+'&rsquo;s <b>'+LBLL(CUR)+'</b> &middot; '+money(price)+' charged today');
   saveDB();
+  trackEvent('spot_purchase_completed',spotAnalyticsData(claimSlot,price));
   drawItemMap();refreshItemCards();
   document.getElementById('mStep1').style.display='none';
   document.getElementById('mStep3').style.display='';
