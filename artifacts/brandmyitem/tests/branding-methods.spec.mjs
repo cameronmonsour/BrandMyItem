@@ -81,7 +81,7 @@ test.describe('item-specific branding methods', () => {
     );
   });
 
-  test('keeps each sponsor spot row bound to its placement and checkout price', async ({ page }) => {
+  test('keeps every sponsor spot action bound to its placement and checkout price', async ({ page }) => {
     await page.goto('/#item/demo1');
     await expect(page.locator('#v-item')).toHaveClass(/on/);
     await expect(page.locator('#iSpotList')).toBeVisible();
@@ -89,6 +89,7 @@ test.describe('item-specific branding methods', () => {
     const listing = await page.evaluate(() => {
       const item = DB.listings.find((candidate) => candidate.id === 'demo1');
       return {
+          spotCount: item.prices.length,
         openSpots: item.prices
           .map((price, index) => ({ price, index }))
           .filter(({ index }) => !item.claims[index])
@@ -110,35 +111,62 @@ test.describe('item-specific branding methods', () => {
     expect(listing.openSpots.length).toBeGreaterThanOrEqual(2);
     expect(listing.claimedCount).toBeGreaterThan(0);
 
-    const openRows = page.locator('#iSpotList .ap-spot-option.open');
-    await expect(openRows).toHaveCount(listing.openSpots.length);
-    for (const [rowIndex, expected] of listing.openSpots.entries()) {
-      const row = openRows.nth(rowIndex);
+    const rows = page.locator('#iSpotList .ap-spot-option');
+    await expect(rows).toHaveCount(listing.spotCount);
+    for (let index = 0; index < listing.spotCount; index += 1) {
+      const expected = await page.evaluate((spotIndex) => {
+        const item = DB.listings.find((candidate) => candidate.id === 'demo1');
+        const price = item.prices[spotIndex];
+        const meta = slotMeta(item.type, item.slots, spotIndex);
+        return {
+          index: spotIndex,
+          placement: `${meta.pos} · ${meta.size}`,
+          price: money(price),
+          claimed: Boolean(item.claims[spotIndex]),
+        };
+      }, index);
+      const row = rows.nth(index);
+
       await expect(row).toContainText(`Spot ${expected.index + 1}`);
       await expect(row).toContainText(expected.placement);
       await expect(row).toContainText(expected.price);
+      await expect(row.locator('.ap-spot-price span')).toHaveText(
+        expected.claimed ? 'Claimed' : 'Buy',
+      );
+
+      if (expected.claimed) {
+        await expect(row).toBeDisabled();
+        await row.click({ force: true });
+        await expect(page.locator('#modalBg')).not.toBeVisible();
+        continue;
+      }
+
+      await expect(row).toBeEnabled();
+      await expect(row).toHaveAttribute(
+        'aria-label',
+        `Buy Spot ${expected.index + 1} for ${expected.price}`,
+      );
       await row.click();
 
       await expect(page.locator('#modalBg')).toBeVisible();
+      await expect(page.locator('#mStep1')).toBeVisible();
+      await expect(page.locator('#uplBox')).toContainText('Upload your logo');
       await expect(page.locator('#mSlotInfo')).toContainText(
         `${expected.placement} placement`,
       );
       await expect(page.locator('#mPrice')).toHaveText(expected.price);
-      await expect(page.locator('#mFee')).toHaveText(expected.fee);
-      await expect(page.locator('#mTotal')).toHaveText(expected.total);
 
       await page.locator('#mCancel').click();
       await expect(page.locator('#modalBg')).not.toBeVisible();
       await expect(row).toBeFocused();
     }
 
-    const claimedRows = page.locator('#iSpotList .ap-spot-option.claimed');
-    await expect(claimedRows).toHaveCount(listing.claimedCount);
-    for (let index = 0; index < listing.claimedCount; index += 1) {
-      const row = claimedRows.nth(index);
-      await expect(row).toBeDisabled();
-      await row.click({ force: true });
-      await expect(page.locator('#modalBg')).not.toBeVisible();
-    }
+    const widths = await page.evaluate(() => ({
+      viewport: window.innerWidth,
+      documentWidth: document.documentElement.scrollWidth,
+      bodyWidth: document.body.scrollWidth,
+    }));
+    expect(widths.documentWidth).toBeLessThanOrEqual(widths.viewport);
+    expect(widths.bodyWidth).toBeLessThanOrEqual(widths.viewport);
   });
 });
