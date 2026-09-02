@@ -188,8 +188,9 @@ h2.big{font-family:var(--serif);font-size:clamp(30px,3.8vw,42px);font-weight:500
 .spec-table td:last-child{font-weight:600}
 .build-product-layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(270px,.75fr);gap:20px;padding:20px;border-top:1px solid var(--border);align-items:start}
 .build-product-visual{min-width:0}
-.cu-viewport{max-width:100%;height:460px;overflow:auto;display:flex;align-items:flex-start;justify-content:center;background:#fff;border:1px solid #fff;border-radius:0}
-.cu-viewport canvas{flex:none;display:block;border-radius:0;touch-action:none;cursor:grab}
+.cu-viewport{max-width:100%;height:460px;overflow:auto;display:flex;align-items:flex-start;justify-content:center;background:#fff;border:0;border-radius:0}
+.cu-viewport canvas{flex:none;display:block;border:0;outline:none;box-shadow:none;border-radius:0;touch-action:none;cursor:grab}
+.cu-viewport canvas:focus,.cu-viewport canvas:focus-visible{border:0;outline:none;box-shadow:none}
 .cu-viewport canvas.is-panning{cursor:grabbing}
 .cu-zoom{display:flex;align-items:center;justify-content:center;gap:6px;margin:8px 0 0}
 .cu-zoom button{height:30px;min-width:30px;padding:0 9px;border:1px solid rgba(60,60,67,.18);border-radius:8px;background:#fff;color:#3f3f46;font-size:13px;font-weight:600}
@@ -7477,13 +7478,13 @@ function stickerCanvas(o,ar,quality){
   g.textAlign='center';
   if(o.open){
     /* Transparent placement: only a crisp black boundary and fixed-size price. */
-    g.strokeStyle='#000';g.lineWidth=Math.max(4,4*k);
+    g.strokeStyle='#000';g.lineWidth=1;
     if(o.shape==='circle'){g.beginPath();g.ellipse(W/2,H/2,W/2-10,H/2-10,0,0,7);g.stroke()}
     else{rr(10,10,W-20,H-20,rad);g.stroke()}
     g.fillStyle='#1D1D1F';g.font='600 '+Math.round(62*quality)+'px Inter,Arial';
     g.textBaseline='middle';g.fillText(o.price||'',W/2,H/2);
   }else{
-    g.strokeStyle='#000';g.lineWidth=Math.max(4,4*k);rr(12,12,W-24,H-24,rad);g.stroke();
+    g.strokeStyle='#000';g.lineWidth=1;rr(12,12,W-24,H-24,rad);g.stroke();
     if(o.price){g.font='600 '+Math.round(62*quality)+'px Inter,Arial';g.fillStyle='#1D1D1F';g.textBaseline='middle';g.fillText(o.price,W/2,H/2)}
   }
   return c;
@@ -8874,7 +8875,7 @@ function cuDraw(){
   var iw=CU.img.width,ih=CU.img.height;
   cv.width=iw;cv.height=ih;
   var viewport=document.getElementById('cuViewport');
-  var availableWidth=viewport?Math.max(280,viewport.clientWidth-4):760;
+  var availableWidth=viewport?Math.max(280,viewport.clientWidth):760;
   var fit=Math.min(1,availableWidth/iw,460/ih);
   var viewScale=fit*Math.max(0.5,Math.min(3,CU.zoom||1));
   cv.style.width=Math.max(1,Math.round(iw*viewScale))+'px';
@@ -8914,8 +8915,10 @@ function cuDraw(){
   CU.tiles.forEach(function(t,i){
     var rx=(t.x-t.w/2)*iw,ry=(t.y-t.h/2)*ih,rw=t.w*iw,rh=t.h*ih;
     var seld=(i===CU.sel);
-    /* pure outline: nothing inside, the item shows straight through */
-    g.strokeStyle='#fff';
+    /* Match the placement outline to the selected color control. */
+    var outlineColor=t.color||CU.color||'#1D1D1F';
+    if(/^#fff(?:fff)?$/i.test(outlineColor)||/^white$/i.test(outlineColor))outlineColor='#1D1D1F';
+    g.strokeStyle=outlineColor;
     g.lineWidth=1;
     if(t.shape==='poly'&&t.pts&&t.pts.length>2){
       g.beginPath();
@@ -8954,7 +8957,7 @@ function drawPricePlacement(g,t,frame,price){
   var rx=frame.x+(t.x-t.w/2)*frame.w,ry=frame.y+(t.y-t.h/2)*frame.h;
   var rw=t.w*frame.w,rh=t.h*frame.h,cx=rx+rw/2,cy=ry+rh/2;
   g.save();
-  g.strokeStyle='#000';g.lineWidth=7;g.lineJoin='round';g.setLineDash([]);
+  g.strokeStyle='#000';g.lineWidth=1;g.lineJoin='round';g.setLineDash([]);
   if(t.shape==='poly'&&t.pts&&t.pts.length>2){
     g.beginPath();
     g.moveTo(frame.x+t.pts[0][0]*frame.w,frame.y+t.pts[0][1]*frame.h);
