@@ -8953,7 +8953,7 @@ function cuSetZoom(value){
   if(label)label.textContent=Math.round(CU.zoom*100)+'%';
 }
 var PHOTO_STAGE_SCALE={macbook:0.84};
-function drawPricePlacement(g,t,frame,price){
+function drawPricePlacement(g,t,frame,price,logo,brand){
   var rx=frame.x+(t.x-t.w/2)*frame.w,ry=frame.y+(t.y-t.h/2)*frame.h;
   var rw=t.w*frame.w,rh=t.h*frame.h,cx=rx+rw/2,cy=ry+rh/2;
   g.save();
@@ -8971,9 +8971,20 @@ function drawPricePlacement(g,t,frame,price){
     g.arcTo(rx+rw,ry+rh,rx,ry+rh,rad);g.arcTo(rx,ry+rh,rx,ry,rad);
     g.arcTo(rx,ry,rx+rw,ry,rad);g.closePath();g.stroke();
   }
-  g.fillStyle='#000';g.font='600 76px Inter,Arial';g.textAlign='center';g.textBaseline='middle';
-  var label=price||'',maxWidth=Math.max(1,rw*.82),scale=Math.min(1,maxWidth/g.measureText(label).width);
-  g.translate(cx,cy);g.scale(scale,1);g.fillText(label,0,0);
+  g.fillStyle='#000';g.textAlign='center';g.textBaseline='middle';
+  if(logo&&logo.naturalWidth){
+    var maxW=rw*.72,maxH=rh*.54,logoScale=Math.min(maxW/logo.naturalWidth,maxH/logo.naturalHeight);
+    var logoW=logo.naturalWidth*logoScale,logoH=logo.naturalHeight*logoScale;
+    g.drawImage(logo,cx-logoW/2,cy-logoH/2,logoW,logoH);
+  }else if(brand){
+    var mark=String(brand).trim().slice(0,2).toUpperCase();
+    g.font='600 '+Math.max(18,Math.min(76,rh*.24))+'px Inter,Arial';
+    g.fillText(mark,cx,cy);
+  }else{
+    g.font='600 76px Inter,Arial';
+    var label=price||'',maxWidth=Math.max(1,rw*.82),scale=Math.min(1,maxWidth/g.measureText(label).width);
+    g.translate(cx,cy);g.scale(scale,1);g.fillText(label,0,0);
+  }
   g.restore();
 }
 function renderCustomStage(el,l,onTap){
@@ -8982,8 +8993,9 @@ function renderCustomStage(el,l,onTap){
   cv.style.cssText='width:100%;display:block;border-radius:18px;background:#fff';
   el.appendChild(cv);
   var frame={x:0,y:0,w:1,h:1};
-  var img=new Image();
-  img.onload=function(){
+  var logoImages=[],logoPending=0,photoReady=false;
+  function paint(){
+    if(!photoReady||logoPending)return;
     cv.width=3840;cv.height=2400;
     var g=cv.getContext('2d');
     g.imageSmoothingEnabled=true;g.imageSmoothingQuality='high';
@@ -8993,9 +9005,21 @@ function renderCustomStage(el,l,onTap){
     frame.x=(cv.width-frame.w)/2;frame.y=(cv.height-frame.h)/2;
     g.drawImage(img,frame.x,frame.y,frame.w,frame.h);
     (l.tiles||[]).forEach(function(t,i){
-      var c=l.claims[i],price=c?money(c.amt||l.prices[i]):money(l.prices[i]);
-      drawPricePlacement(g,t,frame,price);
+      var c=l.claims&&l.claims[i],price=c?money(c.amt||l.prices[i]):money(l.prices[i]);
+      drawPricePlacement(g,t,frame,price,c?logoImages[i]:null,c&&c.brand);
     });
+  }
+  (l.claims||[]).forEach(function(c,i){
+    if(!c||!c.logo)return;
+    logoPending++;
+    var logo=new Image();
+    logo.onload=function(){logoImages[i]=logo;logoPending--;paint()};
+    logo.onerror=function(){logoPending--;paint()};
+    logo.src=c.logo;
+  });
+  var img=new Image();
+  img.onload=function(){
+    photoReady=true;paint();
   };
   img.src=l.photo;
   cv.addEventListener('pointerup',function(e){
