@@ -706,12 +706,12 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .choice-grid.term-choice-grid{grid-template-columns:repeat(3,1fr)}
 .choice-grid.checkin-frequency-grid{grid-template-columns:repeat(3,1fr)}
 .choice-grid.fulfillment-choice-grid{grid-template-columns:repeat(2,1fr)}
-.choice-card{appearance:none;text-align:left;border:1px solid var(--border);border-radius:12px;background:#fff;padding:11px 12px;min-height:70px;color:var(--fg);cursor:pointer;transition:border-color .15s,background .15s,box-shadow .15s}
+.choice-card{appearance:none;text-align:left;border:1px solid var(--border);border-radius:12px;background:#fff;padding:11px 12px;min-height:0;color:var(--fg);cursor:pointer;transition:border-color .15s,background .15s,box-shadow .15s}
 .choice-card:hover{border-color:#8e8e93}
 .choice-card.on{border:1px solid #1D1D1F;background:#1D1D1F;color:#fff;box-shadow:none}
 .choice-card.on span,.choice-card.on small{color:#fff}
 .choice-card strong,.choice-card span,.choice-card small{display:block}
-.choice-card strong{font-size:14px;margin-bottom:4px}
+.choice-card strong{font-size:14px;margin-bottom:0}
 .choice-card span{font-size:12.5px;line-height:1.35;color:var(--mfg)}
 .choice-card small{font-size:11.5px;line-height:1.35;color:var(--mfg);margin-top:5px}
 .choice-note{font-size:12px;line-height:1.45;color:var(--mfg);margin:7px 0 0}
@@ -754,6 +754,7 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .modal-close{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--mfg);font-size:21px;line-height:1;flex-shrink:0}
 .modal-close:hover{background:var(--wash);color:var(--fg)}
 .modal h3{font-family:var(--serif);font-size:27px;font-weight:500;letter-spacing:-.01em;margin-bottom:4px;padding-bottom:2px}
+.modal .modal-estimate{font-size:12px;font-weight:600;line-height:1.4;letter-spacing:.01em;color:var(--mfg);margin:0 0 16px}
 .modal .mp{font-size:13.5px;color:var(--mfg);margin-bottom:16px;line-height:1.55}
 .campaign-bg{position:fixed;inset:0;background:rgba(17,17,19,.48);backdrop-filter:blur(7px);z-index:85;display:none;align-items:center;justify-content:center;padding:20px}
 .campaign-bg.on{display:flex}
@@ -2175,24 +2176,26 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
           <div class="brand-deal-section">
             <div class="field" style="margin-top:14px"><div class="label">Check-in term</div>
               <div class="choice-grid term-choice-grid" id="termChoices" role="radiogroup" aria-label="Check-in term">
-                <button class="choice-card" type="button" data-choice-group="term" data-value="6" aria-pressed="false"><strong>6 months</strong><span>Send check-ins for 6 months</span></button>
-                <button class="choice-card on" type="button" data-choice-group="term" data-value="12" aria-pressed="true"><strong>12 months</strong><span>Send check-ins for 12 months</span></button>
-                <button class="choice-card" type="button" data-choice-group="term" data-value="18" aria-pressed="false"><strong>18 months</strong><span>Send check-ins for 18 months</span></button>
+                <button class="choice-card" type="button" data-choice-group="term" data-value="6" aria-pressed="false"><strong>6 months</strong></button>
+                <button class="choice-card on" type="button" data-choice-group="term" data-value="12" aria-pressed="true"><strong>12 months</strong></button>
+                <button class="choice-card" type="button" data-choice-group="term" data-value="18" aria-pressed="false"><strong>18 months</strong></button>
               </div>
+              <p class="choice-note">Choose how long the owner sends photo check-ins.</p>
             </div>
             <div class="field" style="margin-top:14px"><div class="label">Check-in frequency</div>
               <div class="choice-grid checkin-frequency-grid" id="checkinFrequencyChoices" role="radiogroup" aria-label="Check-in frequency">
-                <button class="choice-card" type="button" data-choice-group="checkinFrequency" data-value="weekly" aria-pressed="false"><strong>Weekly</strong><span>Better odds with weekly check-ins</span></button>
-                <button class="choice-card" type="button" data-choice-group="checkinFrequency" data-value="biweekly" aria-pressed="false"><strong>Biweekly</strong><span>Send check-ins every 2 weeks</span></button>
-                <button class="choice-card on" type="button" data-choice-group="checkinFrequency" data-value="monthly" aria-pressed="true"><strong>Monthly</strong><span>Send check-ins once a month</span></button>
+                <button class="choice-card" type="button" data-choice-group="checkinFrequency" data-value="weekly" aria-pressed="false"><strong>Weekly</strong></button>
+                <button class="choice-card" type="button" data-choice-group="checkinFrequency" data-value="biweekly" aria-pressed="false"><strong>Biweekly</strong></button>
+                <button class="choice-card on" type="button" data-choice-group="checkinFrequency" data-value="monthly" aria-pressed="true"><strong>Monthly</strong></button>
               </div>
+              <p class="choice-note">Choose how often the owner sends photo check-ins during the selected term.</p>
             </div>
             <div class="field" style="margin-top:14px"><div class="label">Who applies the branding?</div>
               <div class="choice-grid fulfillment-choice-grid" id="brandingChoices" role="radiogroup" aria-label="Branding fulfillment">
-                <button class="choice-card" type="button" data-choice-group="branding" data-value="assisted" aria-pressed="false"><strong>BrandMyItem applied</strong><small>+10% fulfillment fee · 60-day delivery window</small></button>
-                <button class="choice-card on" type="button" data-choice-group="branding" data-value="self" aria-pressed="true"><strong>You apply it</strong><small>Delivered in under 23 days · 7-day branding window</small></button>
+                <button class="choice-card" type="button" data-choice-group="branding" data-value="assisted" aria-pressed="false"><strong>BrandMyItem applied</strong></button>
+                <button class="choice-card on" type="button" data-choice-group="branding" data-value="self" aria-pressed="true"><strong>You apply it</strong></button>
               </div>
-              <p class="choice-note">In both paths, BrandMyItem buys and ships the physical item. Only the branding application changes.</p>
+              <p class="choice-note">BrandMyItem applied adds a 10% fulfillment fee; the self-apply option uses the standard delivery window. BrandMyItem buys and ships the item either way.</p>
               <p class="tax-note">Sales tax, if applicable, is calculated at checkout based on the transaction and buyer location. Listing proceeds may have tax implications for the owner; this demo does not determine filing obligations or provide tax advice.</p>
             </div>
           </div>
@@ -2389,8 +2392,7 @@ footer{border-top:1px solid var(--border);padding:36px 0;background:var(--wash2)
 <div class="modal-bg" id="modalBg">
   <div class="modal">
     <div id="mStep1">
-      <h3 id="mTitle">Claim this spot</h3>
-      <p class="mp" id="mSlotInfo"></p>
+      <p class="modal-estimate" id="mTitle">All ad placements are estimates. Pictures and sizing are estimated.</p>
       <div class="upl" id="uplBox">Upload your logo · required (PNG, transparent works best)</div>
       <input type="file" id="uplInput" accept="image/*" style="display:none">
       <div class="field"><label class="label" for="mBrand">Brand name</label><input class="input" id="mBrand" placeholder="Acme"></div>
@@ -8937,13 +8939,6 @@ function cuDraw(){
       g.arcTo(rx,ry+rh,rx,ry,rad);g.arcTo(rx,ry,rx+rw,ry,rad);g.closePath();
       g.stroke();
     }
-    if(seld&&t.shape!=='poly'){
-      g.fillStyle='#30D158';
-      var hs=Math.max(10,iw/70);
-      g.fillRect(rx+rw-hs/2,ry+rh-hs/2,hs,hs);            /* corner: both */
-      g.fillRect(rx+rw-hs/2,ry+rh/2-hs/2,hs,hs);          /* right edge: width */
-      g.fillRect(rx+rw/2-hs/2,ry+rh-hs/2,hs,hs);          /* bottom edge: height */
-    }
   });
 }
 function cuSetZoom(value){
@@ -9178,18 +9173,24 @@ function cuInit(){
       return;
     }
     cv.focus();
-    /* boxes first: resize handle, then body */
+    /* Boxes first: invisible corner hit areas, then body. */
     for(var i=CU.tiles.length-1;i>=0;i--){
       var t=CU.tiles[i];
-      var hx=t.x+t.w/2,hy=t.y+t.h/2;
-      if(t.shape!=='poly'&&i===CU.sel&&Math.abs(x-hx)<0.03&&Math.abs(y-hy)<0.03){
-        DRAG={i:i,mode:'size'};cv.setPointerCapture(e.pointerId);return;
-      }
-      if(t.shape!=='poly'&&i===CU.sel&&Math.abs(x-hx)<0.03&&Math.abs(y-t.y)<0.03){
-        DRAG={i:i,mode:'w'};cv.setPointerCapture(e.pointerId);return;
-      }
-      if(t.shape!=='poly'&&i===CU.sel&&Math.abs(x-t.x)<0.03&&Math.abs(y-hy)<0.03){
-        DRAG={i:i,mode:'h'};cv.setPointerCapture(e.pointerId);return;
+      if(t.shape!=='poly'&&i===CU.sel){
+        var halfW=t.w/2,halfH=t.h/2;
+        var corners=[
+          {name:'tl',x:t.x-halfW,y:t.y-halfH},
+          {name:'tr',x:t.x+halfW,y:t.y-halfH},
+          {name:'bl',x:t.x-halfW,y:t.y+halfH},
+          {name:'br',x:t.x+halfW,y:t.y+halfH}
+        ];
+        for(var ci=0;ci<corners.length;ci++){
+          var corner=corners[ci];
+          if(Math.abs(x-corner.x)<0.035&&Math.abs(y-corner.y)<0.035){
+            DRAG={i:i,mode:'corner',corner:corner.name};
+            cv.setPointerCapture(e.pointerId);return;
+          }
+        }
       }
       if(Math.abs(x-t.x)<=t.w/2&&Math.abs(y-t.y)<=t.h/2){
         CU.sel=i;DRAG={i:i,mode:'move',dx:x-t.x,dy:y-t.y};
@@ -9225,10 +9226,15 @@ function cuInit(){
         t.pts=t.pts.map(function(p){return [p[0]+ddx,p[1]+ddy]});
       }
       t.x=nx;t.y=ny;
-    }else if(DRAG.mode==='w'){
-      t.w=Math.min(0.94,Math.max(0.05,(x-t.x)*2));
-    }else if(DRAG.mode==='h'){
-      t.h=Math.min(0.94,Math.max(0.04,(y-t.y)*2));
+    }else if(DRAG.mode==='corner'){
+      var corner=DRAG.corner;
+      var left=corner==='tl'||corner==='bl',top=corner==='tl'||corner==='tr';
+      var anchorX=t.x+(left?1:-1)*t.w/2;
+      var anchorY=t.y+(top?1:-1)*t.h/2;
+      var edgeX=left?Math.max(0.02,Math.min(anchorX-0.05,x)):Math.min(0.98,Math.max(anchorX+0.05,x));
+      var edgeY=top?Math.max(0.02,Math.min(anchorY-0.04,y)):Math.min(0.98,Math.max(anchorY+0.04,y));
+      t.x=(anchorX+edgeX)/2;t.w=Math.abs(anchorX-edgeX);
+      t.y=(anchorY+edgeY)/2;t.h=Math.abs(anchorY-edgeY);
     }else{
       t.w=Math.min(0.94,Math.max(0.05,(x-t.x)*2));
       t.h=Math.min(0.94,Math.max(0.04,(y-t.y)*2));
@@ -10124,8 +10130,7 @@ function openBid(i,trigger){
   trackEvent('spot_selected',analyticsData);
   document.getElementById('mStep1').style.display='';
   document.getElementById('mStep3').style.display='none';
-  document.getElementById('mTitle').textContent='Buy this spot';
-  document.getElementById('mSlotInfo').innerHTML=meta.pos+' &middot; '+meta.size+' placement on '+LBLL(CUR)+'. Branding method: '+safeCardText(brandingMethod(CUR.type))+', '+(CUR.brandingMode==='assisted'?'applied by BrandMyItem':'for you to apply')+'. Your logo goes on the item itself and on this page. First come, first served. You are charged today; if the listing does not sell out within 60 days, this spot is refunded automatically.';
+  document.getElementById('mTitle').textContent='All ad placements are estimates. Pictures and sizing are estimated.';
   document.getElementById('mPrice').textContent=money(price);
   document.getElementById('mFee').textContent=money(fee);
   var feeLabel=document.getElementById('mFeeLabel');if(feeLabel)feeLabel.textContent='Total fee before tax & shipping ('+Math.round(feeRateOf(CUR)*100)+'%)';
