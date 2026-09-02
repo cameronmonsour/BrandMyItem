@@ -7574,18 +7574,15 @@ function stickerCanvas(o,ar,quality){
   var rad=Math.min(34*k,H*0.16);
   g.textAlign='center';
   if(o.open){
-    /* Open placements show only their price; the product photo stays visible underneath. */
-    g.strokeStyle='#6E6E73';g.lineWidth=Math.max(3,3*k);
+    /* Transparent placement: only a crisp black boundary and fixed-size price. */
+    g.strokeStyle='#000';g.lineWidth=Math.max(4,4*k);
     if(o.shape==='circle'){g.beginPath();g.ellipse(W/2,H/2,W/2-10,H/2-10,0,0,7);g.stroke()}
     else{rr(10,10,W-20,H-20,rad);g.stroke()}
-    g.fillStyle='#1D1D1F';g.font='600 '+Math.round(62*k)+'px Inter,Arial';
-    g.fillText(o.price||'',W/2,H*0.58);
+    g.fillStyle='#1D1D1F';g.font='600 '+Math.round(62*quality)+'px Inter,Arial';
+    g.textBaseline='middle';g.fillText(o.price||'',W/2,H/2);
   }else{
-    g.fillStyle='#FFFFFF';rr(12,12,W-24,H-24,rad);g.fill();
-    g.fillStyle='rgba(0,0,0,0.045)';rr(12,12,W-24,H-24,rad);g.fill();
-    g.fillStyle='#FFFFFF';rr(16,16,W-32,H-32,rad*0.92);g.fill();
-    g.strokeStyle='#3A3A3C';g.lineWidth=Math.max(4,5*k);rr(12,12,W-24,H-24,rad);g.stroke();
-    if(o.price){g.font='600 '+Math.round(70*k)+'px Inter,Arial';g.fillStyle='#1D1D1F';g.fillText(o.price,W/2,H*0.58)}
+    g.strokeStyle='#000';g.lineWidth=Math.max(4,4*k);rr(12,12,W-24,H-24,rad);g.stroke();
+    if(o.price){g.font='600 '+Math.round(62*quality)+'px Inter,Arial';g.fillStyle='#1D1D1F';g.textBaseline='middle';g.fillText(o.price,W/2,H/2)}
   }
   return c;
 }
@@ -9051,6 +9048,29 @@ function cuSetZoom(value){
   if(label)label.textContent=Math.round(CU.zoom*100)+'%';
 }
 var PHOTO_STAGE_SCALE={macbook:0.84};
+function drawPricePlacement(g,t,frame,price){
+  var rx=frame.x+(t.x-t.w/2)*frame.w,ry=frame.y+(t.y-t.h/2)*frame.h;
+  var rw=t.w*frame.w,rh=t.h*frame.h,cx=rx+rw/2,cy=ry+rh/2;
+  g.save();
+  g.strokeStyle='#000';g.lineWidth=7;g.lineJoin='round';g.setLineDash([]);
+  if(t.shape==='poly'&&t.pts&&t.pts.length>2){
+    g.beginPath();
+    g.moveTo(frame.x+t.pts[0][0]*frame.w,frame.y+t.pts[0][1]*frame.h);
+    t.pts.slice(1).forEach(function(p){g.lineTo(frame.x+p[0]*frame.w,frame.y+p[1]*frame.h)});
+    g.closePath();g.stroke();
+  }else if(t.shape==='circle'){
+    g.beginPath();g.ellipse(cx,cy,Math.max(1,rw/2-4),Math.max(1,rh/2-4),0,0,Math.PI*2);g.stroke();
+  }else{
+    var rad=Math.min(28,Math.min(rw,rh)*0.12);
+    g.beginPath();g.moveTo(rx+rad,ry);g.arcTo(rx+rw,ry,rx+rw,ry+rh,rad);
+    g.arcTo(rx+rw,ry+rh,rx,ry+rh,rad);g.arcTo(rx,ry+rh,rx,ry,rad);
+    g.arcTo(rx,ry,rx+rw,ry,rad);g.closePath();g.stroke();
+  }
+  g.fillStyle='#000';g.font='600 76px Inter,Arial';g.textAlign='center';g.textBaseline='middle';
+  var label=price||'',maxWidth=Math.max(1,rw*.82),scale=Math.min(1,maxWidth/g.measureText(label).width);
+  g.translate(cx,cy);g.scale(scale,1);g.fillText(label,0,0);
+  g.restore();
+}
 function renderCustomStage(el,l,onTap){
   el.innerHTML='';
   var cv=document.createElement('canvas');
@@ -9068,10 +9088,8 @@ function renderCustomStage(el,l,onTap){
     frame.x=(cv.width-frame.w)/2;frame.y=(cv.height-frame.h)/2;
     g.drawImage(img,frame.x,frame.y,frame.w,frame.h);
     (l.tiles||[]).forEach(function(t,i){
-      var c=l.claims[i];
-      var card=stickerCanvas(c?{price:money(c.amt||l.prices[i])}:{open:true,price:money(l.prices[i]),shape:t.shape},
-        Math.max(0.8,Math.min(3.4,t.w/t.h)),4);
-      g.drawImage(card,frame.x+(t.x-t.w/2)*frame.w,frame.y+(t.y-t.h/2)*frame.h,t.w*frame.w,t.h*frame.h);
+      var c=l.claims[i],price=c?money(c.amt||l.prices[i]):money(l.prices[i]);
+      drawPricePlacement(g,t,frame,price);
     });
   };
   img.src=l.photo;
