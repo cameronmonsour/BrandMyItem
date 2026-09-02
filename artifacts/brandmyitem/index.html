@@ -188,8 +188,8 @@ h2.big{font-family:var(--serif);font-size:clamp(30px,3.8vw,42px);font-weight:500
 .spec-table td:last-child{font-weight:600}
 .build-product-layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(270px,.75fr);gap:20px;padding:20px;border-top:1px solid var(--border);align-items:start}
 .build-product-visual{min-width:0}
-.cu-viewport{max-width:100%;height:460px;overflow:auto;display:flex;align-items:flex-start;justify-content:center;background:#fff;border:1px solid rgba(60,60,67,.16);border-radius:14px}
-.cu-viewport canvas{flex:none;display:block;border-radius:14px;touch-action:none;cursor:grab}
+.cu-viewport{max-width:100%;height:460px;overflow:auto;display:flex;align-items:flex-start;justify-content:center;background:#fff;border:1px solid #fff;border-radius:0}
+.cu-viewport canvas{flex:none;display:block;border-radius:0;touch-action:none;cursor:grab}
 .cu-viewport canvas.is-panning{cursor:grabbing}
 .cu-zoom{display:flex;align-items:center;justify-content:center;gap:6px;margin:8px 0 0}
 .cu-zoom button{height:30px;min-width:30px;padding:0 9px;border:1px solid rgba(60,60,67,.18);border-radius:8px;background:#fff;color:#3f3f46;font-size:13px;font-weight:600}
@@ -498,6 +498,7 @@ details.faq .fa{padding:0 18px 16px;font-size:14px;color:var(--mfg);line-height:
 .lcard .chips{display:flex;align-items:flex-end;gap:5px;flex:0 0 auto;min-width:0}
 .lcard .chipg{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;background:var(--wash);border-radius:999px;padding:3px 7px 3px 4px;line-height:1.2;font-variant-numeric:tabular-nums;white-space:nowrap}
 .lcard .chipg.sold-count{padding:4px 8px}
+.lcard .countdown-badge{position:absolute;top:10px;left:10px;z-index:3;padding:4px 8px;color:var(--mfg);border:1px solid var(--border)}
 .lcard .sponsor-price{display:flex;flex-direction:column;align-items:flex-end;gap:3px;min-width:0}
 .lcard .sponsor-price .sponsor-stack{padding-left:0}
 .lcard .sponsor-stack{display:inline-flex;align-items:center;padding-left:2px}
@@ -6587,7 +6588,7 @@ var CATS=[
   {id:'Sports',item:'paddle'},{id:'Style',item:'suit'}
 ];
 var ITEMS={
-  macbook:{label:'MacBook Pro',brand:'Apple',color:'Silver',cat:'Tech',retail:1599,maxSlots:8,surf:[28,18],verified:'2026-08-29',source:'https://www.apple.com/macbook-pro/specs/',
+  macbook:{label:'MacBook Pro',brand:'Apple',color:'Silver',cat:'Tech',retail:1599,maxSlots:10,surf:[28,18],verified:'2026-08-29',source:'https://www.apple.com/macbook-pro/specs/',
     specs:[['Model','14-inch MacBook Pro (M5)'],['Chip','Apple M5 &middot; 10-core CPU, 10-core GPU'],['Memory','16GB unified memory'],['Storage','512GB SSD'],['Color','Silver'],['Display','14.2-inch Liquid Retina XDR &middot; 3024×1964'],['Battery','72.4Wh lithium-polymer'],['Ports','3× Thunderbolt 4, HDMI, SDXC, MagSafe 3'],['Dimensions','12.31 × 8.71 × 0.61 in'],['Weight','3.4 lb']]},
   iphone:{label:'iPhone 17 Pro',brand:'Apple',color:'Silver',cat:'Tech',retail:1099,maxSlots:4,surf:[7,15],verified:'2026-08-29',source:'https://support.apple.com/en-us/125090',
     specs:[['Chip','A19 Pro'],['Storage','256GB'],['Color','Silver'],['Display','6.3-inch Super Retina XDR OLED &middot; 2622×1206'],['Camera','48MP Fusion Pro camera system'],['Build','Aluminum unibody, Ceramic Shield 2 front'],['Dimensions','5.91 × 2.83 × 0.34 in'],['Weight','7.27 oz (206 g)']]},
@@ -6679,16 +6680,18 @@ var DB=store.get('bmi_db4');
 if(!DB){
   var now=Date.now();
   DB={listings:[
-    {id:'demo1',type:'macbook',owner:'Cam',mail:'',habs:['Coffee shops','Events'],slots:8,
-      prices:[500,250,250,165,165,225,225,219],
-      claims:[null,
+    {id:'demo1',type:'macbook',owner:'Cam',mail:'',habs:['Coffee shops','Events'],slots:10,
+      prices:[250,250,165,500,165,225,225,225,219,219],
+      claims:[
         {brand:'Outraised',link:'https://outraised.lol',logo:null,amt:250},
         {brand:'Northshore',link:'',logo:null,amt:250},
         {brand:'Clipory',link:'',logo:null,amt:165},
-        null,
+        null,null,
         {brand:'PingRoom',link:'',logo:null,amt:225},
         {brand:'See.io',link:'',logo:null,amt:225},
-        {brand:'SoldAsap',link:'',logo:null,amt:219}],
+        null,
+        {brand:'SoldAsap',link:'',logo:null,amt:219},
+        null],
       created:now-1000*60*42},
     {id:'demo2',type:'bottle',owner:'Maya',mail:'',habs:['Gym'],slots:2,
       prices:[25,20],claims:[{brand:'LiftClub',link:'',logo:null,amt:25},{brand:'Juicebox',link:'',logo:null,amt:20}],created:now-1000*60*60*5},
@@ -6958,8 +6961,12 @@ function processListingLifecycle(){
 /* spot geometry: cells around a 3x3 grid, center reserved for the item glyph.
    order ring: TL,T,TR,L,R,BL,B,BR — first N of a per-count order */
 var CELLS={tl:[1,1],t:[2,1],tr:[3,1],l:[1,2],r:[3,2],bl:[1,3],b:[2,3],br:[3,3]};
-var ORDER={1:['t'],2:['t','b'],3:['t','bl','br'],4:['tl','tr','bl','br'],5:['tl','tr','bl','b','br'],6:['tl','t','tr','bl','b','br'],7:['tl','t','tr','l','bl','b','br'],8:['tl','t','tr','l','r','bl','b','br']};
-var POSNAME={tl:'Top left',t:'Top banner',tr:'Top right',l:'Middle left',r:'Middle right',bl:'Bottom left',b:'Bottom center',br:'Bottom right'};
+var ORDER={1:['t'],2:['t','b'],3:['t','bl','br'],4:['tl','tr','bl','br'],5:['tl','tr','bl','b','br'],6:['tl','t','tr','bl','b','br'],7:['tl','t','tr','l','bl','b','br'],8:['tl','t','tr','l','r','bl','b','br'],
+  9:['tl','t','tr','l1','l2','r1','r2','bl','br'],
+  10:['tl','t','tr','l1','l2','r1','r2','bl','b','br']};
+var POSNAME={tl:'Top left',t:'Top center',tr:'Top right',l:'Middle left',r:'Middle right',
+  l1:'Middle left outer',l2:'Middle left inner',r1:'Middle right inner',r2:'Middle right outer',
+  bl:'Bottom left',b:'Bottom center',br:'Bottom right'};
 function suitFix(){try{
   Object.keys(ITEM_FACES).forEach(function(k){
     var f=ITEM_FACES[k][0];
@@ -6995,7 +7002,7 @@ function variantRetail(type,size){
 function slotMeta(type,count,i){
   if(!ITEMS[type])return{pos:'Spot '+(i+1),size:'Placement',key:null};
   var key=ORDER[count][i];
-  var big=(key==='t'||key==='b');
+  var big=count>=9?(['tl','t','tr','bl','b','br'].indexOf(key)>=0):(key==='t'||key==='b');
   var frac=big?0.32:0.16;
   var tier='Small';for(var t=0;t<SIZE_TIERS.length;t++){if(frac<=SIZE_TIERS[t][0]){tier=SIZE_TIERS[t][1];break}}
   return{pos:POSNAME[key],size:tier,key:key}
@@ -7556,32 +7563,29 @@ var VIEW3={macbook:{s:1.05,cy:1.05,cz:5.3,sh:2.4},iphone:{s:1.0,cy:1.62,cz:5.2,s
   golfbag:{s:0.8,cy:2.1,cz:7.0,sh:1.4},weekender:{s:1.0,cy:0.95,cz:5.2,sh:2.2},
   paddle:{s:1.05,cy:1.35,cz:5.0,sh:1.2},suit:{s:1.02,cy:1.72,cz:5.6,sh:1.6}};
 
-function stickerCanvas(o,ar){
+function stickerCanvas(o,ar,quality){
   ar=ar||1.706;
-  var W=512,H=Math.max(200,Math.min(640,Math.round(W/ar)));
+  quality=Math.max(1,Math.min(4,quality||4));
+  var W=Math.round(512*quality),H=Math.max(Math.round(200*quality),Math.min(Math.round(640*quality),Math.round(W/ar)));
   var c=document.createElement('canvas');c.width=W;c.height=H;var g=c.getContext('2d');
+  g.imageSmoothingEnabled=true;g.imageSmoothingQuality='high';
   var k=Math.min(W,H*1.706)/512;
   function rr(x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath()}
   var rad=Math.min(34*k,H*0.16);
   g.textAlign='center';
   if(o.open){
-    /* transparent placeholder: the photo shows straight through, just an outline in the owner's chosen color */
-    var oc=o.color||'#1D1D1F';
-    g.strokeStyle=oc;g.lineWidth=Math.max(1,1.4*k);
+    /* Open placements show only their price; the product photo stays visible underneath. */
+    g.strokeStyle='#6E6E73';g.lineWidth=Math.max(3,3*k);
     if(o.shape==='circle'){g.beginPath();g.ellipse(W/2,H/2,W/2-10,H/2-10,0,0,7);g.stroke()}
     else{rr(10,10,W-20,H-20,rad);g.stroke()}
-    g.fillStyle=oc;g.font='700 '+Math.round(56*k)+'px Inter,Arial';
-    g.fillText('LOGO',W/2,H*0.46);
-    g.font='600 '+Math.round(50*k)+'px Inter,Arial';g.fillText(o.price||'',W/2,H*0.72);
+    g.fillStyle='#1D1D1F';g.font='600 '+Math.round(62*k)+'px Inter,Arial';
+    g.fillText(o.price||'',W/2,H*0.58);
   }else{
     g.fillStyle='#FFFFFF';rr(12,12,W-24,H-24,rad);g.fill();
     g.fillStyle='rgba(0,0,0,0.045)';rr(12,12,W-24,H-24,rad);g.fill();
     g.fillStyle='#FFFFFF';rr(16,16,W-32,H-32,rad*0.92);g.fill();
-    g.strokeStyle='#3A3A3C';g.lineWidth=Math.max(4,6*k);g.setLineDash([26*k,17*k]);rr(12,12,W-24,H-24,rad);g.stroke();g.setLineDash([]);
-    g.fillStyle='#1D1D1F';g.font='600 '+Math.round(100*k)+'px Inter,Arial';
-    g.fillText((o.brand||'?').trim().slice(0,2).toUpperCase(),W/2,H*0.44);
-    g.font='500 '+Math.round(44*k)+'px Inter,Arial';g.fillStyle='#3A3A3C';g.fillText((o.brand||'').slice(0,15),W/2,H*0.66);
-    if(o.price){g.font='600 '+Math.round(48*k)+'px Inter,Arial';g.fillStyle='#1D1D1F';g.fillText(o.price,W/2,H*0.88)}
+    g.strokeStyle='#3A3A3C';g.lineWidth=Math.max(4,5*k);rr(12,12,W-24,H-24,rad);g.stroke();
+    if(o.price){g.font='600 '+Math.round(70*k)+'px Inter,Arial';g.fillStyle='#1D1D1F';g.fillText(o.price,W/2,H*0.58)}
   }
   return c;
 }
@@ -7613,17 +7617,8 @@ function stickerMesh(st,i,surf){
   }else if(surf.slots&&surf.slots[i]){px=surf.slots[i][0];py=surf.slots[i][1]}
   if(surf.sw&&!(surf.anch&&surf.anch[i])){sw=surf.sw;shh=sw*0.586}
   var ar=Math.max(0.8,Math.min(3.4,sw/shh));
-  var cv=stickerCanvas(c?{brand:c.brand,price:money(c.amt||st.prices[i])}:{open:true,price:money(st.prices[i]),pos:slotMeta(st.type,st.slots,i).pos},ar);
+  var cv=stickerCanvas(c?{price:money(c.amt||st.prices[i])}:{open:true,price:money(st.prices[i]),pos:slotMeta(st.type,st.slots,i).pos},ar,4);
   var tex=new T.CanvasTexture(cv);tex.anisotropy=8;
-  if(c&&c.logo){
-    var img=new Image();
-    img.onload=function(){var g2=cv.getContext('2d');var W=cv.width,H=cv.height;
-      g2.clearRect(0,0,W,H);
-      g2.fillStyle='#fff';g2.fillRect(8,8,W-16,H-16);
-      var r=Math.min((W-90)/img.width,(H-70)/img.height),w=img.width*r,h=img.height*r;
-      g2.drawImage(img,(W-w)/2,(H-h)/2,w,h);tex.needsUpdate=true};
-    img.src=c.logo;
-  }
   /* real mesh present: project the card onto the surface like applied vinyl */
   var target=surf.target;
   if(target&&T.DecalGeometry){
@@ -7946,6 +7941,23 @@ function renderLiveFeed(feedId){
 }
 function renderHomeLiveFeed(){renderLiveFeed('homeLiveFeed')}
 function renderDashboardLiveFeed(){renderLiveFeed('dashLiveFeed')}
+var cardCountdownTimer=null;
+function listingCountdownLabel(l){
+  var ms=Math.max(0,endOf(l)-Date.now());
+  if(!ms)return 'Closed';
+  return Math.floor(ms/86400000)+'d '+pad(Math.floor(ms%86400000/3600000))+'h';
+}
+function refreshCardCountdowns(){
+  document.querySelectorAll('[data-countdown-listing]').forEach(function(el){
+    var l=DB.listings.find(function(item){return String(item.id)===el.getAttribute('data-countdown-listing')});
+    if(l)el.textContent=listingCountdownLabel(l);
+  });
+}
+function startCardCountdowns(){
+  if(cardCountdownTimer)clearInterval(cardCountdownTimer);
+  refreshCardCountdowns();
+  cardCountdownTimer=setInterval(refreshCardCountdowns,60000);
+}
 function renderHomeCampaigns(){
   var host=document.getElementById('homeCampaignGrid');
   if(!host)return;
@@ -7975,9 +7987,13 @@ function renderHomeCampaigns(){
     card.onclick=function(){location.hash='item/'+l.id};
     host.appendChild(card);
     renderFinal(document.getElementById('home-th-'+l.id),l);
-    var live=document.createElement('span');live.className='badge badge-blue newb';live.textContent='LIVE';
-    document.getElementById('home-th-'+l.id).appendChild(live);
+    var countdown=document.createElement('span');
+    countdown.className='chipg sold-count countdown-badge';
+    countdown.setAttribute('data-countdown-listing',l.id);
+    countdown.textContent=listingCountdownLabel(l);
+    document.getElementById('home-th-'+l.id).appendChild(countdown);
   });
+  startCardCountdowns();
 }
 function homeReferenceRowHtml(l,c){
   var photo=listingPhoto(l);
@@ -8364,7 +8380,7 @@ function renderDash(){
     return;
   }
   list.forEach(function(l){
-    var it={label:LBLL(l)},pct=pctOf(l),isNew=Date.now()-l.created<1000*60*60*24;
+    var it={label:LBLL(l)},pct=pctOf(l);
     var sold=l.slots-openSlots(l);
     var card=document.createElement('button');card.type='button';card.className='lcard';
     card.setAttribute('data-listing-id',l.id);
@@ -8383,8 +8399,13 @@ function renderDash(){
     var th=document.getElementById('th-'+l.id);
     renderFinal(th,l);
     th.onmousemove=null;th.onmouseleave=null;
-    if(isNew){var nb=document.createElement('span');nb.className='badge badge-blue newb';nb.textContent='NEW';th.appendChild(nb)}
+    var countdown=document.createElement('span');
+    countdown.className='chipg sold-count countdown-badge';
+    countdown.setAttribute('data-countdown-listing',l.id);
+    countdown.textContent=listingCountdownLabel(l);
+    th.appendChild(countdown);
   });
+  startCardCountdowns();
 }
 
 /* ============ BUILD ============ */
@@ -8995,7 +9016,7 @@ function cuDraw(){
     var rx=(t.x-t.w/2)*iw,ry=(t.y-t.h/2)*ih,rw=t.w*iw,rh=t.h*ih;
     var seld=(i===CU.sel);
     /* pure outline: nothing inside, the item shows straight through */
-    g.strokeStyle=seld?'#30D158':(t.color||CU.color);
+    g.strokeStyle='#fff';
     g.lineWidth=1;
     if(t.shape==='poly'&&t.pts&&t.pts.length>2){
       g.beginPath();
@@ -9038,8 +9059,9 @@ function renderCustomStage(el,l,onTap){
   var frame={x:0,y:0,w:1,h:1};
   var img=new Image();
   img.onload=function(){
-    cv.width=1200;cv.height=750;
+    cv.width=3840;cv.height=2400;
     var g=cv.getContext('2d');
+    g.imageSmoothingEnabled=true;g.imageSmoothingQuality='high';
     g.fillStyle='#fff';g.fillRect(0,0,cv.width,cv.height);
     var scale=Math.min(cv.width/img.width,cv.height/img.height)*(PHOTO_STAGE_SCALE[l.type]||1);
     frame.w=img.width*scale;frame.h=img.height*scale;
@@ -9047,19 +9069,9 @@ function renderCustomStage(el,l,onTap){
     g.drawImage(img,frame.x,frame.y,frame.w,frame.h);
     (l.tiles||[]).forEach(function(t,i){
       var c=l.claims[i];
-      var card=stickerCanvas(c?{brand:c.brand,price:money(c.amt||l.prices[i])}:{open:true,price:money(l.prices[i]),color:t.color,shape:t.shape},
-        Math.max(0.8,Math.min(3.4,t.w/t.h)));
+      var card=stickerCanvas(c?{price:money(c.amt||l.prices[i])}:{open:true,price:money(l.prices[i]),shape:t.shape},
+        Math.max(0.8,Math.min(3.4,t.w/t.h)),4);
       g.drawImage(card,frame.x+(t.x-t.w/2)*frame.w,frame.y+(t.y-t.h/2)*frame.h,t.w*frame.w,t.h*frame.h);
-      if(c&&c.logo){
-        var li=new Image();
-        li.onload=function(){
-          var rx=frame.x+(t.x-t.w/2)*frame.w,ry=frame.y+(t.y-t.h/2)*frame.h,rw=t.w*frame.w,rh=t.h*frame.h;
-          g.fillStyle='#fff';g.fillRect(rx+2,ry+2,rw-4,rh-4);
-          var r=Math.min(rw*0.8/li.width,rh*0.72/li.height);
-          g.drawImage(li,rx+(rw-li.width*r)/2,ry+(rh-li.height*r)/2,li.width*r,li.height*r);
-        };
-        li.src=c.logo;
-      }
     });
   };
   img.src=l.photo;
@@ -9558,24 +9570,61 @@ function postListing(){
 }
 
 /* ============ ITEM ============ */
-var PHOTO_PLACEMENT_VERSION=3;
+var PHOTO_PLACEMENT_VERSION=5;
 var REFERENCE_PHOTO_TILES={
   macbook:{
-    8:[
-      {x:0.4215,y:0.6185,w:0.2100,h:0.1500},
-      {x:0.4215,y:0.4244,w:0.2100,h:0.1418},
-      {x:0.5993,y:0.6239,w:0.0911,h:0.1500},
-      {x:0.5993,y:0.4191,w:0.0911,h:0.1500},
-      {x:0.6747,y:0.6508,w:0.0900,h:0.1500},
-      {x:0.6747,y:0.5106,w:0.0900,h:0.1012},
-      {x:0.6747,y:0.4191,w:0.0900,h:0.0709},
-      {x:0.6693,y:0.3599,w:0.0900,h:0.0600}
+    10:[
+      {x:0.290,y:0.290,w:0.198,h:0.200},
+      {x:0.500,y:0.290,w:0.198,h:0.200},
+      {x:0.710,y:0.290,w:0.198,h:0.200},
+      {x:0.240,y:0.500,w:0.095,h:0.200},
+      {x:0.350,y:0.500,w:0.095,h:0.200},
+      {x:0.650,y:0.500,w:0.095,h:0.200},
+      {x:0.760,y:0.500,w:0.095,h:0.200},
+      {x:0.290,y:0.710,w:0.198,h:0.200},
+      {x:0.500,y:0.710,w:0.198,h:0.200},
+      {x:0.710,y:0.710,w:0.198,h:0.200}
     ]
   }
 };
+var PRODUCT_PLACEMENT_AREAS={
+  macbook:{x0:0.19,x1:0.81,y0:0.19,y1:0.81,cols:3},
+  iphone:{x0:0.40,x1:0.60,y0:0.49,y1:0.82,cols:2},
+  bottle:{x0:0.43,x1:0.57,y0:0.42,y1:0.76,cols:1},
+  'case':{x0:0.39,x1:0.61,y0:0.48,y1:0.84,cols:2},
+  cooler:{x0:0.31,x1:0.69,y0:0.43,y1:0.71,cols:2},
+  headphones:{x0:0.41,x1:0.59,y0:0.54,y1:0.80,cols:1},
+  golfbag:{x0:0.43,x1:0.59,y0:0.40,y1:0.82,cols:1},
+  weekender:{x0:0.31,x1:0.69,y0:0.49,y1:0.74,cols:2},
+  paddle:{x0:0.39,x1:0.61,y0:0.37,y1:0.64,cols:1},
+  suit:{x0:0.34,x1:0.66,y0:0.37,y1:0.72,cols:2},
+  backpack:{x0:0.36,x1:0.64,y0:0.39,y1:0.75,cols:2}
+};
+function curatedPhotoTiles(type,n){
+  var area=PRODUCT_PLACEMENT_AREAS[type];
+  if(!area||!n)return null;
+  var cols=Math.min(area.cols||1,n),rows=Math.ceil(n/cols),tiles=[],gap=0.012;
+  var w=(area.x1-area.x0-gap*(cols-1))/cols;
+  var h=(area.y1-area.y0-gap*(rows-1))/rows;
+  for(var row=0;row<rows;row++){
+    var count=Math.min(cols,n-row*cols);
+    var rowWidth=count*w+(count-1)*gap;
+    var rowStart=(area.x0+area.x1-rowWidth)/2;
+    for(var col=0;col<count;col++){
+      tiles.push({
+        x:rowStart+w/2+col*(w+gap),
+        y:area.y0+h/2+row*(h+gap),
+        w:w,h:h
+      });
+    }
+  }
+  return tiles;
+}
 function mapTiles(type,n){
   var reference=REFERENCE_PHOTO_TILES[type]&&REFERENCE_PHOTO_TILES[type][n];
   if(reference)return reference.map(function(t){return {x:t.x,y:t.y,w:t.w,h:t.h}});
+  var curated=curatedPhotoTiles(type,n);
+  if(curated)return curated;
   var sd=(typeof SCANDATA!=='undefined')&&SCANDATA[type];
   if(!sd||!sd.tiles[n])return null;
   var W=sd.x1-sd.x0,H=sd.y1-sd.y0;
@@ -9605,9 +9654,20 @@ function mapTiles(type,n){
 }
 function migratePhoto(){
   DB.listings.forEach(function(l){
+    var isDemo=!!(DEMO_CONTEXT[l.id]||String(l.id).indexOf('demo')===0);
+    if(isDemo&&l.type==='macbook'&&l.slots!==10){
+      var oldClaims=(l.claims||[]).slice(),oldPrices=(l.prices||[]).slice();
+      l.slots=10;
+      l.claims=[oldClaims[1]||null,oldClaims[2]||null,oldClaims[3]||null,oldClaims[0]||null,null,
+        oldClaims[5]||null,oldClaims[6]||null,oldClaims[4]||null,oldClaims[7]||null,null];
+      l.prices=[oldPrices[1]||250,oldPrices[2]||250,oldPrices[3]||165,oldPrices[0]||500,165,
+        oldPrices[5]||225,oldPrices[6]||225,225,oldPrices[7]||219,219];
+      l.mtv=0;
+    }
     if((l.type==='suit'||l.type==='backpack')&&ITEM_PHOTOS[l.type]&&l.photo!==ITEM_PHOTOS[l.type])l.photo=ITEM_PHOTOS[l.type];
     if(l.faces&&l.faces.length>1)uniformFaceTileSizes(l.faces);
-    if(l.custom&&l.mtv!==PHOTO_PLACEMENT_VERSION&&ITEM_PHOTOS[l.type]&&!l.faces){
+    var usesCatalogPhoto=!!(ITEM_PHOTOS[l.type]&&(isDemo||l.photo===ITEM_PHOTOS[l.type]));
+    if(l.custom&&l.mtv!==PHOTO_PLACEMENT_VERSION&&usesCatalogPhoto&&!l.faces){
       var t2=mapTiles(l.type,l.slots);
       if(t2){l.tiles=t2;l.mtv=PHOTO_PLACEMENT_VERSION}
       return;
@@ -9886,7 +9946,7 @@ function drawItemMap(){
         el.innerHTML='';el.appendChild(ftabs);
         host=document.createElement('div');el.appendChild(host);
       }
-      renderCustomStage(host,{photo:faces[fi].photo,tiles:faces[fi].tiles,
+      renderCustomStage(host,{type:CUR.type,slots:CUR.slots,photo:faces[fi].photo,tiles:faces[fi].tiles,
         claims:CUR.claims.slice(faces[fi].off),prices:CUR.prices.slice(faces[fi].off)},
         function(si){openBid(faces[fi].off+si)});
       return;
@@ -9897,7 +9957,7 @@ function drawItemMap(){
   }else{
     if(CUR.custom){
       var faces2=CUR.faces&&CUR.faces.length?CUR.faces:[{photo:CUR.photo,tiles:CUR.tiles,off:0}];
-      renderCustomStage(el,{photo:faces2[0].photo,tiles:faces2[0].tiles,claims:CUR.claims,prices:CUR.prices},null);
+      renderCustomStage(el,{type:CUR.type,slots:CUR.slots,photo:faces2[0].photo,tiles:faces2[0].tiles,claims:CUR.claims,prices:CUR.prices},null);
       return;
     }
     renderFinal(el,CUR,{showOpen:false,h:560});
