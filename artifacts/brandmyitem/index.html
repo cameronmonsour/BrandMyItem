@@ -9195,7 +9195,7 @@ function renderCustomStage(el,l,onTap){
     var x=(px-frame.x)/frame.w,y=(py-frame.y)/frame.h;
     for(var i=0;i<(l.tiles||[]).length;i++){
       var t=l.tiles[i];
-      if(Math.abs(x-t.x)<=t.w/2&&Math.abs(y-t.y)<=t.h/2){onTap(i);return}
+      if(tileContainsPoint(t,x,y)){onTap(i);return}
     }
   });
 }
@@ -9709,7 +9709,7 @@ function postListing(){
 }
 
 /* --- ITEM --- */
-var PHOTO_PLACEMENT_VERSION=8;
+var PHOTO_PLACEMENT_VERSION=9;
 var REFERENCE_PHOTO_TILES={
   macbook:{
     10:[
@@ -9732,6 +9732,50 @@ var REFERENCE_PHOTO_TILES={
     ]
   }
 };
+/* Locked against the intrinsic dimensions of the campaign/product-*.png
+   assets. Catalog surfaces are data; only genuinely custom uploads are
+   detected in the browser. */
+var CATALOG_SURFACES={
+  macbook:{size:[1275,952],surface:[242,181,791,590],cols:3,source:'campaign/product-macbook.png'},
+  iphone:{size:[952,1275],surface:[381,625,190,421],cols:2,source:'campaign/product-iphone.png'},
+  bottle:{size:[952,1275],surface:[409,536,133,434],cols:1,source:'campaign/product-bottle.png'},
+  'case':{size:[952,1275],surface:[371,612,210,459],cols:2,source:'campaign/product-case.png'},
+  cooler:{size:[1092,1092],surface:[339,470,415,306],cols:2,source:'campaign/product-cooler.png'},
+  headphones:{size:[952,1275],surface:[238,548,476,612],cols:1,source:'campaign/product-headphones.png'},
+  golfbag:{size:[952,1275],surface:[409,510,152,536],cols:1,source:'campaign/product-golfbag.png'},
+  weekender:{size:[1275,952],surface:[395,466,485,238],cols:2,source:'campaign/product-weekender.png'},
+  paddle:{size:[952,1275],surface:[371,472,210,344],cols:1,source:'campaign/product-paddle.png'},
+  suit:{size:[952,1275],surface:[324,472,305,446],cols:2,source:'campaign/product-suit.png'},
+  backpack:{size:[952,1275],surface:[343,497,267,459],cols:2,source:'campaign/product-backpack.png'}
+};
+function lockedCatalogPlacements(img,type,n){
+  var d=CATALOG_SURFACES[type],reference=REFERENCE_PHOTO_TILES[type]&&REFERENCE_PHOTO_TILES[type][n];
+  if(!d)return null;
+  var iw=img.naturalWidth||img.width,ih=img.naturalHeight||img.height;
+  if(iw!==d.size[0]||ih!==d.size[1])return null;
+  if(reference)return reference.map(copyPhotoTile);
+  var x=d.surface[0],y=d.surface[1],w=d.surface[2],h=d.surface[3];
+  var layouts={
+    1:[1,1],
+    2:w>=h?[2,1]:[1,2],
+    3:w>=h?[3,1]:[1,3],
+    4:[2,2],
+    6:w>=h?[3,2]:[2,3]
+  };
+  var layout=layouts[n],cols=layout?layout[0]:Math.max(1,Math.min(d.cols||1,n));
+  var rows=layout?layout[1]:Math.ceil(n/cols);
+  var gap=Math.max(3,Math.round(Math.min(w,h)*0.035));
+  var cw=(w-gap*(cols-1))/cols,ch=(h-gap*(rows-1))/rows,tiles=[];
+  for(var row=0;row<rows&&tiles.length<n;row++){
+    var count=Math.min(cols,n-tiles.length);
+    var rowWidth=count*cw+(count-1)*gap,rowX=x+(w-rowWidth)/2;
+    for(var col=0;col<count;col++){
+      var tx=rowX+col*(cw+gap),ty=y+row*(ch+gap);
+      tiles.push({x:(tx+cw/2)/iw,y:(ty+ch/2)/ih,w:cw/iw,h:ch/ih});
+    }
+  }
+  return tiles.length===n?tiles:null;
+}
 var PRODUCT_PLACEMENT_AREAS={
   macbook:{x0:0.19,x1:0.81,y0:0.19,y1:0.81,cols:3},
   iphone:{x0:0.40,x1:0.60,y0:0.49,y1:0.82,cols:2},
@@ -9768,6 +9812,13 @@ function scanPhotoPlacements(img,type,n){
   if(!img||!(img.naturalWidth||img.width)||!(img.naturalHeight||img.height))return null;
   var src=img.currentSrc||img.src||'',cacheable=type!=='custom',key=type+'|'+n+'|'+src;
   if(cacheable&&PHOTO_SCAN_CACHE[key])return PHOTO_SCAN_CACHE[key].map(copyPhotoTile);
+  if(cacheable){
+    var locked=lockedCatalogPlacements(img,type,n);
+    if(locked){
+      PHOTO_SCAN_CACHE[key]=locked.map(copyPhotoTile);
+      return locked.map(copyPhotoTile);
+    }
+  }
   var iw=img.naturalWidth||img.width,ih=img.naturalHeight||img.height,maxSide=360;
   var scale=Math.min(1,maxSide/Math.max(iw,ih)),W=Math.max(80,Math.round(iw*scale)),H=Math.max(80,Math.round(ih*scale));
   var cv=document.createElement('canvas');cv.width=W;cv.height=H;

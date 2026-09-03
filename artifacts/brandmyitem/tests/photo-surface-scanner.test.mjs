@@ -6,8 +6,13 @@ import vm from 'node:vm';
 const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
 
 test('photo placement migration includes the surface scanner geometry', () => {
-  assert.match(html, /var PHOTO_PLACEMENT_VERSION=8/);
+  assert.match(html, /var PHOTO_PLACEMENT_VERSION=9/);
   assert.match(html, /function scanPhotoPlacements\(img,type,n\)/);
+  assert.match(html, /var CATALOG_SURFACES=\{/);
+  assert.match(html, /function lockedCatalogPlacements\(img,type,n\)/);
+  assert.match(html, /if\(iw!==d\.size\[0\]\|\|ih!==d\.size\[1\]\)return null/);
+  assert.match(html, /var locked=lockedCatalogPlacements\(img,type,n\)/);
+  assert.match(html, /gap=Math\.max\(3,Math\.round\(Math\.min\(w,h\)\*0\.035\)\)/);
   assert.match(html, /edgeDistance=new Uint16Array\(W\*H\)/);
   assert.match(html, /Math\.min\(W,H\)\*0\.045/);
   assert.match(html, /if\(type!=='headphones'\)/);

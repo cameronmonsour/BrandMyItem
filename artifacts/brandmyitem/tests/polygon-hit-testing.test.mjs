@@ -9,6 +9,7 @@ const tileContainsPointSource = html.match(/function tileContainsPoint\(t,x,y\)\
 
 assert.ok(pointInPolygonSource, 'pointInPolygon should exist in index.html');
 assert.ok(tileContainsPointSource, 'tileContainsPoint should exist in index.html');
+assert.match(html, /if\(tileContainsPoint\(t,x,y\)\)\{onTap\(i\);return\}/);
 
 const sandbox = {};
 vm.runInNewContext(`${pointInPolygonSource};${tileContainsPointSource}`, sandbox);
