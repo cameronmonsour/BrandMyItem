@@ -474,7 +474,8 @@ details.faq .fa b{color:var(--fg);font-weight:600}
 .tick span{color:var(--mfg);font-size:12px;font-weight:600;white-space:nowrap}
 .tick b{font-weight:600}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(236px,1fr));gap:20px}
-.lcard{border:1px solid var(--border);border-radius:22px;overflow:hidden;background:var(--bg);transition:transform .18s,box-shadow .18s;text-align:left;box-shadow:var(--sh-sm)}
+#dashGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.lcard{min-width:0;border:1px solid var(--border);border-radius:22px;overflow:hidden;background:var(--bg);transition:transform .18s,box-shadow .18s;text-align:left;box-shadow:var(--sh-sm)}
 .lcard:hover{transform:translateY(-3px);box-shadow:var(--sh-lg)}
 .lcard .thumb{aspect-ratio:16/10;background:#FFFFFF;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;perspective:900px;border-bottom:1px solid var(--border)}
 .lcard .thumb .snapimg{width:90%;height:92%;object-fit:contain}
@@ -489,20 +490,20 @@ details.faq .fa b{color:var(--fg);font-weight:600}
 .prevwrap .three-mount{min-height:360px}
 .mapcenter .snapimg{max-width:180px;max-height:180px;background:#FFFFFF}
 .lcard .newb{position:absolute;top:10px;left:10px;z-index:3}
-.lcard .body{padding:13px 16px 15px}
-.lcard .who{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.lcard .body{display:flex;flex-direction:column;min-width:0;padding:13px 16px 15px}
+.lcard .who{display:flex;align-items:center;gap:8px;height:26px;min-width:0;margin-bottom:6px}
 .lcard .who .avatarc{width:26px;height:26px;border-radius:50%;background:#1D1D1F;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;overflow:hidden}
 .lcard .who .avatarc.avatar-photo{background:#F5F5F7}
 .lcard .who .avatarc img{width:100%;height:100%;object-fit:cover}
-.lcard .who .oname{font-size:13.5px;font-weight:500}
-.lcard .who .when{font-size:12.5px;color:var(--mfg)}
-.lcard .who .catic{margin-left:auto;width:26px;height:26px;border-radius:50%;background:#fff;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.lcard .who .oname{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13.5px;font-weight:500}
+.lcard .who .when{flex:0 0 auto;white-space:nowrap;font-size:12.5px;color:var(--mfg)}
+.lcard .who .catic{flex:0 0 26px;margin-left:auto;width:26px;height:26px;border-radius:50%;background:#fff;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden}
 .lcard .who .catic img{width:80%;height:80%;object-fit:contain}
-.lcard .iname{display:block;height:20px;line-height:20px;font-size:16px;font-weight:600;letter-spacing:-.012em;margin:0 0 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.lcard .card-context{display:flex;align-items:center;min-width:0;margin:0 0 5px;font-size:11.5px;line-height:1.25;color:var(--mfg)}
-.lcard .card-context-value{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lcard .iname{display:block;width:100%;height:20px;line-height:20px;font-size:16px;font-weight:600;letter-spacing:-.012em;margin:0 0 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lcard .card-context{display:flex;align-items:flex-start;width:100%;height:30px;min-width:0;margin:0 0 5px;font-size:11.5px;line-height:15px;color:var(--mfg)}
+.lcard .card-context-value{display:-webkit-box;width:100%;min-width:0;overflow:hidden;overflow-wrap:anywhere;white-space:normal;-webkit-box-orient:vertical;-webkit-line-clamp:2}
 .lcard .card-context-em{color:var(--fg);font-weight:600}
-.lcard .moneyrow{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:8px;min-width:0}
+.lcard .moneyrow{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:8px;width:100%;min-width:0;min-height:37px}
 .lcard .moneyrow .amts{display:inline-flex;align-items:center;height:21px;line-height:1.2;font-size:15.5px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap;min-width:0;overflow:hidden;text-overflow:ellipsis}
 .lcard .moneyrow .amts span{color:#A6B0BA;font-weight:500}
 .lcard .chips{display:flex;align-items:flex-end;gap:5px;flex:0 0 auto;min-width:0}
@@ -910,7 +911,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
   .statrow{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
   .stat{padding:13px 14px}
   .stat b{font-size:19px}
-  .grid{grid-template-columns:1fr}
+  .grid,#dashGrid{grid-template-columns:1fr}
 }
 @media(max-width:620px){.brand-fit-grid{grid-template-columns:1fr}}
 @media(max-width:620px){.location-add-row{align-items:stretch}.location-add{padding:0 12px}}

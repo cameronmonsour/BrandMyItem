@@ -114,6 +114,8 @@ test('dashboard keeps compact tracker cards without a duplicate left category bo
   assert.match(html, /class="ios-box"/);
   assert.doesNotMatch(html, /class="card filter-card"/);
   assert.match(html, /\.grid\{display:grid;grid-template-columns:repeat\(auto-fill,minmax\(236px,1fr\)\);gap:20px\}/);
+  assert.match(html, /#dashGrid\{grid-template-columns:repeat\(2,minmax\(0,1fr\)\)\}/);
+  assert.match(html, /@media\(max-width:620px\)\{[\s\S]*?\.grid,#dashGrid\{grid-template-columns:1fr\}/);
   assert.match(html, /#home-onboard\{padding-bottom:0!important\}/);
   assert.match(html, /\.home-how-band\{padding:0 0 56px!important\}/);
   assert.match(html, /\.home-flow-list\{[^}]*max-width:1100px;margin:0 auto/);
@@ -142,7 +144,12 @@ test('dashboard keeps compact tracker cards without a duplicate left category bo
   assert.match(html, /id="fTerm"/);
   assert.match(html, /id="fCadence"/);
   assert.match(html, /listingContextHtml\(l\)\+'<div class="iname">/);
-  assert.match(html, /\.lcard \.iname\{[^}]*height:20px;line-height:20px;[^}]*margin:0 0 3px/);
+  assert.match(html, /\.lcard \.who\{[^}]*height:26px;min-width:0;margin-bottom:6px/);
+  assert.match(html, /\.lcard \.who \.oname\{[^}]*overflow:hidden;text-overflow:ellipsis;white-space:nowrap/);
+  assert.match(html, /\.lcard \.iname\{[^}]*width:100%;height:20px;line-height:20px;[^}]*margin:0 0 3px/);
+  assert.match(html, /\.lcard \.card-context\{[^}]*width:100%;height:30px;[^}]*margin:0 0 5px/);
+  assert.match(html, /\.lcard \.card-context-value\{[^}]*overflow-wrap:anywhere;white-space:normal;[^}]*-webkit-line-clamp:2/);
+  assert.match(html, /\.lcard \.moneyrow\{[^}]*width:100%;min-width:0;min-height:37px/);
   assert.doesNotMatch(html, /<span class="when">— /);
   assert.doesNotMatch(html, /aria-hidden="true">&mdash;<\/span>/);
   assert.match(html, /<span class="chipg sold-count">/);
@@ -215,8 +222,9 @@ test('every catalog item has an item-specific branding method', () => {
 });
 
 test('sold and price pills keep the same compact height', () => {
-  assert.match(html, /\.lcard \.iname\{display:block;height:20px;line-height:20px;[^}]*margin:0 0 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis\}/);
+  assert.match(html, /\.lcard \.iname\{display:block;width:100%;height:20px;line-height:20px;[^}]*margin:0 0 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis\}/);
   assert.match(html, /\.lcard \.moneyrow\{display:grid;grid-template-columns:minmax\(0,1fr\) auto;align-items:end;/);
+  assert.match(html, /\.lcard \.moneyrow\{[^}]*min-height:37px/);
   assert.match(html, /\.lcard \.moneyrow \.amts\{display:inline-flex;align-items:center;height:21px;line-height:1\.2;/);
   assert.match(html, /\.lcard \.chips\{display:flex;align-items:flex-end;gap:5px/);
   assert.match(html, /\.lcard \.chipg\.sold-count\{padding:4px 8px\}/);
