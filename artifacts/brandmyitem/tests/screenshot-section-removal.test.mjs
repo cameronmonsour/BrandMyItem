@@ -95,9 +95,9 @@ test('dashboard keeps compact tracker cards without a duplicate left category bo
   assert.doesNotMatch(builderHtml, /id="brandingChoices"/);
   assert.doesNotMatch(builderHtml, /id="termConfidenceOut"/);
   assert.match(builderHtml, /class="card details-card"/);
-  assert.match(builderHtml, /<div class="card-t">Details<\/div><p class="details-subheadline">Item sales tax, shipping, and handling are included in the platform fee\.<\/p>/);
+  assert.match(builderHtml, /<div class="card-t">Details<\/div><p class="details-subheadline">Branding application, item sales tax, shipping, and handling are included\.<\/p>/);
   assert.match(builderHtml, /id="totalOut"/);
-  assert.match(builderHtml, /Goal when fully claimed \(includes 40%\)/);
+  assert.match(builderHtml, /Goal when fully claimed/);
   assert.doesNotMatch(builderHtml, /<span>Platform fee<\/span>/);
   assert.doesNotMatch(builderHtml, /<span>Branding application<\/span>/);
   assert.doesNotMatch(builderHtml, /Total fee before tax &amp; shipping/);
@@ -159,10 +159,10 @@ test('fulfillment copy enforces BrandMyItem-applied branding', () => {
 test('builder and campaign goals include the complete 40% purchase amount', () => {
   assert.match(html, /function markedUpRetail\(retail\)/);
   assert.match(html, /document\.getElementById\('totalOut'\)\.textContent=money\(v\)/);
-  assert.match(html, /Item sales tax, shipping, and handling are included in the platform fee\./);
+  assert.match(html, /Branding application, item sales tax, shipping, and handling are included\./);
   assert.match(html, /function goalOf\(l\)\{return l\.prices\.reduce\(function\(s,p\)\{return s\+spotPurchaseTotal\(l,p\)\},0\)\}/);
   assert.match(html, /function raisedOf\(l\)\{return \(l\.claims\|\|\[\]\)\.reduce/);
-  assert.match(html, /Total today \(includes 40%\)/);
+  assert.match(html, /<span>Total today<\/span>/);
   assert.match(html, /pricesIncludeMarkup:true/g);
   assert.match(html, /var price=CUR\.prices\[i\],total=spotPurchaseTotal\(CUR,price\)/);
 });
@@ -176,7 +176,7 @@ test('builder separates placement sizing from per-spot pricing', () => {
   assert.match(html, /function renderPhotoOnly\(el,st\)/);
   assert.match(html, /if\(CU\.tiles\.length&&!CU\.sizingComplete\)\{toast\('Complete sizing and price every ad space before posting'\);return\}/);
   assert.match(html, /cuSpotPriceTotal\(\)!==pricingGoal/);
-  assert.match(html, /Every spot must add up to the full purchase goal, including 40%\./);
+  assert.match(html, /Every spot must add up to the full purchase goal\./);
   assert.match(html, /matches full purchase goal/);
   assert.match(html, /prices=CU\.faces\[0\]\.prices\.slice\(\)/);
 });

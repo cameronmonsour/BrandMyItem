@@ -42,6 +42,9 @@ test('every rotating bento item uses an exact-dimension transparent cutout with 
   assert.doesNotMatch(html, /class="fb-logo-cover"/);
   assert.match(html, /unit\.classList\.toggle\('is-bought',index<boughtCount\)/);
   assert.match(html, /itemMeta\.textContent='\$'\+item\.price\.toLocaleString\(\)\+' retail · '\+item\.n\+' spots'/);
+  assert.match(html, /\.fb-stage\{position:absolute;left:20px;right:20px;top:178px;bottom:58px;[^}]*overflow:hidden\}/);
+  assert.match(html, /itemStage\.style\.aspectRatio=frame\.size\[0\]\+'\/'\+frame\.size\[1\]/);
+  assert.match(html, /itemStage\.style\.height=frame\.size\[0\]>=frame\.size\[1\]\?'auto':'88%'/);
 });
 
 test('lead suitcase uses four rounded silver-shell boxes that avoid the halo and wheels', () => {
@@ -72,7 +75,7 @@ test('price tile uses the transparent iPhone cutout with black priced tracker sp
 test('all bento artwork is contained away from copy on narrow screens', () => {
   assert.match(html, /@media\(max-width:600px\)\{/);
   assert.match(html, /\.fb-bagwrap\{right:22px;top:210px;height:200px\}/);
-  assert.match(html, /\.fb-stage\{left:16px;right:16px;top:205px;bottom:64px\}/);
+  assert.match(html, /\.fb-stage\{left:16px;right:16px;top:220px;bottom:64px\}/);
   assert.match(html, /\.fb-shot\{left:auto;right:-22px;bottom:-62px;height:190px\}/);
   assert.match(html, /\.fb-price\{padding:26px 132px 48px 28px;min-height:260px\}/);
   assert.match(html, /\.fb-term \.fb-suit\{right:18px;top:34px;height:96px\}/);
@@ -90,7 +93,7 @@ test('every bento claim matches the actual marketplace rules', () => {
   assert.match(html, /one current photo on the locked weekly, biweekly, or monthly cadence/);
   assert.match(html, /If every spot isn't purchased by day 60, refunds are initiated to the original payment method within 5 business days/);
   assert.match(html, /applies every sponsor mark, and delivers it to the Owner within 60 days/);
-  assert.match(html, /combined spot total<br>includes 40%/);
+  assert.match(html, /combined all-in<br>spot total/);
   assert.match(html, /<h3>One clear price per spot\.<\/h3>/);
   assert.match(html, /Example: first spot sold/);
   assert.match(html, /dayUnit\.textContent=day===1\?'day':'days'/);

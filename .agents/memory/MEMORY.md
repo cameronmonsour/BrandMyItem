@@ -6,7 +6,9 @@
 - [Placement builder defaults](placement-builder-defaults.md) — start with one selected box; users intentionally add placements with Copy box or shape tools.
 - [Dashboard filter language](dashboard-filter-language.md) — filters use compact Apple-style inset groups, not separate floating form cards.
 - [Campaign preview hierarchy](campaign-preview-hierarchy.md) — campaign details use one editorial surface with dividers, not nested gray cards.
+- [Bento product text clearance](bento-product-text-clearance.md) — rotating product art must stay in an aspect-ratio frame below its title and retail line.
 - [Product-page purchase hierarchy](product-page-purchase-hierarchy.md) — keep the product contained and make an explicit spot selector the primary buying path.
 - [Playwright assertion compatibility](playwright-assertion-compatibility.md) — use built-in matchers or plain assertions; optional matcher extensions are not installed.
 - [Mandatory branding application](mandatory-branding-application.md) — BrandMyItem applies every sponsor mark; there is no owner-applied fulfillment path.
+- [Fee disclosure placement](fee-disclosure-placement.md) — disclose the 40% amount only in FAQ answers; elsewhere use neutral all-in purchase-total language.
 - [Scanner coordinate source](scanner-coordinate-source.md) — locked surfaces must use campaign-image dimensions; bento cutout coordinates do not transfer.

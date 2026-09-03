@@ -1192,11 +1192,11 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 .feature-bento .fb-days[data-phase="3"] .fb-row svg,.feature-bento .fb-days[data-phase="3"] .fb-row .fb-refunded{display:block}
 .feature-bento .fb-days[data-phase="3"] .fb-row .fb-charged{display:none}
 .feature-bento .fb-note{font-size:12px;color:var(--mfg);margin-top:12px;min-height:18px}
-.feature-bento .fb-itemline{margin-top:8px;display:flex;flex-direction:column;gap:2px;position:relative;z-index:3}
+.feature-bento .fb-itemline{margin-top:8px;display:flex;flex-direction:column;gap:2px;position:relative;z-index:3;min-height:32px}
 .feature-bento .fb-itemline b{font-size:13px}.feature-bento .fb-itemline span{font-size:11px;color:var(--mfg)}
-.feature-bento .fb-stage{position:absolute;left:20px;right:20px;top:156px;bottom:58px;display:flex;align-items:center;justify-content:center}
-.feature-bento .fb-stage-inner{position:relative;display:flex;max-width:88%;max-height:88%;filter:drop-shadow(0 18px 18px rgba(0,0,0,.14))}
-.feature-bento .fb-stage-inner>img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;transition:opacity .25s}
+.feature-bento .fb-stage{position:absolute;left:20px;right:20px;top:178px;bottom:58px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.feature-bento .fb-stage-inner{position:relative;display:block;flex:none;width:88%;height:auto;max-width:88%;max-height:88%;aspect-ratio:1275/952;filter:drop-shadow(0 18px 18px rgba(0,0,0,.14))}
+.feature-bento .fb-stage-inner>img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain;transition:opacity .25s}
 .feature-bento .fb-stage-inner>svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
 .feature-bento .fb-stage .fb-spot{fill:none;stroke:#000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;vector-effect:non-scaling-stroke;visibility:visible}
 .feature-bento .fb-spot-price,.feature-bento .fb-spot-logo{transition:opacity .28s var(--fb-ease)}
@@ -1273,7 +1273,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
   .feature-bento .fb-tile{padding:28px;min-height:440px}
   .feature-bento .fb-bagwrap{right:22px;top:210px;height:200px}
   .feature-bento .fb-days .fb-num{font-size:90px}
-  .feature-bento .fb-stage{left:16px;right:16px;top:205px;bottom:64px}
+  .feature-bento .fb-stage{left:16px;right:16px;top:220px;bottom:64px}
   .feature-bento .fb-fund{left:28px;right:28px}
   .feature-bento .fb-proof{gap:5px}
   .feature-bento .fb-proof figure{width:54px}
@@ -1876,7 +1876,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           <div class="fb-price-visual" id="fbPriceVisual">
             <img class="fb-price-phone" src="bento/cutout-iphone.png" alt="" aria-hidden="true">
           </div>
-          <div class="fb-sum"><b>$<span id="fbSumNum">0</span></b><small>combined spot total<br>includes 40%</small></div>
+          <div class="fb-sum"><b>$<span id="fbSumNum">0</span></b><small>combined all-in<br>spot total</small></div>
         </article>
 
         <article class="fb-tile fb-term" data-phase="0" data-loop="9000" style="--i:4">
@@ -2235,7 +2235,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
                     <button class="btn btn-primary" id="cuCompleteSizing" type="button">Complete sizing</button>
                   </div>
                   <div id="cuSpotPricing" style="display:none">
-                    <div class="spot-pricing-head"><div><b>Price each ad space</b><span style="display:block">Every spot must add up to the full purchase goal, including 40%.</span></div><button class="btn btn-secondary" id="cuEditSizing" type="button">Edit sizing</button></div>
+                    <div class="spot-pricing-head"><div><b>Price each ad space</b><span style="display:block">Every spot must add up to the full purchase goal.</span></div><button class="btn btn-secondary" id="cuEditSizing" type="button">Edit sizing</button></div>
                     <div class="spot-price-grid" id="cuSpotPriceGrid"></div>
                     <div class="spot-pricing-total" id="cuSpotPriceTotal" role="status" aria-live="polite"></div>
                   </div>
@@ -2311,7 +2311,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
             </div>
           </div>
         </div></div>
-        <div class="card details-card"><div class="card-h"><div><div class="card-t">Details</div><p class="details-subheadline">Item sales tax, shipping, and handling are included in the platform fee.</p></div></div>
+        <div class="card details-card"><div class="card-h"><div><div class="card-t">Details</div><p class="details-subheadline">Branding application, item sales tax, shipping, and handling are included.</p></div></div>
         <div class="card-c" style="padding-top:8px">
           <div class="fact"><span>Item ships</span><b>new, at 100% claimed</b></div>
           <div class="fact"><span>Listing window</span><b>60 days, until completed or deleted</b></div>
@@ -2319,7 +2319,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           <div class="fact"><span>Check-in term</span><b id="buildTermOut">12 months</b></div>
           <div class="fact"><span>Fulfillment</span><b id="buildFulfillmentOut">BrandMyItem applies branding</b></div>
           <div class="fact"><span>Branded material</span><b id="buildMaterialOut">Adhesive sticker/decal applied by BrandMyItem</b></div>
-          <div class="total"><span class="t1">Goal when fully claimed (includes 40%)</span><span class="t2" id="totalOut">$0</span></div>
+          <div class="total"><span class="t1">Goal when fully claimed</span><span class="t2" id="totalOut">$0</span></div>
         </div></div>
         <div class="card"><div class="card-h"><div class="card-t">Post it</div></div>
         <div class="card-c" style="padding-top:12px">
@@ -2430,7 +2430,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
               <tr><td>Check-in cadence</td><td id="iCad"></td></tr>
               <tr><td>Visibility term</td><td id="iTerm">12 months</td></tr>
               <tr><td>Fulfillment</td><td id="iFulfillment">BrandMyItem applies branding</td></tr>
-              <tr><td>Purchase total</td><td id="iPurchaseTotalCopy">Spot price + 40% · includes branding application, item sales tax, shipping &amp; handling</td></tr>
+              <tr><td>Purchase total</td><td id="iPurchaseTotalCopy">All-in spot price · includes branding application, item sales tax, shipping &amp; handling</td></tr>
             </tbody>
           </table>
         </article>
@@ -2453,7 +2453,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 <footer class="site-footer">
   <div class="fwrap">
     <div class="fine">
-      <p>* Spot prices are set by surface share and always add up to the item's retail price, exactly. Every purchase total includes 40% covering BrandMyItem-applied branding, item sales tax, shipping, and handling. Every spot is charged in full at purchase. If a listing is not fully funded within 60 days, every purchase is refunded automatically to the original payment method; no request is required. Once a listing is fully funded, BrandMyItem purchases the item new, applies and verifies every approved sponsor mark, and delivers it pre-branded within 60 days. Owners never receive, hold, or handle money at any point. The owner selects the commitment term (6, 12, or 18 months) and check-in cadence (weekly, biweekly, or monthly) when posting; both lock when the first spot sells. Missed check-ins result in a public flag and, if continued, restriction from posting new items; there is no financial penalty. Items are purchased new and carry the manufacturer's warranty. Availability is first come, first served, while spots last.</p>
+      <p>* Spot prices are set by surface share and always add up to the item's full purchase goal. Every purchase total covers BrandMyItem-applied branding, item sales tax, shipping, and handling. Every spot is charged in full at purchase. If a listing is not fully funded within 60 days, every purchase is refunded automatically to the original payment method; no request is required. Once a listing is fully funded, BrandMyItem purchases the item new, applies and verifies every approved sponsor mark, and delivers it pre-branded within 60 days. Owners never receive, hold, or handle money at any point. The owner selects the commitment term (6, 12, or 18 months) and check-in cadence (weekly, biweekly, or monthly) when posting; both lock when the first spot sells. Missed check-ins result in a public flag and, if continued, restriction from posting new items; there is no financial penalty. Items are purchased new and carry the manufacturer's warranty. Availability is first come, first served, while spots last.</p>
       <p>Owners who post about their item on social media must clearly disclose the material connection in accordance with the FTC Endorsement Guides. Brands confirm they hold the rights to any mark they submit and license BrandMyItem to reproduce it once, on the purchased spot, and to display the owner's check-in photos publicly. Placements that are unlawful, that use marks the purchaser does not own, or that fall into restricted categories will be declined. Receiving an item may be taxable income; owners are responsible for taxes that apply to them, and forms are issued where required. All product names shown in listings are the property of their respective manufacturers, and no listing implies any affiliation with, or endorsement by, the manufacturer of the item.</p>
       <p><b>The story, short version.</b> BrandMyItem started with one laptop. Vincent (<a href="https://x.com/vynsedev" target="_blank" rel="noopener">@vynsedev</a>) sold the lid of his MacBook to the internet, sticker by sticker, with <a href="https://brandmymac.com" target="_blank" rel="noopener">BrandMyMac</a>, and proved that people will fund a real thing for a real spot on it. BrandMyItem is Cam's (<a href="https://x.com/imce0bitch" target="_blank" rel="noopener">@imce0bitch</a>) answer to the obvious next question: why stop at one Mac? Same honest trade, every item worth carrying. Respect where it started.</p>
       <p>BrandMyItem is operated by IRLi LLC, a California limited liability company. BrandMyItem is a marketplace for physical advertising placements; it is not a bank, a money transmitter, a crowdfunding platform, or an investment of any kind.</p>
@@ -2582,7 +2582,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
       <div class="field"><label class="label" for="mBrand">Brand name</label><input class="input" id="mBrand" placeholder="Acme"></div>
       <div class="field"><label class="label" for="mMail">Work email</label><input class="input" id="mMail" type="email" placeholder="you@brand.com"></div>
       <div class="field"><label class="label" for="mLink">Link, optional</label><input class="input" id="mLink" placeholder="https://"></div>
-       <div class="card" style="border-radius:14px;margin-bottom:2px"><div class="card-c" style="padding:12px 14px"><div class="fact"><span>Total today (includes 40%)</span><b id="mTotal"></b></div><p class="finetext" style="margin-top:8px">Includes branding application, item sales tax, shipping, and handling.</p></div></div>
+       <div class="card" style="border-radius:14px;margin-bottom:2px"><div class="card-c" style="padding:12px 14px"><div class="fact"><span>Total today</span><b id="mTotal"></b></div><p class="finetext" style="margin-top:8px">Includes branding application, item sales tax, shipping, and handling.</p></div></div>
       <div class="mrow">
         <button class="btn btn-outline" id="mCancel">Cancel</button>
         <button class="btn btn-primary" id="mNext">Continue</button>
@@ -10351,7 +10351,7 @@ function trackCardHtml(l,c){
         '<div style="margin-top:10px;font-size:13px;color:#3a3a3c;line-height:2">'+
           '<div>Submission ID <b style="float:right">'+c.subId+'</b></div>'+
           '<div>Spot price <b style="float:right">'+money(c.amt)+'</b></div>'+
-          '<div>Total charged (includes 40%) <b style="float:right">'+money(c.amt+c.fee)+'</b></div>'+
+          '<div>Total charged <b style="float:right">'+money(c.amt+c.fee)+'</b></div>'+
           '<div>Fulfillment status <b style="float:right">'+badge+'</b></div>'+
           '<div>Check-ins on file <b style="float:right">'+checkins.length+' of '+termOf(l)+'</b></div>'+
         '</div>'+
@@ -10502,7 +10502,7 @@ function refreshItemCards(){
   }
   document.getElementById('iCad').textContent=checkinCadenceText(CUR);
   var shipEl=document.getElementById('iShips');if(shipEl)shipEl.textContent=CUR.closed?'closed · claims refunded':(CUR.shippedAt?'shipped to owner':(pct>=100?'funded · preparing shipment':'new, at 100% claimed'));
-  var feeCopy=document.getElementById('iFeeCopy');if(feeCopy)feeCopy.textContent='Exact prices, first come, first served. Every purchase total includes 40% covering BrandMyItem-applied branding, item sales tax, shipping, and handling.';
+  var feeCopy=document.getElementById('iFeeCopy');if(feeCopy)feeCopy.textContent='Exact all-in prices, first come, first served. Every purchase total covers BrandMyItem-applied branding, item sales tax, shipping, and handling.';
   var fulfillmentEl=document.getElementById('iFulfillment');if(fulfillmentEl)fulfillmentEl.textContent='BrandMyItem applies branding';
   var materialEl=document.getElementById('iMaterial');if(materialEl)materialEl.textContent=brandingMaterial(CUR.type);
   var termEl=document.getElementById('iTerm');if(termEl)termEl.textContent=termOf(CUR)+' months'+(CUR.termLocked?' · locked':'');
@@ -10870,11 +10870,17 @@ function initHomeFeatureBento(){
 
   function loadFeatureItem(){
     var item=items[itemIndex];
+    var frame=CATALOG_SURFACES[item.type];
     if(!itemImg)return;
     itemImg.src=item.img;
     if(itemName)itemName.textContent=item.name;
     if(itemMeta)itemMeta.textContent='$'+item.price.toLocaleString()+' retail · '+item.n+' spots';
     if(itemStage){
+      if(frame){
+        itemStage.style.aspectRatio=frame.size[0]+'/'+frame.size[1];
+        itemStage.style.width=frame.size[0]>=frame.size[1]?'88%':'auto';
+        itemStage.style.height=frame.size[0]>=frame.size[1]?'auto':'88%';
+      }
       var oldSvg = itemStage.querySelector('svg');
       if(oldSvg) oldSvg.remove();
       itemStage.insertAdjacentHTML('beforeend', buildOverlaySvg(item.type, item.n, 'fb-spot', '', item.parts));
