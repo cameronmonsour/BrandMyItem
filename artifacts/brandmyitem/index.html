@@ -8026,13 +8026,11 @@ function startCardCountdowns(){
 function renderHomeCampaigns(){
   var host=document.getElementById('homeCampaignGrid');
   if(!host)return;
-  var list=DB.listings.filter(function(l){return openSlots(l)>0}).sort(function(a,b){
-    var close=pctOf(b)-pctOf(a);
-    return close||((b.created||0)-(a.created||0));
-  }).slice(0,3);
-  if(!list.length){
-    list=DB.listings.slice().sort(function(a,b){return pctOf(b)-pctOf(a)}).slice(0,3);
-  }
+  /* Launch examples stay fixed so the homepage always teaches the same three item shapes. */
+  var launchCampaignIds=['demo6','demo1','demo5'];
+  var list=launchCampaignIds.map(function(id){
+    return DB.listings.find(function(l){return l.id===id});
+  }).filter(Boolean);
   host.innerHTML='';
   if(!list.length){
     host.innerHTML='<div class="empty"><b>No campaigns live yet</b>Be the first to post an item.</div>';

@@ -68,6 +68,14 @@ test('dashboard activity uses the same live ticker as the homepage', () => {
   assert.match(html, /\(DB\.activity\|\|\[\]\)\.forEach\(function\(a\)\{\s+if\(!a\.txt\)return;/);
 });
 
+test('launch homepage keeps AirPods, MacBook, and iPhone examples locked', () => {
+  const block = html.match(/function renderHomeCampaigns\(\)\{([\s\S]*?)\n\}/)?.[1] || '';
+  assert.match(block, /var launchCampaignIds=\['demo6','demo1','demo5'\]/);
+  assert.match(block, /launchCampaignIds\.map\(function\(id\)/);
+  assert.doesNotMatch(block, /sort\(function\(a,b\)/);
+  assert.doesNotMatch(block, /openSlots\(l\)>0/);
+});
+
 test('dashboard keeps compact tracker cards without a duplicate left category box', () => {
   assert.doesNotMatch(html, /id="railCats"/);
   assert.doesNotMatch(html, /<h5>Category<\/h5>/);
