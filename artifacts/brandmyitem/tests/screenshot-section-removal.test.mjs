@@ -104,7 +104,8 @@ test('dashboard keeps compact tracker cards without a duplicate left category bo
   assert.doesNotMatch(builderHtml, /id="buildTaxOut"/);
   assert.match(builderHtml, /Choose your character/);
   assert.match(builderHtml, /<label class="label" for="pAddress">Shipping address<\/label>/);
-  assert.match(builderHtml, /id="pAddress"[^>]*autocomplete="street-address"/);
+  assert.match(builderHtml, /<input class="input" id="pAddress" type="text" autocomplete="street-address" placeholder="Street address, city, state, ZIP">/);
+  assert.doesNotMatch(builderHtml, /<textarea[^>]*id="pAddress"/);
   assert.doesNotMatch(builderHtml, /avatarPickStatus/);
   assert.doesNotMatch(builderHtml, /Memoji selected/);
   assert.match(builderHtml, /\.avatar-option\.on\{border:1px solid var\(--fg\);box-shadow:none\}/);
