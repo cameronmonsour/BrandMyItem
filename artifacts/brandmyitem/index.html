@@ -1151,14 +1151,12 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 .feature-bento .fb-term{grid-column:9/13;grid-row:4/6}
 .feature-bento .fb-price{grid-column:5/9;grid-row:5/6}
 .feature-bento .fb-scene{display:none}
-.feature-bento .fb-scene path,.feature-bento .fb-scene line,.feature-bento .fb-scene rect{fill:none;stroke:var(--fg);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1s var(--fb-ease)}
-.feature-bento .fb-tile.on-scene .fb-scene path,.feature-bento .fb-tile.on-scene .fb-scene line,.feature-bento .fb-tile.on-scene .fb-scene rect{stroke-dashoffset:0}
+.feature-bento .fb-scene path,.feature-bento .fb-scene line,.feature-bento .fb-scene rect{fill:none;stroke:var(--fg);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .feature-bento .fb-bagwrap{position:absolute;right:40px;top:156px;height:254px;aspect-ratio:187/324;z-index:2;transition:transform 1.5s var(--fb-ease)}
 .feature-bento .fb-bagwrap img{height:100%;width:100%;position:relative;z-index:2}
 .feature-bento .fb-bagwrap>svg{position:absolute;inset:0;width:100%;height:100%;z-index:3;overflow:visible}
-.feature-bento .fb-spotline{fill:none;stroke:var(--fg);stroke-width:2;stroke-dasharray:560;stroke-dashoffset:560;transition:stroke-dashoffset 1.1s var(--fb-ease),opacity .4s}
-.feature-bento .fb-hero[data-phase="1"] .fb-spotline,.feature-bento .fb-hero[data-phase="2"] .fb-spotline{stroke-dashoffset:0}
-.feature-bento .fb-hero[data-phase="3"] .fb-spotline,.feature-bento .fb-hero[data-phase="4"] .fb-spotline{stroke-dashoffset:0;opacity:0}
+.feature-bento .fb-spotline{fill:none;stroke:var(--fg);stroke-width:2;vector-effect:non-scaling-stroke;visibility:hidden}
+.feature-bento .fb-hero[data-phase="1"] .fb-spotline,.feature-bento .fb-hero[data-phase="2"] .fb-spotline{visibility:visible}
 .feature-bento .fb-stamp{opacity:0;transform:scale(1.18);transform-origin:44px 44px;color:var(--fg);transition:opacity .35s var(--fb-ease),transform .6s cubic-bezier(.34,1.4,.64,1)}
 .feature-bento .fb-hero[data-phase="3"] .fb-stamp,.feature-bento .fb-hero[data-phase="4"] .fb-stamp{opacity:1;transform:none}
 .feature-bento .fb-hero[data-phase="4"] .fb-bagwrap{animation:fbRoll 1.5s var(--fb-ease) .45s both}
@@ -1184,15 +1182,15 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 .feature-bento .fb-stage{position:absolute;left:20px;right:20px;top:156px;bottom:58px;display:grid;place-items:center}
 .feature-bento .fb-stage>img{max-width:88%;max-height:88%;width:auto;height:auto;filter:drop-shadow(0 18px 18px rgba(0,0,0,.14));transition:opacity .25s}
 .feature-bento .fb-stage>svg{position:absolute;pointer-events:none;overflow:visible}
-.feature-bento .fb-stage .fb-spot{fill:none;stroke:currentColor;stroke-width:1.5;stroke-dasharray:6 5;opacity:0;transform:scale(.95);transform-origin:center;transition:opacity .3s,transform .5s var(--fb-ease)}
-.feature-bento .fb-mac[data-phase="1"] .fb-spot,.feature-bento .fb-mac[data-phase="2"] .fb-spot,.feature-bento .fb-mac[data-phase="3"] .fb-spot{opacity:1;transform:none}
+.feature-bento .fb-stage .fb-spot{fill:none;stroke:currentColor;stroke-width:2;vector-effect:non-scaling-stroke;visibility:hidden}
+.feature-bento .fb-mac[data-phase="1"] .fb-spot,.feature-bento .fb-mac[data-phase="2"] .fb-spot{visibility:visible}
 .feature-bento .fb-stampg{opacity:0;transform:scale(1.15);transition:opacity .3s var(--fb-ease),transform .5s cubic-bezier(.34,1.4,.64,1)}
 .feature-bento .fb-stampg.on{opacity:1;transform:none}
 .feature-bento .fb-fund{position:absolute;left:36px;right:36px;bottom:22px;z-index:3;font-size:12px;font-weight:600;display:flex;align-items:center;gap:10px;opacity:0;transition:opacity .5s}
 .feature-bento .fb-mac[data-phase="2"] .fb-fund,.feature-bento .fb-mac[data-phase="3"] .fb-fund{opacity:1}
 .feature-bento .fb-fund .fb-bar{flex:1;height:4px;border-radius:2px;background:rgba(29,29,31,.15);overflow:hidden}
 .feature-bento .fb-fund .fb-bar i{display:block;height:100%;background:var(--fg);width:0}
-.feature-bento .fb-done{position:absolute;left:50%;top:60%;transform:translate(-50%,8px);z-index:5;background:var(--fg);color:#fff;font-size:12px;font-weight:600;padding:8px 12px;border-radius:999px;display:inline-flex;gap:7px;align-items:center;white-space:nowrap;opacity:0;transition:opacity .4s,transform .5s var(--fb-ease)}
+.feature-bento .fb-done{position:absolute;left:50%;bottom:54px;transform:translate(-50%,8px);z-index:5;background:var(--fg);color:#fff;font-size:12px;font-weight:600;padding:8px 12px;border-radius:999px;display:inline-flex;gap:7px;align-items:center;white-space:nowrap;opacity:0;transition:opacity .4s,transform .5s var(--fb-ease)}
 .feature-bento .fb-done svg{width:12px;height:12px}
 .feature-bento .fb-mac[data-phase="3"] .fb-done,.feature-bento .fb-mac[data-phase="4"] .fb-done{opacity:1;transform:translate(-50%,0)}
 .feature-bento .fb-done .fb-shipped{display:none}.feature-bento .fb-mac[data-phase="4"] .fb-done .fb-funded{display:none}.feature-bento .fb-mac[data-phase="4"] .fb-done .fb-shipped{display:inline}
@@ -1213,17 +1211,17 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 .feature-bento .fb-checkin[data-phase="1"] .fb-due,.feature-bento .fb-checkin[data-phase="3"] .fb-verified,.feature-bento .fb-checkin[data-phase="4"] .fb-verified{opacity:1;transform:none}
 .feature-bento .fb-price{padding:26px 140px 22px 28px}
 .feature-bento .fb-price h3{font-size:28px;line-height:1.05;text-align:left;max-width:9ch;margin-left:0;margin-right:0;letter-spacing:-0.03em}
-.feature-bento .fb-math{position:absolute;left:28px;bottom:54px;max-width:130px;font-size:11.5px;font-weight:600;line-height:1.15;display:flex;gap:4px;align-items:center;flex-wrap:wrap;z-index:3}
+.feature-bento .fb-math{position:absolute;left:28px;top:116px;max-width:130px;font-size:11.5px;font-weight:600;line-height:1.15;display:flex;gap:4px;align-items:center;flex-wrap:wrap;z-index:3}
 .feature-bento .fb-math span{opacity:.2;transition:opacity .3s}.feature-bento .fb-math span.on{opacity:1}.feature-bento .fb-math em{font-style:normal;color:var(--mfg)}
 .feature-bento .fb-math b{display:block;width:100%;opacity:0;transition:opacity .4s;margin-top:2px}.feature-bento .fb-price[data-phase="4"] .fb-math b{opacity:1}
 .feature-bento .fb-price-visual{position:absolute;right:22px;top:50%;transform:translateY(-50%);height:130px;width:calc(130px * (68 / 149))}
 .feature-bento .fb-price-phone{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
 .feature-bento .fb-price-map{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.feature-bento .fb-price-map .fb-ps{fill:none;stroke:var(--fg);stroke-width:1.2;opacity:0;transition:opacity .35s}
-.feature-bento .fb-price-map .fb-ps.on{opacity:1}
-.feature-bento .fb-price-map .fb-lead{stroke:var(--fg);stroke-width:1;fill:none;stroke-dasharray:40;stroke-dashoffset:40;opacity:0;transition:stroke-dashoffset .45s,opacity .3s}
-.feature-bento .fb-price-map .fb-lead.on{stroke-dashoffset:0;opacity:1}
-.feature-bento .fb-price-map .fb-label{font-family:'Inter',sans-serif;font-size:7px;font-weight:600;fill:var(--fg);opacity:0}.feature-bento .fb-price-map .fb-label.on{opacity:1}
+.feature-bento .fb-price-map .fb-ps{fill:none;stroke:var(--fg);stroke-width:2;vector-effect:non-scaling-stroke;visibility:hidden}
+.feature-bento .fb-price-map .fb-ps.on{visibility:visible}
+.feature-bento .fb-price-map .fb-lead{stroke:var(--fg);stroke-width:1.5;vector-effect:non-scaling-stroke;fill:none;visibility:hidden}
+.feature-bento .fb-price-map .fb-lead.on{visibility:visible}
+.feature-bento .fb-price-map .fb-label{font-family:'Inter',sans-serif;font-size:7px;font-weight:600;fill:var(--fg);visibility:hidden}.feature-bento .fb-price-map .fb-label.on{visibility:visible}
 .feature-bento .fb-sum{position:absolute;left:28px;bottom:16px;display:flex;align-items:baseline;gap:7px}.feature-bento .fb-sum b{font-size:27px;font-weight:800;letter-spacing:-.06em}.feature-bento .fb-sum small{font-size:10.5px;color:var(--mfg);opacity:0}.feature-bento .fb-price[data-phase="4"] .fb-sum small{opacity:1}
 .feature-bento .fb-term h3,.feature-bento .fb-term p{max-width:190px;text-align:left;margin-left:0;margin-right:0}.feature-bento .fb-term p{max-width:178px}
 .feature-bento .fb-term .fb-suit{position:absolute;right:22px;top:40px;height:116px}
@@ -1803,81 +1801,81 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
             <line pathLength="1" x1="59" y1="150" x2="59" y2="380"/>
             <line pathLength="1" x1="183" y1="150" x2="183" y2="380"/>
           </svg>
-          <h3>Your logo, actually on something.</h3>
-          <p>Sticker, patch, embroidery, or engraving. Applied to the item, carried wherever it goes.</p>
+          <h3>Your logo, applied to a real item.</h3>
+          <p>BrandMyItem applies every approved sponsor mark using the listed method before delivery.</p>
           <div class="fb-bagwrap" aria-hidden="true">
             <img src="bento/bag.png" alt="">
             <svg viewBox="0 0 187 324">
-              <rect class="fb-spotline" x="36" y="110" width="116" height="152" rx="14"/>
-              <g transform="translate(50 142)"><g class="fb-stamp"><svg x="0" y="0" width="88" height="88" viewBox="0 0 64 64"><use href="#fbLidMark"/></svg></g></g>
+              <rect class="fb-spotline" x="13" y="86" width="160" height="225" rx="8"/>
+              <g transform="translate(49 154)"><g class="fb-stamp"><svg x="0" y="0" width="88" height="88" viewBox="0 0 64 64"><use href="#fbLidMark"/></svg></g></g>
             </svg>
           </div>
         </article>
 
         <article class="fb-tile fb-days" data-phase="0" data-loop="12000" style="--i:1">
-          <h3>Refunded automatically, never held.</h3>
-          <p>Each spot is charged at purchase. Not fully funded in 60 days, every buyer is refunded.</p>
-          <div class="fb-num"><span id="fbDayNum">1</span><small>days</small></div>
+          <h3>If it doesn't fund, purchases are refunded.</h3>
+          <p>Each spot is charged at checkout. If every spot isn't purchased by day 60, refunds are initiated to the original payment method within 5 business days.</p>
+          <div class="fb-num"><span id="fbDayNum">1</span><small id="fbDayUnit">day</small></div>
           <div class="fb-ruler" id="fbRuler" aria-hidden="true"></div>
           <div class="fb-rows">
-            <div class="fb-row fb-r1"><b>Spot 1</b><span class="fb-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg><span class="fb-charged">$233 charged</span><span class="fb-refunded">$233 refunded</span></span></div>
-            <div class="fb-row fb-r2"><b>Spot 2</b><span class="fb-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg><span class="fb-charged">$233 charged</span><span class="fb-refunded">$233 refunded</span></span></div>
-            <div class="fb-row fb-r3"><b>Spot 3</b><span class="fb-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg><span class="fb-charged">$233 charged</span><span class="fb-refunded">$233 refunded</span></span></div>
+            <div class="fb-row fb-r1"><b>Spot 1</b><span class="fb-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg><span class="fb-charged">$233 charged at checkout</span><span class="fb-refunded">Refund initiated</span></span></div>
+            <div class="fb-row fb-r2"><b>Spot 2</b><span class="fb-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg><span class="fb-charged">$233 charged at checkout</span><span class="fb-refunded">Refund initiated</span></span></div>
+            <div class="fb-row fb-r3"><b>Spot 3</b><span class="fb-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg><span class="fb-charged">$233 charged at checkout</span><span class="fb-refunded">Refund initiated</span></span></div>
           </div>
-          <div class="fb-note" id="fbDayNote">3 of 5 spots claimed</div>
+          <div class="fb-note" id="fbDayNote">3 of 5 spots purchased</div>
         </article>
 
         <article class="fb-tile fb-mac" data-phase="0" data-loop="11000" style="--i:2">
-          <h3>Real items, not points.</h3>
-          <p>A real MacBook, bought at retail and shipped to your door once its spots sell out.</p>
+          <h3>Real items, bought at retail.</h3>
+          <p>When every spot is purchased, BrandMyItem buys the listed item new, applies every sponsor mark, and delivers it to the Owner within 60 days.</p>
           <div class="fb-itemline"><b id="fbItemName">MacBook Pro 14&quot;</b><span id="fbItemMeta">$1,599 retail · 6 spots</span></div>
-          <div class="fb-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg><span class="fb-funded">Fully funded. Bought at retail.</span><span class="fb-shipped">Shipped to the owner</span></div>
+          <div class="fb-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg><span class="fb-funded">Fully funded. Purchase triggered.</span><span class="fb-shipped">Delivered pre-branded to the Owner</span></div>
           <div class="fb-stage" id="fbItemStage"><img id="fbItemImg" src="bento/macbook.png" alt=""><svg id="fbItemSvg" viewBox="0 0 268 207"></svg></div>
           <div class="fb-fund"><span id="fbFundPct">0%</span><div class="fb-bar"><i id="fbFundBar"></i></div><span id="fbFundAmt">$0 of $1,599</span></div>
         </article>
 
         <article class="fb-tile fb-checkin" data-phase="0" data-loop="7000" style="--i:3">
-          <h3>One photo a month. That's it.</h3>
-          <p>The owner sends one photo a month showing the item and its ads in use, for the full term.</p>
+          <h3>One check-in photo per cycle.</h3>
+          <p>The Owner submits one current photo on the locked weekly, biweekly, or monthly cadence, with the item in use and its placements visible.</p>
           <div class="fb-proof" aria-hidden="true">
-            <figure><img src="bento/proof-1.jpg" alt=""><figcaption>Jun</figcaption></figure>
-            <figure><img src="bento/proof-2.jpg" alt=""><figcaption>Jul</figcaption></figure>
-            <figure><img src="bento/proof-3.jpg" alt=""><figcaption>Aug</figcaption></figure>
-            <figure><span class="fb-next-proof"></span><figcaption>Sep</figcaption></figure>
+            <figure><img src="bento/proof-1.jpg" alt=""><figcaption>Cycle 1</figcaption></figure>
+            <figure><img src="bento/proof-2.jpg" alt=""><figcaption>Cycle 2</figcaption></figure>
+            <figure><img src="bento/proof-3.jpg" alt=""><figcaption>Cycle 3</figcaption></figure>
+            <figure><span class="fb-next-proof"></span><figcaption>Next</figcaption></figure>
           </div>
           <div class="fb-shot" aria-hidden="true"><img src="bento/checkin.png" alt=""></div>
           <div class="fb-flash" aria-hidden="true"></div>
-          <div class="fb-due">Photo due · September</div>
-          <div class="fb-verified">September verified</div>
+          <div class="fb-due">Next check-in due this cycle</div>
+          <div class="fb-verified">Check-in received</div>
         </article>
 
         <article class="fb-tile fb-price" data-phase="0" data-loop="9000" style="--i:5">
-          <h3>Priced by surface.</h3>
-          <div class="fb-math"><span data-k="0">56%</span><em>+</em><span data-k="1">22%</span><em>+</em><span data-k="2">22%</span><em>=</em><b>100% of retail</b></div>
+          <h3>Spot price = surface share.</h3>
+          <div class="fb-math"><span data-k="0">33⅓%</span><em>+</em><span data-k="1">33⅓%</span><em>+</em><span data-k="2">33⅓%</span><em>=</em><b>100% of retail</b></div>
           <div class="fb-price-visual">
             <img class="fb-price-phone" src="bento/phone.png" alt="" aria-hidden="true">
-            <svg class="fb-price-map" viewBox="0 0 68 149" aria-hidden="true">
-              <rect class="fb-ps" data-k="0" x="14" y="72" width="40" height="34" rx="5"/>
-              <rect class="fb-ps" data-k="1" x="14" y="110" width="19" height="20" rx="4"/>
-              <rect class="fb-ps" data-k="2" x="35" y="110" width="19" height="20" rx="4"/>
-              <path class="fb-lead" data-k="0" d="M14 89 H -10"/><text class="fb-label" data-k="0" x="-13" y="91" text-anchor="end">56% · $309</text>
-              <path class="fb-lead" data-k="1" d="M14 120 H -10"/><text class="fb-label" data-k="1" x="-13" y="122" text-anchor="end">22% · $120</text>
-              <path class="fb-lead" data-k="2" d="M44 130 V 144 H -10"/><text class="fb-label" data-k="2" x="-13" y="146" text-anchor="end">22% · $120</text>
+            <svg class="fb-price-map" viewBox="0 0 68 149" preserveAspectRatio="none" aria-hidden="true">
+              <rect class="fb-ps" data-k="0" x="12" y="71" width="42" height="14.667" rx="3"/>
+              <rect class="fb-ps" data-k="1" x="12" y="88.667" width="42" height="14.667" rx="3"/>
+              <rect class="fb-ps" data-k="2" x="12" y="106.333" width="42" height="14.667" rx="3"/>
+              <path class="fb-lead" data-k="0" d="M12 78.333 H -10"/><text class="fb-label" data-k="0" x="-13" y="80.333" text-anchor="end">33⅓% · $183 spot</text>
+              <path class="fb-lead" data-k="1" d="M12 96 H -10"/><text class="fb-label" data-k="1" x="-13" y="98" text-anchor="end">33⅓% · $183 spot</text>
+              <path class="fb-lead" data-k="2" d="M12 113.667 H -10"/><text class="fb-label" data-k="2" x="-13" y="115.667" text-anchor="end">33⅓% · $183 spot</text>
             </svg>
           </div>
-          <div class="fb-sum"><b>$<span id="fbSumNum">0</span></b><small>= retail, exactly</small></div>
+          <div class="fb-sum"><b>$<span id="fbSumNum">0</span></b><small>spot prices = retail<br>+30% fees at checkout</small></div>
         </article>
 
         <article class="fb-tile fb-term" data-phase="0" data-loop="9000" style="--i:4">
           <h3>Pick the term.</h3>
-          <p>The owner chooses 6, 12, or 18 months when posting. It locks on the first sale.</p>
+          <p>The Owner chooses a 6-, 12-, or 18-month term when posting. The selected term locks when the first spot sells.</p>
           <img class="fb-suit" src="bento/suit.png" alt="" aria-hidden="true">
           <div class="fb-options">
             <div class="fb-option" data-k="0"><div class="fb-n">6</div><div><div class="fb-option-bar" style="width:33%"><i></i></div><small>months</small></div></div>
             <div class="fb-option" data-k="1"><div class="fb-n">12</div><div><div class="fb-option-bar" style="width:66%"><i></i></div><small>months</small></div></div>
             <div class="fb-option" data-k="2"><div class="fb-n">18</div><div><div class="fb-option-bar"><i></i></div><small>months</small></div></div>
           </div>
-          <div class="fb-term-status"><span class="fb-term-first">First spot sold</span><span class="fb-term-locked"> · 12 months, locked</span></div>
+          <div class="fb-term-status"><span class="fb-term-first">Example: first spot sold</span><span class="fb-term-locked"> · 12-month term locked</span></div>
         </article>
       </div>
     </section>
@@ -7918,18 +7916,20 @@ var views=['home','dashboard','build','item','track'];
 var LAST_PRODUCT_VIEW_KEY='';
 function route(){
   var h=location.hash.replace('#','')||'home';
+  var anchorId=h==='homeFeatureBento'?h:'';
   var itemId=null;
   if(h.indexOf('item/')===0){itemId=h.split('/')[1];h='item'}
   if(h==='feed')h='dashboard';
-  if(h.indexOf('home-')===0)h='home';
+  if(h.indexOf('home-')===0||anchorId)h='home';
   if(h!=='item')LAST_PRODUCT_VIEW_KEY='';
   views.forEach(function(v){document.getElementById('v-'+v).classList.toggle('on',v===h)});
-  if(location.hash.indexOf('home-')<0)window.scrollTo(0,0);
+  if(location.hash.indexOf('home-')<0&&!anchorId)window.scrollTo(0,0);
   if(h==='home')showHome();
   if(h==='dashboard')showDash();
   if(h==='build')showBuild();
   if(h==='item')showItem(itemId);
   if(h==='track')showTrack();
+  if(anchorId)setTimeout(function(){var target=document.getElementById(anchorId);if(target)target.scrollIntoView({behavior:'auto',block:'start'})},0);
 }
 function placeBuilder(){
   var b=document.getElementById('builderFlow');
@@ -10686,21 +10686,31 @@ function initHomeFeatureBento(){
   runTile('.fb-hero',[[0,0],[.06,1],[.24,2],[.42,3],[.60,4],[.93,0]],function(p,phase,el){
     el.classList.toggle('on-scene',phase===4);
   });
-  var dayNum=document.getElementById('fbDayNum'),dayNote=document.getElementById('fbDayNote'),ruler=document.getElementById('fbRuler');
+  var dayNum=document.getElementById('fbDayNum'),dayUnit=document.getElementById('fbDayUnit'),dayNote=document.getElementById('fbDayNote'),ruler=document.getElementById('fbRuler');
   if(ruler)ruler.innerHTML='<i></i>'.repeat(60);
   var ticks=ruler?Array.prototype.slice.call(ruler.querySelectorAll('i')):[];
   runTile('.fb-days',[[0,0],[.05,1],[.20,2],[.70,3],[.90,4]],function(p,phase){
     var day=phase>=2?(phase===2?Math.max(1,Math.round(seg(p,.20,.70)*60)):60):1;
     if(dayNum)dayNum.textContent=String(day);
+    if(dayUnit)dayUnit.textContent=day===1?'day':'days';
     ticks.forEach(function(tick,index){tick.classList.toggle('on',phase>=2&&phase<4&&index<day)});
-    if(dayNote)dayNote.textContent=phase===3?'Not sold out. All 3 refunded automatically':(phase===4?'':(phase>=1?'3 of 5 spots claimed':''));
+    if(dayNote)dayNote.textContent=phase===3?'Not funded by day 60. Refunds initiated.':(phase===4?'':(phase>=1?'3 of 5 spots purchased':''));
   });
+  function splitBentoGrid(surface,n){
+    var x=surface[0],y=surface[1],w=surface[2],h=surface[3],wide=w>=h;
+    var layout={2:wide?[2,1]:[1,2],3:wide?[3,1]:[1,3],4:[2,2],6:wide?[3,2]:[2,3]}[n];
+    var cols=layout[0],rows=layout[1],g=Math.max(3,Math.round(Math.min(w,h)*.035));
+    var cw=(w-g*(cols-1))/cols,ch=(h-g*(rows-1))/rows,cells=[];
+    for(var r=0;r<rows;r++)for(var c=0;c<cols;c++)cells.push([x+c*(cw+g),y+r*(ch+g),cw,ch]);
+    return cells;
+  }
   var items=[
-    {name:'MacBook Pro 14\"',price:1599,img:'bento/macbook.png',vb:[268,207],ink:'#1D1D1F',spots:[[22,20,70,70],[99,20,70,70],[176,20,70,70],[22,98,70,70],[99,98,70,70],[176,98,70,70]]},
-    {name:'Hard cooler',price:350,img:'bento/cooler.png',vb:[191,154],ink:'#1D1D1F',spots:[[30,64,60,54],[100,64,60,54]]},
-    {name:'Weekender',price:495,img:'bento/weekender.png',vb:[225,180],ink:'#FFFFFF',spots:[[40,85,70,60],[120,85,70,60]]},
-    {name:'Commuter backpack',price:850,img:'bento/backpack.png',vb:[152,216],ink:'#FFFFFF',spots:[[38,62,78,56],[38,126,78,56]]}
+    {name:'MacBook Pro 14\"',price:1599,img:'bento/macbook.png',vb:[268,207],surface:[18,18,232,154],ink:'#1D1D1F',n:6},
+    {name:'Hard cooler',price:350,img:'bento/cooler.png',vb:[191,154],surface:[54,55,117,65],ink:'#1D1D1F',n:2},
+    {name:'Weekender',price:495,img:'bento/weekender.png',vb:[225,180],surface:[30,52,162,119],ink:'#FFFFFF',n:2},
+    {name:'Commuter backpack',price:850,img:'bento/backpack.png',vb:[152,216],surface:[29,44,91,140],ink:'#FFFFFF',n:2}
   ];
+  items.forEach(function(item){item.spots=splitBentoGrid(item.surface,item.n)});
   var itemIndex=0,itemImg=document.getElementById('fbItemImg'),itemSvg=document.getElementById('fbItemSvg'),itemName=document.getElementById('fbItemName'),itemMeta=document.getElementById('fbItemMeta');
   var fundPct=document.getElementById('fbFundPct'),fundBar=document.getElementById('fbFundBar'),fundAmt=document.getElementById('fbFundAmt'),stamps=[];
   function sizeItemOverlay(){
@@ -10716,7 +10726,8 @@ function initHomeFeatureBento(){
     if(itemName)itemName.textContent=item.name;
     if(itemMeta)itemMeta.textContent='$'+item.price.toLocaleString()+' retail · '+item.spots.length+' spots';
     itemSvg.setAttribute('viewBox','0 0 '+item.vb[0]+' '+item.vb[1]);itemSvg.style.color=item.ink;
-    itemSvg.innerHTML='<g>'+item.spots.map(function(r){return '<rect class="fb-spot" x="'+r[0]+'" y="'+r[1]+'" width="'+r[2]+'" height="'+r[3]+'" rx="7"/>'}).join('')+'</g>'+
+    itemSvg.setAttribute('preserveAspectRatio','none');
+    itemSvg.innerHTML='<g>'+item.spots.map(function(r){return '<rect class="fb-spot" vector-effect="non-scaling-stroke" x="'+r[0]+'" y="'+r[1]+'" width="'+r[2]+'" height="'+r[3]+'" rx="7"/>'}).join('')+'</g>'+
       item.spots.map(function(r){var m=Math.min(r[2],r[3])*.62,x=r[0]+(r[2]-m)/2,y=r[1]+(r[3]-m)/2;return '<g class="fb-stampg" style="color:'+item.ink+';transform-origin:'+(x+m/2)+'px '+(y+m/2)+'px"><svg x="'+x+'" y="'+y+'" width="'+m+'" height="'+m+'" viewBox="0 0 64 64"><use href="#fbLidMark"/></svg></g>'}).join('');
     stamps=Array.prototype.slice.call(itemSvg.querySelectorAll('.fb-stampg'));
     requestAnimationFrame(sizeItemOverlay);
@@ -10735,7 +10746,7 @@ function initHomeFeatureBento(){
     if(fundAmt)fundAmt.textContent='$'+amount.toLocaleString()+' of $'+item.price.toLocaleString();
   });
   runTile('.fb-checkin',[[0,0],[.04,1],[.30,2],[.34,3],[.62,4],[.96,0]]);
-  var priceSpots=qa('.fb-price .fb-ps'),priceLeads=qa('.fb-price .fb-lead'),priceLabels=qa('.fb-price .fb-label'),priceMath=qa('.fb-price .fb-math span'),sumNum=document.getElementById('fbSumNum'),parts=[309,120,120];
+  var priceSpots=qa('.fb-price .fb-ps'),priceLeads=qa('.fb-price .fb-lead'),priceLabels=qa('.fb-price .fb-label'),priceMath=qa('.fb-price .fb-math span'),sumNum=document.getElementById('fbSumNum'),parts=[183,183,183];
   runTile('.fb-price',[[0,0],[.06,1],[.28,2],[.50,3],[.72,4],[.94,0]],function(p,phase){
     var total=0;
     parts.forEach(function(value,index){
