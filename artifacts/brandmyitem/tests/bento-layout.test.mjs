@@ -94,11 +94,21 @@ test('the direct bento anchor remains on the home view', () => {
 
 test('every bento claim matches the actual marketplace rules', () => {
   assert.doesNotMatch(html, /One photo a month|That's it|A real MacBook, bought|Refunded automatically, never held|3 of 5 spots claimed|September verified/);
-  assert.match(html, /one current photo on the locked weekly, biweekly, or monthly cadence/);
-  assert.match(html, /If every spot isn't purchased by day 60, refunds are initiated to the original payment method within 5 business days/);
-  assert.match(html, /applies every sponsor mark, and delivers it to the Owner within 60 days/);
+  assert.match(html, /<h3>Your logo, actually on something\.<\/h3>/);
+  assert.match(html, /Sticker, patch, embroidery, or engraving\. Applied to a real item, carried in public for the whole term\./);
+  assert.match(html, /<h3>Not funded\? Refunded\.<\/h3>/);
+  assert.match(html, /Not fully funded by day 60, every buyer is refunded automatically\./);
+  assert.match(html, /<h3>Real items, not points\.<\/h3>/);
+  assert.match(html, /When the last spot sells, BrandMyItem buys the item new at retail and ships it straight to the owner\./);
+  assert.match(html, /<h3>Proof, on a schedule\.<\/h3>/);
+  assert.match(html, /One photo each cycle, weekly, biweekly, or monthly, showing the item and its placements in use\./);
   assert.match(html, /combined all-in<br>spot total/);
-  assert.match(html, /<h3>One clear price per spot\.<\/h3>/);
+  assert.match(html, /<h3>Priced by surface\.<\/h3>/);
+  assert.match(html, /<h3>Pick the term\.<\/h3>/);
+  assert.match(html, /Locked from the moment it's live\./);
+  assert.match(html, /\.feature-bento \.fb-tile h3\{[^}]*text-align:left;margin:0 0 10px;max-width:17ch/);
+  assert.match(html, /\.feature-bento \.fb-tile p\{[^}]*text-align:left;margin:0 0 16px/);
+  assert.doesNotMatch(html, /\.feature-bento \.fb-tile (?:h3|p)\{[^}]*text-align:center/);
   assert.match(html, /Example: first spot sold/);
   assert.match(html, /\.feature-bento \.fb-row\{[^}]*background:var\(--fg\);color:#fff;[^}]*border-radius:999px/);
   assert.match(html, /\.feature-bento \.fb-due,\.feature-bento \.fb-verified\{background:var\(--fg\);color:#fff;border:1px solid var\(--fg\)\}/);
@@ -106,4 +116,12 @@ test('every bento claim matches the actual marketplace rules', () => {
   assert.doesNotMatch(html, /[·・]|&middot;/);
   assert.match(html, /dayUnit\.textContent=day===1\?'day':'days'/);
   assert.match(html, /Not funded by day 60\. Refunds initiated\./);
+});
+
+test('FAQ and footer use the supplied complete structure without legacy duplicates', () => {
+  assert.match(html, /<h2>Asked and answered\.<\/h2>/);
+  assert.match(html, /Everything owners and brands ask before they use BrandMyItem, in plain language\. BrandMyItem is operated by IRLi LLC\./);
+  assert.doesNotMatch(html, /class="faq-grid legacy-faq-grid"/);
+  assert.match(html, /The term is locked from the moment the listing goes live and cannot be changed\./);
+  assert.match(html, /both are locked from the moment the listing is published\./);
 });

@@ -20,7 +20,7 @@ test('removes the screenshot-only homepage and page headers', () => {
   assert.match(html, /\.faq-grid\{max-width:none;display:grid;grid-template-columns:repeat\(2,minmax\(0,1fr\)\);gap:12px 14px\}/);
   assert.match(html, /\.faq-grid\{grid-template-columns:1fr;gap:10px\}/);
   assert.doesNotMatch(html, />Questions</);
-  assert.doesNotMatch(html, />Asked and answered\.</);
+  assert.match(html, />Asked and answered\.</);
   assert.match(html, /home-flow-index">5<\/span><h3>Photo check-ins<\/h3>/);
   assert.match(html, /how-it-works-monthly-check-in\.png/);
   assert.match(html, /\.home-flow-icon\.photo\.monthly img\{object-fit:contain\}/);

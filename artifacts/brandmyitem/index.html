@@ -1155,8 +1155,8 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 .feature-bento{--fb-r:30px;--fb-gap:14px;--fb-ease:cubic-bezier(.2,.7,.2,1);display:grid;grid-template-columns:repeat(12,1fr);grid-auto-rows:213px;gap:var(--fb-gap)}
 .feature-bento .fb-tile{position:relative;overflow:hidden;background:#F5F5F7;border-radius:var(--fb-r);padding:36px;display:flex;flex-direction:column;opacity:0;transform:translateY(18px) scale(.985);transition:opacity .7s var(--fb-ease),transform .7s var(--fb-ease);transition-delay:calc(var(--i)*90ms)}
 .feature-bento.in .fb-tile{opacity:1;transform:none}
-.feature-bento .fb-tile h3{font-family:'Inter',-apple-system,sans-serif;font-size:clamp(25px,2.65vw,38px);font-weight:700;letter-spacing:-.045em;line-height:1.06;text-align:center;margin:0 auto 10px;max-width:14ch;position:relative;z-index:3}
-.feature-bento .fb-tile p{font-family:'Inter',-apple-system,sans-serif;font-size:16px;line-height:1.35;letter-spacing:-.012em;color:var(--fg);text-align:center;margin:0 auto 16px;max-width:30ch;position:relative;z-index:3}
+.feature-bento .fb-tile h3{font-family:'Inter',-apple-system,sans-serif;font-size:clamp(25px,2.65vw,38px);font-weight:700;letter-spacing:-.045em;line-height:1.06;text-align:left;margin:0 0 10px;max-width:17ch;position:relative;z-index:3}
+.feature-bento .fb-tile p{font-family:'Inter',-apple-system,sans-serif;font-size:16px;line-height:1.35;letter-spacing:-.012em;color:var(--fg);text-align:left;margin:0 0 16px;max-width:30ch;position:relative;z-index:3}
 .feature-bento .fb-hero{grid-column:1/9;grid-row:1/3}
 .feature-bento .fb-days{grid-column:9/13;grid-row:1/4}
 .feature-bento .fb-mac{grid-column:1/5;grid-row:3/6}
@@ -1814,8 +1814,8 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
             <line pathLength="1" x1="59" y1="150" x2="59" y2="380"/>
             <line pathLength="1" x1="183" y1="150" x2="183" y2="380"/>
           </svg>
-          <h3>Your logo, applied to a real item.</h3>
-          <p>BrandMyItem applies every approved sponsor mark using the listed method before delivery.</p>
+          <h3>Your logo, actually on something.</h3>
+          <p>Sticker, patch, embroidery, or engraving. Applied to a real item, carried in public for the whole term.</p>
           <div class="fb-bagwrap" aria-hidden="true">
             <img src="bento/bag.png" alt="">
             <svg viewBox="0 0 187 324">
@@ -1830,8 +1830,8 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
         </article>
 
         <article class="fb-tile fb-days" data-phase="0" data-loop="12000" style="--i:1">
-          <h3>If it doesn't fund, purchases are refunded.</h3>
-          <p>Each spot is charged at checkout. If every spot isn't purchased by day 60, refunds are initiated to the original payment method within 5 business days.</p>
+          <h3>Not funded? Refunded.</h3>
+          <p>Every spot is charged at checkout. Not fully funded by day 60, every buyer is refunded automatically.</p>
           <div class="fb-num"><span id="fbDayNum">1</span><small id="fbDayUnit">day</small></div>
           <div class="fb-ruler" id="fbRuler" aria-hidden="true"></div>
           <div class="fb-rows">
@@ -1843,8 +1843,8 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
         </article>
 
         <article class="fb-tile fb-mac" data-phase="0" data-loop="11000" style="--i:2">
-          <h3>Real items, bought at retail.</h3>
-          <p>When every spot is purchased, BrandMyItem buys the listed item new, applies every sponsor mark, and delivers it to the Owner within 60 days.</p>
+          <h3>Real items, not points.</h3>
+          <p>When the last spot sells, BrandMyItem buys the item new at retail and ships it straight to the owner.</p>
           <div class="fb-itemline"><b id="fbItemName">MacBook Pro 14&quot;</b><span id="fbItemMeta">$1,599 retail — 10 spots</span></div>
           <div class="fb-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg><span class="fb-funded">Fully funded. Purchase triggered.</span><span class="fb-shipped">Delivered pre-branded to the Owner</span></div>
           <div class="fb-stage" id="fbItemStage">
@@ -1856,8 +1856,8 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
         </article>
 
         <article class="fb-tile fb-checkin" data-phase="0" data-loop="7000" style="--i:3">
-          <h3>One check-in photo per cycle.</h3>
-          <p>The Owner submits one current photo on the locked weekly, biweekly, or monthly cadence, with the item in use and its placements visible.</p>
+          <h3>Proof, on a schedule.</h3>
+          <p>One photo each cycle, weekly, biweekly, or monthly, showing the item and its placements in use.</p>
           <div class="fb-proof" aria-hidden="true">
             <figure><img src="bento/proof-1.jpg" alt=""><figcaption>Cycle 1</figcaption></figure>
             <figure><img src="bento/proof-2.jpg" alt=""><figcaption>Cycle 2</figcaption></figure>
@@ -1871,8 +1871,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
         </article>
 
         <article class="fb-tile fb-price" data-phase="0" data-loop="9000" style="--i:5">
-          <h3>One clear price per spot.</h3>
-          <p>Each ad space has a simple, all-in purchase price.</p>
+          <h3>Priced by surface.</h3>
           <div class="fb-price-visual" id="fbPriceVisual">
             <img class="fb-price-phone" src="bento/cutout-iphone.png" alt="" aria-hidden="true">
           </div>
@@ -1881,7 +1880,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 
         <article class="fb-tile fb-term" data-phase="0" data-loop="9000" style="--i:4">
           <h3>Pick the term.</h3>
-          <p>The Owner chooses a 6-, 12-, or 18-month term when posting. The selected term locks when the first spot sells.</p>
+          <p>The owner chooses 6, 12, or 18 months when posting. Locked from the moment it's live.</p>
           <img class="fb-suit" src="bento/suit.png" alt="" aria-hidden="true">
           <div class="fb-options">
             <div class="fb-option" data-k="0"><div class="fb-n">6</div><div><div class="fb-option-bar" style="width:33%"><i></i></div><small>months</small></div></div>
@@ -1894,6 +1893,10 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
     </section>
 
     <section class="band" id="home-faq" style="padding-top:0">
+      <div class="faq-head">
+        <h2>Asked and answered.</h2>
+        <p class="faq-lede">Everything owners and brands ask before they use BrandMyItem, in plain language. BrandMyItem is operated by IRLi LLC.</p>
+      </div>
       <div class="faq-group">
         <h3>The basics</h3>
         <div class="faq-grid">
@@ -1901,7 +1904,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           <details class="faq"><summary>Who actually buys the item?<span class="x"></span></summary><div class="fa">BrandMyItem does. Once a listing is fully funded, we purchase the item new from a retailer and ship it directly to the owner. The owner never receives or handles any money at any point.</div></details>
           <details class="faq"><summary>Does the owner make money?<span class="x"></span></summary><div class="fa">No. The owner never receives cash. The only thing an owner ever receives is the item itself. Brand payments are made to BrandMyItem for the placement service, not to the owner.</div></details>
           <details class="faq"><summary>Is this crowdfunding?<span class="x"></span></summary><div class="fa">No. Brands are buying a defined advertising placement from BrandMyItem at a fixed price, and every purchase is automatically refunded if the listing doesn't fully fund within 60 days. Nothing is pledged, nothing is held, and no one is asked to fund a promise.</div></details>
-          <details class="faq"><summary>How are spots priced?<span class="x"></span></summary><div class="fa">By surface. Each spot's price is its share of the item's usable surface multiplied by the item's retail price, and all spot prices on a listing add up to that retail price exactly. Nothing above it, nothing below it.</div></details>
+          <details class="faq"><summary>How are spots priced?<span class="x"></span></summary><div class="fa">By surface. Each spot's base share comes from its portion of the item's usable advertising surface. The final all-in spot prices add up to the full campaign goal, including 40% covering BrandMyItem-applied branding, item sales tax, shipping, and handling.</div></details>
           <details class="faq"><summary>What items are allowed?<span class="x"></span></summary><div class="fa">Items from the current catalog only: everyday, publicly visible items of $300 or more with a real ad surface, like laptops, phones, luggage, golf bags, and coolers. Nothing motorized, registered, or insured is listed, ever.</div></details>
         </div>
       </div>
@@ -1910,8 +1913,8 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
         <h3>For owners</h3>
         <div class="faq-grid">
           <details class="faq"><summary>What do I commit to?<span class="x"></span></summary><div class="fa">Three things: keep the branding applied for your full term, use the item in public the way it's meant to be used, and send one check-in photo on the schedule you chose. That's the entire commitment.</div></details>
-          <details class="faq"><summary>How long is the term?<span class="x"></span></summary><div class="fa">You choose 6, 12, or 18 months when you post the item. The term locks for everyone the moment the first spot sells.</div></details>
-          <details class="faq"><summary>How often do I check in?<span class="x"></span></summary><div class="fa">You pick the pace when you post: weekly, biweekly, or monthly. One photo per cycle showing the item and its branding in use, for the whole term. No dashboard, no login required to keep it going.</div></details>
+          <details class="faq"><summary>How long is the term?<span class="x"></span></summary><div class="fa">You choose 6, 12, or 18 months when you post the item. The term is locked from the moment the listing goes live and cannot be changed.</div></details>
+          <details class="faq"><summary>How often do I check in?<span class="x"></span></summary><div class="fa">You pick the pace when you post: weekly, biweekly, or monthly. Like the term, it locks when the listing goes live. One photo per cycle showing the item and its branding in use, for the whole term.</div></details>
           <details class="faq"><summary>What happens if I miss check-ins?<span class="x"></span></summary><div class="fa">Missed check-ins put a public flag on your listing, and continued misses restrict you from posting new items. There is no financial penalty and nothing is taken from you; your record is simply public.</div></details>
           <details class="faq"><summary>Who owns the item?<span class="x"></span></summary><div class="fa">You do, from the day it's delivered. The term is a display commitment, not a loan or a lease. You agree not to sell the item or remove the branding until your term ends.</div></details>
           <details class="faq"><summary>When does my item arrive?<span class="x"></span></summary><div class="fa">Once fully funded, BrandMyItem purchases the item, applies every approved sponsor mark, and delivers it pre-branded within 60 days.</div></details>
@@ -1941,18 +1944,6 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
         </div>
       </div>
 
-      <div class="faq-grid legacy-faq-grid">
-        <details class="faq"><summary>Is this real?</summary><div class="fa">Completely. The items are real, the stickers are real die-cut vinyl, and every listing belongs to a real person who takes it where they work, study, and travel. The only fiction is the idea that a laptop lid or a suitcase isn't premium ad inventory.</div></details>
-        <details class="faq"><summary>Does the owner make money?</summary><div class="fa">No, and that's the point. Once a listing is fully funded, IRLi LLC buys the item and ships it to the owner. Spot money funds that purchase, the platform fee runs the business, and cash never changes hands with the owner at any point.</div></details>
-        <details class="faq"><summary>What does a brand actually get?</summary><div class="fa">Your logo printed on the item itself, visible everywhere it goes and in everything its owner posts, plus your spot on the listing page with a link to your site, for as long as the owner's chosen term runs (6, 12, or 18 months). No impressions promised, just real presence in real rooms your ads can't reach.</div></details>
-        <details class="faq"><summary>How does payment work?</summary><div class="fa">Buying a spot charges your card immediately for the purchase total, which includes 40% covering BrandMyItem-applied branding, item sales tax, shipping, and handling. No holds, no waiting. If a listing doesn't sell out within 60 days, every brand on it is refunded automatically. If it sells out but shipment runs late, you'll get a notice before the promised date passes, with the choice to wait or take a full refund. If the item can never be delivered, you're refunded in full without having to ask.</div></details>
-        <details class="faq"><summary>Can any brand join?</summary><div class="fa">Almost. Every sponsor is approved by hand before anything is printed. Alcohol, cannabis, tobacco, and political ads aren't accepted, and the item's owner has the final say on what rides on their stuff. Refused purchases are refunded in full.</div></details>
-        <details class="faq"><summary>What keeps the owner honest?</summary><div class="fa">Monthly photo check-ins, public on the listing for anyone to see. The first one requires a receipt dated after the listing funded, so nobody can claim credit for an item they already owned. Miss a check-in and the listing gets flagged publicly; miss two in a row and that owner can't post another listing.</div></details>
-        <details class="faq"><summary>What can I post?</summary><div class="fa">Objects and wearables. Laptops, phones, tumblers, luggage, coolers, wedding suits, graduation gowns. Nothing that needs insurance or permits, so no cars or property.</div></details>
-        <details class="faq"><summary>What if the item never sells out?</summary><div class="fa">Every listing gets 60 days. Sell out in time and it ships. If it doesn't, every brand who bought a spot is refunded automatically and the listing closes — no request needed, no money left sitting indefinitely.</div></details>
-        <details class="faq"><summary>Do I have to say it's sponsored if I post about it?</summary><div class="fa">Yes. Any post about a sponsored item needs to disclose that, and BrandMyItem's built-in share tool tags it for you automatically. That's not a house rule — it's an FTC requirement any time you post about something you received for free in exchange for showing a brand's logo.</div></details>
-        <details class="faq"><summary>Who actually buys the item?</summary><div class="fa">IRLi LLC does, once the listing reaches 100%. Neither the brand nor the owner fronts the item cost — brands pay for ad space, IRLi LLC buys and ships the physical item, and the owner never touches campaign money at any step.</div></details>
-      </div>
     </section>
 
   </div>
@@ -2453,7 +2444,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 <footer class="site-footer">
   <div class="fwrap">
     <div class="fine">
-      <p>* Spot prices are set by surface share and always add up to the item's full purchase goal. Every purchase total covers BrandMyItem-applied branding, item sales tax, shipping, and handling. Every spot is charged in full at purchase. If a listing is not fully funded within 60 days, every purchase is refunded automatically to the original payment method; no request is required. Once a listing is fully funded, BrandMyItem purchases the item new, applies and verifies every approved sponsor mark, and delivers it pre-branded within 60 days. Owners never receive, hold, or handle money at any point. The owner selects the commitment term (6, 12, or 18 months) and check-in cadence (weekly, biweekly, or monthly) when posting; both lock when the first spot sells. Missed check-ins result in a public flag and, if continued, restriction from posting new items; there is no financial penalty. Items are purchased new and carry the manufacturer's warranty. Availability is first come, first served, while spots last.</p>
+      <p>* Spot prices are set by surface share and always add up to the item's full purchase goal. Every purchase total covers BrandMyItem-applied branding, item sales tax, shipping, and handling. Every spot is charged in full at purchase. If a listing is not fully funded within 60 days, every purchase is refunded automatically to the original payment method; no request is required. Once a listing is fully funded, BrandMyItem purchases the item new, applies and verifies every approved sponsor mark, and delivers it pre-branded within 60 days. Owners never receive, hold, or handle money at any point. The owner selects the commitment term (6, 12, or 18 months) and check-in cadence (weekly, biweekly, or monthly) when posting; both are locked from the moment the listing is published. Missed check-ins result in a public flag and, if continued, restriction from posting new items; there is no financial penalty. Items are purchased new and carry the manufacturer's warranty. Availability is first come, first served, while spots last.</p>
       <p>Owners who post about their item on social media must clearly disclose the material connection in accordance with the FTC Endorsement Guides. Brands confirm they hold the rights to any mark they submit and license BrandMyItem to reproduce it once, on the purchased spot, and to display the owner's check-in photos publicly. Placements that are unlawful, that use marks the purchaser does not own, or that fall into restricted categories will be declined. Receiving an item may be taxable income; owners are responsible for taxes that apply to them, and forms are issued where required. All product names shown in listings are the property of their respective manufacturers, and no listing implies any affiliation with, or endorsement by, the manufacturer of the item.</p>
       <p><b>The story, short version.</b> BrandMyItem started with one laptop. Vincent (<a href="https://x.com/vynsedev" target="_blank" rel="noopener">@vynsedev</a>) sold the lid of his MacBook to the internet, sticker by sticker, with <a href="https://brandmymac.com" target="_blank" rel="noopener">BrandMyMac</a>, and proved that people will fund a real thing for a real spot on it. BrandMyItem is Cam's (<a href="https://x.com/imce0bitch" target="_blank" rel="noopener">@imce0bitch</a>) answer to the obvious next question: why stop at one Mac? Same honest trade, every item worth carrying. Respect where it started.</p>
       <p>BrandMyItem is operated by IRLi LLC, a California limited liability company. BrandMyItem is a marketplace for physical advertising placements; it is not a bank, a money transmitter, a crowdfunding platform, or an investment of any kind.</p>
