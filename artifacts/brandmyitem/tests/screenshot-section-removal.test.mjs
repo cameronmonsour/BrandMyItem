@@ -115,7 +115,7 @@ test('dashboard keeps compact tracker cards without a duplicate left category bo
   assert.doesNotMatch(html, /class="card filter-card"/);
   assert.match(html, /\.grid\{display:grid;grid-template-columns:repeat\(auto-fill,minmax\(236px,1fr\)\);gap:20px\}/);
   assert.match(html, /#home-onboard\{padding-bottom:0!important\}/);
-  assert.match(html, /\.home-how-band\{padding:56px 0!important\}/);
+  assert.match(html, /\.home-how-band\{padding:0 0 56px!important\}/);
   assert.match(html, /\.home-flow-list\{[^}]*max-width:1100px;margin:0 auto/);
   assert.match(html, /\.home-flow-step:nth-child\(2\),\.home-flow-step:nth-child\(3\),\.home-flow-step:nth-child\(4\)\{transform:none\}/);
   assert.match(html, /\.habs button\.on\{background:#1D1D1F;border:1px solid #1D1D1F;color:#fff\}/);
@@ -142,6 +142,9 @@ test('dashboard keeps compact tracker cards without a duplicate left category bo
   assert.match(html, /id="fTerm"/);
   assert.match(html, /id="fCadence"/);
   assert.match(html, /listingContextHtml\(l\)\+'<div class="iname">/);
+  assert.match(html, /\.lcard \.iname\{[^}]*height:20px;line-height:20px;[^}]*margin:0 0 3px/);
+  assert.doesNotMatch(html, /<span class="when">— /);
+  assert.doesNotMatch(html, /aria-hidden="true">&mdash;<\/span>/);
   assert.match(html, /<span class="chipg sold-count">/);
 });
 
@@ -212,7 +215,7 @@ test('every catalog item has an item-specific branding method', () => {
 });
 
 test('sold and price pills keep the same compact height', () => {
-  assert.match(html, /\.lcard \.iname\{display:block;height:20px;line-height:20px;[^}]*margin:0 0 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis\}/);
+  assert.match(html, /\.lcard \.iname\{display:block;height:20px;line-height:20px;[^}]*margin:0 0 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis\}/);
   assert.match(html, /\.lcard \.moneyrow\{display:grid;grid-template-columns:minmax\(0,1fr\) auto;align-items:end;/);
   assert.match(html, /\.lcard \.moneyrow \.amts\{display:inline-flex;align-items:center;height:21px;line-height:1\.2;/);
   assert.match(html, /\.lcard \.chips\{display:flex;align-items:flex-end;gap:5px/);

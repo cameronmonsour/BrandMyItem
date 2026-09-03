@@ -41,7 +41,7 @@ test('every rotating bento item uses an exact-dimension transparent cutout with 
   assert.match(html, /class="fb-spot-logo"/);
   assert.doesNotMatch(html, /class="fb-logo-cover"/);
   assert.match(html, /unit\.classList\.toggle\('is-bought',index<boughtCount\)/);
-  assert.match(html, /itemMeta\.textContent='\$'\+item\.price\.toLocaleString\(\)\+' retail — '\+item\.n\+' spots'/);
+  assert.match(html, /itemMeta\.textContent='\$'\+item\.price\.toLocaleString\(\)\+' retail, '\+item\.n\+' spots'/);
   assert.match(html, /\.fb-stage\{position:absolute;left:20px;right:20px;top:var\(--fb-stage-top,210px\);bottom:58px;[^}]*overflow:hidden\}/);
   assert.match(html, /itemStage\.style\.aspectRatio=frame\.size\[0\]\+'\/'\+frame\.size\[1\]/);
   assert.match(html, /itemStage\.style\.height=frame\.size\[0\]>=frame\.size\[1\]\?'auto':'88%'/);

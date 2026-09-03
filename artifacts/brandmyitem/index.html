@@ -490,7 +490,7 @@ details.faq .fa b{color:var(--fg);font-weight:600}
 .mapcenter .snapimg{max-width:180px;max-height:180px;background:#FFFFFF}
 .lcard .newb{position:absolute;top:10px;left:10px;z-index:3}
 .lcard .body{padding:13px 16px 15px}
-.lcard .who{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.lcard .who{display:flex;align-items:center;gap:8px;margin-bottom:6px}
 .lcard .who .avatarc{width:26px;height:26px;border-radius:50%;background:#1D1D1F;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;overflow:hidden}
 .lcard .who .avatarc.avatar-photo{background:#F5F5F7}
 .lcard .who .avatarc img{width:100%;height:100%;object-fit:cover}
@@ -498,8 +498,8 @@ details.faq .fa b{color:var(--fg);font-weight:600}
 .lcard .who .when{font-size:12.5px;color:var(--mfg)}
 .lcard .who .catic{margin-left:auto;width:26px;height:26px;border-radius:50%;background:#fff;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden}
 .lcard .who .catic img{width:80%;height:80%;object-fit:contain}
-.lcard .iname{display:block;height:20px;line-height:20px;font-size:16px;font-weight:600;letter-spacing:-.012em;margin:0 0 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.lcard .card-context{display:flex;align-items:center;min-width:0;margin:0 0 9px;font-size:11.5px;line-height:1.25;color:var(--mfg)}
+.lcard .iname{display:block;height:20px;line-height:20px;font-size:16px;font-weight:600;letter-spacing:-.012em;margin:0 0 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lcard .card-context{display:flex;align-items:center;min-width:0;margin:0 0 5px;font-size:11.5px;line-height:1.25;color:var(--mfg)}
 .lcard .card-context-value{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .lcard .card-context-em{color:var(--fg);font-weight:600}
 .lcard .moneyrow{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:8px;min-width:0}
@@ -1125,7 +1125,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 /* Homepage model explainer */
 .home-model-head{max-width:760px;text-align:center;margin:0 auto 46px}
 .home-flow{position:relative;margin:0;padding:0}
-.home-how-band{padding:56px 0!important}
+.home-how-band{padding:0 0 56px!important}
 #home-onboard{padding-bottom:0!important}
 .home-flow-line{display:none}
 .home-flow-list{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px;list-style:none;max-width:1100px;margin:0 auto;padding:0;position:relative}
@@ -1246,7 +1246,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 .home-model-note{max-width:790px;margin:28px auto 0;text-align:center}
 @media(max-width:900px){
   .home-flow{margin-bottom:0}
-  .home-how-band{padding:58px 0 68px!important}
+  .home-how-band{padding:0 0 68px!important}
   .home-flow-line{display:none}
   .home-flow-list{grid-template-columns:1fr;gap:0;max-width:620px;margin:0 auto}
   .home-flow-step,.home-flow-step:nth-child(2),.home-flow-step:nth-child(4){display:grid;grid-template-columns:72px minmax(0,1fr);column-gap:18px;text-align:left;padding:0 0 30px;position:relative;transform:none}
@@ -1842,7 +1842,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
         <article class="fb-tile fb-mac" data-phase="0" data-loop="11000" style="--i:2">
           <h3>Real items, not points.</h3>
           <p>When the last spot sells, BrandMyItem buys the item new at retail and ships it straight to the owner.</p>
-          <div class="fb-itemline"><b id="fbItemName">MacBook Pro 14&quot;</b><span id="fbItemMeta">$1,599 retail — 10 spots</span></div>
+          <div class="fb-itemline"><b id="fbItemName">MacBook Pro 14&quot;</b><span id="fbItemMeta">$1,599 retail, 10 spots</span></div>
           <div class="fb-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg><span class="fb-funded">Fully funded. Purchase triggered.</span><span class="fb-shipped">Delivered pre-branded to the Owner</span></div>
           <div class="fb-stage" id="fbItemStage">
             <div class="fb-stage-inner">
@@ -7132,10 +7132,10 @@ function sponsorLogoStack(l){
 }
 function listingContextHtml(l){
   var parts=[];
-  if(l.closed)parts.push('<span style="color:#B23327">Closed — refunded</span>');
-  else if(l.nonCompliant)parts.push('<span style="color:#B23327">Check-in overdue — posting restricted</span>');
-  else if(l.shippedAt)parts.push('<span style="color:#1F7A44">Shipped — check-ins active</span>');
-  else if(pctOf(l)>=100)parts.push('<span style="color:#1F7A44">Funded — preparing shipment</span>');
+  if(l.closed)parts.push('<span style="color:#B23327">Closed, refunded</span>');
+  else if(l.nonCompliant)parts.push('<span style="color:#B23327">Check-in overdue, posting restricted</span>');
+  else if(l.shippedAt)parts.push('<span style="color:#1F7A44">Shipped, check-ins active</span>');
+  else if(pctOf(l)>=100)parts.push('<span style="color:#1F7A44">Funded, preparing shipment</span>');
   var locations=[];
   (l.cities||[]).slice(0,2).forEach(function(v){if(v&&!locations.includes(v))locations.push(v)});
   (l.universities||[]).slice(0,1).forEach(function(v){if(v&&!locations.includes(v))locations.push(v)});
@@ -7143,7 +7143,7 @@ function listingContextHtml(l){
   if(l.social)parts.push('<span class="card-context-em">'+safeCardText(l.social)+' followers</span>');
   locations.slice(0,2).forEach(function(v){parts.push(safeCardText(v))});
   if(!parts.length)return '';
-  return '<div class="card-context" aria-label="'+safeCardText(parts.map(function(v){return v.replace(/<[^>]+>/g,'')}).join(' — '))+'"><span class="card-context-value">'+parts.join(' <span aria-hidden="true">&mdash;</span> ')+'</span></div>';
+  return '<div class="card-context" aria-label="'+safeCardText(parts.map(function(v){return v.replace(/<[^>]+>/g,'')}).join(', '))+'"><span class="card-context-value">'+parts.join(', ')+'</span></div>';
 }
 function renderSpotMap(el,st){if(el)el.innerHTML='';return}
 function renderSpotMap_DEAD(el,st,opts){
@@ -8045,7 +8045,7 @@ function renderHomeCampaigns(){
     var card=document.createElement('button');card.type='button';card.className='lcard home-campaign-card';
     card.innerHTML='<div class="thumb" id="home-th-'+l.id+'"></div>'+
       '<div class="body">'+
-      '<div class="who">'+ownerAvatarHtml(l)+'<span class="oname">'+l.owner+'</span><span class="when">— '+ago(l.created)+'</span><span class="catic"><img src="'+PHO(l)+'" alt=""></span></div>'+
+      '<div class="who">'+ownerAvatarHtml(l)+'<span class="oname">'+l.owner+'</span><span class="when">'+ago(l.created)+'</span><span class="catic"><img src="'+PHO(l)+'" alt=""></span></div>'+
       listingContextHtml(l)+'<div class="iname">'+it.label+'</div>'+
        '<div class="moneyrow"><span class="amts">'+money(raisedOf(l))+'<span>/'+money(goalOf(l))+'</span></span>'+
        '<span class="chips"><span class="chipg sold-count">'+sold+'/'+l.slots+' sold</span><span class="sponsor-price">'+sponsorLogoStack(l)+'<span class="chipb">from '+money(minOpenPrice(l)===Infinity?Math.min.apply(null,l.prices):minOpenPrice(l))+'</span></span></span></div>'+
@@ -8455,7 +8455,7 @@ function renderDash(){
     card.setAttribute('aria-label','Preview campaign for '+it.label+' by '+(l.owner||'this owner'));
     card.innerHTML='<div class="thumb" id="th-'+l.id+'"></div>'+
       '<div class="body">'+
-      '<div class="who">'+ownerAvatarHtml(l)+'<span class="oname">'+l.owner+'</span><span class="when">— '+ago(l.created)+'</span><span class="catic"><img src="'+PHO(l)+'" alt=""></span></div>'+
+      '<div class="who">'+ownerAvatarHtml(l)+'<span class="oname">'+l.owner+'</span><span class="when">'+ago(l.created)+'</span><span class="catic"><img src="'+PHO(l)+'" alt=""></span></div>'+
       listingContextHtml(l)+'<div class="iname">'+it.label+'</div>'+
       '<div class="moneyrow"><span class="amts">'+money(raisedOf(l))+'<span>/'+money(goalOf(l))+'</span></span>'+
       '<span class="chips"><span class="chipg sold-count">'+sold+'/'+l.slots+' sold</span><span class="sponsor-price">'+sponsorLogoStack(l)+'<span class="chipb">from '+money(listingSpotPrice(l))+'</span></span></span></div>'+
@@ -10870,7 +10870,7 @@ function initHomeFeatureBento(){
     if(!itemImg)return;
     itemImg.src=item.img;
     if(itemName)itemName.textContent=item.name;
-    if(itemMeta)itemMeta.textContent='$'+item.price.toLocaleString()+' retail — '+item.n+' spots';
+    if(itemMeta)itemMeta.textContent='$'+item.price.toLocaleString()+' retail, '+item.n+' spots';
     requestAnimationFrame(syncItemStageTop);
     if(itemStage){
       if(frame){
