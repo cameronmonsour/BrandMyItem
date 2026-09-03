@@ -9176,7 +9176,8 @@ function renderCustomStage(el,l,onTap){
     frame.x=(cv.width-frame.w)/2;frame.y=(cv.height-frame.h)/2;
     g.drawImage(img,frame.x,frame.y,frame.w,frame.h);
     var cssWidth=cv.getBoundingClientRect().width||cv.clientWidth||cv.width;
-    var placementStroke=2*cv.width/cssWidth;
+    var compactCard=!!cv.closest('.lcard');
+    var placementStroke=(compactCard?1.25:2)*cv.width/cssWidth;
     (l.tiles||[]).forEach(function(t,i){
       var c=l.claims&&l.claims[i],price=c?money(c.amt||l.prices[i]):money(l.prices[i]);
       drawPricePlacement(g,t,frame,price,c?logoImages[i]:null,c&&c.brand,placementStroke);
