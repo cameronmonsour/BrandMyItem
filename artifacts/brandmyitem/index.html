@@ -1167,6 +1167,8 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 .feature-bento .fb-scene path,.feature-bento .fb-scene line,.feature-bento .fb-scene rect{fill:none;stroke:var(--fg);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .feature-bento .fb-bagwrap{position:absolute;right:40px;top:156px;height:254px;aspect-ratio:187/324;z-index:2;transition:transform 1.5s var(--fb-ease)}
 .feature-bento .fb-bagwrap img{height:100%;width:100%;position:relative;z-index:2}
+.feature-bento .fb-bagwrap>svg{position:absolute;inset:0;width:100%;height:100%;z-index:3;overflow:visible}
+.feature-bento .fb-spotline{fill:none;stroke:#fff;stroke-width:1.5;vector-effect:non-scaling-stroke;visibility:visible}
 .feature-bento .fb-hero[data-phase="4"] .fb-bagwrap{animation:fbRoll 1.5s var(--fb-ease) .45s both}
 @keyframes fbRoll{0%{transform:translateX(-178px) rotate(-7deg)}70%{transform:translateX(12px) rotate(-3deg)}100%{transform:none}}
 .feature-bento .fb-days .fb-num{font-size:120px;font-weight:800;letter-spacing:-.07em;line-height:.88;margin:auto 0 12px}
@@ -1187,8 +1189,11 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 .feature-bento .fb-note{font-size:12px;color:var(--mfg);margin-top:12px;min-height:18px}
 .feature-bento .fb-itemline{margin-top:8px;display:flex;flex-direction:column;gap:2px;position:relative;z-index:3}
 .feature-bento .fb-itemline b{font-size:13px}.feature-bento .fb-itemline span{font-size:11px;color:var(--mfg)}
-.feature-bento .fb-stage{position:absolute;left:20px;right:20px;top:156px;bottom:58px;display:grid;place-items:center}
-.feature-bento .fb-stage>img{max-width:88%;max-height:88%;width:auto;height:auto;filter:drop-shadow(0 18px 18px rgba(0,0,0,.14));transition:opacity .25s}
+.feature-bento .fb-stage{position:absolute;left:20px;right:20px;top:156px;bottom:58px;display:flex;align-items:center;justify-content:center}
+.feature-bento .fb-stage-inner{position:relative;display:flex;max-width:88%;max-height:88%;filter:drop-shadow(0 18px 18px rgba(0,0,0,.14))}
+.feature-bento .fb-stage-inner>img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;transition:opacity .25s}
+.feature-bento .fb-stage-inner>svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.feature-bento .fb-stage .fb-spot{fill:none;stroke:#fff;stroke-width:1.5;vector-effect:non-scaling-stroke;visibility:visible}
 .feature-bento .fb-fund{position:absolute;left:36px;right:36px;bottom:22px;z-index:3;font-size:12px;font-weight:600;display:flex;align-items:center;gap:10px;opacity:0;transition:opacity .5s}
 .feature-bento .fb-mac[data-phase="2"] .fb-fund,.feature-bento .fb-mac[data-phase="3"] .fb-fund{opacity:1}
 .feature-bento .fb-fund .fb-bar{flex:1;height:4px;border-radius:2px;background:rgba(29,29,31,.15);overflow:hidden}
@@ -1212,11 +1217,15 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 .feature-bento .fb-due,.feature-bento .fb-verified{position:absolute;right:24px;bottom:40px;font-size:12px;font-weight:600;border-radius:999px;padding:7px 12px;opacity:0;transform:translateY(-6px);transition:opacity .4s,transform .5s var(--fb-ease)}
 .feature-bento .fb-due{background:#fff;border:1px solid var(--fg)}.feature-bento .fb-verified{background:var(--fg);color:#fff}
 .feature-bento .fb-checkin[data-phase="1"] .fb-due,.feature-bento .fb-checkin[data-phase="3"] .fb-verified,.feature-bento .fb-checkin[data-phase="4"] .fb-verified{opacity:1;transform:none}
-.feature-bento .fb-price{padding:26px 140px 22px 28px}
-.feature-bento .fb-price h3{font-size:28px;line-height:1.05;text-align:left;max-width:9ch;margin-left:0;margin-right:0;letter-spacing:-0.03em}
-.feature-bento .fb-price-visual{position:absolute;right:22px;top:50%;transform:translateY(-50%);height:130px;width:calc(130px * (68 / 149))}
+.feature-bento .fb-price{padding:24px 140px 48px 28px}
+.feature-bento .fb-price h3{font-size:24px;line-height:1;text-align:left;max-width:10ch;margin:0 0 8px;letter-spacing:-0.03em}
+.feature-bento .fb-price p{font-size:13px;line-height:1.25;text-align:left;max-width:17ch;margin:0}
+.feature-bento .fb-price-visual{position:absolute;right:22px;top:50%;transform:translateY(-50%);height:130px;width:calc(130px * (952 / 1275))}
 .feature-bento .fb-price-phone{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
-.feature-bento .fb-sum{position:absolute;left:28px;bottom:16px;display:flex;align-items:baseline;gap:7px}.feature-bento .fb-sum b{font-size:27px;font-weight:800;letter-spacing:-.06em}.feature-bento .fb-sum small{font-size:10.5px;color:var(--mfg);opacity:0}.feature-bento .fb-price[data-phase="4"] .fb-sum small{opacity:1}
+.feature-bento .fb-price-map{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.feature-bento .fb-price-map .fb-ps{fill:none;stroke:#fff;stroke-width:1.5;vector-effect:non-scaling-stroke;opacity:.35;transition:opacity .4s}
+.feature-bento .fb-price-map .fb-ps.on{opacity:1}
+.feature-bento .fb-sum{position:absolute;left:28px;bottom:14px;display:flex;align-items:baseline;gap:7px}.feature-bento .fb-sum b{font-size:25px;font-weight:800;letter-spacing:-.06em}.feature-bento .fb-sum small{font-size:10.5px;color:var(--mfg);opacity:0}.feature-bento .fb-price[data-phase="4"] .fb-sum small{opacity:1}
 .feature-bento .fb-term h3,.feature-bento .fb-term p{max-width:190px;text-align:left;margin-left:0;margin-right:0}.feature-bento .fb-term p{max-width:178px}
 .feature-bento .fb-term .fb-suit{position:absolute;right:22px;top:40px;height:116px}
 .feature-bento .fb-options{margin:auto 0 64px;display:flex;flex-direction:column;gap:6px}
@@ -1261,7 +1270,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
   .feature-bento .fb-proof img,.feature-bento .fb-proof .fb-next-proof{width:54px;height:41px}
   .feature-bento .fb-shot{left:auto;right:-22px;bottom:-62px;height:190px}
   .feature-bento .fb-due,.feature-bento .fb-verified{right:20px;bottom:24px}
-  .feature-bento .fb-price{padding:26px 132px 22px 28px;min-height:260px}
+  .feature-bento .fb-price{padding:26px 132px 48px 28px;min-height:260px}
   .feature-bento .fb-price-visual{right:18px}
   .feature-bento .fb-term .fb-suit{right:18px;top:34px;height:96px}
   .feature-bento .fb-options{margin-bottom:62px}
@@ -1799,6 +1808,9 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           <p>BrandMyItem applies every approved sponsor mark using the listed method before delivery.</p>
           <div class="fb-bagwrap" aria-hidden="true">
             <img src="bento/bag.png" alt="">
+            <svg viewBox="0 0 187 324">
+              <rect class="fb-spotline" x="13" y="86" width="160" height="225" rx="8"/>
+            </svg>
           </div>
         </article>
 
@@ -1818,9 +1830,13 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
         <article class="fb-tile fb-mac" data-phase="0" data-loop="11000" style="--i:2">
           <h3>Real items, bought at retail.</h3>
           <p>When every spot is purchased, BrandMyItem buys the listed item new, applies every sponsor mark, and delivers it to the Owner within 60 days.</p>
-          <div class="fb-itemline"><b id="fbItemName">MacBook Pro 14&quot;</b><span id="fbItemMeta">$1,599 retail · 6 spots</span></div>
+          <div class="fb-itemline"><b id="fbItemName">MacBook Pro 14&quot;</b><span id="fbItemMeta">$1,599 retail · 10 spots</span></div>
           <div class="fb-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg><span class="fb-funded">Fully funded. Purchase triggered.</span><span class="fb-shipped">Delivered pre-branded to the Owner</span></div>
-          <div class="fb-stage" id="fbItemStage"><img id="fbItemImg" src="bento/macbook.png" alt=""></div>
+          <div class="fb-stage" id="fbItemStage">
+            <div class="fb-stage-inner">
+              <img id="fbItemImg" src="bento/cutout-macbook.png" alt="">
+            </div>
+          </div>
           <div class="fb-fund"><span id="fbFundPct">0%</span><div class="fb-bar"><i id="fbFundBar"></i></div><span id="fbFundAmt">$0 of $1,599</span></div>
         </article>
 
@@ -1842,8 +1858,8 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
         <article class="fb-tile fb-price" data-phase="0" data-loop="9000" style="--i:5">
           <h3>One clear price per spot.</h3>
           <p>Each ad space has a simple, all-in purchase price.</p>
-          <div class="fb-price-visual">
-            <img class="fb-price-phone" src="bento/phone.png" alt="" aria-hidden="true">
+          <div class="fb-price-visual" id="fbPriceVisual">
+            <img class="fb-price-phone" src="bento/cutout-iphone.png" alt="" aria-hidden="true">
           </div>
           <div class="fb-sum"><b>$<span id="fbSumNum">0</span></b><small>combined spot total<br>includes 40%</small></div>
         </article>
@@ -10732,7 +10748,9 @@ function initHomeFeatureBento(){
   var clamp=function(v,a,b){return Math.min(b,Math.max(a,v))};
   var seg=function(p,a,b){return clamp((p-a)/(b-a),0,1)};
   var ease=function(t){return 1-Math.pow(1-t,3)};
-  if('IntersectionObserver' in window){
+  if(location.hash==='#homeFeatureBento'){
+    root.classList.add('in');
+  }else if('IntersectionObserver' in window){
     var observer=new IntersectionObserver(function(entries){
       if(entries[0].isIntersecting){root.classList.add('in');observer.disconnect()}
     },{threshold:.12});
@@ -10765,19 +10783,49 @@ function initHomeFeatureBento(){
     if(dayNote)dayNote.textContent=phase===3?'Not funded by day 60. Refunds initiated.':(phase===4?'':(phase>=1?'3 of 5 spots purchased':''));
   });
   var items=[
-    {name:'MacBook Pro 14\"',price:1599,img:'bento/macbook.png',n:6},
-    {name:'Hard cooler',price:350,img:'bento/cooler.png',n:2},
-    {name:'Weekender',price:495,img:'bento/weekender.png',n:2},
-    {name:'Commuter backpack',price:850,img:'bento/backpack.png',n:2}
+    {name:'MacBook Pro 14\"',price:1599,img:'bento/cutout-macbook.png',n:10,type:'macbook'},
+    {name:'iPhone 17 Pro',price:1099,img:'bento/cutout-iphone.png',n:5,type:'iphone'},
+    {name:'AirPods Max',price:549,img:'bento/cutout-headphones.png',n:2,type:'headphones'},
+    {name:'RIMOWA Original Cabin',price:1550,img:'bento/cutout-case.png',n:4,type:'case'}
   ];
-  var itemIndex=0,itemImg=document.getElementById('fbItemImg'),itemName=document.getElementById('fbItemName'),itemMeta=document.getElementById('fbItemMeta');
+  var itemIndex=0,itemImg=document.getElementById('fbItemImg'),itemName=document.getElementById('fbItemName'),itemMeta=document.getElementById('fbItemMeta'),itemStage=document.querySelector('.fb-stage-inner');
   var fundPct=document.getElementById('fbFundPct'),fundBar=document.getElementById('fbFundBar'),fundAmt=document.getElementById('fbFundAmt');
+
+  function buildOverlaySvg(type, n, spotClass, mapClass) {
+    var d=CATALOG_SURFACES[type];
+    if(!d) return '';
+    var placements = lockedCatalogPlacements({width:d.size[0], height:d.size[1]}, type, n);
+    if(!placements) return '';
+    var svg = '<svg viewBox="0 0 '+d.size[0]+' '+d.size[1]+'" class="'+(mapClass||'')+'" aria-hidden="true">';
+    placements.forEach(function(p, i) {
+      var kAttr = ' data-k="'+i+'"';
+      if(p.shape === 'poly' && p.pts) {
+        var pts = p.pts.map(function(pt){ return (pt[0]*d.size[0])+','+(pt[1]*d.size[1]) }).join(' ');
+        svg += '<polygon points="'+pts+'" class="'+spotClass+'"'+kAttr+' />';
+      } else {
+        var x = (p.x - p.w/2) * d.size[0];
+        var y = (p.y - p.h/2) * d.size[1];
+        var w = p.w * d.size[0];
+        var h = p.h * d.size[1];
+        var rx = 6;
+        svg += '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="'+rx+'" class="'+spotClass+'"'+kAttr+' />';
+      }
+    });
+    svg += '</svg>';
+    return svg;
+  }
+
   function loadFeatureItem(){
     var item=items[itemIndex];
     if(!itemImg)return;
     itemImg.src=item.img;
     if(itemName)itemName.textContent=item.name;
     if(itemMeta)itemMeta.textContent='$'+item.price.toLocaleString()+' retail · '+item.n+' spots';
+    if(itemStage){
+      var oldSvg = itemStage.querySelector('svg');
+      if(oldSvg) oldSvg.remove();
+      itemStage.insertAdjacentHTML('beforeend', buildOverlaySvg(item.type, item.n, 'fb-spot', ''));
+    }
   }
   loadFeatureItem();
   runTile('.fb-mac',[[0,0],[.05,1],[.18,2],[.62,3],[.78,4],[.95,0]],function(p,phase,el){
@@ -10790,17 +10838,26 @@ function initHomeFeatureBento(){
     if(fundPct)fundPct.textContent=percent+'%';
     if(fundAmt)fundAmt.textContent='$'+amount.toLocaleString()+' of $'+item.price.toLocaleString();
   });
+  var priceVisual = document.getElementById('fbPriceVisual');
+  if(priceVisual) {
+    priceVisual.insertAdjacentHTML('beforeend', buildOverlaySvg('iphone', 5, 'fb-ps', 'fb-price-map'));
+  }
   runTile('.fb-checkin',[[0,0],[.04,1],[.30,2],[.34,3],[.62,4],[.96,0]]);
-  var priceSpots=[],priceLeads=[],priceLabels=[],priceMath=[],sumNum=document.getElementById('fbSumNum'),parts=[257,256,256];
+  var priceSpots=[],priceLeads=[],priceLabels=[],priceMath=[],sumNum=document.getElementById('fbSumNum'),parts=[307,308,308,308,308];
   runTile('.fb-price',[[0,0],[.06,1],[.28,2],[.50,3],[.72,4],[.94,0]],function(p,phase){
     var total=0;
+    if(priceSpots.length === 0 && priceVisual) {
+      priceSpots = Array.prototype.slice.call(priceVisual.querySelectorAll('.fb-ps'));
+    }
     parts.forEach(function(value,index){
-      var on=phase>=index+1&&phase<=4,start=[.06,.28,.50][index],fraction=on?ease(seg(p,start,start+.16)):0;
-      if(priceSpots[index])priceSpots[index].classList.toggle('on',on);
-      if(priceLeads[index])priceLeads[index].classList.toggle('on',on);
-      if(priceLabels[index])priceLabels[index].classList.toggle('on',on);
-      if(priceMath[index])priceMath[index].classList.toggle('on',on);
-      total+=Math.round(value*fraction);
+      var start = 0.06 + (index * 0.12); // 0.06, 0.18, 0.30, 0.42, 0.54
+      var on = p >= start && phase > 0 && phase <= 4;
+      var fraction = on ? ease(seg(p, start, start + 0.10)) : 0;
+      if(priceSpots[index]) priceSpots[index].classList.toggle('on', on);
+      if(priceLeads[index]) priceLeads[index].classList.toggle('on', on);
+      if(priceLabels[index]) priceLabels[index].classList.toggle('on', on);
+      if(priceMath[index]) priceMath[index].classList.toggle('on', on);
+      total += Math.round(value * fraction);
     });
     if(sumNum)sumNum.textContent=(phase===0?0:total).toLocaleString();
   });
