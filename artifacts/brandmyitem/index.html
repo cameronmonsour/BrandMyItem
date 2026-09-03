@@ -1168,7 +1168,13 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 .feature-bento .fb-bagwrap{position:absolute;right:40px;top:156px;height:254px;aspect-ratio:187/324;z-index:2;transition:transform 1.5s var(--fb-ease)}
 .feature-bento .fb-bagwrap img{height:100%;width:100%;position:relative;z-index:2}
 .feature-bento .fb-bagwrap>svg{position:absolute;inset:0;width:100%;height:100%;z-index:3;overflow:visible}
-.feature-bento .fb-spotline{fill:none;stroke:#fff;stroke-width:1.5;vector-effect:non-scaling-stroke;visibility:visible}
+.feature-bento .fb-spotline{fill:none;stroke:#000;stroke-width:1.5;vector-effect:non-scaling-stroke;visibility:visible}
+.feature-bento .fb-lead-price,.feature-bento .fb-lead-logo{transition:opacity .35s var(--fb-ease)}
+.feature-bento .fb-lead-price rect{fill:#fff;stroke:#000;stroke-width:1;vector-effect:non-scaling-stroke}
+.feature-bento .fb-lead-price text{fill:#000;font-size:16px;font-weight:800;text-anchor:middle;dominant-baseline:middle}
+.feature-bento .fb-lead-logo{color:#000;opacity:0}
+.feature-bento .fb-hero[data-phase="3"] .fb-lead-price,.feature-bento .fb-hero[data-phase="4"] .fb-lead-price{opacity:0}
+.feature-bento .fb-hero[data-phase="3"] .fb-lead-logo,.feature-bento .fb-hero[data-phase="4"] .fb-lead-logo{opacity:1}
 .feature-bento .fb-hero[data-phase="4"] .fb-bagwrap{animation:fbRoll 1.5s var(--fb-ease) .45s both}
 @keyframes fbRoll{0%{transform:translateX(-178px) rotate(-7deg)}70%{transform:translateX(12px) rotate(-3deg)}100%{transform:none}}
 .feature-bento .fb-days .fb-num{font-size:120px;font-weight:800;letter-spacing:-.07em;line-height:.88;margin:auto 0 12px}
@@ -1193,7 +1199,13 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 .feature-bento .fb-stage-inner{position:relative;display:flex;max-width:88%;max-height:88%;filter:drop-shadow(0 18px 18px rgba(0,0,0,.14))}
 .feature-bento .fb-stage-inner>img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;transition:opacity .25s}
 .feature-bento .fb-stage-inner>svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
-.feature-bento .fb-stage .fb-spot{fill:none;stroke:#fff;stroke-width:1.5;vector-effect:non-scaling-stroke;visibility:visible}
+.feature-bento .fb-stage .fb-spot{fill:none;stroke:#000;stroke-width:1.5;vector-effect:non-scaling-stroke;visibility:visible}
+.feature-bento .fb-spot-price,.feature-bento .fb-spot-logo{transition:opacity .28s var(--fb-ease)}
+.feature-bento .fb-spot-price rect,.feature-bento .fb-spot-logo .fb-logo-cover{fill:#fff;stroke:#000;stroke-width:1;vector-effect:non-scaling-stroke}
+.feature-bento .fb-spot-price text{fill:#000;font-family:'Inter',-apple-system,sans-serif;font-weight:800;text-anchor:middle;dominant-baseline:middle}
+.feature-bento .fb-spot-logo{color:#000;opacity:0}
+.feature-bento .fb-spot-unit.is-bought .fb-spot-price{opacity:0}
+.feature-bento .fb-spot-unit.is-bought .fb-spot-logo{opacity:1}
 .feature-bento .fb-fund{position:absolute;left:36px;right:36px;bottom:22px;z-index:3;font-size:12px;font-weight:600;display:flex;align-items:center;gap:10px;opacity:0;transition:opacity .5s}
 .feature-bento .fb-mac[data-phase="2"] .fb-fund,.feature-bento .fb-mac[data-phase="3"] .fb-fund{opacity:1}
 .feature-bento .fb-fund .fb-bar{flex:1;height:4px;border-radius:2px;background:rgba(29,29,31,.15);overflow:hidden}
@@ -1223,7 +1235,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 .feature-bento .fb-price-visual{position:absolute;right:22px;top:50%;transform:translateY(-50%);height:130px;width:calc(130px * (952 / 1275))}
 .feature-bento .fb-price-phone{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
 .feature-bento .fb-price-map{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
-.feature-bento .fb-price-map .fb-ps{fill:none;stroke:#fff;stroke-width:1.5;vector-effect:non-scaling-stroke;opacity:.35;transition:opacity .4s}
+.feature-bento .fb-price-map .fb-ps{fill:none;stroke:#000;stroke-width:1.5;vector-effect:non-scaling-stroke;opacity:1;transition:opacity .4s}
 .feature-bento .fb-price-map .fb-ps.on{opacity:1}
 .feature-bento .fb-sum{position:absolute;left:28px;bottom:14px;display:flex;align-items:baseline;gap:7px}.feature-bento .fb-sum b{font-size:25px;font-weight:800;letter-spacing:-.06em}.feature-bento .fb-sum small{font-size:10.5px;color:var(--mfg);opacity:0}.feature-bento .fb-price[data-phase="4"] .fb-sum small{opacity:1}
 .feature-bento .fb-term h3,.feature-bento .fb-term p{max-width:190px;text-align:left;margin-left:0;margin-right:0}.feature-bento .fb-term p{max-width:178px}
@@ -1810,6 +1822,8 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
             <img src="bento/bag.png" alt="">
             <svg viewBox="0 0 187 324">
               <rect class="fb-spotline" x="13" y="86" width="160" height="225" rx="8"/>
+              <g class="fb-lead-price"><rect x="55" y="187" width="76" height="28" rx="7"/><text x="93" y="201">$2,170</text></g>
+              <g class="fb-lead-logo"><rect x="60" y="180" width="66" height="42" rx="8" fill="#fff"/><use href="#fbLidMark" x="77" y="185" width="32" height="32"/></g>
             </svg>
           </div>
         </article>
@@ -10783,15 +10797,15 @@ function initHomeFeatureBento(){
     if(dayNote)dayNote.textContent=phase===3?'Not funded by day 60. Refunds initiated.':(phase===4?'':(phase>=1?'3 of 5 spots purchased':''));
   });
   var items=[
-    {name:'MacBook Pro 14\"',price:1599,img:'bento/cutout-macbook.png',n:10,type:'macbook'},
-    {name:'iPhone 17 Pro',price:1099,img:'bento/cutout-iphone.png',n:5,type:'iphone'},
-    {name:'AirPods Max',price:549,img:'bento/cutout-headphones.png',n:2,type:'headphones'},
-    {name:'RIMOWA Original Cabin',price:1550,img:'bento/cutout-case.png',n:4,type:'case'}
+    {name:'MacBook Pro 14\"',price:1599,parts:[224,224,224,224,224,224,224,224,224,223],img:'bento/cutout-macbook.png',n:10,type:'macbook'},
+    {name:'iPhone 17 Pro',price:1099,parts:[307,308,308,308,308],img:'bento/cutout-iphone.png',n:5,type:'iphone'},
+    {name:'AirPods Max',price:549,parts:[385,384],img:'bento/cutout-headphones.png',n:2,type:'headphones'},
+    {name:'RIMOWA Original Cabin',price:1550,parts:[543,543,542,542],img:'bento/cutout-case.png',n:4,type:'case'}
   ];
   var itemIndex=0,itemImg=document.getElementById('fbItemImg'),itemName=document.getElementById('fbItemName'),itemMeta=document.getElementById('fbItemMeta'),itemStage=document.querySelector('.fb-stage-inner');
   var fundPct=document.getElementById('fbFundPct'),fundBar=document.getElementById('fbFundBar'),fundAmt=document.getElementById('fbFundAmt');
 
-  function buildOverlaySvg(type, n, spotClass, mapClass) {
+  function buildOverlaySvg(type, n, spotClass, mapClass, prices) {
     var d=CATALOG_SURFACES[type];
     if(!d) return '';
     var placements = lockedCatalogPlacements({width:d.size[0], height:d.size[1]}, type, n);
@@ -10799,17 +10813,34 @@ function initHomeFeatureBento(){
     var svg = '<svg viewBox="0 0 '+d.size[0]+' '+d.size[1]+'" class="'+(mapClass||'')+'" aria-hidden="true">';
     placements.forEach(function(p, i) {
       var kAttr = ' data-k="'+i+'"';
+      var bounds;
+      svg += '<g class="fb-spot-unit"'+kAttr+'>';
       if(p.shape === 'poly' && p.pts) {
-        var pts = p.pts.map(function(pt){ return (pt[0]*d.size[0])+','+(pt[1]*d.size[1]) }).join(' ');
-        svg += '<polygon points="'+pts+'" class="'+spotClass+'"'+kAttr+' />';
+        var absPts = p.pts.map(function(pt){ return [pt[0]*d.size[0],pt[1]*d.size[1]] });
+        var pts = absPts.map(function(pt){ return pt[0]+','+pt[1] }).join(' ');
+        var xs=absPts.map(function(pt){return pt[0]}),ys=absPts.map(function(pt){return pt[1]});
+        bounds={x:Math.min.apply(Math,xs),y:Math.min.apply(Math,ys)};
+        bounds.w=Math.max.apply(Math,xs)-bounds.x;
+        bounds.h=Math.max.apply(Math,ys)-bounds.y;
+        svg += '<polygon points="'+pts+'" class="'+spotClass+'" />';
       } else {
         var x = (p.x - p.w/2) * d.size[0];
         var y = (p.y - p.h/2) * d.size[1];
         var w = p.w * d.size[0];
         var h = p.h * d.size[1];
         var rx = 6;
-        svg += '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="'+rx+'" class="'+spotClass+'"'+kAttr+' />';
+        bounds={x:x,y:y,w:w,h:h};
+        svg += '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="'+rx+'" class="'+spotClass+'" />';
       }
+      var cx=bounds.x+bounds.w/2,cy=bounds.y+bounds.h/2;
+      var badgeW=Math.min(bounds.w*.74,d.size[0]*.15),badgeH=Math.min(bounds.h*.3,d.size[1]*.064);
+      badgeW=Math.max(badgeW,d.size[0]*.075);badgeH=Math.max(badgeH,d.size[1]*.034);
+      var bx=cx-badgeW/2,by=cy-badgeH/2,br=Math.min(badgeH*.24,10);
+      var fontSize=badgeH*.46,logoSize=badgeH*.72;
+      var amount=prices&&prices[i]!=null?prices[i]:'';
+      svg += '<g class="fb-spot-price"><rect x="'+bx+'" y="'+by+'" width="'+badgeW+'" height="'+badgeH+'" rx="'+br+'"/><text x="'+cx+'" y="'+cy+'" font-size="'+fontSize+'">$'+amount+'</text></g>';
+      svg += '<g class="fb-spot-logo"><rect class="fb-logo-cover" x="'+bx+'" y="'+by+'" width="'+badgeW+'" height="'+badgeH+'" rx="'+br+'"/><use href="#fbLidMark" x="'+(cx-logoSize/2)+'" y="'+(cy-logoSize/2)+'" width="'+logoSize+'" height="'+logoSize+'"/></g>';
+      svg += '</g>';
     });
     svg += '</svg>';
     return svg;
@@ -10824,7 +10855,7 @@ function initHomeFeatureBento(){
     if(itemStage){
       var oldSvg = itemStage.querySelector('svg');
       if(oldSvg) oldSvg.remove();
-      itemStage.insertAdjacentHTML('beforeend', buildOverlaySvg(item.type, item.n, 'fb-spot', ''));
+      itemStage.insertAdjacentHTML('beforeend', buildOverlaySvg(item.type, item.n, 'fb-spot', '', item.parts));
     }
   }
   loadFeatureItem();
@@ -10832,31 +10863,33 @@ function initHomeFeatureBento(){
     el.classList.toggle('on-scene',phase>=1&&phase<=4);
     if(phase===0&&p>.95&&!el._swapped){el._swapped=true;itemIndex=(itemIndex+1)%items.length;loadFeatureItem()}
     if(phase===1)el._swapped=false;
-    var item=items[itemIndex],fill=phase===2?ease(seg(p,.18,.62)):(phase>=3&&p<.95?1:0);
-    var percent=Math.round(fill*100),amount=percent===100?item.price:Math.round(fill*item.price);
+    var item=items[itemIndex],goal=item.parts.reduce(function(sum,value){return sum+value},0),fill=phase===2?ease(seg(p,.18,.62)):(phase>=3&&p<.95?1:0);
+    var percent=Math.round(fill*100),amount=percent===100?goal:Math.round(fill*goal);
+    var boughtCount=Math.min(item.n,Math.floor(fill*item.n+.001));
+    if(itemStage)Array.prototype.forEach.call(itemStage.querySelectorAll('.fb-spot-unit'),function(unit,index){unit.classList.toggle('is-bought',index<boughtCount)});
     if(fundBar)fundBar.style.width=percent+'%';
     if(fundPct)fundPct.textContent=percent+'%';
-    if(fundAmt)fundAmt.textContent='$'+amount.toLocaleString()+' of $'+item.price.toLocaleString();
+    if(fundAmt)fundAmt.textContent='$'+amount.toLocaleString()+' of $'+goal.toLocaleString();
   });
   var priceVisual = document.getElementById('fbPriceVisual');
+  var parts=[307,308,308,308,308];
   if(priceVisual) {
-    priceVisual.insertAdjacentHTML('beforeend', buildOverlaySvg('iphone', 5, 'fb-ps', 'fb-price-map'));
+    priceVisual.insertAdjacentHTML('beforeend', buildOverlaySvg('iphone', 5, 'fb-ps', 'fb-price-map', parts));
   }
   runTile('.fb-checkin',[[0,0],[.04,1],[.30,2],[.34,3],[.62,4],[.96,0]]);
-  var priceSpots=[],priceLeads=[],priceLabels=[],priceMath=[],sumNum=document.getElementById('fbSumNum'),parts=[307,308,308,308,308];
+  var priceSpots=[],priceUnits=[],sumNum=document.getElementById('fbSumNum');
   runTile('.fb-price',[[0,0],[.06,1],[.28,2],[.50,3],[.72,4],[.94,0]],function(p,phase){
     var total=0;
     if(priceSpots.length === 0 && priceVisual) {
       priceSpots = Array.prototype.slice.call(priceVisual.querySelectorAll('.fb-ps'));
+      priceUnits = Array.prototype.slice.call(priceVisual.querySelectorAll('.fb-spot-unit'));
     }
     parts.forEach(function(value,index){
       var start = 0.06 + (index * 0.12); // 0.06, 0.18, 0.30, 0.42, 0.54
       var on = p >= start && phase > 0 && phase <= 4;
       var fraction = on ? ease(seg(p, start, start + 0.10)) : 0;
       if(priceSpots[index]) priceSpots[index].classList.toggle('on', on);
-      if(priceLeads[index]) priceLeads[index].classList.toggle('on', on);
-      if(priceLabels[index]) priceLabels[index].classList.toggle('on', on);
-      if(priceMath[index]) priceMath[index].classList.toggle('on', on);
+      if(priceUnits[index]) priceUnits[index].classList.toggle('is-bought',fraction>.92);
       total += Math.round(value * fraction);
     });
     if(sumNum)sumNum.textContent=(phase===0?0:total).toLocaleString();
