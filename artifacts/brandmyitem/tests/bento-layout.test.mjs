@@ -41,10 +41,12 @@ test('every rotating bento item uses an exact-dimension transparent cutout with 
   assert.match(html, /class="fb-spot-logo"/);
   assert.doesNotMatch(html, /class="fb-logo-cover"/);
   assert.match(html, /unit\.classList\.toggle\('is-bought',index<boughtCount\)/);
-  assert.match(html, /itemMeta\.textContent='\$'\+item\.price\.toLocaleString\(\)\+' retail · '\+item\.n\+' spots'/);
-  assert.match(html, /\.fb-stage\{position:absolute;left:20px;right:20px;top:178px;bottom:58px;[^}]*overflow:hidden\}/);
+  assert.match(html, /itemMeta\.textContent='\$'\+item\.price\.toLocaleString\(\)\+' retail — '\+item\.n\+' spots'/);
+  assert.match(html, /\.fb-stage\{position:absolute;left:20px;right:20px;top:var\(--fb-stage-top,210px\);bottom:58px;[^}]*overflow:hidden\}/);
   assert.match(html, /itemStage\.style\.aspectRatio=frame\.size\[0\]\+'\/'\+frame\.size\[1\]/);
   assert.match(html, /itemStage\.style\.height=frame\.size\[0\]>=frame\.size\[1\]\?'auto':'88%'/);
+  assert.match(html, /itemTile\.style\.setProperty\('--fb-stage-top',Math\.ceil\(itemLine\.offsetTop\+itemLine\.offsetHeight\+16\)\+'px'\)/);
+  assert.match(html, /requestAnimationFrame\(syncItemStageTop\)/);
 });
 
 test('lead suitcase uses four rounded silver-shell boxes that avoid the halo and wheels', () => {
@@ -75,8 +77,10 @@ test('price tile uses the transparent iPhone cutout with black priced tracker sp
 test('all bento artwork is contained away from copy on narrow screens', () => {
   assert.match(html, /@media\(max-width:600px\)\{/);
   assert.match(html, /\.fb-bagwrap\{right:22px;top:210px;height:200px\}/);
-  assert.match(html, /\.fb-stage\{left:16px;right:16px;top:220px;bottom:64px\}/);
-  assert.match(html, /\.fb-shot\{left:auto;right:-22px;bottom:-62px;height:190px\}/);
+  assert.match(html, /\.fb-stage\{left:16px;right:16px;bottom:64px\}/);
+  assert.match(html, /\.fb-shot\{left:auto;right:-22px;height:190px\}/);
+  assert.match(html, /\.fb-shot\{position:absolute;left:-30px;top:var\(--fb-shot-top,250px\);height:236px\}/);
+  assert.match(html, /checkinTile\.style\.setProperty\('--fb-shot-top',Math\.ceil\(proofRow\.offsetTop\+proofRow\.offsetHeight\+16\)\+'px'\)/);
   assert.match(html, /\.fb-price\{padding:26px 132px 48px 28px;min-height:260px\}/);
   assert.match(html, /\.fb-term \.fb-suit\{right:18px;top:34px;height:96px\}/);
 });
@@ -96,6 +100,10 @@ test('every bento claim matches the actual marketplace rules', () => {
   assert.match(html, /combined all-in<br>spot total/);
   assert.match(html, /<h3>One clear price per spot\.<\/h3>/);
   assert.match(html, /Example: first spot sold/);
+  assert.match(html, /\.feature-bento \.fb-row\{[^}]*background:var\(--fg\);color:#fff;[^}]*border-radius:999px/);
+  assert.match(html, /\.feature-bento \.fb-due,\.feature-bento \.fb-verified\{background:var\(--fg\);color:#fff;border:1px solid var\(--fg\)\}/);
+  assert.match(html, /\.feature-bento \.fb-term-status\{[^}]*background:var\(--fg\);color:#fff;[^}]*border-radius:999px/);
+  assert.doesNotMatch(html, /[·・]|&middot;/);
   assert.match(html, /dayUnit\.textContent=day===1\?'day':'days'/);
   assert.match(html, /Not funded by day 60\. Refunds initiated\./);
 });

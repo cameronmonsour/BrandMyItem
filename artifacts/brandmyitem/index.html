@@ -501,12 +501,12 @@ details.faq .fa b{color:var(--fg);font-weight:600}
 .lcard .who .when{font-size:12.5px;color:var(--mfg)}
 .lcard .who .catic{margin-left:auto;width:26px;height:26px;border-radius:50%;background:#fff;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden}
 .lcard .who .catic img{width:80%;height:80%;object-fit:contain}
-.lcard .iname{font-size:16px;font-weight:600;letter-spacing:-.012em;margin-bottom:6px}
+.lcard .iname{display:block;height:20px;line-height:20px;font-size:16px;font-weight:600;letter-spacing:-.012em;margin:0 0 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .lcard .card-context{display:flex;align-items:center;min-width:0;margin:0 0 9px;font-size:11.5px;line-height:1.25;color:var(--mfg)}
 .lcard .card-context-value{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .lcard .card-context-em{color:var(--fg);font-weight:600}
-.lcard .moneyrow{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;min-width:0}
-.lcard .moneyrow .amts{font-size:15.5px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.lcard .moneyrow{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:8px;min-width:0}
+.lcard .moneyrow .amts{display:inline-flex;align-items:center;height:21px;line-height:1.2;font-size:15.5px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap;min-width:0;overflow:hidden;text-overflow:ellipsis}
 .lcard .moneyrow .amts span{color:#A6B0BA;font-weight:500}
 .lcard .chips{display:flex;align-items:flex-end;gap:5px;flex:0 0 auto;min-width:0}
 .lcard .chipg{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;background:var(--wash);border-radius:999px;padding:3px 7px 3px 4px;line-height:1.2;font-variant-numeric:tabular-nums;white-space:nowrap}
@@ -1183,8 +1183,8 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 .feature-bento .fb-ruler i.on{background:var(--fg)}
 .feature-bento .fb-ruler i:nth-child(10n){height:14px}
 .feature-bento .fb-rows{display:flex;flex-direction:column;gap:6px}
-.feature-bento .fb-row{display:flex;align-items:center;justify-content:space-between;font-size:12.5px;padding:8px 12px;background:#fff;border:1px solid #D2D2D7;border-radius:9px;opacity:0;transform:translateY(8px);transition:opacity .4s,transform .5s var(--fb-ease)}
-.feature-bento .fb-row .fb-state{display:flex;gap:5px;align-items:center;color:var(--mfg)}
+.feature-bento .fb-row{display:flex;align-items:center;justify-content:space-between;font-size:12.5px;padding:8px 12px;background:var(--fg);color:#fff;border:1px solid var(--fg);border-radius:999px;opacity:0;transform:translateY(8px);transition:opacity .4s,transform .5s var(--fb-ease)}
+.feature-bento .fb-row .fb-state{display:flex;gap:5px;align-items:center;color:rgba(255,255,255,.76)}
 .feature-bento .fb-row svg{width:13px;height:13px;display:none}
 .feature-bento .fb-days[data-phase="1"] .fb-r1,.feature-bento .fb-days[data-phase="2"] .fb-row,.feature-bento .fb-days[data-phase="3"] .fb-row{opacity:1;transform:none}
 .feature-bento .fb-days[data-phase="1"] .fb-r2{transition-delay:.12s}.feature-bento .fb-days[data-phase="1"] .fb-r3{transition-delay:.24s}
@@ -1194,7 +1194,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 .feature-bento .fb-note{font-size:12px;color:var(--mfg);margin-top:12px;min-height:18px}
 .feature-bento .fb-itemline{margin-top:8px;display:flex;flex-direction:column;gap:2px;position:relative;z-index:3;min-height:32px}
 .feature-bento .fb-itemline b{font-size:13px}.feature-bento .fb-itemline span{font-size:11px;color:var(--mfg)}
-.feature-bento .fb-stage{position:absolute;left:20px;right:20px;top:178px;bottom:58px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.feature-bento .fb-stage{position:absolute;left:20px;right:20px;top:var(--fb-stage-top,210px);bottom:58px;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .feature-bento .fb-stage-inner{position:relative;display:block;flex:none;width:88%;height:auto;max-width:88%;max-height:88%;aspect-ratio:1275/952;filter:drop-shadow(0 18px 18px rgba(0,0,0,.14))}
 .feature-bento .fb-stage-inner>img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain;transition:opacity .25s}
 .feature-bento .fb-stage-inner>svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
@@ -1221,11 +1221,11 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 .feature-bento .fb-checkin[data-phase="3"] .fb-next-proof img,.feature-bento .fb-checkin[data-phase="4"] .fb-next-proof img{opacity:1}
 .feature-bento .fb-checkin[data-phase="3"] .fb-next-proof svg,.feature-bento .fb-checkin[data-phase="4"] .fb-next-proof svg{opacity:0}
 .feature-bento .fb-proof figcaption{font-size:11px;color:var(--mfg);margin-top:4px;text-align:center}
-.feature-bento .fb-shot{position:absolute;left:-30px;bottom:-92px;height:236px}.feature-bento .fb-shot img{height:100%}
+.feature-bento .fb-shot{position:absolute;left:-30px;top:var(--fb-shot-top,250px);height:236px}.feature-bento .fb-shot img{height:100%}
 .feature-bento .fb-flash{position:absolute;inset:0;background:#fff;opacity:0;transition:opacity .12s}
 .feature-bento .fb-checkin[data-phase="2"] .fb-flash{opacity:.85}
 .feature-bento .fb-due,.feature-bento .fb-verified{position:absolute;right:24px;bottom:40px;font-size:12px;font-weight:600;border-radius:999px;padding:7px 12px;opacity:0;transform:translateY(-6px);transition:opacity .4s,transform .5s var(--fb-ease)}
-.feature-bento .fb-due{background:#fff;border:1px solid var(--fg)}.feature-bento .fb-verified{background:var(--fg);color:#fff}
+.feature-bento .fb-due,.feature-bento .fb-verified{background:var(--fg);color:#fff;border:1px solid var(--fg)}
 .feature-bento .fb-checkin[data-phase="1"] .fb-due,.feature-bento .fb-checkin[data-phase="3"] .fb-verified,.feature-bento .fb-checkin[data-phase="4"] .fb-verified{opacity:1;transform:none}
 .feature-bento .fb-price{padding:24px 140px 48px 28px}
 .feature-bento .fb-price h3{font-size:24px;line-height:1;text-align:left;max-width:10ch;margin:0 0 8px;letter-spacing:-0.03em}
@@ -1243,8 +1243,8 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 .feature-bento .fb-option .fb-n{font-size:38px;font-weight:800;letter-spacing:-.06em;line-height:1;color:#D2D2D7;transition:color .5s}.feature-bento .fb-option.on .fb-n{color:var(--fg)}
 .feature-bento .fb-option .fb-option-bar{height:6px;border-radius:3px;background:#D2D2D7;position:relative;overflow:hidden}.feature-bento .fb-option-bar i{position:absolute;inset:0;background:var(--fg);transform:scaleX(0);transform-origin:left;transition:transform .7s}.feature-bento .fb-option.on .fb-option-bar i{transform:scaleX(1)}
 .feature-bento .fb-option small{font-size:11px;color:var(--mfg)}
-.feature-bento .fb-term-status{position:absolute;left:36px;bottom:26px;font-size:12px;font-weight:600;background:#fff;border:1px solid var(--fg);border-radius:999px;padding:6px 10px;opacity:0;transform:translateY(6px);transition:opacity .4s,transform .5s}
-.feature-bento .fb-term[data-phase="2"] .fb-term-status,.feature-bento .fb-term[data-phase="3"] .fb-term-status{opacity:1;transform:none}.feature-bento .fb-term[data-phase="3"] .fb-term-status{background:var(--fg);color:#fff}
+.feature-bento .fb-term-status{position:absolute;left:36px;bottom:26px;font-size:12px;font-weight:600;background:var(--fg);color:#fff;border:1px solid var(--fg);border-radius:999px;padding:6px 10px;opacity:0;transform:translateY(6px);transition:opacity .4s,transform .5s}
+.feature-bento .fb-term[data-phase="2"] .fb-term-status,.feature-bento .fb-term[data-phase="3"] .fb-term-status{opacity:1;transform:none}
 .feature-bento .fb-term-locked{display:none}.feature-bento .fb-term[data-phase="3"] .fb-term-first{display:none}.feature-bento .fb-term[data-phase="3"] .fb-term-locked{display:inline}
 .home-model-note{max-width:790px;margin:28px auto 0;text-align:center}
 @media(max-width:900px){
@@ -1273,12 +1273,12 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
   .feature-bento .fb-tile{padding:28px;min-height:440px}
   .feature-bento .fb-bagwrap{right:22px;top:210px;height:200px}
   .feature-bento .fb-days .fb-num{font-size:90px}
-  .feature-bento .fb-stage{left:16px;right:16px;top:220px;bottom:64px}
+  .feature-bento .fb-stage{left:16px;right:16px;bottom:64px}
   .feature-bento .fb-fund{left:28px;right:28px}
   .feature-bento .fb-proof{gap:5px}
   .feature-bento .fb-proof figure{width:54px}
   .feature-bento .fb-proof img,.feature-bento .fb-proof .fb-next-proof{width:54px;height:41px}
-  .feature-bento .fb-shot{left:auto;right:-22px;bottom:-62px;height:190px}
+  .feature-bento .fb-shot{left:auto;right:-22px;height:190px}
   .feature-bento .fb-due,.feature-bento .fb-verified{right:20px;bottom:24px}
   .feature-bento .fb-price{padding:26px 132px 48px 28px;min-height:260px}
   .feature-bento .fb-price-visual{right:18px}
@@ -1426,7 +1426,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 .ap-owner-who .avatarc img { width: 100%; height: 100%; object-fit: cover; }
 .ap-owner-location { display:none; font-size:14px; color:#86868B; white-space:nowrap; }
 .ap-owner-location.has-value { display:inline-flex; align-items:center; }
-.ap-owner-location.has-value::before { content:"·"; color:#C7C7CC; margin-right:14px; }
+.ap-owner-location.has-value::before { content:"—"; color:#C7C7CC; margin-right:14px; }
 .ap-owner-socials { display:none; align-items:center; gap:8px; }
 .ap-owner-socials.has-links { display:flex; }
 .ap-owner-socials a { display:inline-flex; align-items:center; gap:5px; color:#1D1D1F; font-size:12px; font-weight:600; text-decoration:none; }
@@ -1845,7 +1845,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
         <article class="fb-tile fb-mac" data-phase="0" data-loop="11000" style="--i:2">
           <h3>Real items, bought at retail.</h3>
           <p>When every spot is purchased, BrandMyItem buys the listed item new, applies every sponsor mark, and delivers it to the Owner within 60 days.</p>
-          <div class="fb-itemline"><b id="fbItemName">MacBook Pro 14&quot;</b><span id="fbItemMeta">$1,599 retail · 10 spots</span></div>
+          <div class="fb-itemline"><b id="fbItemName">MacBook Pro 14&quot;</b><span id="fbItemMeta">$1,599 retail — 10 spots</span></div>
           <div class="fb-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg><span class="fb-funded">Fully funded. Purchase triggered.</span><span class="fb-shipped">Delivered pre-branded to the Owner</span></div>
           <div class="fb-stage" id="fbItemStage">
             <div class="fb-stage-inner">
@@ -1888,7 +1888,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
             <div class="fb-option" data-k="1"><div class="fb-n">12</div><div><div class="fb-option-bar" style="width:66%"><i></i></div><small>months</small></div></div>
             <div class="fb-option" data-k="2"><div class="fb-n">18</div><div><div class="fb-option-bar"><i></i></div><small>months</small></div></div>
           </div>
-          <div class="fb-term-status"><span class="fb-term-first">Example: first spot sold</span><span class="fb-term-locked"> · 12-month term locked</span></div>
+          <div class="fb-term-status"><span class="fb-term-first">Example: first spot sold</span><span class="fb-term-locked">12-month term locked</span></div>
         </article>
       </div>
     </section>
@@ -2173,7 +2173,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           <div class="build-product-layout">
             <div class="build-product-visual">
               <input type="file" id="cuPhoto" accept="image/*" style="display:none">
-              <div class="upl" id="cuUpl" style="display:none">Upload a photo of your item &middot; draw each custom placement shape</div>
+              <div class="upl" id="cuUpl" style="display:none">Upload a photo of your item — draw each custom placement shape</div>
                <div id="cuWrap" style="display:none">
                  <div class="cu-viewport" id="cuViewport"><canvas id="cuCanvas" width="1" height="1" tabindex="0" aria-label="Item photo tracing canvas"></canvas></div>
                  <div class="cu-zoom" role="toolbar" aria-label="Photo zoom controls">
@@ -2430,7 +2430,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
               <tr><td>Check-in cadence</td><td id="iCad"></td></tr>
               <tr><td>Visibility term</td><td id="iTerm">12 months</td></tr>
               <tr><td>Fulfillment</td><td id="iFulfillment">BrandMyItem applies branding</td></tr>
-              <tr><td>Purchase total</td><td id="iPurchaseTotalCopy">All-in spot price · includes branding application, item sales tax, shipping &amp; handling</td></tr>
+              <tr><td>Purchase total</td><td id="iPurchaseTotalCopy">All-in spot price — includes branding application, item sales tax, shipping &amp; handling</td></tr>
             </tbody>
           </table>
         </article>
@@ -2577,7 +2577,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
   <div class="modal">
     <div id="mStep1">
       <p class="modal-estimate" id="mTitle">All ad placements are estimates. Pictures and sizing are estimated.</p>
-      <div class="upl" id="uplBox">Upload your logo · required (PNG, transparent works best)</div>
+      <div class="upl" id="uplBox">Upload your logo — required (PNG, transparent works best)</div>
       <input type="file" id="uplInput" accept="image/*" style="display:none">
       <div class="field"><label class="label" for="mBrand">Brand name</label><input class="input" id="mBrand" placeholder="Acme"></div>
       <div class="field"><label class="label" for="mMail">Work email</label><input class="input" id="mMail" type="email" placeholder="you@brand.com"></div>
@@ -2590,7 +2590,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
       <p class="finetext">Your logo is the handoff: once the item fully funds, the owner downloads it and produces the approved branding from your exact file. No back and forth needed.</p>
     </div>
     <div id="mStep3" style="display:none">
-      <h3>You&rsquo;re in &middot; save this ID</h3>
+      <h3>You&rsquo;re in — save this ID</h3>
       <p class="mp">We sent a copy to <b id="mSubMail"></b>. Use this ID with that email any time to track your spot.</p>
       <div class="subid-box">
         <div class="subid-label">Submission ID</div>
@@ -2666,7 +2666,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
         Copy for Instagram
       </button>
     </div>
-    <p class="finetext" id="igHint" style="display:none">Caption copied · Instagram doesn't allow posting from the web, so paste it into the app along with the photo above.</p>
+    <p class="finetext" id="igHint" style="display:none">Caption copied — Instagram doesn't allow posting from the web, so paste it into the app along with the photo above.</p>
     <div class="mrow" style="margin-top:14px">
       <button class="btn btn-primary btn-full" id="shareDone">Done</button>
     </div>
@@ -6678,15 +6678,15 @@ var CATS=[
 ];
 var ITEMS={
   macbook:{label:'MacBook Pro',brand:'Apple',color:'Silver',cat:'Tech',retail:1599,maxSlots:10,surf:[28,18],verified:'2026-08-29',source:'https://www.apple.com/macbook-pro/specs/',
-    specs:[['Model','14-inch MacBook Pro (M5)'],['Chip','Apple M5 &middot; 10-core CPU, 10-core GPU'],['Memory','16GB unified memory'],['Storage','512GB SSD'],['Color','Silver'],['Display','14.2-inch Liquid Retina XDR &middot; 3024×1964'],['Battery','72.4Wh lithium-polymer'],['Ports','3× Thunderbolt 4, HDMI, SDXC, MagSafe 3'],['Dimensions','12.31 × 8.71 × 0.61 in'],['Weight','3.4 lb']]},
+    specs:[['Model','14-inch MacBook Pro (M5)'],['Chip','Apple M5 — 10-core CPU, 10-core GPU'],['Memory','16GB unified memory'],['Storage','512GB SSD'],['Color','Silver'],['Display','14.2-inch Liquid Retina XDR — 3024×1964'],['Battery','72.4Wh lithium-polymer'],['Ports','3× Thunderbolt 4, HDMI, SDXC, MagSafe 3'],['Dimensions','12.31 × 8.71 × 0.61 in'],['Weight','3.4 lb']]},
   iphone:{label:'iPhone 17 Pro',brand:'Apple',color:'Silver',cat:'Tech',retail:1099,maxSlots:5,surf:[7,15],verified:'2026-08-29',source:'https://support.apple.com/en-us/125090',
-    specs:[['Chip','A19 Pro'],['Storage','256GB'],['Color','Silver'],['Display','6.3-inch Super Retina XDR OLED &middot; 2622×1206'],['Camera','48MP Fusion Pro camera system'],['Build','Aluminum unibody, Ceramic Shield 2 front'],['Dimensions','5.91 × 2.83 × 0.34 in'],['Weight','7.27 oz (206 g)']]},
+    specs:[['Chip','A19 Pro'],['Storage','256GB'],['Color','Silver'],['Display','6.3-inch Super Retina XDR OLED — 2622×1206'],['Camera','48MP Fusion Pro camera system'],['Build','Aluminum unibody, Ceramic Shield 2 front'],['Dimensions','5.91 × 2.83 × 0.34 in'],['Weight','7.27 oz (206 g)']]},
   cooler:{label:'Tundra 45 Hard Cooler',brand:'YETI',color:'White',cat:'Event',retail:325,maxSlots:4,surf:[45,30],verified:'2026-08-29',source:'https://www.yeti.com/coolers/hard-coolers/tundra/tundra-45.html',
     specs:[['Model','Tundra 45'],['Capacity','45 size'],['Color','White'],['Construction','Rotomolded FatWall design'],['Insulation','PermaFrost polyurethane foam'],['Hardware','T-Rex lid latches, DoubleHaul handles'],['Outside','25.5 × 15.9 × 15.5 in'],['Empty weight','24.6 lb'],['Certification','IGBC bear-resistant when locked']]},
   bottle:{label:'Quencher H2.0 FlowState Tumbler',brand:'Stanley 1913',color:'Cream 2.0',cat:'Hydration',retail:45,maxSlots:4,surf:[20,16],verified:'2026-08-29',source:'https://www.stanley1913.com/products/quencher-h2-0-flowstate-tumbler-40-oz',
     specs:[['Capacity','40 oz'],['Color','Cream 2.0'],['Material','90% recycled 18/8 stainless steel'],['Insulation','Double-wall vacuum insulation'],['Lid','3-position FlowState lid with reusable straw'],['Fit','Car cupholder compatible'],['Care','Dishwasher safe'],['Dimensions','5.82 × 3.74 × 12.03 in'],['Weight','1.43 lb']]},
   case:{label:'Original Cabin',brand:'RIMOWA',color:'Silver',cat:'Travel',retail:1550,maxSlots:8,surf:[34,46],verified:'2026-08-29',source:'https://www.rimowa.com/us/en/luggage/colour/silver/cabin/92553004.html',
-    specs:[['Collection','Original'],['Size','Cabin &middot; 21.7 × 15.8 × 9.1 in'],['Shell','High-end anodized aluminum'],['Color','Silver'],['Volume','35 L'],['Weight','9.5 lb (4.3 kg)'],['Wheels','RIMOWA Multiwheel system'],['Interior','Height-adjustable Flex Divider'],['Lock','TSA-approved locks'],['Guarantee','Lifetime guarantee']]},
+    specs:[['Collection','Original'],['Size','Cabin — 21.7 × 15.8 × 9.1 in'],['Shell','High-end anodized aluminum'],['Color','Silver'],['Volume','35 L'],['Weight','9.5 lb (4.3 kg)'],['Wheels','RIMOWA Multiwheel system'],['Interior','Height-adjustable Flex Divider'],['Lock','TSA-approved locks'],['Guarantee','Lifetime guarantee']]},
   headphones:{label:'AirPods Max 2',brand:'Apple',color:'Midnight',cat:'Tech',retail:549,maxSlots:2,surf:[8,8],verified:'2026-08-29',source:'https://www.apple.com/airpods-max/specs/',
     specs:[['Type','Wireless over-ear headphones'],['Color','Midnight'],['Audio','Active Noise Cancellation, Adaptive Audio, Transparency'],['Connection','USB-C, Bluetooth 5.3'],['Battery','Up to 20 hours'],['Controls','Digital Crown and noise control button'],['Dimensions','7.37 × 6.64 × 3.28 in'],['Weight','13.6 oz (386.2 g)'],['Case','Smart Case included']]},
   golfbag:{label:'Deluxe Carry Stand Bag',brand:'PXG',color:'White / Black',cat:'Sports',retail:325,maxSlots:5,surf:[60,25],verified:'2026-08-29',source:'https://www.pxg.com/products/deluxe-carry-stand-bag',
@@ -6696,7 +6696,7 @@ var ITEMS={
   paddle:{label:'Pro V Paddle',brand:'JOOLA',color:'Blaze Red (Ben Johns)',cat:'Sports',retail:299.95,maxSlots:2,surf:[20,25],verified:'2026-08-29',source:'https://joola.com/collections/pro-v',
     specs:[['Series','Pro V'],['Model','Perseus Pro V'],['Core thickness','16mm'],['Surface','Textured carbon-fiber face'],['Shape','Elongated'],['Color','Blaze Red (Ben Johns)'],['Dimensions','Model-specific official dimensions'],['Certification','USAP PBCoR .43 certified']]},
   suit:{label:'Luxury Twill O’Connor Tuxedo',brand:'Tom Ford',color:'Black',cat:'Style',retail:7490,maxSlots:4,surf:[40,50],verified:'2026-08-29',source:'https://www.tomfordfashion.com/en-us/luxury-twill-oconnor-tuxedo/2EYPT1-WOS09X5N.html',
-    specs:[['Style','O’Connor tuxedo'],['Lapel','Peak lapel with satin trim'],['Fabric','15-micron luxury twill &middot; 100% wool'],['Color','Black'],['Jacket','Single-breasted with double vent'],['Trousers','Matching trousers with satin side stripe'],['Jacket length','75.5 cm'],['Hem','19 cm'],['Origin','Made in Italy'],['Care','Professional dry clean']]},
+    specs:[['Style','O’Connor tuxedo'],['Lapel','Peak lapel with satin trim'],['Fabric','15-micron luxury twill — 100% wool'],['Color','Black'],['Jacket','Single-breasted with double vent'],['Trousers','Matching trousers with satin side stripe'],['Jacket length','75.5 cm'],['Hem','19 cm'],['Origin','Made in Italy'],['Care','Professional dry clean']]},
   backpack:{label:'Search Backpack',brand:'TUMI',color:'Black',cat:'Carry',retail:850,maxSlots:4,surf:[35,45],verified:'2026-08-29',source:'https://www.tumi.com/p/search-backpack-01470531041/',
     specs:[['Collection','Alpha Bravo'],['Material','Smooth leather'],['Color','Black'],['Laptop','Padded compartment fits up to 15-inch screens'],['Storage','Main compartment, front zip pocket, side zip pockets'],['Carry','Top handle, padded mesh back panel, adjustable shoulder straps'],['Add-a-Bag','Sleeve for securing to luggage'],['Dimensions','43H × 21D × 35.5W cm'],['Weight','1.832 kg'],['Warranty','Limited five-year global warranty']]}
 };
@@ -6720,7 +6720,7 @@ function brandingMaterial(type){
 }
 var HAB_BY_CAT={Tech:['Coffee shops','Office'],Event:['Events'],Hydration:['Gym'],Travel:['Airport'],Carry:['Campus','Office']};
 var ITEM_VARIANTS={
-  macbook:{colors:[['Silver','#E3E3E6'],['Space Black','#3A3A3C']],sizeLabel:'Size',sizeQ:'Pick your screen size.',sizes:[['14"',0,{Model:'14-inch MacBook Pro (M5)',Chip:'Apple M5 &middot; 10-core CPU, 10-core GPU',Memory:'16GB unified memory',Storage:'512GB SSD',Display:'14.2-inch Liquid Retina XDR &middot; 3024×1964',Battery:'72.4Wh lithium-polymer',Ports:'3× Thunderbolt 4, HDMI, SDXC, MagSafe 3',Dimensions:'12.31 × 8.71 × 0.61 in',Weight:'3.4 lb'}],['16"',900,{Model:'16-inch MacBook Pro (M5 Pro)',Chip:'Apple M5 Pro &middot; 15-core CPU, 16-core GPU',Memory:'24GB unified memory',Storage:'512GB SSD',Display:'16.2-inch Liquid Retina XDR &middot; 3456×2234',Battery:'100Wh lithium-polymer',Ports:'3× Thunderbolt 5, HDMI, SDXC, MagSafe 3',Dimensions:'14.01 × 9.77 × 0.66 in',Weight:'4.7 lb'}]]},
+  macbook:{colors:[['Silver','#E3E3E6'],['Space Black','#3A3A3C']],sizeLabel:'Size',sizeQ:'Pick your screen size.',sizes:[['14"',0,{Model:'14-inch MacBook Pro (M5)',Chip:'Apple M5 — 10-core CPU, 10-core GPU',Memory:'16GB unified memory',Storage:'512GB SSD',Display:'14.2-inch Liquid Retina XDR — 3024×1964',Battery:'72.4Wh lithium-polymer',Ports:'3× Thunderbolt 4, HDMI, SDXC, MagSafe 3',Dimensions:'12.31 × 8.71 × 0.61 in',Weight:'3.4 lb'}],['16"',900,{Model:'16-inch MacBook Pro (M5 Pro)',Chip:'Apple M5 Pro — 15-core CPU, 16-core GPU',Memory:'24GB unified memory',Storage:'512GB SSD',Display:'16.2-inch Liquid Retina XDR — 3456×2234',Battery:'100Wh lithium-polymer',Ports:'3× Thunderbolt 5, HDMI, SDXC, MagSafe 3',Dimensions:'14.01 × 9.77 × 0.66 in',Weight:'4.7 lb'}]]},
   iphone:{colors:[['Silver','#E7E5E1'],['Cosmic Orange','#C96737'],['Deep Blue','#34465C']],sizeLabel:'Storage',sizeQ:'How much space do you need?',sizes:[['256GB',0,{Storage:'256GB'}],['512GB',200,{Storage:'512GB'}],['1TB',400,{Storage:'1TB'}]]},
   cooler:{colors:[['White','#F2F2F2'],['Navy','#263852'],['Charcoal','#454548'],['Tan','#B7A17E']],sizeLabel:'Size',sizeQ:'Choose the official Tundra size.',sizes:[['Tundra 35',-50,{Model:'Tundra 35',Capacity:'35 size'}],['Tundra 45',0,{Model:'Tundra 45',Capacity:'45 size'}],['Tundra 65',50,{Model:'Tundra 65',Capacity:'65 size'}]]},
   bottle:{colors:[['Cream 2.0','#EDE6DC'],['Black 2.0','#252527'],['Rose Quartz 2.0','#D98A93'],['Frost','#D9DBDD']],sizeLabel:'Size',sizeQ:'Pick your capacity.',sizes:[['30 oz',-10,{Capacity:'30 oz'}],['40 oz',0,{Capacity:'40 oz'}]]},
@@ -7030,17 +7030,17 @@ function processListingLifecycle(){
     if(pctOf(l)<100&&now>=endOf(l)){
       l.closed=true;l.status='closed';l.closedAt=now;l.refundReason='unsold_timeout';
       (l.claims||[]).forEach(function(c){if(c&&!c.refunded){c.refunded=true;c.refundedAt=now;c.refundReason='Listing did not sell out within 60 days';}});
-      DB.activity.unshift({txt:'<b>'+safeCardText(l.owner||'Owner')+'</b>&rsquo;s <b>'+safeCardText(LBLL(l))+'</b> expired after 60 days &middot; all sponsors refunded',ts:now});
+      DB.activity.unshift({txt:'<b>'+safeCardText(l.owner||'Owner')+'</b>&rsquo;s <b>'+safeCardText(LBLL(l))+'</b> expired after 60 days — all sponsors refunded',ts:now});
       changed=true;
     }else if(pctOf(l)>=100&&!l.shippedAt&&l.promisedDeliveryAt&&now>=l.promisedDeliveryAt){
       if(!l.delayNotice){
         l.delayNotice={sentAt:now,proposedAt:now+30*86400000,automatic:true,requiresResponse:true};
-        DB.activity.unshift({txt:'<b>Delivery delay</b> reported for '+safeCardText(LBLL(l))+' · sponsors can wait or refund',ts:now});
+        DB.activity.unshift({txt:'<b>Delivery delay</b> reported for '+safeCardText(LBLL(l))+' — sponsors can wait or refund',ts:now});
         changed=true;
       }else if(now>=l.delayNotice.proposedAt){
         l.closed=true;l.status='closed';l.closedAt=now;l.refundReason='Non-delivery after delay window';
         (l.claims||[]).forEach(function(c){if(c&&!c.refunded){c.refunded=true;c.refundedAt=now;c.refundReason='Non-delivery after the delivery delay window';}});
-        DB.activity.unshift({txt:'<b>'+safeCardText(LBLL(l))+'</b> closed after non-delivery &middot; all sponsors refunded',ts:now});
+        DB.activity.unshift({txt:'<b>'+safeCardText(LBLL(l))+'</b> closed after non-delivery — all sponsors refunded',ts:now});
         changed=true;
       }
     }
@@ -7149,10 +7149,10 @@ function sponsorLogoStack(l){
 }
 function listingContextHtml(l){
   var parts=[];
-  if(l.closed)parts.push('<span style="color:#B23327">Closed · refunded</span>');
-  else if(l.nonCompliant)parts.push('<span style="color:#B23327">Check-in overdue · posting restricted</span>');
-  else if(l.shippedAt)parts.push('<span style="color:#1F7A44">Shipped · check-ins active</span>');
-  else if(pctOf(l)>=100)parts.push('<span style="color:#1F7A44">Funded · preparing shipment</span>');
+  if(l.closed)parts.push('<span style="color:#B23327">Closed — refunded</span>');
+  else if(l.nonCompliant)parts.push('<span style="color:#B23327">Check-in overdue — posting restricted</span>');
+  else if(l.shippedAt)parts.push('<span style="color:#1F7A44">Shipped — check-ins active</span>');
+  else if(pctOf(l)>=100)parts.push('<span style="color:#1F7A44">Funded — preparing shipment</span>');
   var locations=[];
   (l.cities||[]).slice(0,2).forEach(function(v){if(v&&!locations.includes(v))locations.push(v)});
   (l.universities||[]).slice(0,1).forEach(function(v){if(v&&!locations.includes(v))locations.push(v)});
@@ -7160,7 +7160,7 @@ function listingContextHtml(l){
   if(l.social)parts.push('<span class="card-context-em">'+safeCardText(l.social)+' followers</span>');
   locations.slice(0,2).forEach(function(v){parts.push(safeCardText(v))});
   if(!parts.length)return '';
-  return '<div class="card-context" aria-label="'+safeCardText(parts.map(function(v){return v.replace(/<[^>]+>/g,'')}).join(' · '))+'"><span class="card-context-value">'+parts.join(' <span aria-hidden="true">&middot;</span> ')+'</span></div>';
+  return '<div class="card-context" aria-label="'+safeCardText(parts.map(function(v){return v.replace(/<[^>]+>/g,'')}).join(' — '))+'"><span class="card-context-value">'+parts.join(' <span aria-hidden="true">&mdash;</span> ')+'</span></div>';
 }
 function renderSpotMap(el,st){if(el)el.innerHTML='';return}
 function renderSpotMap_DEAD(el,st,opts){
@@ -7293,16 +7293,16 @@ function logoMesh(k){
   m.position.set(spec.x,spec.y,spec.z);
   return m;
 }
-console.log('BMI BUILD 57 · photos: '+Object.keys(ITEM_PHOTOS).length+' · T:'+(!!T));
+console.log('BMI BUILD 57 | photos: '+Object.keys(ITEM_PHOTOS).length+' | T:'+(!!T));
 
 /* AI-generated GLB meshes from the catalog photos (Higgsfield image-to-3D).
    Paste each item's .glb URL as jobs finish; the site swaps them in automatically
    and falls back to the parametric build for any empty slot. */
 /* facing correction per item: which way the good side points */
 var MESH_ROT={macbook:Math.PI};
-var MESH_B64={}; /* 3D retired · meshes removed build 41 */
+var MESH_B64={}; /* 3D retired; meshes removed build 41 */
 
-console.log('BMI BUILD 57 · meshes embedded: '+Object.keys(MESH_B64).length);
+console.log('BMI BUILD 57 | meshes embedded: '+Object.keys(MESH_B64).length);
 
 
 var MESHES={};
@@ -7462,7 +7462,7 @@ function loadMeshes(){
           MESH_ANCH[k]=computeAnchors(root,(ITEMS[k]?ITEMS[k].maxSlots:4),k);
         }
         SNAPCACHE={};route();
-        console.log('BMI mesh ready: '+k+' · scan preloaded · '+(MESH_ANCH[k]?MESH_ANCH[k].length:0)+' max placements');
+        console.log('BMI mesh ready: '+k+' | scan preloaded | '+(MESH_ANCH[k]?MESH_ANCH[k].length:0)+' max placements');
       },function(e){console.error('BMI mesh FAILED: '+k,(e&&e.message)||e)});
     }catch(e){console.error('BMI mesh THREW: '+k,(e&&e.message)||e)}
   });
@@ -7925,9 +7925,9 @@ function runCountdown(elId,l){
   if(!el)return;
   function tick(){
     var ms=endOf(l)-Date.now();
-    if(ms<=0){el.innerHTML='Listing closed &middot; final look locked';clearInterval(countTimers[elId]);return}
+    if(ms<=0){el.innerHTML='Listing closed — final look locked';clearInterval(countTimers[elId]);return}
     var d=Math.floor(ms/86400000),h=Math.floor(ms%86400000/3600000),m=Math.floor(ms%3600000/60000);
-    el.innerHTML='Listing closes in <b>'+d+'d '+pad(h)+'h '+pad(m)+'m</b> &middot; spots are first come, first served';
+    el.innerHTML='Listing closes in <b>'+d+'d '+pad(h)+'h '+pad(m)+'m</b> — spots are first come, first served';
   }
   tick();countTimers[elId]=setInterval(tick,15000);
 }
@@ -8019,7 +8019,7 @@ function renderLiveFeed(feedId){
       '<span class="home-activity-name">'+brand+'</span>'+
       '<span class="home-activity-action">bought <b>'+money(row.c.amt||row.l.prices[0])+'</b></span>'+
       '<span class="home-activity-product">'+(photo?'<img src="'+photo+'" alt="">':'')+'<span>'+label+'</span></span>'+
-      '<span class="home-activity-time">&middot; '+ago(row.ts)+'</span>'+
+      '<span class="home-activity-time">— '+ago(row.ts)+'</span>'+
     '</a>';
   }
   var tickerRows=rows.map(itemHtml).join('');
@@ -8062,7 +8062,7 @@ function renderHomeCampaigns(){
     var card=document.createElement('button');card.type='button';card.className='lcard home-campaign-card';
     card.innerHTML='<div class="thumb" id="home-th-'+l.id+'"></div>'+
       '<div class="body">'+
-      '<div class="who">'+ownerAvatarHtml(l)+'<span class="oname">'+l.owner+'</span><span class="when">&middot; '+ago(l.created)+'</span><span class="catic"><img src="'+PHO(l)+'" alt=""></span></div>'+
+      '<div class="who">'+ownerAvatarHtml(l)+'<span class="oname">'+l.owner+'</span><span class="when">— '+ago(l.created)+'</span><span class="catic"><img src="'+PHO(l)+'" alt=""></span></div>'+
       listingContextHtml(l)+'<div class="iname">'+it.label+'</div>'+
        '<div class="moneyrow"><span class="amts">'+money(raisedOf(l))+'<span>/'+money(goalOf(l))+'</span></span>'+
        '<span class="chips"><span class="chipg sold-count">'+sold+'/'+l.slots+' sold</span><span class="sponsor-price">'+sponsorLogoStack(l)+'<span class="chipb">from '+money(minOpenPrice(l)===Infinity?Math.min.apply(null,l.prices):minOpenPrice(l))+'</span></span></span></div>'+
@@ -8085,7 +8085,7 @@ function homeReferenceRowHtml(l,c){
   var label=c.refunded?'Refunded':(l.shippedAt?'Shipped':(pctOf(l)>=100?'Funded':'Purchased'));
   return '<button class="home-reference-row" type="button">'+
     (photo?'<img class="home-reference-thumb" src="'+photo+'" alt="">':'')+
-    '<span class="home-reference-copy"><span class="home-reference-title">'+LBLL(l)+'</span><span class="home-reference-meta">'+c.brand+' &middot; '+c.subId+'</span></span>'+
+    '<span class="home-reference-copy"><span class="home-reference-title">'+LBLL(l)+'</span><span class="home-reference-meta">'+c.brand+' — '+c.subId+'</span></span>'+
     '<span class="status-badge '+(c.refunded?'risk':'active')+'">'+label+'</span><span class="home-reference-arrow" aria-hidden="true">&rsaquo;</span>'+
   '</button>';
 }
@@ -8139,7 +8139,7 @@ function showHomeTracker(){
 function showHome(){
   var totalRaised=DB.listings.reduce(function(s,l){return s+raisedOf(l)},0);
   var open=DB.listings.reduce(function(s,l){return s+openSlots(l)},0);
-  var hl=document.getElementById('homeLive');if(hl)hl.textContent=money(totalRaised)+' raised live · '+open+' spots open';
+  var hl=document.getElementById('homeLive');if(hl)hl.textContent=money(totalRaised)+' raised live — '+open+' spots open';
   renderHomeLiveFeed();
   renderHomeCampaigns();
   if(!homeType)homeType=featured().type;
@@ -8180,7 +8180,7 @@ var campaignListing=null,campaignReturnFocus=null,campaignBodyOverflow='';
 function campaignValues(values,fallback){
   var out=[];
   (values||[]).forEach(function(v){if(v&&out.indexOf(v)<0)out.push(v)});
-  return out.length?out.join(' · '):(fallback||'Not provided');
+  return out.length?out.join(' — '):(fallback||'Not provided');
 }
 function campaignSpotMeta(l,i){
   if(ITEMS[l.type])return slotMeta(l.type,l.slots,i);
@@ -8198,7 +8198,7 @@ function campaignSponsorHtml(c){
   var brand=(c.brand||'Sponsor').trim()||'Sponsor';
   var mark=c.logo?'<img src="'+c.logo+'" alt="'+safeCardText(brand)+' logo">':'<span>'+safeCardText(brand.slice(0,2).toUpperCase())+'</span>';
   return '<div class="campaign-sponsor"><div class="campaign-sponsor-mark">'+mark+'</div>'+
-    '<div class="campaign-sponsor-copy"><b>'+safeCardText(brand)+'</b><span>'+money(c.amt||0)+' · '+ago(c.purchasedAt||Date.now())+'</span></div></div>';
+    '<div class="campaign-sponsor-copy"><b>'+safeCardText(brand)+'</b><span>'+money(c.amt||0)+' — '+ago(c.purchasedAt||Date.now())+'</span></div></div>';
 }
 function campaignSpotHtml(price,meta,claim,index){
   var brand=claim&&claim.brand?(claim.brand.trim()||'Sponsor'):'';
@@ -8228,16 +8228,16 @@ function renderCampaignDetails(l){
       '<div class="campaign-cover">'+photoHtml+'</div>'+
       '<div><div class="campaign-category">'+safeCardText(category)+'</div>'+
         '<h2 class="campaign-title" id="campaignTitle">'+safeCardText(label)+'</h2>'+
-        '<div class="campaign-owner">'+profile+'<span>Posted by <b>'+safeCardText(l.owner||'This owner')+'</b> · '+ago(l.created)+'</span></div>'+
+        '<div class="campaign-owner">'+profile+'<span>Posted by <b>'+safeCardText(l.owner||'This owner')+'</b> — '+ago(l.created)+'</span></div>'+
       '</div>'+
     '</div>'+
     '<div class="campaign-grid">'+
       '<section class="campaign-panel campaign-purpose">'+
         '<div class="campaign-label">Campaign brief</div><p>'+safeCardText(purpose)+'</p>'+
         '<div class="campaign-facts">'+
-          '<div class="campaign-fact"><span>Item ships</span><b>'+safeCardText(l.closed?'Closed &middot; claims refunded':(l.shippedAt?'Shipped to owner':(pct>=100?'Funded · preparing shipment':'New at 100% funded')))+'</b></div>'+
+          '<div class="campaign-fact"><span>Item ships</span><b>'+safeCardText(l.closed?'Closed — claims refunded':(l.shippedAt?'Shipped to owner':(pct>=100?'Funded — preparing shipment':'New at 100% funded')))+'</b></div>'+
           '<div class="campaign-fact"><span>Owner check-in</span><b>'+safeCardText(checkinCadenceText(l))+'</b></div>'+
-          '<div class="campaign-fact"><span>Campaign term</span><b>'+termOf(l)+' months'+(l.termLocked?' · locked':'')+'</b></div>'+
+          '<div class="campaign-fact"><span>Campaign term</span><b>'+termOf(l)+' months'+(l.termLocked?' — locked':'')+'</b></div>'+
           '<div class="campaign-fact"><span>Branding method</span><b>'+safeCardText(brandingMaterial(l.type))+'</b></div>'+
         '</div>'+
       '</section>'+
@@ -8399,7 +8399,7 @@ function postActivityRows(){
 function postActivityText(row){
   var owner=row.owner||'Someone',label=row.label||'an item',spots=parseInt(row.spots,10);
   if(row.owner&&row.label){
-    return '<b>'+safeCardText(owner)+'</b> posted a <b>'+safeCardText(label)+'</b> &middot; '+(isNaN(spots)?'':spots+' '+(spots===1?'spot':'spots'));
+    return '<b>'+safeCardText(owner)+'</b> posted a <b>'+safeCardText(label)+'</b> — '+(isNaN(spots)?'':spots+' '+(spots===1?'spot':'spots'));
   }
   return row.txt||'A user posted an item';
 }
@@ -8472,7 +8472,7 @@ function renderDash(){
     card.setAttribute('aria-label','Preview campaign for '+it.label+' by '+(l.owner||'this owner'));
     card.innerHTML='<div class="thumb" id="th-'+l.id+'"></div>'+
       '<div class="body">'+
-      '<div class="who">'+ownerAvatarHtml(l)+'<span class="oname">'+l.owner+'</span><span class="when">&middot; '+ago(l.created)+'</span><span class="catic"><img src="'+PHO(l)+'" alt=""></span></div>'+
+      '<div class="who">'+ownerAvatarHtml(l)+'<span class="oname">'+l.owner+'</span><span class="when">— '+ago(l.created)+'</span><span class="catic"><img src="'+PHO(l)+'" alt=""></span></div>'+
       listingContextHtml(l)+'<div class="iname">'+it.label+'</div>'+
       '<div class="moneyrow"><span class="amts">'+money(raisedOf(l))+'<span>/'+money(goalOf(l))+'</span></span>'+
       '<span class="chips"><span class="chipg sold-count">'+sold+'/'+l.slots+' sold</span><span class="sponsor-price">'+sponsorLogoStack(l)+'<span class="chipb">from '+money(listingSpotPrice(l))+'</span></span></span></div>'+
@@ -8926,7 +8926,7 @@ function renderBuildSpecs(k){
   var table=document.getElementById('buildSpecTable');
   if(!title||!price||!table)return;
   title.innerHTML=sp.label;
-  price.innerHTML='Retail '+money(selectedRetail)+' &middot; funded by its sponsors';
+  price.innerHTML='Retail '+money(selectedRetail)+' — funded by its sponsors';
   table.innerHTML='';
   sp.specs.forEach(function(r){
     var value=r[1];
@@ -8950,7 +8950,7 @@ function cuFaceChips(){
   CU.faces.forEach(function(f,i){
     var b=document.createElement('span');
     b.className='chip';b.style.cssText='border:1px solid rgba(60,60,67,.24);border-radius:999px;padding:4px 12px;font-size:12px;font-weight:600';
-    b.textContent=(FACE_NAMES[i]||('Angle '+(i+1)))+' · '+f.tiles.length+' spots';
+    b.textContent=(FACE_NAMES[i]||('Angle '+(i+1)))+' — '+f.tiles.length+' spots';
     el.appendChild(b);
   });
 }
@@ -8997,7 +8997,7 @@ function cuSaveFace(){
   CU.img=null;CU.photo=null;CU.poly=[];CU.tracePointer=null;CU.tracing=false;CU.closed=false;CU.tiles=[];CU.prices=[];
   if(CU.syncControls)CU.syncControls();
   cuFaceChips();
-  document.getElementById('cuUpl').innerHTML=CU.faces.length>1?'Angle saved &middot; placement sizes matched to the first photo':'Angle saved &middot; upload the next photo (up to 4)';
+  document.getElementById('cuUpl').innerHTML=CU.faces.length>1?'Angle saved — placement sizes matched to the first photo':'Angle saved — upload the next photo (up to 4)';
   var cv=document.getElementById('cuCanvas');
   if(cv)cv.getContext('2d').clearRect(0,0,cv.width,cv.height);
   return true;
@@ -9256,7 +9256,7 @@ function cuInit(){
           CU.sel=CU.tiles.length?0:-1;CU.closed=!!CU.tiles.length;
            CU.zoom=1;
           document.getElementById('cuWrap').style.display='block';
-          upl.textContent=CU.tiles.length?'Photo scanned · adjust the suggested placements below':'Photo loaded · trace each custom placement shape below';
+          upl.textContent=CU.tiles.length?'Photo scanned — adjust the suggested placements below':'Photo loaded — trace each custom placement shape below';
           traceUI();cuPricingUI();cuDraw();totals()};
         im2.src=CU.photo;
       };
@@ -9282,10 +9282,10 @@ function cuInit(){
     if(CU.tracing){
       if(!n){
         hint.textContent='Tap the photo to place your first point. Tap the first dot to finish.';
-        status.textContent='0 points · Place the first point to begin.';
+        status.textContent='0 points — Place the first point to begin.';
       }else if(n<3){
         hint.textContent=n+' point'+(n===1?'':'s')+' added. Add '+(3-n)+' more, then tap the first dot to finish.';
-        status.textContent=n+' point'+(n===1?'':'s')+' · At least 3 points are required.';
+        status.textContent=n+' point'+(n===1?'':'s')+' — At least 3 points are required.';
       }else{
         hint.textContent=n+' points added. Tap the first dot to finish.';
         status.textContent='Tap the first dot to finish.';
@@ -9306,7 +9306,7 @@ function cuInit(){
     var hadTrace=CU.tracing||CU.poly.length;
     CU.tracing=false;CU.poly=[];CU.tracePointer=null;CU.sel=-1;
     selUI();traceUI();cuDraw();
-    if(showMessage&&hadTrace)toast('Trace canceled · no shape was added');
+    if(showMessage&&hadTrace)toast('Trace canceled — no shape was added');
   }
   function deleteSelectedShape(showMessage){
     if(CU.sel<0||!CU.tiles[CU.sel])return false;
@@ -9472,7 +9472,7 @@ function cuInit(){
     if(e.key==='Escape'&&CU.tracing){e.preventDefault();cancelTrace(true)}
     if((e.key==='Backspace'||e.key==='Delete')&&CU.tracing&&CU.poly.length){
       e.preventDefault();CU.poly.pop();CU.tracePointer=null;traceUI();cuDraw();
-      toast('Point removed · '+CU.poly.length+' point'+(CU.poly.length===1?'':'s')+' left');
+      toast('Point removed — '+CU.poly.length+' point'+(CU.poly.length===1?'':'s')+' left');
     }else if((e.key==='Backspace'||e.key==='Delete')&&!CU.tracing&&CU.sel>=0){
       e.preventDefault();deleteSelectedShape(true);
     }
@@ -9500,13 +9500,13 @@ function cuInit(){
   document.getElementById('cuUndo').onclick=function(){
     if(CU.tracing&&CU.poly.length){
       CU.poly.pop();CU.tracePointer=null;traceUI();cuDraw();
-      toast('Point removed · '+CU.poly.length+' point'+(CU.poly.length===1?'':'s')+' left');
+      toast('Point removed — '+CU.poly.length+' point'+(CU.poly.length===1?'':'s')+' left');
     }
   };
   document.getElementById('cuCancelTrace').onclick=function(){cancelTrace(true)};
   document.getElementById('cuReset').onclick=resetZones;
   document.getElementById('cuTrace').onclick=function(){
-    if(CU.tracing){toast(CU.poly.length?'Trace in progress · tap the first dot to finish':'Trace mode is ready · place your first point');return}
+    if(CU.tracing){toast(CU.poly.length?'Trace in progress — tap the first dot to finish':'Trace mode is ready — place your first point');return}
     setTool('trace');
   };
   document.getElementById('cuShapeRect').onclick=function(){
@@ -9706,8 +9706,8 @@ function cuUpdateSpotPriceTotal(){
   var purchaseGoal=markedUpRetail(document.getElementById('cuRetail').value||'100');
   var total=cuSpotPriceTotal(),difference=purchaseGoal-total;
   el.classList.toggle('is-valid',difference===0&&CU.prices.length===CU.tiles.length);
-  el.textContent=difference===0?'Spot total '+money(total)+' · matches full purchase goal':
-    'Spot total '+money(total)+' of '+money(purchaseGoal)+' · '+(difference>0?'add ':'remove ')+money(Math.abs(difference));
+  el.textContent=difference===0?'Spot total '+money(total)+' — matches full purchase goal':
+    'Spot total '+money(total)+' of '+money(purchaseGoal)+' — '+(difference>0?'add ':'remove ')+money(Math.abs(difference));
 }
 function cuRenderSpotPrices(){
   var grid=document.getElementById('cuSpotPriceGrid');if(!grid)return;
@@ -9810,7 +9810,7 @@ function postListing(){
       termMonths:selectedTerm,checkinFrequency:B.checkinFrequency||'monthly',termLocked:false,brandingMode:selectedBranding,status:'live',shipping:{name:name,address:address}};
   }
   DB.listings.unshift(l);
-  logAct('<b>'+name+'</b> posted a <b>'+LBLL(l)+'</b> &middot; '+l.slots+' spot'+(l.slots>1?'s':''),
+  logAct('<b>'+name+'</b> posted a <b>'+LBLL(l)+'</b> — '+l.slots+' spot'+(l.slots>1?'s':''),
     {kind:'post',listingId:l.id,owner:name,label:LBLL(l),spots:l.slots});
   saveDB();
   toast('Your item is live and unbranded');
@@ -10293,7 +10293,7 @@ function submitTrackProof(itemId,subId,key){
       var found=TRACK_MATCHES.filter(function(m){return m.c&&m.c.subId===subId})[0];
       if(found)renderTrackResults(TRACK_MATCHES);
     }
-    toast(first?'Receipt and first photo submitted · '+cid:'Month '+l.checkins.length+' photo submitted · '+cid);
+    toast(first?'Receipt and first photo submitted — '+cid:'Month '+l.checkins.length+' photo submitted — '+cid);
   }
 }
 function sendDelayNotice(l){
@@ -10301,8 +10301,8 @@ function sendDelayNotice(l){
   var promised=l.promisedDeliveryAt||l.fundedAt+deliveryDaysOf(l)*86400000;
   l.promisedDeliveryAt=promised;
   l.delayNotice={sentAt:Date.now(),proposedAt:promised+30*86400000,requiresResponse:false};
-  logAct('<b>Delivery delay notice</b> sent for '+LBLL(l)+' · brands can wait or receive a full refund');
-  saveDB();toast('Delay notice sent · brands can choose wait or refund');
+  logAct('<b>Delivery delay notice</b> sent for '+LBLL(l)+' — brands can wait or receive a full refund');
+  saveDB();toast('Delay notice sent — brands can choose wait or refund');
 }
 function respondDelay(itemId,subId,choice){
   var l=DB.listings.filter(function(x){return x.id===itemId})[0],c=null;
@@ -10311,7 +10311,7 @@ function respondDelay(itemId,subId,choice){
   if(!l||!c)return;
   c.delayResponse=choice;c.delayRespondedAt=Date.now();
   if(choice==='refund'){c.refunded=true;c.refundedAt=Date.now();c.refundReason='Brand chose a full refund after a delivery delay';}
-  saveDB();toast(choice==='refund'?'Full refund recorded':'Thanks · your wait consent was recorded');
+  saveDB();toast(choice==='refund'?'Full refund recorded':'Thanks — your wait consent was recorded');
   if(document.getElementById('tkResult')&&TRACK_MATCHES.length)renderTrackResults(TRACK_MATCHES);
   if(document.getElementById('tkDemoResult'))renderTrackDemos();
   if(CUR&&CUR.id===l.id){refreshItemCards();drawItemMap()}
@@ -10386,7 +10386,7 @@ function downloadLogoPack(){
     a.download=(c.brand||'sponsor').replace(/[^a-z0-9]/gi,'_').toLowerCase()+'_spot'+(i+1)+'.png';
     document.body.appendChild(a);a.click();a.remove();got++;
   });
-  toast(got?got+' logo file'+(got>1?'s':'')+' downloading · have the '+brandingMethod(CUR.type)+' made':'No uploaded logo files on this listing yet');
+  toast(got?got+' logo file'+(got>1?'s':'')+' downloading — have the '+brandingMethod(CUR.type)+' made':'No uploaded logo files on this listing yet');
 }
 function drawItemMap(){
   var el=document.getElementById('itemMap');
@@ -10448,7 +10448,7 @@ function renderItemSpotList(){
       '<span aria-hidden="true">+</span>';
     button.innerHTML=
       '<span class="ap-spot-mark">'+mark+'</span>'+
-      '<span class="ap-spot-copy"><strong>Spot '+(i+1)+'</strong><span>'+safeCardText(meta.pos)+' &middot; '+safeCardText(meta.size)+'</span></span>'+
+      '<span class="ap-spot-copy"><strong>Spot '+(i+1)+'</strong><span>'+safeCardText(meta.pos)+' — '+safeCardText(meta.size)+'</span></span>'+
       '<span class="ap-spot-price"><b>'+money(price)+'</b><span>'+stateLabel+'</span></span>';
     if(!claim&&!CUR.closed)button.onclick=function(){openBid(i,button)};
     host.appendChild(button);
@@ -10485,12 +10485,12 @@ function refreshItemCards(){
   }
   document.getElementById('iHab').textContent=[CUR.freq,CUR.social&&(CUR.social+' followers')].filter(Boolean).join(' \u00b7 ');
   var locEl=document.getElementById('iBrandLocations'),purposeEl=document.getElementById('iPurpose'),socialEl=document.getElementById('iSocial'),linksEl=document.getElementById('iSocialLinks');
-  if(locEl)locEl.textContent=(CUR.habs&&CUR.habs.length?CUR.habs.join(' · '):'Not provided');
+  if(locEl)locEl.textContent=(CUR.habs&&CUR.habs.length?CUR.habs.join(' — '):'Not provided');
   if(purposeEl)purposeEl.textContent=CUR.purpose||'The owner has not added a purpose statement yet.';
   if(socialEl)socialEl.textContent=CUR.social?CUR.social+' followers':'Not provided';
   var citiesEl=document.getElementById('iCities'),universitiesEl=document.getElementById('iUniversities');
-  if(citiesEl)citiesEl.textContent=CUR.cities&&CUR.cities.length?CUR.cities.join(' · '):'Not provided';
-  if(universitiesEl)universitiesEl.textContent=CUR.universities&&CUR.universities.length?CUR.universities.join(' · '):'Not provided';
+  if(citiesEl)citiesEl.textContent=CUR.cities&&CUR.cities.length?CUR.cities.join(' — '):'Not provided';
+  if(universitiesEl)universitiesEl.textContent=CUR.universities&&CUR.universities.length?CUR.universities.join(' — '):'Not provided';
   if(linksEl){
     var linked=SOCIAL_PLATFORMS.filter(function(p){return CUR.socialLinks&&CUR.socialLinks[p.key]});
     linksEl.innerHTML=linked.length?'<span class="finetext" style="align-self:center">Verify the owner on</span>'+linked.map(function(p){
@@ -10501,18 +10501,18 @@ function refreshItemCards(){
     }).join(''):'<p class="finetext">No public profiles linked yet.</p>';
   }
   document.getElementById('iCad').textContent=checkinCadenceText(CUR);
-  var shipEl=document.getElementById('iShips');if(shipEl)shipEl.textContent=CUR.closed?'closed · claims refunded':(CUR.shippedAt?'shipped to owner':(pct>=100?'funded · preparing shipment':'new, at 100% claimed'));
+  var shipEl=document.getElementById('iShips');if(shipEl)shipEl.textContent=CUR.closed?'closed — claims refunded':(CUR.shippedAt?'shipped to owner':(pct>=100?'funded — preparing shipment':'new, at 100% claimed'));
   var feeCopy=document.getElementById('iFeeCopy');if(feeCopy)feeCopy.textContent='Exact all-in prices, first come, first served. Every purchase total covers BrandMyItem-applied branding, item sales tax, shipping, and handling.';
   var fulfillmentEl=document.getElementById('iFulfillment');if(fulfillmentEl)fulfillmentEl.textContent='BrandMyItem applies branding';
   var materialEl=document.getElementById('iMaterial');if(materialEl)materialEl.textContent=brandingMaterial(CUR.type);
-  var termEl=document.getElementById('iTerm');if(termEl)termEl.textContent=termOf(CUR)+' months'+(CUR.termLocked?' · locked':'');
+  var termEl=document.getElementById('iTerm');if(termEl)termEl.textContent=termOf(CUR)+' months'+(CUR.termLocked?' — locked':'');
   var brandingWindowEl=document.getElementById('iBrandingWindow'),proofCadenceEl=document.getElementById('iProofCadence');
-  if(brandingWindowEl)brandingWindowEl.textContent='BrandMyItem applies and verifies branding · 60-day delivery window';
+  if(brandingWindowEl)brandingWindowEl.textContent='BrandMyItem applies and verifies branding — 60-day delivery window';
   if(proofCadenceEl)proofCadenceEl.textContent=checkinFrequencyLabel(CUR)+' check-ins';
   var claimed=CUR.slots-openSlots(CUR);
   var spotSummary=document.getElementById('spotSummary');
   if(spotSummary)spotSummary.innerHTML=
-    claimed+' of '+CUR.slots+' spots sold. Spots from '+money(Math.min.apply(null,CUR.prices))+' &middot; big banners carry a premium. Every sponsor submits their logo at purchase; the '+safeCardText(brandingMethod(CUR.type))+' is produced from that file.'+
+    claimed+' of '+CUR.slots+' spots sold. Spots from '+money(Math.min.apply(null,CUR.prices))+' — big banners carry a premium. Every sponsor submits their logo at purchase; the '+safeCardText(brandingMethod(CUR.type))+' is produced from that file.'+
     (pct>=100?' <a href="#" id="logoPackBtn" style="font-weight:600;text-decoration:underline">Download the logo pack</a> and have the '+safeCardText(brandingMethod(CUR.type))+' made.':'');
   renderItemSpotList();
   var lp=document.getElementById('logoPackBtn');
@@ -10540,7 +10540,7 @@ function renderOwnerTools(){
   };
   var pct=pctOf(CUR),term=termOf(CUR),checkins=CUR.checkins||[],status=checkinStatus(CUR);
   if(CUR.closed){
-    cb.innerHTML='<div class="fact"><span>Listing status</span><b style="color:#B23327">Closed · all sponsors refunded</b></div><p class="finetext" style="margin:8px 0 0">This listing did not sell out within 60 days. No item will be purchased or shipped.</p>';
+    cb.innerHTML='<div class="fact"><span>Listing status</span><b style="color:#B23327">Closed — all sponsors refunded</b></div><p class="finetext" style="margin:8px 0 0">This listing did not sell out within 60 days. No item will be purchased or shipped.</p>';
     return;
   }
   if(pct<100){
@@ -10552,12 +10552,12 @@ function renderOwnerTools(){
       '<p class="finetext" style="margin:8px 0 12px">BrandMyItem applies and verifies every approved sponsor mark before delivery. The pre-branded item has a 60-day delivery window. Promised date: '+(CUR.promisedDeliveryAt?new Date(CUR.promisedDeliveryAt).toLocaleDateString():'being scheduled')+'.</p>'+
       '<button class="btn btn-primary btn-full" id="markShippedBtn" type="button">Mark item shipped to owner</button>'+
       '<button class="btn btn-outline btn-full" id="delayNoticeBtn" type="button" style="margin-top:8px">Send a delivery delay notice</button>'+
-      (CUR.delayNotice?'<p class="finetext" style="margin:9px 0 0;color:#8A6D1D">Delay notice sent on '+new Date(CUR.delayNotice.sentAt).toLocaleDateString()+' · proposed date '+new Date(CUR.delayNotice.proposedAt).toLocaleDateString()+'</p>':'');
+      (CUR.delayNotice?'<p class="finetext" style="margin:9px 0 0;color:#8A6D1D">Delay notice sent on '+new Date(CUR.delayNotice.sentAt).toLocaleDateString()+' — proposed date '+new Date(CUR.delayNotice.proposedAt).toLocaleDateString()+'</p>':'');
     document.getElementById('markShippedBtn').onclick=function(){
       CUR.shippedAt=Date.now();CUR.status='shipped';
       if(CUR.brandingDueAt)delete CUR.brandingDueAt;
       refreshCheckinStatus(CUR);saveDB();refreshItemCards();
-      toast('Shipment marked · check-ins are now available');
+      toast('Shipment marked — check-ins are now available');
     };
     document.getElementById('delayNoticeBtn').onclick=function(){sendDelayNotice(CUR);renderOwnerTools()};
     return;
@@ -10573,8 +10573,8 @@ function renderOwnerTools(){
   if(isFirst){
     cb.innerHTML=prog+'<p class="finetext" style="margin:0 0 12px">First check-in requires a receipt and purchase date on or after '+fundedDate+'.</p>'+
       '<div class="field"><label class="label" for="receiptDate">Purchase date on receipt</label><input class="input" id="receiptDate" type="date"></div>'+
-      '<input type="file" id="receiptInput" accept="image/*" style="display:none"><div class="upl" id="receiptBox" style="margin-bottom:12px">Upload receipt · required</div>'+
-      '<input type="file" id="checkinInput" accept="image/*" style="display:none"><div class="upl" id="checkinBox">Upload check-in photo · required</div>'+
+      '<input type="file" id="receiptInput" accept="image/*" style="display:none"><div class="upl" id="receiptBox" style="margin-bottom:12px">Upload receipt — required</div>'+
+      '<input type="file" id="checkinInput" accept="image/*" style="display:none"><div class="upl" id="checkinBox">Upload check-in photo — required</div>'+
       '<p class="finetext" id="receiptErr" style="display:none;color:#B23327;margin:10px 0 0"></p><button class="btn btn-primary btn-full" id="checkinBtn" type="button" style="margin-top:12px">Submit first check-in</button>';
     var receiptData=null,checkinData=null,rbox=document.getElementById('receiptBox'),rinput=document.getElementById('receiptInput'),cbox=document.getElementById('checkinBox'),cinput=document.getElementById('checkinInput');
     rbox.onclick=function(){rinput.click()};cbox.onclick=function(){cinput.click()};
@@ -10629,7 +10629,7 @@ function openBid(i,trigger){
   document.getElementById('mStep3').style.display='none';
   document.getElementById('mTitle').textContent='All ad placements are estimates. Pictures and sizing are estimated.';
   document.getElementById('mTotal').textContent=money(total);
-  document.getElementById('uplBox').innerHTML='Upload your logo · required (PNG, transparent works best)';
+  document.getElementById('uplBox').innerHTML='Upload your logo — required (PNG, transparent works best)';
   document.getElementById('mBrand').value='';document.getElementById('mMail').value='';document.getElementById('mLink').value='';
   document.getElementById('modalBg').classList.add('on');
   trackEvent('checkout_opened',analyticsData);
@@ -10660,7 +10660,7 @@ function completePurchase(){
     feeRate:feeRateOf(CUR),purchasedAt:now,subId:subId,itemId:CUR.id,ts:now};
   if(!CUR.termLocked){CUR.termLocked=true;CUR.termLockedAt=now}
   if(pctOf(CUR)>=100&&!CUR.fundedAt){CUR.fundedAt=now;CUR.status='funded';CUR.promisedDeliveryAt=now+deliveryDaysOf(CUR)*86400000}
-  logAct('<b>'+brand+'</b> bought a spot on '+CUR.owner+'&rsquo;s <b>'+LBLL(CUR)+'</b> &middot; '+money(price)+' charged today');
+  logAct('<b>'+brand+'</b> bought a spot on '+CUR.owner+'&rsquo;s <b>'+LBLL(CUR)+'</b> — '+money(price)+' charged today');
   saveDB();
   trackEvent('spot_purchase_completed',spotAnalyticsData(claimSlot,price));
   drawItemMap();refreshItemCards();
@@ -10812,8 +10812,21 @@ function initHomeFeatureBento(){
     {name:'AirPods Max',price:549,parts:[385,384],img:'bento/cutout-headphones.png',n:2,type:'headphones'},
     {name:'RIMOWA Original Cabin',price:1550,parts:[543,543,542,542],img:'bento/cutout-case.png',n:4,type:'case'}
   ];
-  var itemIndex=0,itemImg=document.getElementById('fbItemImg'),itemName=document.getElementById('fbItemName'),itemMeta=document.getElementById('fbItemMeta'),itemStage=document.querySelector('.fb-stage-inner');
+  var itemIndex=0,itemImg=document.getElementById('fbItemImg'),itemName=document.getElementById('fbItemName'),itemMeta=document.getElementById('fbItemMeta'),itemStage=document.querySelector('.fb-stage-inner'),itemLine=q('.fb-itemline'),itemTile=q('.fb-mac');
   var fundPct=document.getElementById('fbFundPct'),fundBar=document.getElementById('fbFundBar'),fundAmt=document.getElementById('fbFundAmt');
+  var checkinTile=q('.fb-checkin'),proofRow=q('.fb-proof');
+  function syncItemStageTop(){
+    if(!itemLine||!itemTile)return;
+    itemTile.style.setProperty('--fb-stage-top',Math.ceil(itemLine.offsetTop+itemLine.offsetHeight+16)+'px');
+  }
+  function syncCheckinShotTop(){
+    if(!checkinTile||!proofRow)return;
+    checkinTile.style.setProperty('--fb-shot-top',Math.ceil(proofRow.offsetTop+proofRow.offsetHeight+16)+'px');
+  }
+  function syncBentoArtwork(){syncItemStageTop();syncCheckinShotTop()}
+  window.addEventListener('resize',syncBentoArtwork);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(syncBentoArtwork);
+  requestAnimationFrame(syncCheckinShotTop);
 
   function buildOverlaySvg(type, n, spotClass, mapClass, prices) {
     var d=CATALOG_SURFACES[type];
@@ -10874,7 +10887,8 @@ function initHomeFeatureBento(){
     if(!itemImg)return;
     itemImg.src=item.img;
     if(itemName)itemName.textContent=item.name;
-    if(itemMeta)itemMeta.textContent='$'+item.price.toLocaleString()+' retail · '+item.n+' spots';
+    if(itemMeta)itemMeta.textContent='$'+item.price.toLocaleString()+' retail — '+item.n+' spots';
+    requestAnimationFrame(syncItemStageTop);
     if(itemStage){
       if(frame){
         itemStage.style.aspectRatio=frame.size[0]+'/'+frame.size[1];

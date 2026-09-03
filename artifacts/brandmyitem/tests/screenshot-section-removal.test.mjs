@@ -207,6 +207,9 @@ test('every catalog item has an item-specific branding method', () => {
 });
 
 test('sold and price pills keep the same compact height', () => {
+  assert.match(html, /\.lcard \.iname\{display:block;height:20px;line-height:20px;[^}]*margin:0 0 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis\}/);
+  assert.match(html, /\.lcard \.moneyrow\{display:grid;grid-template-columns:minmax\(0,1fr\) auto;align-items:end;/);
+  assert.match(html, /\.lcard \.moneyrow \.amts\{display:inline-flex;align-items:center;height:21px;line-height:1\.2;/);
   assert.match(html, /\.lcard \.chips\{display:flex;align-items:flex-end;gap:5px/);
   assert.match(html, /\.lcard \.chipg\.sold-count\{padding:4px 8px\}/);
 });

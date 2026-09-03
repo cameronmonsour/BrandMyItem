@@ -5,8 +5,11 @@
 - [Custom tracer semantics](custom-tracer-semantics.md) — tracing creates the customer-drawn polygon itself; it must never partition the outline into rectangular boxes.
 - [Placement builder defaults](placement-builder-defaults.md) — start with one selected box; users intentionally add placements with Copy box or shape tools.
 - [Dashboard filter language](dashboard-filter-language.md) — filters use compact Apple-style inset groups, not separate floating form cards.
+- [Listing footer alignment](listing-footer-alignment.md) — raised/goal, sold count, and starting-price pill share one bottom-row centerline.
 - [Campaign preview hierarchy](campaign-preview-hierarchy.md) — campaign details use one editorial surface with dividers, not nested gray cards.
 - [Bento product text clearance](bento-product-text-clearance.md) — rotating product art must stay in an aspect-ratio frame below its title and retail line.
+- [Bento check-in clearance](bento-checkin-clearance.md) — the phone mockup starts below the measured proof row and captions, never from a fixed bottom anchor.
+- [Bento status box language](bento-status-box-language.md) — highlighted bento states use solid-black rounded boxes with no middle-dot separators.
 - [Product-page purchase hierarchy](product-page-purchase-hierarchy.md) — keep the product contained and make an explicit spot selector the primary buying path.
 - [Playwright assertion compatibility](playwright-assertion-compatibility.md) — use built-in matchers or plain assertions; optional matcher extensions are not installed.
 - [Mandatory branding application](mandatory-branding-application.md) — BrandMyItem applies every sponsor mark; there is no owner-applied fulfillment path.
