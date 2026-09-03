@@ -157,12 +157,14 @@ test('fulfillment copy enforces BrandMyItem-applied branding', () => {
 });
 
 test('builder and campaign goals include the complete 40% purchase amount', () => {
-  assert.match(html, /var fees=prices\.reduce\(function\(a,b\)\{return a\+feeFor\(B,b\)\},0\)/);
-  assert.match(html, /document\.getElementById\('totalOut'\)\.textContent=money\(v\+fees\)/);
+  assert.match(html, /function markedUpRetail\(retail\)/);
+  assert.match(html, /document\.getElementById\('totalOut'\)\.textContent=money\(v\)/);
   assert.match(html, /Item sales tax, shipping, and handling are included in the platform fee\./);
-  assert.match(html, /function goalOf\(l\)\{return l\.prices\.reduce\(function\(s,p\)\{return s\+p\+feeFor\(l,p\)\},0\)\}/);
+  assert.match(html, /function goalOf\(l\)\{return l\.prices\.reduce\(function\(s,p\)\{return s\+spotPurchaseTotal\(l,p\)\},0\)\}/);
   assert.match(html, /function raisedOf\(l\)\{return \(l\.claims\|\|\[\]\)\.reduce/);
   assert.match(html, /Total today \(includes 40%\)/);
+  assert.match(html, /pricesIncludeMarkup:true/g);
+  assert.match(html, /var price=CUR\.prices\[i\],total=spotPurchaseTotal\(CUR,price\)/);
 });
 
 test('builder separates placement sizing from per-spot pricing', () => {
@@ -171,9 +173,11 @@ test('builder separates placement sizing from per-spot pricing', () => {
   assert.match(html, /id="cuSpotPriceGrid"/);
   assert.match(html, /id="cuEditSizing"[^>]*>Edit sizing<\/button>/);
   assert.match(html, /CU\.sizingComplete=true;CU\.sel=-1;CU\.prices=boxPrices\(\);B\.prices=CU\.prices\.slice\(\)/);
-  assert.match(html, /var placementStroke=\(compactCard\?1\.25:2\)/);
+  assert.match(html, /function renderPhotoOnly\(el,st\)/);
   assert.match(html, /if\(CU\.tiles\.length&&!CU\.sizingComplete\)\{toast\('Complete sizing and price every ad space before posting'\);return\}/);
-  assert.match(html, /cuSpotPriceTotal\(\)!==pricingRetail/);
+  assert.match(html, /cuSpotPriceTotal\(\)!==pricingGoal/);
+  assert.match(html, /Every spot must add up to the full purchase goal, including 40%\./);
+  assert.match(html, /matches full purchase goal/);
   assert.match(html, /prices=CU\.faces\[0\]\.prices\.slice\(\)/);
 });
 

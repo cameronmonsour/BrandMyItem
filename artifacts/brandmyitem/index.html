@@ -482,6 +482,7 @@ details.faq .fa b{color:var(--fg);font-weight:600}
 .lcard .thumb{aspect-ratio:16/10;background:#FFFFFF;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;perspective:900px;border-bottom:1px solid var(--border)}
 .lcard .thumb .snapimg{width:90%;height:92%;object-fit:contain}
 .lcard .thumb .pimg{width:92%;height:92%;object-fit:contain;background:#FFFFFF}
+.clean-product-photo{width:100%;aspect-ratio:16/10;display:block;object-fit:contain;background:#fff;border-radius:18px}
 .snapimg{max-width:100%;max-height:100%;object-fit:contain}
 .three-mount{width:100%;min-height:440px;display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:none}
 .mapstage{background:#FFFFFF;border:1px solid var(--border);border-radius:34px;box-shadow:0 24px 60px rgba(0,0,0,.07);margin:14px 0 0}
@@ -1166,11 +1167,6 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 .feature-bento .fb-scene path,.feature-bento .fb-scene line,.feature-bento .fb-scene rect{fill:none;stroke:var(--fg);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .feature-bento .fb-bagwrap{position:absolute;right:40px;top:156px;height:254px;aspect-ratio:187/324;z-index:2;transition:transform 1.5s var(--fb-ease)}
 .feature-bento .fb-bagwrap img{height:100%;width:100%;position:relative;z-index:2}
-.feature-bento .fb-bagwrap>svg{position:absolute;inset:0;width:100%;height:100%;z-index:3;overflow:visible}
-.feature-bento .fb-spotline{fill:none;stroke:var(--fg);stroke-width:2;vector-effect:non-scaling-stroke;visibility:hidden}
-.feature-bento .fb-hero[data-phase="1"] .fb-spotline,.feature-bento .fb-hero[data-phase="2"] .fb-spotline{visibility:visible}
-.feature-bento .fb-stamp{opacity:0;transform:scale(1.18);transform-origin:44px 44px;color:var(--fg);transition:opacity .35s var(--fb-ease),transform .6s cubic-bezier(.34,1.4,.64,1)}
-.feature-bento .fb-hero[data-phase="3"] .fb-stamp,.feature-bento .fb-hero[data-phase="4"] .fb-stamp{opacity:1;transform:none}
 .feature-bento .fb-hero[data-phase="4"] .fb-bagwrap{animation:fbRoll 1.5s var(--fb-ease) .45s both}
 @keyframes fbRoll{0%{transform:translateX(-178px) rotate(-7deg)}70%{transform:translateX(12px) rotate(-3deg)}100%{transform:none}}
 .feature-bento .fb-days .fb-num{font-size:120px;font-weight:800;letter-spacing:-.07em;line-height:.88;margin:auto 0 12px}
@@ -1193,11 +1189,6 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 .feature-bento .fb-itemline b{font-size:13px}.feature-bento .fb-itemline span{font-size:11px;color:var(--mfg)}
 .feature-bento .fb-stage{position:absolute;left:20px;right:20px;top:156px;bottom:58px;display:grid;place-items:center}
 .feature-bento .fb-stage>img{max-width:88%;max-height:88%;width:auto;height:auto;filter:drop-shadow(0 18px 18px rgba(0,0,0,.14));transition:opacity .25s}
-.feature-bento .fb-stage>svg{position:absolute;pointer-events:none;overflow:visible}
-.feature-bento .fb-stage .fb-spot{fill:none;stroke:currentColor;stroke-width:2;vector-effect:non-scaling-stroke;visibility:hidden}
-.feature-bento .fb-mac[data-phase="1"] .fb-spot,.feature-bento .fb-mac[data-phase="2"] .fb-spot{visibility:visible}
-.feature-bento .fb-stampg{opacity:0;transform:scale(1.15);transition:opacity .3s var(--fb-ease),transform .5s cubic-bezier(.34,1.4,.64,1)}
-.feature-bento .fb-stampg.on{opacity:1;transform:none}
 .feature-bento .fb-fund{position:absolute;left:36px;right:36px;bottom:22px;z-index:3;font-size:12px;font-weight:600;display:flex;align-items:center;gap:10px;opacity:0;transition:opacity .5s}
 .feature-bento .fb-mac[data-phase="2"] .fb-fund,.feature-bento .fb-mac[data-phase="3"] .fb-fund{opacity:1}
 .feature-bento .fb-fund .fb-bar{flex:1;height:4px;border-radius:2px;background:rgba(29,29,31,.15);overflow:hidden}
@@ -1223,17 +1214,8 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 .feature-bento .fb-checkin[data-phase="1"] .fb-due,.feature-bento .fb-checkin[data-phase="3"] .fb-verified,.feature-bento .fb-checkin[data-phase="4"] .fb-verified{opacity:1;transform:none}
 .feature-bento .fb-price{padding:26px 140px 22px 28px}
 .feature-bento .fb-price h3{font-size:28px;line-height:1.05;text-align:left;max-width:9ch;margin-left:0;margin-right:0;letter-spacing:-0.03em}
-.feature-bento .fb-math{position:absolute;left:28px;top:116px;max-width:130px;font-size:11.5px;font-weight:600;line-height:1.15;display:flex;gap:4px;align-items:center;flex-wrap:wrap;z-index:3}
-.feature-bento .fb-math span{opacity:.2;transition:opacity .3s}.feature-bento .fb-math span.on{opacity:1}.feature-bento .fb-math em{font-style:normal;color:var(--mfg)}
-.feature-bento .fb-math b{display:block;width:100%;opacity:0;transition:opacity .4s;margin-top:2px}.feature-bento .fb-price[data-phase="4"] .fb-math b{opacity:1}
 .feature-bento .fb-price-visual{position:absolute;right:22px;top:50%;transform:translateY(-50%);height:130px;width:calc(130px * (68 / 149))}
 .feature-bento .fb-price-phone{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
-.feature-bento .fb-price-map{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.feature-bento .fb-price-map .fb-ps{fill:none;stroke:var(--fg);stroke-width:2;vector-effect:non-scaling-stroke;visibility:hidden}
-.feature-bento .fb-price-map .fb-ps.on{visibility:visible}
-.feature-bento .fb-price-map .fb-lead{stroke:var(--fg);stroke-width:1.5;vector-effect:non-scaling-stroke;fill:none;visibility:hidden}
-.feature-bento .fb-price-map .fb-lead.on{visibility:visible}
-.feature-bento .fb-price-map .fb-label{font-family:'Inter',sans-serif;font-size:7px;font-weight:600;fill:var(--fg);visibility:hidden}.feature-bento .fb-price-map .fb-label.on{visibility:visible}
 .feature-bento .fb-sum{position:absolute;left:28px;bottom:16px;display:flex;align-items:baseline;gap:7px}.feature-bento .fb-sum b{font-size:27px;font-weight:800;letter-spacing:-.06em}.feature-bento .fb-sum small{font-size:10.5px;color:var(--mfg);opacity:0}.feature-bento .fb-price[data-phase="4"] .fb-sum small{opacity:1}
 .feature-bento .fb-term h3,.feature-bento .fb-term p{max-width:190px;text-align:left;margin-left:0;margin-right:0}.feature-bento .fb-term p{max-width:178px}
 .feature-bento .fb-term .fb-suit{position:absolute;right:22px;top:40px;height:116px}
@@ -1817,10 +1799,6 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           <p>BrandMyItem applies every approved sponsor mark using the listed method before delivery.</p>
           <div class="fb-bagwrap" aria-hidden="true">
             <img src="bento/bag.png" alt="">
-            <svg viewBox="0 0 187 324">
-              <rect class="fb-spotline" x="13" y="86" width="160" height="225" rx="8"/>
-              <g transform="translate(49 154)"><g class="fb-stamp"><svg x="0" y="0" width="88" height="88" viewBox="0 0 64 64"><use href="#fbLidMark"/></svg></g></g>
-            </svg>
           </div>
         </article>
 
@@ -1842,7 +1820,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           <p>When every spot is purchased, BrandMyItem buys the listed item new, applies every sponsor mark, and delivers it to the Owner within 60 days.</p>
           <div class="fb-itemline"><b id="fbItemName">MacBook Pro 14&quot;</b><span id="fbItemMeta">$1,599 retail · 6 spots</span></div>
           <div class="fb-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg><span class="fb-funded">Fully funded. Purchase triggered.</span><span class="fb-shipped">Delivered pre-branded to the Owner</span></div>
-          <div class="fb-stage" id="fbItemStage"><img id="fbItemImg" src="bento/macbook.png" alt=""><svg id="fbItemSvg" viewBox="0 0 268 207"></svg></div>
+          <div class="fb-stage" id="fbItemStage"><img id="fbItemImg" src="bento/macbook.png" alt=""></div>
           <div class="fb-fund"><span id="fbFundPct">0%</span><div class="fb-bar"><i id="fbFundBar"></i></div><span id="fbFundAmt">$0 of $1,599</span></div>
         </article>
 
@@ -1862,20 +1840,12 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
         </article>
 
         <article class="fb-tile fb-price" data-phase="0" data-loop="9000" style="--i:5">
-          <h3>Spot price = surface share.</h3>
-          <div class="fb-math"><span data-k="0">33⅓%</span><em>+</em><span data-k="1">33⅓%</span><em>+</em><span data-k="2">33⅓%</span><em>=</em><b>100% of retail</b></div>
+          <h3>One clear price per spot.</h3>
+          <p>Each ad space has a simple, all-in purchase price.</p>
           <div class="fb-price-visual">
             <img class="fb-price-phone" src="bento/phone.png" alt="" aria-hidden="true">
-            <svg class="fb-price-map" viewBox="0 0 68 149" preserveAspectRatio="none" aria-hidden="true">
-              <rect class="fb-ps" data-k="0" x="12" y="71" width="42" height="14.667" rx="3"/>
-              <rect class="fb-ps" data-k="1" x="12" y="88.667" width="42" height="14.667" rx="3"/>
-              <rect class="fb-ps" data-k="2" x="12" y="106.333" width="42" height="14.667" rx="3"/>
-              <path class="fb-lead" data-k="0" d="M12 78.333 H -10"/><text class="fb-label" data-k="0" x="-13" y="80.333" text-anchor="end">33⅓% · $183 spot</text>
-              <path class="fb-lead" data-k="1" d="M12 96 H -10"/><text class="fb-label" data-k="1" x="-13" y="98" text-anchor="end">33⅓% · $183 spot</text>
-              <path class="fb-lead" data-k="2" d="M12 113.667 H -10"/><text class="fb-label" data-k="2" x="-13" y="115.667" text-anchor="end">33⅓% · $183 spot</text>
-            </svg>
           </div>
-          <div class="fb-sum"><b>$<span id="fbSumNum">0</span></b><small>spot prices = retail<br>purchase total includes 40%</small></div>
+          <div class="fb-sum"><b>$<span id="fbSumNum">0</span></b><small>combined spot total<br>includes 40%</small></div>
         </article>
 
         <article class="fb-tile fb-term" data-phase="0" data-loop="9000" style="--i:4">
@@ -2234,7 +2204,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
                     <button class="btn btn-primary" id="cuCompleteSizing" type="button">Complete sizing</button>
                   </div>
                   <div id="cuSpotPricing" style="display:none">
-                    <div class="spot-pricing-head"><div><b>Price each ad space</b><span style="display:block">Every spot must add up to the item retail price.</span></div><button class="btn btn-secondary" id="cuEditSizing" type="button">Edit sizing</button></div>
+                    <div class="spot-pricing-head"><div><b>Price each ad space</b><span style="display:block">Every spot must add up to the full purchase goal, including 40%.</span></div><button class="btn btn-secondary" id="cuEditSizing" type="button">Edit sizing</button></div>
                     <div class="spot-price-grid" id="cuSpotPriceGrid"></div>
                     <div class="spot-pricing-total" id="cuSpotPriceTotal" role="status" aria-live="polite"></div>
                   </div>
@@ -6960,13 +6930,16 @@ function logAct(txt,meta){
   DB.activity.unshift(event);DB.activity=DB.activity.slice(0,20);saveDB()
 }
 function claimIsRefunded(c){return !!(c&&c.refunded)}
-function raisedOf(l){return (l.claims||[]).reduce(function(s,c){return s+(c&&!claimIsRefunded(c)?(c.amt+(typeof c.fee==='number'?c.fee:feeFor(l,c.amt))):0)},0)}
-function goalOf(l){return l.prices.reduce(function(s,p){return s+p+feeFor(l,p)},0)}
+function raisedOf(l){return (l.claims||[]).reduce(function(s,c){return s+(c&&!claimIsRefunded(c)?claimPurchaseTotal(l,c):0)},0)}
+function goalOf(l){return l.prices.reduce(function(s,p){return s+spotPurchaseTotal(l,p)},0)}
 function pctOf(l){var g=goalOf(l);return g?Math.min(100,raisedOf(l)/g*100):0}
 function openSlots(l){return l.closed?0:(l.claims||[]).filter(function(c){return!c}).length}
 function termOf(l){var n=parseInt(l&&l.termMonths,10);return n===6||n===18?n:12}
 function feeRateOf(){return 0.40}
 function feeFor(l,price){return Math.round(price*feeRateOf(l))}
+function markedUpRetail(retail){retail=Math.max(1,Math.round(Number(retail)||0));return retail+Math.round(retail*feeRateOf())}
+function spotPurchaseTotal(l,price){return l&&l.pricesIncludeMarkup?price:price+feeFor(l,price)}
+function claimPurchaseTotal(l,c){return l&&l.pricesIncludeMarkup?c.amt:c.amt+(typeof c.fee==='number'?c.fee:feeFor(l,c.amt))}
 function deliveryDaysOf(){return 60}
 function endOf(l){return (l.postedAt||l.created)+((l.unsoldTimeoutDays||AUCTION_DAYS)*86400000)}
 function checkinStatus(l){
@@ -7889,21 +7862,17 @@ function mount3D(el,st,opts){
   ACTIVE3D={r:r,sc:sc,el:el,raf:0,mv:move,up:up};
   loop();
 }
-function renderFinal(el,st,opts){
-  /* BUILD 43: photo model only. All legacy 3D and schematic rendering is dead code below this line. */
-  var l=normalizeListingPhoto(st);
-  if(!l.photo){
-    var ph=(typeof ITEM_PHOTOS!=='undefined')&&ITEM_PHOTOS[l.type];
-    if(ph)l={photo:ph,tiles:mapTiles(l.type,l.slots)||[],claims:l.claims||[],prices:l.prices||[],custom:true,id:l.id,preview:l.preview,type:l.type,sourceType:l.sourceType};
-  }
-  if(l.photo){renderCustomStage(el,l,(opts&&opts.onTap)?opts.onTap:null);return}
-  el.innerHTML='';return;
-
-  if(el.classList&&el.classList.contains('thumb')){
-    if(listingPhoto(st)){el.innerHTML='<img class="pimg" src="'+listingPhoto(st)+'" alt="" loading="lazy">';return}
-    if(ITEM_PHOTOS[st.type]){el.innerHTML='<img class="pimg" src="'+ITEM_PHOTOS[st.type]+'" alt="" loading="lazy">';return}
-    el.innerHTML='<img class="snapimg" src="'+snap3D(st)+'" alt="">';return}
-  mount3D(el,st,opts);
+function renderPhotoOnly(el,st){
+  var src=listingPhoto(st)||((typeof ITEM_PHOTOS!=='undefined')&&ITEM_PHOTOS[st.type]);
+  el.innerHTML='';
+  if(!src)return;
+  var img=document.createElement('img');
+  img.src=src;img.alt=LBLL(st);img.loading='lazy';
+  img.className=el.classList&&el.classList.contains('thumb')?'pimg':'clean-product-photo';
+  el.appendChild(img);
+}
+function renderFinal(el,st){
+  renderPhotoOnly(el,st);
 }
 
 /* segmented control */
@@ -8161,9 +8130,8 @@ function drawHomeMap(f){
   el.classList.add('mapstage');
   var tap=function(i){if(f.preview){location.hash='build';return}location.hash='item/'+f.id;setTimeout(function(){openBid(i)},60)};
   if(homeMode==='auction'){
-    if(f.custom){renderCustomStage(el,f,tap);return}
     renderFinal(el,f,{onTap:tap,showOpen:true,h:520,scan:true});
-    document.getElementById('homeCap').textContent='Tap any open spot on the item to buy it for your brand. The '+brandingMethod(f.type)+' is made from your logo.';
+    document.getElementById('homeCap').textContent='Open the campaign to choose an available spot. The '+brandingMethod(f.type)+' is made from your logo.';
   }else{
     renderFinal(el,f,{showOpen:false,h:520});
     document.getElementById('homeCap').textContent='Fully funded: download the logo pack, get the '+brandingMethod(f.type)+' made, apply, done. No messages, no coordination.';
@@ -9691,11 +9659,12 @@ function tmplInit(){
 function cuRepart(){if(CU.template&&!CU.customized)cuApplyTemplate()}
 function boxPrices(){
   var retail=Math.max(1,parseFloat(document.getElementById('cuRetail').value||'100'));
+  var purchaseGoal=markedUpRetail(retail);
   var tot=0;CU.tiles.forEach(function(t){tot+=t.w*t.h});
   if(!tot)return [];
   var unit=retail<200?1:5;
-  var pr=CU.tiles.map(function(t){return Math.max(unit,Math.round(retail*(t.w*t.h)/tot/unit)*unit)});
-  pr[0]+=retail-pr.reduce(function(a,b){return a+b},0);
+  var pr=CU.tiles.map(function(t){return Math.max(unit,Math.round(purchaseGoal*(t.w*t.h)/tot/unit)*unit)});
+  pr[0]+=purchaseGoal-pr.reduce(function(a,b){return a+b},0);
   return pr;
 }
 function cuSpotPriceTotal(){
@@ -9703,11 +9672,11 @@ function cuSpotPriceTotal(){
 }
 function cuUpdateSpotPriceTotal(){
   var el=document.getElementById('cuSpotPriceTotal');if(!el)return;
-  var retail=Math.max(1,Math.round(parseFloat(document.getElementById('cuRetail').value||'100')));
-  var total=cuSpotPriceTotal(),difference=retail-total;
+  var purchaseGoal=markedUpRetail(document.getElementById('cuRetail').value||'100');
+  var total=cuSpotPriceTotal(),difference=purchaseGoal-total;
   el.classList.toggle('is-valid',difference===0&&CU.prices.length===CU.tiles.length);
-  el.textContent=difference===0?'Spot total '+money(total)+' · matches retail':
-    'Spot total '+money(total)+' of '+money(retail)+' · '+(difference>0?'add ':'remove ')+money(Math.abs(difference));
+  el.textContent=difference===0?'Spot total '+money(total)+' · matches full purchase goal':
+    'Spot total '+money(total)+' of '+money(purchaseGoal)+' · '+(difference>0?'add ':'remove ')+money(Math.abs(difference));
 }
 function cuRenderSpotPrices(){
   var grid=document.getElementById('cuSpotPriceGrid');if(!grid)return;
@@ -9739,8 +9708,7 @@ function cuPricingUI(){
 function totals(){
   var prices=CU.sizingComplete&&CU.prices.length===CU.tiles.length?CU.prices:(CU.tiles.length?boxPrices():B.prices);
   var v=prices.reduce(function(a,b){return a+b},0);
-  var fees=prices.reduce(function(a,b){return a+feeFor(B,b)},0);
-  document.getElementById('totalOut').textContent=money(v+fees);
+  document.getElementById('totalOut').textContent=money(v);
 }
 function postListing(){
   var name=document.getElementById('pName').value.trim();
@@ -9753,9 +9721,9 @@ function postListing(){
   }
   if(CU.tiles.length&&!CU.sizingComplete){toast('Complete sizing and price every ad space before posting');return}
   if(CU.sizingComplete){
-    var pricingRetail=Math.max(1,Math.round(parseFloat(document.getElementById('cuRetail').value||'100')));
-    if(CU.prices.length!==CU.tiles.length||CU.prices.some(function(price){return !price||price<1})||cuSpotPriceTotal()!==pricingRetail){
-      toast('Every spot needs a price and the spot total must match retail');return;
+    var pricingGoal=markedUpRetail(document.getElementById('cuRetail').value||'100');
+    if(CU.prices.length!==CU.tiles.length||CU.prices.some(function(price){return !price||price<1})||cuSpotPriceTotal()!==pricingGoal){
+      toast('Every spot needs a price and the spot total must match the full purchase goal');return;
     }
   }
   var selectedTerm=termOf(B);
@@ -9779,7 +9747,7 @@ function postListing(){
     if(CU.closed&&CU.tiles.length)cuSaveFace();
     uniformFaceTileSizes(CU.faces);
     var retail=Math.max(1,parseFloat(document.getElementById('cuRetail').value||'100'));
-    var pool=poolPrices(CU.faces,retail);
+    var pool=poolPrices(CU.faces,markedUpRetail(retail));
     var flatTiles=[],facesOut=[],off=0;
     CU.faces.forEach(function(f,fi){
       facesOut.push({photo:f.photo,tiles:f.tiles,off:off,label:f.label||FACE_NAMES[fi]});
@@ -9796,12 +9764,18 @@ function postListing(){
     var mdl=(document.getElementById('tModel')||{value:''}).value.trim();
     l={id:uid(),type:'custom',sourceType:CU.template||null,custom:true,photo:CU.faces[0].photo,faces:facesOut,tiles:CU.faces[0].tiles,
       retail:retail,title:mdl||null,owner:name,mail:mail,avatar:B.avatar,habs:B.habs.slice(),cities:B.cities.slice(),universities:B.universities.slice(),purpose:B.purpose.trim(),freq:B.freq,social:B.social,color:B.color,socialLinks:Object.assign({},B.socialLinks),slots:flatTiles.length,
-      prices:prices,claims:prices.map(function(){return null}),created:Date.now(),postedAt:Date.now(),unsoldTimeoutDays:60,
+      prices:prices,pricesIncludeMarkup:true,claims:prices.map(function(){return null}),created:Date.now(),postedAt:Date.now(),unsoldTimeoutDays:60,
       termMonths:selectedTerm,checkinFrequency:B.checkinFrequency||'monthly',termLocked:false,brandingMode:selectedBranding,status:'live',shipping:{name:name,address:address}};
     CU.faces=[];cuFaceChips();
   }else{
+    var standardRetail=variantRetail(B.type,B.variantSize),standardGoal=markedUpRetail(standardRetail);
+    var standardPrices=B.prices.slice(),standardTotal=standardPrices.reduce(function(a,b){return a+b},0);
+    if(standardPrices.length&&standardTotal!==standardGoal){
+      standardPrices=standardPrices.map(function(price){return Math.max(1,Math.round(price*standardGoal/standardTotal))});
+      standardPrices[0]+=standardGoal-standardPrices.reduce(function(a,b){return a+b},0);
+    }
     l={id:uid(),type:B.type,owner:name,mail:mail,avatar:B.avatar,habs:B.habs.slice(),cities:B.cities.slice(),universities:B.universities.slice(),purpose:B.purpose.trim(),freq:B.freq,social:B.social,color:B.color,variantModel:B.variantModel,variantSize:B.variantSize,retail:variantRetail(B.type,B.variantSize),source:ITEMS[B.type].source,verified:ITEMS[B.type].verified,socialLinks:Object.assign({},B.socialLinks),slots:B.slots,
-      prices:B.prices.slice(),claims:B.prices.map(function(){return null}),created:Date.now(),postedAt:Date.now(),unsoldTimeoutDays:60,
+      prices:standardPrices,pricesIncludeMarkup:true,claims:standardPrices.map(function(){return null}),created:Date.now(),postedAt:Date.now(),unsoldTimeoutDays:60,
       termMonths:selectedTerm,checkinFrequency:B.checkinFrequency||'monthly',termLocked:false,brandingMode:selectedBranding,status:'live',shipping:{name:name,address:address}};
   }
   DB.listings.unshift(l);
@@ -10396,18 +10370,16 @@ function drawItemMap(){
         el.innerHTML='';el.appendChild(ftabs);
         host=document.createElement('div');el.appendChild(host);
       }
-      renderCustomStage(host,{type:CUR.type,sourceType:CUR.sourceType,slots:CUR.slots,photo:faces[fi].photo,tiles:faces[fi].tiles,
-        claims:CUR.claims.slice(faces[fi].off),prices:CUR.prices.slice(faces[fi].off)},
-        function(si){openBid(faces[fi].off+si)});
+      renderPhotoOnly(host,{type:CUR.type,sourceType:CUR.sourceType,photo:faces[fi].photo,title:LBLL(CUR)});
       return;
     }
     renderFinal(el,CUR,{onTap:function(i){openBid(i)},showOpen:true,h:560});
     var itemCap=document.getElementById('itemCap');
-    if(itemCap)itemCap.textContent='Tap any open spot on the item to buy it for your brand. The '+brandingMethod(CUR.type)+' is made from your logo.';
+    if(itemCap)itemCap.textContent='Choose an open spot from the list to buy it for your brand. The '+brandingMethod(CUR.type)+' is made from your logo.';
   }else{
     if(CUR.custom){
       var faces2=CUR.faces&&CUR.faces.length?CUR.faces:[{photo:CUR.photo,tiles:CUR.tiles,off:0}];
-      renderCustomStage(el,{type:CUR.type,sourceType:CUR.sourceType,slots:CUR.slots,photo:faces2[0].photo,tiles:faces2[0].tiles,claims:CUR.claims,prices:CUR.prices},null);
+      renderPhotoOnly(el,{type:CUR.type,sourceType:CUR.sourceType,photo:faces2[0].photo,title:LBLL(CUR)});
       return;
     }
     renderFinal(el,CUR,{showOpen:false,h:560});
@@ -10610,7 +10582,7 @@ function openBid(i,trigger){
   buyReturnFocus=trigger||document.activeElement;
   claimSlot=i;logoData=null;
   var meta=slotMeta(CUR.type,CUR.slots,i);
-  var price=CUR.prices[i],fee=feeFor(CUR,price),total=price+fee;
+  var price=CUR.prices[i],total=spotPurchaseTotal(CUR,price);
   var analyticsData=spotAnalyticsData(i,price);
   trackEvent('spot_selected',analyticsData);
   document.getElementById('mStep1').style.display='';
@@ -10642,7 +10614,7 @@ function completePurchase(){
   var brand=document.getElementById('mBrand').value.trim();
   var mail=document.getElementById('mMail').value.trim();
   if(CUR.claims[claimSlot]){toast('That spot just sold');closeBuyModal();return}
-  var price=CUR.prices[claimSlot],fee=feeFor(CUR,price),now=Date.now();
+  var price=CUR.prices[claimSlot],fee=CUR.pricesIncludeMarkup?0:feeFor(CUR,price),now=Date.now();
   var subId='BMI-'+uid().toUpperCase().slice(0,6);
   CUR.claims[claimSlot]={brand:brand,mail:mail,link:document.getElementById('mLink').value.trim(),logo:logoData,amt:price,fee:fee,
     feeRate:feeRateOf(CUR),purchasedAt:now,subId:subId,itemId:CUR.id,ts:now};
@@ -10792,57 +10764,34 @@ function initHomeFeatureBento(){
     ticks.forEach(function(tick,index){tick.classList.toggle('on',phase>=2&&phase<4&&index<day)});
     if(dayNote)dayNote.textContent=phase===3?'Not funded by day 60. Refunds initiated.':(phase===4?'':(phase>=1?'3 of 5 spots purchased':''));
   });
-  function splitBentoGrid(surface,n){
-    var x=surface[0],y=surface[1],w=surface[2],h=surface[3],wide=w>=h;
-    var layout={2:wide?[2,1]:[1,2],3:wide?[3,1]:[1,3],4:[2,2],6:wide?[3,2]:[2,3]}[n];
-    var cols=layout[0],rows=layout[1],g=Math.max(3,Math.round(Math.min(w,h)*.035));
-    var cw=(w-g*(cols-1))/cols,ch=(h-g*(rows-1))/rows,cells=[];
-    for(var r=0;r<rows;r++)for(var c=0;c<cols;c++)cells.push([x+c*(cw+g),y+r*(ch+g),cw,ch]);
-    return cells;
-  }
   var items=[
-    {name:'MacBook Pro 14\"',price:1599,img:'bento/macbook.png',vb:[268,207],surface:[18,18,232,154],ink:'#1D1D1F',n:6},
-    {name:'Hard cooler',price:350,img:'bento/cooler.png',vb:[191,154],surface:[54,55,117,65],ink:'#1D1D1F',n:2},
-    {name:'Weekender',price:495,img:'bento/weekender.png',vb:[225,180],surface:[30,52,162,119],ink:'#FFFFFF',n:2},
-    {name:'Commuter backpack',price:850,img:'bento/backpack.png',vb:[152,216],surface:[29,44,91,140],ink:'#FFFFFF',n:2}
+    {name:'MacBook Pro 14\"',price:1599,img:'bento/macbook.png',n:6},
+    {name:'Hard cooler',price:350,img:'bento/cooler.png',n:2},
+    {name:'Weekender',price:495,img:'bento/weekender.png',n:2},
+    {name:'Commuter backpack',price:850,img:'bento/backpack.png',n:2}
   ];
-  items.forEach(function(item){item.spots=splitBentoGrid(item.surface,item.n)});
-  var itemIndex=0,itemImg=document.getElementById('fbItemImg'),itemSvg=document.getElementById('fbItemSvg'),itemName=document.getElementById('fbItemName'),itemMeta=document.getElementById('fbItemMeta');
-  var fundPct=document.getElementById('fbFundPct'),fundBar=document.getElementById('fbFundBar'),fundAmt=document.getElementById('fbFundAmt'),stamps=[];
-  function sizeItemOverlay(){
-    if(!itemImg||!itemSvg)return;
-    var imageBox=itemImg.getBoundingClientRect(),stageBox=itemImg.parentElement.getBoundingClientRect();
-    itemSvg.style.left=(imageBox.left-stageBox.left)+'px';itemSvg.style.top=(imageBox.top-stageBox.top)+'px';
-    itemSvg.style.width=imageBox.width+'px';itemSvg.style.height=imageBox.height+'px';
-  }
+  var itemIndex=0,itemImg=document.getElementById('fbItemImg'),itemName=document.getElementById('fbItemName'),itemMeta=document.getElementById('fbItemMeta');
+  var fundPct=document.getElementById('fbFundPct'),fundBar=document.getElementById('fbFundBar'),fundAmt=document.getElementById('fbFundAmt');
   function loadFeatureItem(){
     var item=items[itemIndex];
-    if(!itemImg||!itemSvg)return;
+    if(!itemImg)return;
     itemImg.src=item.img;
     if(itemName)itemName.textContent=item.name;
-    if(itemMeta)itemMeta.textContent='$'+item.price.toLocaleString()+' retail · '+item.spots.length+' spots';
-    itemSvg.setAttribute('viewBox','0 0 '+item.vb[0]+' '+item.vb[1]);itemSvg.style.color=item.ink;
-    itemSvg.setAttribute('preserveAspectRatio','none');
-    itemSvg.innerHTML='<g>'+item.spots.map(function(r){return '<rect class="fb-spot" vector-effect="non-scaling-stroke" x="'+r[0]+'" y="'+r[1]+'" width="'+r[2]+'" height="'+r[3]+'" rx="7"/>'}).join('')+'</g>'+
-      item.spots.map(function(r){var m=Math.min(r[2],r[3])*.62,x=r[0]+(r[2]-m)/2,y=r[1]+(r[3]-m)/2;return '<g class="fb-stampg" style="color:'+item.ink+';transform-origin:'+(x+m/2)+'px '+(y+m/2)+'px"><svg x="'+x+'" y="'+y+'" width="'+m+'" height="'+m+'" viewBox="0 0 64 64"><use href="#fbLidMark"/></svg></g>'}).join('');
-    stamps=Array.prototype.slice.call(itemSvg.querySelectorAll('.fb-stampg'));
-    requestAnimationFrame(sizeItemOverlay);
+    if(itemMeta)itemMeta.textContent='$'+item.price.toLocaleString()+' retail · '+item.n+' spots';
   }
-  if(itemImg)itemImg.addEventListener('load',sizeItemOverlay);
   loadFeatureItem();
   runTile('.fb-mac',[[0,0],[.05,1],[.18,2],[.62,3],[.78,4],[.95,0]],function(p,phase,el){
     el.classList.toggle('on-scene',phase>=1&&phase<=4);
     if(phase===0&&p>.95&&!el._swapped){el._swapped=true;itemIndex=(itemIndex+1)%items.length;loadFeatureItem()}
     if(phase===1)el._swapped=false;
     var item=items[itemIndex],fill=phase===2?ease(seg(p,.18,.62)):(phase>=3&&p<.95?1:0);
-    stamps.forEach(function(stamp,index){stamp.classList.toggle('on',fill>=(index+1)/stamps.length-.001)});
     var percent=Math.round(fill*100),amount=percent===100?item.price:Math.round(fill*item.price);
     if(fundBar)fundBar.style.width=percent+'%';
     if(fundPct)fundPct.textContent=percent+'%';
     if(fundAmt)fundAmt.textContent='$'+amount.toLocaleString()+' of $'+item.price.toLocaleString();
   });
   runTile('.fb-checkin',[[0,0],[.04,1],[.30,2],[.34,3],[.62,4],[.96,0]]);
-  var priceSpots=qa('.fb-price .fb-ps'),priceLeads=qa('.fb-price .fb-lead'),priceLabels=qa('.fb-price .fb-label'),priceMath=qa('.fb-price .fb-math span'),sumNum=document.getElementById('fbSumNum'),parts=[183,183,183];
+  var priceSpots=[],priceLeads=[],priceLabels=[],priceMath=[],sumNum=document.getElementById('fbSumNum'),parts=[257,256,256];
   runTile('.fb-price',[[0,0],[.06,1],[.28,2],[.50,3],[.72,4],[.94,0]],function(p,phase){
     var total=0;
     parts.forEach(function(value,index){
@@ -10861,7 +10810,6 @@ function initHomeFeatureBento(){
     if(phase===1){var walk=seg(p,.04,.56);selected=walk<.3?0:(walk<.6?1:(walk<.82?2:1))}
     options.forEach(function(option,index){option.classList.toggle('on',phase>=1&&index===selected)});
   });
-  window.addEventListener('resize',sizeItemOverlay);
 }
 loadItemLogos();
 /* 3D retired: photo model is the product */

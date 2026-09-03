@@ -41,11 +41,11 @@ test('iPhone placements fill the usable back panel below the camera', () => {
   assert.match(html, /l\.claims=\[iphoneClaim,null,null,null,null\]/);
 });
 
-test('campaign placement outlines stay proportional across card and detail views', () => {
-  assert.match(html, /var compactCard=!!cv\.closest\('\.lcard'\)/);
-  assert.match(html, /var placementStroke=\(compactCard\?1\.25:2\)\*cv\.width\/cssWidth/);
-  assert.match(html, /drawPricePlacement\(g,t,frame,price,c\?logoImages\[i\]:null,c&&c\.brand,placementStroke\)/);
-  assert.match(html, /g\.strokeStyle='#000';g\.lineWidth=lineWidth\|\|2/);
+test('customer-facing campaign surfaces use clean photos without traced placements', () => {
+  assert.match(html, /function renderFinal\(el,st\)\{\s*renderPhotoOnly\(el,st\)/);
+  assert.match(html, /img\.className=el\.classList&&el\.classList\.contains\('thumb'\)\?'pimg':'clean-product-photo'/);
+  assert.doesNotMatch(html, /if\(f\.custom\)\{renderCustomStage\(el,f,tap\)/);
+  assert.match(html, /Choose an open spot from the list to buy it for your brand/);
 });
 
 test('headphones always use two full-width polygon placements', () => {

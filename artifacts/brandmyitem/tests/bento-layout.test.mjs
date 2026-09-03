@@ -10,7 +10,7 @@ function pngSize(name) {
   return [bytes.readUInt32BE(16), bytes.readUInt32BE(20)];
 }
 
-test('every rotating bento overlay uses its image intrinsic dimensions', () => {
+test('every rotating bento item uses its source photo without an overlay', () => {
   const expected = {
     'macbook.png': [268, 207],
     'cooler.png': [191, 154],
@@ -21,33 +21,24 @@ test('every rotating bento overlay uses its image intrinsic dimensions', () => {
     assert.deepEqual(pngSize(name), dimensions);
     assert.match(
       html,
-      new RegExp(`img:'bento/${name.replace('.', '\\.')}',vb:\\[${dimensions[0]},${dimensions[1]}\\]`),
+      new RegExp(`img:'bento/${name.replace('.', '\\.')}'`),
     );
   }
   assert.match(html, /\.fb-stage>img\{[^}]*width:auto;height:auto/);
-  assert.match(html, /itemSvg\.style\.width=imageBox\.width\+'px';itemSvg\.style\.height=imageBox\.height\+'px'/);
-  assert.match(html, /function splitBentoGrid\(surface,n\)/);
-  assert.match(html, /surface:\[18,18,232,154\][^}]*n:6/);
-  assert.match(html, /surface:\[54,55,117,65\][^}]*n:2/);
-  assert.match(html, /surface:\[30,52,162,119\][^}]*n:2/);
-  assert.match(html, /surface:\[29,44,91,140\][^}]*n:2/);
-  assert.match(html, /items\.forEach\(function\(item\)\{item\.spots=splitBentoGrid\(item\.surface,item\.n\)\}\)/);
-  assert.match(html, /itemSvg\.setAttribute\('preserveAspectRatio','none'\)/);
+  assert.doesNotMatch(html, /itemSvg|splitBentoGrid|sizeItemOverlay/);
+  assert.match(html, /itemMeta\.textContent='\$'\+item\.price\.toLocaleString\(\)\+' retail · '\+item\.n\+' spots'/);
 });
 
-test('price surface and labels share the exact product coordinate space', () => {
+test('price tile uses a clean product photo without traced labels', () => {
   assert.deepEqual(pngSize('phone.png'), [68, 149]);
   const priceTile = html.match(/<article class="fb-tile fb-price"[\s\S]*?<\/article>/)?.[0];
   assert.ok(priceTile);
-  assert.match(priceTile, /class="fb-price-visual"[\s\S]*class="fb-price-phone"[\s\S]*class="fb-price-map" viewBox="0 0 68 149"/);
-  assert.equal((priceTile.match(/class="fb-ps"/g) || []).length, 3);
-  assert.equal((priceTile.match(/class="fb-label"/g) || []).length, 3);
+  assert.match(priceTile, /class="fb-price-visual"[\s\S]*class="fb-price-phone"/);
+  assert.doesNotMatch(priceTile, /<svg|fb-ps|fb-label|33⅓%/);
   assert.match(html, /\.fb-price\{padding:26px 140px 22px 28px\}/);
   assert.match(html, /\.fb-price h3\{[^}]*max-width:9ch/);
   assert.match(html, /\.fb-price-visual\{[^}]*height:130px;width:calc\(130px \* \(68 \/ 149\)\)/);
-  assert.match(priceTile, /x="12" y="71" width="42" height="14\.667"/);
-  assert.match(priceTile, /33⅓% · \$183/);
-  assert.match(html, /parts=\[183,183,183\]/);
+  assert.match(html, /parts=\[257,256,256\]/);
 });
 
 test('all bento artwork is contained away from copy on narrow screens', () => {
@@ -59,14 +50,12 @@ test('all bento artwork is contained away from copy on narrow screens', () => {
   assert.match(html, /\.fb-term \.fb-suit\{right:18px;top:34px;height:96px\}/);
 });
 
-test('bento placement outlines are solid and never covered by the funded badge', () => {
+test('bento product photos contain no placement outlines or sponsor stamps', () => {
   const bentoCss = html.match(/\.feature-bento\{[\s\S]*?\/\* --- APPLE-STYLE ITEM PAGE --- \*\//)?.[0];
   assert.ok(bentoCss);
-  assert.doesNotMatch(bentoCss, /stroke-dasharray/);
-  assert.match(bentoCss, /\.fb-stage \.fb-spot\{[^}]*stroke-width:2;vector-effect:non-scaling-stroke;visibility:hidden/);
-  assert.match(bentoCss, /\.fb-mac\[data-phase="1"\] \.fb-spot,.feature-bento \.fb-mac\[data-phase="2"\] \.fb-spot\{visibility:visible\}/);
+  assert.doesNotMatch(bentoCss, /fb-spot|fb-stamp|fb-price-map|fb-spotline/);
   assert.match(bentoCss, /\.fb-done\{[^}]*bottom:54px/);
-  assert.match(html, /<rect class="fb-spot" vector-effect="non-scaling-stroke"/);
+  assert.doesNotMatch(html, /class="fb-spot"|class="fb-stamp"|class="fb-spotline"/);
 });
 
 test('the direct bento anchor remains on the home view', () => {
@@ -80,9 +69,10 @@ test('every bento claim matches the actual marketplace rules', () => {
   assert.match(html, /one current photo on the locked weekly, biweekly, or monthly cadence/);
   assert.match(html, /If every spot isn't purchased by day 60, refunds are initiated to the original payment method within 5 business days/);
   assert.match(html, /applies every sponsor mark, and delivers it to the Owner within 60 days/);
-  assert.match(html, /spot prices = retail<br>purchase total includes 40%/);
-  assert.match(html, /<h3>Spot price = surface share\.<\/h3>/);
-  assert.match(html, /\.fb-math\{[^}]*top:116px/);
+  assert.match(html, /combined spot total<br>includes 40%/);
+  assert.match(html, /<h3>One clear price per spot\.<\/h3>/);
+  assert.doesNotMatch(html, /class="fb-price-map"/);
+  assert.doesNotMatch(html, /id="fbItemSvg"/);
   assert.match(html, /Example: first spot sold/);
   assert.match(html, /dayUnit\.textContent=day===1\?'day':'days'/);
   assert.match(html, /Not funded by day 60\. Refunds initiated\./);
