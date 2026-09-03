@@ -6657,7 +6657,7 @@ var CATS=[
 var ITEMS={
   macbook:{label:'MacBook Pro',brand:'Apple',color:'Silver',cat:'Tech',retail:1599,maxSlots:10,surf:[28,18],verified:'2026-08-29',source:'https://www.apple.com/macbook-pro/specs/',
     specs:[['Model','14-inch MacBook Pro (M5)'],['Chip','Apple M5 &middot; 10-core CPU, 10-core GPU'],['Memory','16GB unified memory'],['Storage','512GB SSD'],['Color','Silver'],['Display','14.2-inch Liquid Retina XDR &middot; 3024×1964'],['Battery','72.4Wh lithium-polymer'],['Ports','3× Thunderbolt 4, HDMI, SDXC, MagSafe 3'],['Dimensions','12.31 × 8.71 × 0.61 in'],['Weight','3.4 lb']]},
-  iphone:{label:'iPhone 17 Pro',brand:'Apple',color:'Silver',cat:'Tech',retail:1099,maxSlots:4,surf:[7,15],verified:'2026-08-29',source:'https://support.apple.com/en-us/125090',
+  iphone:{label:'iPhone 17 Pro',brand:'Apple',color:'Silver',cat:'Tech',retail:1099,maxSlots:5,surf:[7,15],verified:'2026-08-29',source:'https://support.apple.com/en-us/125090',
     specs:[['Chip','A19 Pro'],['Storage','256GB'],['Color','Silver'],['Display','6.3-inch Super Retina XDR OLED &middot; 2622×1206'],['Camera','48MP Fusion Pro camera system'],['Build','Aluminum unibody, Ceramic Shield 2 front'],['Dimensions','5.91 × 2.83 × 0.34 in'],['Weight','7.27 oz (206 g)']]},
   cooler:{label:'Tundra 45 Hard Cooler',brand:'YETI',color:'White',cat:'Event',retail:325,maxSlots:4,surf:[45,30],verified:'2026-08-29',source:'https://www.yeti.com/coolers/hard-coolers/tundra/tundra-45.html',
     specs:[['Model','Tundra 45'],['Capacity','45 size'],['Color','White'],['Construction','Rotomolded FatWall design'],['Insulation','PermaFrost polyurethane foam'],['Hardware','T-Rex lid latches, DoubleHaul handles'],['Outside','25.5 × 15.9 × 15.5 in'],['Empty weight','24.6 lb'],['Certification','IGBC bear-resistant when locked']]},
@@ -6766,8 +6766,8 @@ if(!DB){
       prices:[140,140,70,70],claims:[null,null,null,{brand:'Gateline',link:'',logo:null,amt:70}],created:now-1000*60*60*26},
     {id:'demo4',type:'suit',owner:'Dre',mail:'',habs:['Events'],slots:1,
       prices:[750],claims:[null],created:now-1000*60*12},
-    {id:'demo5',type:'iphone',owner:'Sofia',mail:'',habs:['Campus','Gym'],slots:4,
-      prices:[440,275,275,109],claims:[{brand:'Loopwear',link:'',logo:null,amt:440},null,null,null],created:now-1000*60*60*2},
+    {id:'demo5',type:'iphone',owner:'Sofia',mail:'',habs:['Campus','Gym'],slots:5,
+      prices:[167,233,233,233,233],claims:[{brand:'Loopwear',link:'',logo:null,amt:167},null,null,null,null],created:now-1000*60*60*2},
     {id:'demo6',type:'headphones',owner:'Ken',mail:'',habs:['Commute','Office'],slots:2,
       prices:[300,249],claims:[{brand:'Driftly',link:'',logo:null,amt:300},null],created:now-1000*60*60*5},
     {id:'demo7',type:'paddle',owner:'Priya',mail:'',habs:['Courts','Events'],slots:2,
@@ -6778,7 +6778,7 @@ if(!DB){
   activity:[
     {kind:'post',listingId:'demo4',owner:'Dre',label:'Black Merino Wool Tuxedo Suit',spots:1,ts:now-1000*60*12},
     {kind:'post',listingId:'demo2',owner:'Maya',label:'Quencher H2.0 FlowState Tumbler',spots:2,ts:now-1000*60*60*5},
-    {kind:'post',listingId:'demo5',owner:'Sofia',label:'iPhone 17 Pro',spots:4,ts:now-1000*60*60*2},
+    {kind:'post',listingId:'demo5',owner:'Sofia',label:'iPhone 17 Pro',spots:5,ts:now-1000*60*60*2},
     {kind:'post',listingId:'demo8',owner:'Marcus',label:'Deluxe Carry Stand Bag',spots:5,ts:now-1000*60*60*8},
     {kind:'post',listingId:'demo1',owner:'Cam',label:'MacBook Pro',spots:8,ts:now-1000*60*42},
     {kind:'post',listingId:'demo6',owner:'Ken',label:'AirPods Max 2',spots:2,ts:now-1000*60*60*5},
@@ -9124,11 +9124,11 @@ function cuSetZoom(value){
   if(label)label.textContent=Math.round(CU.zoom*100)+'%';
 }
 var PHOTO_STAGE_SCALE={macbook:0.84};
-function drawPricePlacement(g,t,frame,price,logo,brand){
+function drawPricePlacement(g,t,frame,price,logo,brand,lineWidth){
   var rx=frame.x+(t.x-t.w/2)*frame.w,ry=frame.y+(t.y-t.h/2)*frame.h;
   var rw=t.w*frame.w,rh=t.h*frame.h,cx=rx+rw/2,cy=ry+rh/2;
   g.save();
-  g.strokeStyle='#000';g.lineWidth=1;g.lineJoin='round';g.setLineDash([]);
+  g.strokeStyle='#000';g.lineWidth=lineWidth||2;g.lineJoin='round';g.setLineDash([]);
   if(t.shape==='poly'&&t.pts&&t.pts.length>2){
     g.beginPath();
     g.moveTo(frame.x+t.pts[0][0]*frame.w,frame.y+t.pts[0][1]*frame.h);
@@ -9175,9 +9175,11 @@ function renderCustomStage(el,l,onTap){
     frame.w=img.width*scale;frame.h=img.height*scale;
     frame.x=(cv.width-frame.w)/2;frame.y=(cv.height-frame.h)/2;
     g.drawImage(img,frame.x,frame.y,frame.w,frame.h);
+    var cssWidth=cv.getBoundingClientRect().width||cv.clientWidth||cv.width;
+    var placementStroke=2*cv.width/cssWidth;
     (l.tiles||[]).forEach(function(t,i){
       var c=l.claims&&l.claims[i],price=c?money(c.amt||l.prices[i]):money(l.prices[i]);
-      drawPricePlacement(g,t,frame,price,c?logoImages[i]:null,c&&c.brand);
+      drawPricePlacement(g,t,frame,price,c?logoImages[i]:null,c&&c.brand,placementStroke);
     });
   }
   (l.claims||[]).forEach(function(c,i){
@@ -9730,7 +9732,7 @@ function postListing(){
 }
 
 /* --- ITEM --- */
-var PHOTO_PLACEMENT_VERSION=10;
+var PHOTO_PLACEMENT_VERSION=11;
 var REFERENCE_PHOTO_TILES={
   macbook:{
     10:[
@@ -9744,6 +9746,15 @@ var REFERENCE_PHOTO_TILES={
       {x:0.290,y:0.710,w:0.198,h:0.200},
       {x:0.500,y:0.710,w:0.198,h:0.200},
       {x:0.710,y:0.710,w:0.198,h:0.200}
+    ]
+  },
+  iphone:{
+    5:[
+      {x:0.6355,y:0.1804,w:0.2416,h:0.2039},
+      {x:0.3663,y:0.4516,w:0.2495,h:0.2757},
+      {x:0.6337,y:0.4516,w:0.2495,h:0.2757},
+      {x:0.3663,y:0.7406,w:0.2495,h:0.2757},
+      {x:0.6337,y:0.7406,w:0.2495,h:0.2757}
     ]
   },
   headphones:{
@@ -10015,6 +10026,15 @@ function migratePhoto(){
       l.prices=[oldPrices[1]||250,oldPrices[2]||250,oldPrices[3]||165,oldPrices[0]||500,165,
         oldPrices[5]||225,oldPrices[6]||225,225,oldPrices[7]||219,219];
       l.mtv=0;
+    }
+    if(isDemo&&l.type==='iphone'&&l.slots!==5){
+      var iphoneClaim=(l.claims||[]).filter(Boolean)[0]||null;
+      if(iphoneClaim)iphoneClaim.amt=167;
+      l.slots=5;
+      l.prices=[167,233,233,233,233];
+      l.claims=[iphoneClaim,null,null,null,null];
+      l.mtv=0;
+      (DB.activity||[]).forEach(function(a){if(a.listingId===l.id&&a.kind==='post')a.spots=5});
     }
     if((l.type==='suit'||l.type==='backpack')&&ITEM_PHOTOS[l.type]&&l.photo!==ITEM_PHOTOS[l.type])l.photo=ITEM_PHOTOS[l.type];
     if(l.faces&&l.faces.length>1)uniformFaceTileSizes(l.faces);

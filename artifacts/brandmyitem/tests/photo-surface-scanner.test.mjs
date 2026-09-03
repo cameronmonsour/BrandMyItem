@@ -6,7 +6,7 @@ import vm from 'node:vm';
 const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
 
 test('photo placement migration includes the surface scanner geometry', () => {
-  assert.match(html, /var PHOTO_PLACEMENT_VERSION=10/);
+  assert.match(html, /var PHOTO_PLACEMENT_VERSION=11/);
   assert.match(html, /function scanPhotoPlacements\(img,type,n\)/);
   assert.match(html, /var CATALOG_SURFACES=\{/);
   assert.match(html, /function lockedCatalogPlacements\(img,type,n\)/);
@@ -31,6 +31,20 @@ test('iPhone placements fill the usable back panel below the camera', () => {
   );
   assert.match(html, /iphone:\{x0:0\.242,x1:0\.758,y0:0\.314,y1:0\.878,cols:2\}/);
   assert.doesNotMatch(html, /iphone:\{size:\[952,1275\],surface:\[381,625,190,421\]/);
+  const iphone = html.match(/iphone:\{\s*5:\[([\s\S]*?)\]\s*\},\s*headphones:/)?.[1];
+  assert.ok(iphone, 'iPhone five-placement reference geometry should exist');
+  assert.equal((iphone.match(/\{x:/g) || []).length, 5);
+  assert.match(iphone, /\{x:0\.6355,y:0\.1804,w:0\.2416,h:0\.2039\}/);
+  assert.match(html, /iphone:\{label:'iPhone 17 Pro'[^}]*maxSlots:5/);
+  assert.match(html, /type:'iphone'[^}]*slots:5,\s*prices:\[167,233,233,233,233\]/);
+  assert.match(html, /if\(isDemo&&l\.type==='iphone'&&l\.slots!==5\)/);
+  assert.match(html, /l\.claims=\[iphoneClaim,null,null,null,null\]/);
+});
+
+test('campaign placement outlines render at two CSS pixels', () => {
+  assert.match(html, /var placementStroke=2\*cv\.width\/cssWidth/);
+  assert.match(html, /drawPricePlacement\(g,t,frame,price,c\?logoImages\[i\]:null,c&&c\.brand,placementStroke\)/);
+  assert.match(html, /g\.strokeStyle='#000';g\.lineWidth=lineWidth\|\|2/);
 });
 
 test('headphones always use two full-width polygon placements', () => {
