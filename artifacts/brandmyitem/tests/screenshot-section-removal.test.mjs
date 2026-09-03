@@ -146,10 +146,10 @@ test('dashboard keeps compact tracker cards without a duplicate left category bo
   assert.match(html, /listingContextHtml\(l\)\+'<div class="iname">/);
   assert.match(html, /\.lcard \.who\{[^}]*height:26px;min-width:0;margin-bottom:6px/);
   assert.match(html, /\.lcard \.who \.oname\{[^}]*overflow:hidden;text-overflow:ellipsis;white-space:nowrap/);
-  assert.match(html, /\.lcard \.iname\{[^}]*width:100%;height:20px;line-height:20px;[^}]*margin:0 0 3px/);
-  assert.match(html, /\.lcard \.card-context\{[^}]*width:100%;height:30px;[^}]*margin:0 0 5px/);
-  assert.match(html, /\.lcard \.card-context-value\{[^}]*overflow-wrap:anywhere;white-space:normal;[^}]*-webkit-line-clamp:2/);
-  assert.match(html, /\.lcard \.moneyrow\{[^}]*width:100%;min-width:0;min-height:37px/);
+  assert.match(html, /\.lcard \.iname\{[^}]*width:100%;height:19px;line-height:19px;[^}]*margin:0 0 2px/);
+  assert.match(html, /\.lcard \.card-context\{[^}]*width:100%;height:15px;[^}]*margin:0 0 3px/);
+  assert.match(html, /\.lcard \.card-context-value\{[^}]*overflow:hidden;text-overflow:ellipsis;white-space:nowrap/);
+  assert.match(html, /\.lcard \.moneyrow\{[^}]*width:100%;min-width:0;min-height:32px/);
   assert.doesNotMatch(html, /<span class="when">— /);
   assert.doesNotMatch(html, /aria-hidden="true">&mdash;<\/span>/);
   assert.match(html, /<span class="chipg sold-count">/);
@@ -222,9 +222,9 @@ test('every catalog item has an item-specific branding method', () => {
 });
 
 test('sold and price pills keep the same compact height', () => {
-  assert.match(html, /\.lcard \.iname\{display:block;width:100%;height:20px;line-height:20px;[^}]*margin:0 0 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis\}/);
+  assert.match(html, /\.lcard \.iname\{display:block;width:100%;height:19px;line-height:19px;[^}]*margin:0 0 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis\}/);
   assert.match(html, /\.lcard \.moneyrow\{display:grid;grid-template-columns:minmax\(0,1fr\) auto;align-items:end;/);
-  assert.match(html, /\.lcard \.moneyrow\{[^}]*min-height:37px/);
+  assert.match(html, /\.lcard \.moneyrow\{[^}]*min-height:32px/);
   assert.match(html, /\.lcard \.moneyrow \.amts\{display:inline-flex;align-items:center;height:21px;line-height:1\.2;/);
   assert.match(html, /\.lcard \.chips\{display:flex;align-items:flex-end;gap:5px/);
   assert.match(html, /\.lcard \.chipg\.sold-count\{padding:4px 8px\}/);
