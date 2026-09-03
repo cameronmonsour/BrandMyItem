@@ -159,6 +159,18 @@ test('builder goal includes every spot price and its 30% fee', () => {
   assert.match(html, /Item sales tax, shipping, and handling are included in the platform fee\./);
 });
 
+test('builder separates placement sizing from per-spot pricing', () => {
+  assert.match(html, /id="cuSizingPanel"/);
+  assert.match(html, /id="cuCompleteSizing"[^>]*>Complete sizing<\/button>/);
+  assert.match(html, /id="cuSpotPriceGrid"/);
+  assert.match(html, /id="cuEditSizing"[^>]*>Edit sizing<\/button>/);
+  assert.match(html, /CU\.sizingComplete=true;CU\.sel=-1;CU\.prices=boxPrices\(\);B\.prices=CU\.prices\.slice\(\)/);
+  assert.match(html, /var placementStroke=\(compactCard\?1\.25:2\)/);
+  assert.match(html, /if\(CU\.tiles\.length&&!CU\.sizingComplete\)\{toast\('Complete sizing and price every ad space before posting'\);return\}/);
+  assert.match(html, /cuSpotPriceTotal\(\)!==pricingRetail/);
+  assert.match(html, /prices=CU\.faces\[0\]\.prices\.slice\(\)/);
+});
+
 test('posting requires and saves the owner shipping address', () => {
   assert.match(html, /var address=document\.getElementById\('pAddress'\)\.value\.trim\(\)/);
   assert.match(html, /if\(!name\|\|!mail\|\|!address\)\{toast\('Add your name, email, and shipping address to post'\);return\}/);

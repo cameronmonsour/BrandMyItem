@@ -652,6 +652,18 @@ details.faq .fa b{color:var(--fg);font-weight:600}
 @media(max-width:640px){.home-section-head{display:block}.home-section-head .badge{display:inline-flex;margin-top:14px}.home-activity-item{padding:12px 14px}.home-campaign-grid{grid-template-columns:1fr}}
 @media(max-width:640px){.itempick-nav{display:none}.itemcard{width:132px}}
 .toolbox{display:flex;align-items:center;gap:4px;flex-wrap:wrap;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:5px;margin:10px 0}
+.toolbox.sizing-locked{opacity:.48;pointer-events:none}
+.sizing-panel{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin:10px 0}
+.sizing-ready{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.sizing-ready-copy b{display:block;font-size:13px}.sizing-ready-copy span{display:block;font-size:12px;color:var(--mfg);margin-top:2px}
+.spot-pricing-head,.spot-pricing-total{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.spot-pricing-head b{font-size:13px}.spot-pricing-head span,.spot-pricing-total{font-size:12px;color:var(--mfg)}
+.spot-price-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0}
+.spot-price-field{display:flex;align-items:center;gap:7px;border:1px solid var(--border);border-radius:9px;padding:7px 9px;background:#fff}
+.spot-price-field label{font-size:12px;font-weight:650;white-space:nowrap}.spot-price-field span{color:var(--mfg);font-size:13px}
+.spot-price-field input{width:100%;min-width:0;border:0;outline:0;background:transparent;font:600 13px Inter,-apple-system,sans-serif}
+.spot-pricing-total.is-valid{color:#1F7A44;font-weight:650}
+@media(max-width:640px){.sizing-ready{align-items:flex-start;flex-direction:column}.spot-price-grid{grid-template-columns:1fr}}
 .icontool{display:flex;align-items:center;gap:6px;width:32px;height:32px;padding:0;border-radius:8px;border:1px solid transparent;background:transparent;color:var(--fg);cursor:pointer;transition:background .12s,border-color .12s;justify-content:center;flex-shrink:0}
 .icontool svg{width:16px;height:16px;stroke-width:1;flex-shrink:0}
 .icontool:hover{background:var(--wash);border-color:var(--border)}
@@ -2215,6 +2227,17 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
                 <span class="lbl">Save angle</span>
               </button>
                   <input id="cuRetail" type="number" min="1" placeholder="Item price $" style="display:none">
+                </div>
+                <div class="sizing-panel" id="cuSizingPanel">
+                  <div class="sizing-ready" id="cuSizingReady">
+                    <div class="sizing-ready-copy"><b>Finished sizing the ad spaces?</b><span>Lock the shapes, then set the price for every spot.</span></div>
+                    <button class="btn btn-primary" id="cuCompleteSizing" type="button">Complete sizing</button>
+                  </div>
+                  <div id="cuSpotPricing" style="display:none">
+                    <div class="spot-pricing-head"><div><b>Price each ad space</b><span style="display:block">Every spot must add up to the item retail price.</span></div><button class="btn btn-secondary" id="cuEditSizing" type="button">Edit sizing</button></div>
+                    <div class="spot-price-grid" id="cuSpotPriceGrid"></div>
+                    <div class="spot-pricing-total" id="cuSpotPriceTotal" role="status" aria-live="polite"></div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -8922,7 +8945,7 @@ function renderBuildSpecs(k){
   table.appendChild(sourceRow);
 }
 /* --- CUSTOM ITEM: photo + trace --- */
-var CU={img:null,photo:null,poly:[],tracePointer:null,closed:false,tiles:[],prices:[],mixed:true,retail:0,faces:[],shape:'rect',color:'#1D1D1F',tracing:false,customized:false,sel:-1,zoom:1};
+var CU={img:null,photo:null,poly:[],tracePointer:null,closed:false,tiles:[],prices:[],mixed:true,retail:0,faces:[],shape:'rect',color:'#1D1D1F',tracing:false,customized:false,sel:-1,zoom:1,sizingComplete:false};
 var FACE_NAMES=['Front','Back','Left','Right'];
 function cuFaceChips(){
   var el=document.getElementById('cuFaces');if(!el)return;
@@ -8963,8 +8986,8 @@ function uniformFaceTileSizes(faces){
 }
 function cuSaveFace(){
   if(!CU.tiles.length){toast('Add boxes or trace this angle first');return false}
-  CU.prices=boxPrices();
-  var saved={photo:CU.photo,tiles:CU.tiles.map(copyTileForFace),cells:CU.tiles.length};
+  if(!CU.sizingComplete)CU.prices=boxPrices();
+  var saved={photo:CU.photo,tiles:CU.tiles.map(copyTileForFace),cells:CU.tiles.length,prices:CU.prices.slice()};
   if(CU.faces.length){
     var reference=CU.faces[0].tiles||[];
     saved.tiles.forEach(function(tile,i){
@@ -9231,13 +9254,13 @@ function cuInit(){
       im.onload=function(){
         CU.photo=cuKnockout(im);
         var im2=new Image();
-        im2.onload=function(){CU.img=im2;CU.template=null;CU.poly=[];CU.tracePointer=null;CU.tracing=false;CU.closed=false;
+        im2.onload=function(){CU.img=im2;CU.template=null;CU.poly=[];CU.tracePointer=null;CU.tracing=false;CU.closed=false;CU.sizingComplete=false;
           CU.tiles=scanPhotoPlacements(im2,'custom',Math.max(1,B.slots||1))||[];CU.prices=CU.tiles.length?boxPrices():[];
           CU.sel=CU.tiles.length?0:-1;CU.closed=!!CU.tiles.length;
            CU.zoom=1;
           document.getElementById('cuWrap').style.display='block';
           upl.textContent=CU.tiles.length?'Photo scanned · adjust the suggested placements below':'Photo loaded · trace each custom placement shape below';
-          traceUI();cuDraw();totals()};
+          traceUI();cuPricingUI();cuDraw();totals()};
         im2.src=CU.photo;
       };
       im.src=rd.result;
@@ -9345,6 +9368,7 @@ function cuInit(){
   },{passive:false});
   cv.addEventListener('pointerdown',function(e){
     if(!CU.img)return;
+    if(CU.sizingComplete)return;
     var r=cv.getBoundingClientRect();
     var x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
     if(CU.tracing){
@@ -9502,7 +9526,17 @@ function cuInit(){
     if(CU.sel>=0&&CU.tiles[CU.sel]){CU.tiles[CU.sel].color=CU.color;cuDraw()}
   };
   document.getElementById('cuRetail').onchange=function(){cuRepart()};
+  document.getElementById('cuCompleteSizing').onclick=function(){
+    if(CU.tracing||CU.poly.length){toast('Finish or cancel the current trace first');return}
+    if(!CU.tiles.length){toast('Add at least one ad space before completing sizing');return}
+    CU.sizingComplete=true;CU.sel=-1;CU.prices=boxPrices();B.prices=CU.prices.slice();
+    selUI();cuPricingUI();cuDraw();totals();
+  };
+  document.getElementById('cuEditSizing').onclick=function(){
+    CU.sizingComplete=false;cuPricingUI();traceUI();cuDraw();
+  };
   traceUI();
+  cuPricingUI();
   document.getElementById('cuFace').onclick=function(){
     if(CU.template){toast('Every angle of this item is already shown');return}
     if(CU.faces.length>=4){toast('Four angles is the max');return}
@@ -9554,7 +9588,7 @@ function tmplMax(t){
 function cuApplyTemplate(){
   var t=CU.template;if(!t)return;
   if(CU.customized)return;
-  CU.tracing=false;CU.poly=[];CU.tracePointer=null;CU.sel=-1;
+  CU.tracing=false;CU.poly=[];CU.tracePointer=null;CU.sel=-1;CU.sizingComplete=false;
   var KO=null; /* logo keep-out retired */
   var mx=tmplMax(t);
   if(t==='headphones')B.slots=2;
@@ -9576,7 +9610,7 @@ function cuApplyTemplate(){
   CU.prices=scaleP(t,B.slots,retail);
   B.prices=CU.prices.slice();
   CU.closed=true;CU.poly=[];
-  cuDraw();totals();if(CU.syncSelection)CU.syncSelection();if(CU.syncControls)CU.syncControls();
+  cuDraw();totals();cuPricingUI();if(CU.syncSelection)CU.syncSelection();if(CU.syncControls)CU.syncControls();
 }
 function cuAngleChips(){
   var el=document.getElementById('cuFaces');if(!el)return;
@@ -9629,7 +9663,7 @@ function cuComposeAngles(list,done){
   });
 }
 function cuPickTemplate(t){
-  CU.template=t;CU.faces=[];CU.angleIx=0;CU.tracing=false;CU.customized=false;CU.poly=[];CU.tracePointer=null;CU.sel=-1;
+  CU.template=t;CU.faces=[];CU.angleIx=0;CU.tracing=false;CU.customized=false;CU.poly=[];CU.tracePointer=null;CU.sel=-1;CU.sizingComplete=false;
   /* front photo only for now -- no side or back angles */
   CU.angles=[['Front',ITEM_PHOTOS[t]]];
   document.getElementById('cuRetail').value=variantRetail(t,(typeof B!=='undefined'&&B.type===t)?B.variantSize:null);
@@ -9666,8 +9700,46 @@ function boxPrices(){
   pr[0]+=retail-pr.reduce(function(a,b){return a+b},0);
   return pr;
 }
+function cuSpotPriceTotal(){
+  return (CU.prices||[]).reduce(function(sum,price){return sum+(Number(price)||0)},0);
+}
+function cuUpdateSpotPriceTotal(){
+  var el=document.getElementById('cuSpotPriceTotal');if(!el)return;
+  var retail=Math.max(1,Math.round(parseFloat(document.getElementById('cuRetail').value||'100')));
+  var total=cuSpotPriceTotal(),difference=retail-total;
+  el.classList.toggle('is-valid',difference===0&&CU.prices.length===CU.tiles.length);
+  el.textContent=difference===0?'Spot total '+money(total)+' · matches retail':
+    'Spot total '+money(total)+' of '+money(retail)+' · '+(difference>0?'add ':'remove ')+money(Math.abs(difference));
+}
+function cuRenderSpotPrices(){
+  var grid=document.getElementById('cuSpotPriceGrid');if(!grid)return;
+  grid.innerHTML='';
+  CU.tiles.forEach(function(tile,i){
+    var field=document.createElement('div');field.className='spot-price-field';
+    var label=document.createElement('label');label.htmlFor='cuSpotPrice'+i;label.textContent='Spot '+(i+1);
+    var dollar=document.createElement('span');dollar.textContent='$';
+    var input=document.createElement('input');input.id='cuSpotPrice'+i;input.type='number';input.min='1';input.step='1';input.value=CU.prices[i]||'';
+    input.setAttribute('aria-label','Price for ad spot '+(i+1));
+    input.oninput=function(){
+      CU.prices[i]=Math.max(0,Math.round(Number(this.value)||0));B.prices=CU.prices.slice();
+      cuUpdateSpotPriceTotal();totals();
+    };
+    field.appendChild(label);field.appendChild(dollar);field.appendChild(input);grid.appendChild(field);
+  });
+  cuUpdateSpotPriceTotal();
+}
+function cuPricingUI(){
+  var ready=document.getElementById('cuSizingReady'),pricing=document.getElementById('cuSpotPricing');
+  var toolbar=document.querySelector('#cuWrap .toolbox'),complete=document.getElementById('cuCompleteSizing');
+  if(!ready||!pricing)return;
+  ready.style.display=CU.sizingComplete?'none':'flex';
+  pricing.style.display=CU.sizingComplete?'block':'none';
+  if(toolbar)toolbar.classList.toggle('sizing-locked',CU.sizingComplete);
+  if(complete)complete.disabled=!CU.tiles.length;
+  if(CU.sizingComplete)cuRenderSpotPrices();
+}
 function totals(){
-  var prices=CU.tiles.length?boxPrices():B.prices;
+  var prices=CU.sizingComplete&&CU.prices.length===CU.tiles.length?CU.prices:(CU.tiles.length?boxPrices():B.prices);
   var v=prices.reduce(function(a,b){return a+b},0);
   var fees=prices.reduce(function(a,b){return a+feeFor(B,b)},0);
   document.getElementById('totalOut').textContent=money(v+fees);
@@ -9680,6 +9752,13 @@ function postListing(){
   if(!B.avatar){toast('Select a character before posting');return}
   if(DB.listings.some(function(existing){return existing.ownerRestricted&&existing.mail&&existing.mail.toLowerCase()===mail.toLowerCase()})){
     toast('This owner is restricted from posting after missed check-ins');return;
+  }
+  if(CU.tiles.length&&!CU.sizingComplete){toast('Complete sizing and price every ad space before posting');return}
+  if(CU.sizingComplete){
+    var pricingRetail=Math.max(1,Math.round(parseFloat(document.getElementById('cuRetail').value||'100')));
+    if(CU.prices.length!==CU.tiles.length||CU.prices.some(function(price){return !price||price<1})||cuSpotPriceTotal()!==pricingRetail){
+      toast('Every spot needs a price and the spot total must match retail');return;
+    }
   }
   var selectedTerm=termOf(B);
   var selectedBranding='assisted';
@@ -9709,8 +9788,13 @@ function postListing(){
       f.tiles.forEach(function(t){flatTiles.push(t)});
       off+=f.tiles.length;
     });
-    var prices=new Array(flatTiles.length);
-    pool.order.forEach(function(o,rank){prices[facesOut[o.fi].off+o.i]=pool.prices[rank]});
+    var prices;
+    if(CU.faces.length===1&&CU.faces[0].prices&&CU.faces[0].prices.length===flatTiles.length){
+      prices=CU.faces[0].prices.slice();
+    }else{
+      prices=new Array(flatTiles.length);
+      pool.order.forEach(function(o,rank){prices[facesOut[o.fi].off+o.i]=pool.prices[rank]});
+    }
     var mdl=(document.getElementById('tModel')||{value:''}).value.trim();
     l={id:uid(),type:'custom',sourceType:CU.template||null,custom:true,photo:CU.faces[0].photo,faces:facesOut,tiles:CU.faces[0].tiles,
       retail:retail,title:mdl||null,owner:name,mail:mail,avatar:B.avatar,habs:B.habs.slice(),cities:B.cities.slice(),universities:B.universities.slice(),purpose:B.purpose.trim(),freq:B.freq,social:B.social,color:B.color,socialLinks:Object.assign({},B.socialLinks),slots:flatTiles.length,
