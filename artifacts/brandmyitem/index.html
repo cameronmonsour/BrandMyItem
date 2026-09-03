@@ -1115,7 +1115,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 /* Homepage model explainer */
 .home-model-head{max-width:760px;text-align:center;margin:0 auto 46px}
 .home-flow{position:relative;margin:0;padding:12px 0 0}
-.home-how-band{padding:72px 0 86px!important}
+.home-how-band{padding:32px 0 126px!important}
 .home-flow-line{display:none}
 .home-flow-list{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px;list-style:none;margin:0;padding:0;position:relative}
 .home-flow-step{text-align:center;min-width:0}
@@ -1756,7 +1756,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           </li>
           <li class="home-flow-step">
             <span class="home-flow-icon photo house" aria-hidden="true"><img src="how-it-works-arrives-branded.png" alt=""></span>
-            <span class="home-flow-index">4</span><h3>Brand it your way</h3><p>BrandMyItem applies it for 10%, or you apply it within 7 days of delivery.</p>
+            <span class="home-flow-index">4</span><h3>We apply every brand</h3><p>BrandMyItem applies every approved sponsor mark before shipping to reduce fraud.</p>
           </li>
           <li class="home-flow-step">
             <span class="home-flow-icon photo monthly" aria-hidden="true"><img src="how-it-works-monthly-check-in.png" alt=""></span>
@@ -1880,8 +1880,8 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           <details class="faq"><summary>How often do I check in?<span class="x"></span></summary><div class="fa">You pick the pace when you post: weekly, biweekly, or monthly. One photo per cycle showing the item and its branding in use, for the whole term. No dashboard, no login required to keep it going.</div></details>
           <details class="faq"><summary>What happens if I miss check-ins?<span class="x"></span></summary><div class="fa">Missed check-ins put a public flag on your listing, and continued misses restrict you from posting new items. There is no financial penalty and nothing is taken from you; your record is simply public.</div></details>
           <details class="faq"><summary>Who owns the item?<span class="x"></span></summary><div class="fa">You do, from the day it's delivered. The term is a display commitment, not a loan or a lease. You agree not to sell the item or remove the branding until your term ends.</div></details>
-          <details class="faq"><summary>When does my item arrive?<span class="x"></span></summary><div class="fa">If you're applying the branding yourself: we purchase and ship within about 23 days of full funding, and you apply the materials and submit your first check-in within 7 days of delivery, about 30 days end to end. If you chose assisted application (+10%), it arrives pre-branded within 60 days.</div></details>
-          <details class="faq"><summary>Who pays the +10% assisted fee?<span class="x"></span></summary><div class="fa">Not you. If you choose assisted application when posting, the fee is built into the listing's campaign total that brands fund. Owners never pay anything on BrandMyItem.</div></details>
+          <details class="faq"><summary>When does my item arrive?<span class="x"></span></summary><div class="fa">Once fully funded, BrandMyItem purchases the item, applies every approved sponsor mark, and delivers it pre-branded within 60 days.</div></details>
+          <details class="faq"><summary>Who pays the 10% branding application fee?<span class="x"></span></summary><div class="fa">Brands do. The required 10% application fee is added to sponsor purchases so BrandMyItem can apply and verify every mark before shipping. Owners never pay anything on BrandMyItem.</div></details>
           <details class="faq"><summary>Is my address shared with brands?<span class="x"></span></summary><div class="fa">No. Your shipping address is used by BrandMyItem only, to deliver the item. Brands see your listing, your check-in photos, and the public record, never your address or contact details.</div></details>
           <details class="faq"><summary>Do I have to say it's sponsored if I post about it?<span class="x"></span></summary><div class="fa">Yes. If you post about the item on social media, FTC endorsement rules require you to clearly disclose the material connection, a plain "#ad" or "sponsored" does it. The physical branding on the item itself is already self-evident and needs no extra label.</div></details>
           <details class="faq"><summary>Do I owe taxes on the item?<span class="x"></span></summary><div class="fa">Receiving an item in exchange for a display commitment may be taxable income depending on your situation. You're responsible for any taxes that apply to you, and BrandMyItem issues tax forms where the law requires them.</div></details>
@@ -2012,17 +2012,6 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
         <div class="ios-group">
           <div class="ios-group-head">Deal details</div>
           <div class="ios-box">
-            <label class="ios-item">
-              <span class="ios-label">Fulfillment</span>
-              <div class="ios-control">
-                <select class="ios-select" id="fFulfillment">
-                  <option value="">Any</option>
-                  <option value="self">Owner applies</option>
-                  <option value="assisted">BrandMyItem applies</option>
-                </select>
-                <svg class="ios-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
-              </div>
-            </label>
             <label class="ios-item">
               <span class="ios-label">Commitment</span>
               <div class="ios-control">
@@ -2275,14 +2264,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
               </div>
               <p class="choice-note">Choose how often the owner sends photo check-ins during the selected term.</p>
             </div>
-            <div class="field" style="margin-top:14px"><div class="label">Who applies the branding?</div>
-              <div class="choice-grid fulfillment-choice-grid" id="brandingChoices" role="radiogroup" aria-label="Branding fulfillment">
-                <button class="choice-card" type="button" data-choice-group="branding" data-value="assisted" aria-pressed="false"><strong>BrandMyItem applied</strong></button>
-                <button class="choice-card on" type="button" data-choice-group="branding" data-value="self" aria-pressed="true"><strong>You apply it</strong></button>
-              </div>
-              <p class="choice-note">BrandMyItem applied adds a 10% fulfillment fee with a 60-day delivery window; the self-apply option is delivered in under 23 days with a 7-day branding window. BrandMyItem buys and ships the item either way.</p>
-              <p class="tax-note">Sales tax, if applicable, is calculated at checkout based on the transaction and buyer location. Listing proceeds may have tax implications for the owner; this demo does not determine filing obligations or provide tax advice.</p>
-            </div>
+            <p class="tax-note">BrandMyItem applies and verifies every approved sponsor mark before shipping to reduce fraud. Sales tax, if applicable, is calculated at checkout based on the transaction and buyer location. Listing proceeds may have tax implications for the owner; this demo does not determine filing obligations or provide tax advice.</p>
           </div>
         </div></div>
         <div class="card details-card"><div class="card-h"><div class="card-t">Details</div></div>
@@ -2291,10 +2273,11 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           <div class="fact"><span>Listing window</span><b>60 days, until completed or deleted</b></div>
           <div class="fact"><span>Check-in</span><b id="cadOut">monthly photo</b></div>
           <div class="fact"><span>Check-in term</span><b id="buildTermOut">12 months</b></div>
-          <div class="fact"><span>Fulfillment</span><b id="buildFulfillmentOut">You apply branding</b></div>
-          <div class="fact"><span>Branded material</span><b id="buildMaterialOut">Adhesive sticker/decal for you to apply</b></div>
+          <div class="fact"><span>Fulfillment</span><b id="buildFulfillmentOut">BrandMyItem applies branding</b></div>
+          <div class="fact"><span>Branded material</span><b id="buildMaterialOut">Adhesive sticker/decal applied by BrandMyItem</b></div>
           <div class="fact"><span>Platform fee</span><b>20%</b></div>
-          <div class="fact"><span>Total fee before tax &amp; shipping</span><b id="buildFeeOut">20%</b></div>
+          <div class="fact"><span>Branding application</span><b>10%</b></div>
+          <div class="fact"><span>Total fee before tax &amp; shipping</span><b id="buildFeeOut">30%</b></div>
           <div class="fact"><span>Tax + shipping</span><b id="buildTaxOut">If applicable at checkout</b></div>
           <div class="total"><span class="t1">Goal when fully claimed</span><span class="t2" id="totalOut">$0</span></div>
         </div></div>
@@ -2405,7 +2388,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
             <tbody>
               <tr><td>Check-in cadence</td><td id="iCad"></td></tr>
               <tr><td>Visibility term</td><td id="iTerm">12 months</td></tr>
-              <tr><td>Fulfillment</td><td id="iFulfillment">You apply branding</td></tr>
+              <tr><td>Fulfillment</td><td id="iFulfillment">BrandMyItem applies branding</td></tr>
               <tr><td>Platform fee</td><td>20%</td></tr>
               <tr><td>Total before tax &amp; shipping</td><td id="iTotalFee">20%</td></tr>
               <tr><td>Tax + shipping</td><td id="iTax">If applicable at checkout</td></tr>
@@ -2431,7 +2414,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 <footer class="site-footer">
   <div class="fwrap">
     <div class="fine">
-      <p>* Spot prices are set by surface share and always add up to the item's retail price, exactly. Every spot is charged in full at purchase. If a listing is not fully funded within 60 days, every purchase is refunded automatically to the original payment method; no request is required. Once a listing is fully funded, BrandMyItem purchases the item new, at retail, and ships it directly to the owner. Owners never receive, hold, or handle money at any point. Delivery timelines: approximately 30 days for self-applied branding (about 23 days to purchase and ship, then 7 days for the owner to apply materials and submit a first check-in) and up to 60 days for assisted application. The owner selects the commitment term (6, 12, or 18 months) and check-in cadence (weekly, biweekly, or monthly) when posting; both lock when the first spot sells. Missed check-ins result in a public flag and, if continued, restriction from posting new items; there is no financial penalty. Items are purchased new and carry the manufacturer's warranty. Availability is first come, first served, while spots last.</p>
+      <p>* Spot prices are set by surface share and always add up to the item's retail price, exactly. Every spot is charged in full at purchase. If a listing is not fully funded within 60 days, every purchase is refunded automatically to the original payment method; no request is required. Once a listing is fully funded, BrandMyItem purchases the item new, applies and verifies every approved sponsor mark, and delivers it pre-branded within 60 days. Owners never receive, hold, or handle money at any point. Sponsor purchases include a 20% platform fee and a required 10% branding application fee before applicable tax and shipping. The owner selects the commitment term (6, 12, or 18 months) and check-in cadence (weekly, biweekly, or monthly) when posting; both lock when the first spot sells. Missed check-ins result in a public flag and, if continued, restriction from posting new items; there is no financial penalty. Items are purchased new and carry the manufacturer's warranty. Availability is first come, first served, while spots last.</p>
       <p>Owners who post about their item on social media must clearly disclose the material connection in accordance with the FTC Endorsement Guides. Brands confirm they hold the rights to any mark they submit and license BrandMyItem to reproduce it once, on the purchased spot, and to display the owner's check-in photos publicly. Placements that are unlawful, that use marks the purchaser does not own, or that fall into restricted categories will be declined. Receiving an item may be taxable income; owners are responsible for taxes that apply to them, and forms are issued where required. All product names shown in listings are the property of their respective manufacturers, and no listing implies any affiliation with, or endorsement by, the manufacturer of the item.</p>
       <p><b>The story, short version.</b> BrandMyItem started with one laptop. Vincent (<a href="https://x.com/vynsedev" target="_blank" rel="noopener">@vynsedev</a>) sold the lid of his MacBook to the internet, sticker by sticker, with <a href="https://brandmymac.com" target="_blank" rel="noopener">BrandMyMac</a>, and proved that people will fund a real thing for a real spot on it. BrandMyItem is Cam's (<a href="https://x.com/imce0bitch" target="_blank" rel="noopener">@imce0bitch</a>) answer to the obvious next question: why stop at one Mac? Same honest trade, every item worth carrying. Respect where it started.</p>
       <p>BrandMyItem is operated by IRLi LLC, a California limited liability company. BrandMyItem is a marketplace for physical advertising placements; it is not a bank, a money transmitter, a crowdfunding platform, or an investment of any kind.</p>
@@ -6692,9 +6675,9 @@ var BRANDING_METHODS={
   backpack:'embroidered patch'
 };
 function brandingMethod(type){return BRANDING_METHODS[type]||'custom branding method'}
-function brandingMaterial(type,mode){
+function brandingMaterial(type){
   var method=brandingMethod(type),label=method.charAt(0).toUpperCase()+method.slice(1);
-  return mode==='assisted'?label+' applied by BrandMyItem':label+' for you to apply';
+  return label+' applied by BrandMyItem';
 }
 var HAB_BY_CAT={Tech:['Coffee shops','Office'],Event:['Events'],Hydration:['Gym'],Travel:['Airport'],Carry:['Campus','Office']};
 var ITEM_VARIANTS={
@@ -6944,14 +6927,14 @@ function goalOf(l){return l.prices.reduce(function(s,p){return s+p},0)}
 function pctOf(l){var g=goalOf(l);return g?Math.min(100,raisedOf(l)/g*100):0}
 function openSlots(l){return l.closed?0:(l.claims||[]).filter(function(c){return!c}).length}
 function termOf(l){var n=parseInt(l&&l.termMonths,10);return n===6||n===18?n:12}
-function feeRateOf(l){return l&&l.brandingMode==='assisted'?0.30:0.20}
+function feeRateOf(){return 0.30}
 function feeFor(l,price){return Math.round(price*feeRateOf(l))}
-function deliveryDaysOf(l){return l&&l.brandingMode==='assisted'?60:23}
+function deliveryDaysOf(){return 60}
 function endOf(l){return (l.postedAt||l.created)+((l.unsoldTimeoutDays||AUCTION_DAYS)*86400000)}
 function checkinStatus(l){
   var shipped=l&&l.shippedAt,checkins=(l&&l.checkins)||[],submitted=checkins.length,now=Date.now(),month=30*86400000;
   if(!shipped)return {expected:0,missed:0,overdue:false,nonCompliant:!!(l&&l.nonCompliant),firstDueAt:null,firstOverdue:false};
-  var firstDueAt=l.brandingMode==='self'?(l.brandingDueAt||shipped+7*86400000):shipped+month;
+  var firstDueAt=shipped+month;
   var expected=0;
   if(submitted){
     expected=Math.min(termOf(l),1+Math.max(0,Math.floor((now-checkins[0].date)/month)));
@@ -6975,9 +6958,8 @@ function normalizeModelState(){
     if(!l.postedAt){l.postedAt=l.created||Date.now();changed=true}
     if(!l.unsoldTimeoutDays){l.unsoldTimeoutDays=60;changed=true}
     if(!l.termMonths){l.termMonths=12;changed=true}
-    if(!l.brandingMode){l.brandingMode='self';changed=true}
-    if(l.shippedAt&&l.brandingMode==='self'&&!l.brandingDueAt){l.brandingDueAt=l.shippedAt+7*86400000;changed=true}
-    if(l.brandingMode==='assisted'&&l.brandingDueAt){delete l.brandingDueAt;changed=true}
+    if(l.brandingMode!=='assisted'){l.brandingMode='assisted';changed=true}
+    if(l.brandingDueAt){delete l.brandingDueAt;changed=true}
     if(!l.termLocked&&(l.claims||[]).some(function(c){return !!c&&!c.refunded})){l.termLocked=true;changed=true}
     if(!l.status)l.status=l.closed?'closed':'live';
     if(!Array.isArray(l.claims))l.claims=[];
@@ -7874,7 +7856,7 @@ function renderFinal(el,st,opts){
   var l=normalizeListingPhoto(st);
   if(!l.photo){
     var ph=(typeof ITEM_PHOTOS!=='undefined')&&ITEM_PHOTOS[l.type];
-    if(ph)l={photo:ph,tiles:mapTiles(l.type,l.slots)||[],claims:l.claims||[],prices:l.prices||[],custom:true,id:l.id,preview:l.preview,type:l.type};
+    if(ph)l={photo:ph,tiles:mapTiles(l.type,l.slots)||[],claims:l.claims||[],prices:l.prices||[],custom:true,id:l.id,preview:l.preview,type:l.type,sourceType:l.sourceType};
   }
   if(l.photo){renderCustomStage(el,l,(opts&&opts.onTap)?opts.onTap:null);return}
   el.innerHTML='';return;
@@ -8155,7 +8137,7 @@ function drawHomeMap(f){
 var F={
   q:'',cat:'All',status:'all',min:'',max:'',sort:'new',
   social:'',freq:'',location:'',university:'',itemMin:'',itemMax:'',
-  openMin:'',method:'',fulfillment:'',term:'',checkin:''
+  openMin:'',method:'',term:'',checkin:''
 };
 var campaignListing=null,campaignReturnFocus=null,campaignBodyOverflow='';
 function campaignValues(values,fallback){
@@ -8219,7 +8201,7 @@ function renderCampaignDetails(l){
           '<div class="campaign-fact"><span>Item ships</span><b>'+safeCardText(l.closed?'Closed &middot; claims refunded':(l.shippedAt?'Shipped to owner':(pct>=100?'Funded · preparing shipment':'New at 100% funded')))+'</b></div>'+
           '<div class="campaign-fact"><span>Owner check-in</span><b>'+safeCardText(checkinCadenceText(l))+'</b></div>'+
           '<div class="campaign-fact"><span>Campaign term</span><b>'+termOf(l)+' months'+(l.termLocked?' · locked':'')+'</b></div>'+
-          '<div class="campaign-fact"><span>Branding method</span><b>'+safeCardText(brandingMaterial(l.type,l.brandingMode))+'</b></div>'+
+          '<div class="campaign-fact"><span>Branding method</span><b>'+safeCardText(brandingMaterial(l.type))+'</b></div>'+
         '</div>'+
       '</section>'+
       '<section class="campaign-panel">'+
@@ -8314,7 +8296,7 @@ function showDash(){
     ['fLocation','location','input'],['fUniversity','university','input'],
     ['fItemMin','itemMin','input'],['fItemMax','itemMax','input'],
     ['fOpenMin','openMin','input'],['fMethod','method','change'],
-    ['fFulfillment','fulfillment','change'],['fTerm','term','change'],
+    ['fTerm','term','change'],
     ['fCadence','checkin','change']
   ].forEach(function(binding){
     var el=document.getElementById(binding[0]);if(!el)return;
@@ -8334,7 +8316,7 @@ function showDash(){
     F={
       q:'',cat:'All',status:'all',min:'',max:'',sort:'new',
       social:'',freq:'',location:'',university:'',itemMin:'',itemMax:'',
-      openMin:'',method:'',fulfillment:'',term:'',checkin:''
+      openMin:'',method:'',term:'',checkin:''
     };
     showDash();
   };
@@ -8395,7 +8377,7 @@ function syncDashboardFilterState(){
   [
     ['fSocial','social'],['fFreq','freq'],['fLocation','location'],
     ['fUniversity','university'],['fItemMin','itemMin'],['fItemMax','itemMax'],
-    ['fOpenMin','openMin'],['fMethod','method'],['fFulfillment','fulfillment'],
+    ['fOpenMin','openMin'],['fMethod','method'],
     ['fTerm','term'],['fCadence','checkin']
   ].forEach(function(binding){
     var el=document.getElementById(binding[0]);
@@ -8425,7 +8407,6 @@ function renderDash(){
     var openMin=F.openMin===''?null:parseInt(F.openMin,10);
     if(openMin!==null&&!isNaN(openMin)&&openSlots(l)<openMin)return false;
     if(F.method&&brandingMethod(l.type)!==F.method)return false;
-    if(F.fulfillment&&(l.brandingMode||'self')!==F.fulfillment)return false;
     if(F.term&&String(termOf(l))!==F.term)return false;
     if(F.checkin&&checkinCadenceText(l)!==F.checkin)return false;
     var searchable=[it.label,it.cat,l.owner,l.purpose,l.social].concat(l.habs||[],l.cities||[],l.universities||[]).join(' ').toLowerCase();
@@ -8475,7 +8456,7 @@ function renderDash(){
 }
 
 /* ============ BUILD ============ */
-var B={type:'macbook',slots:4,prices:[],habs:['Coffee shops'],cities:[],universities:[],purpose:'',freq:'Daily',social:'1K\u201310K',socialLinks:{},avatar:'',variantModel:'',termMonths:12,checkinFrequency:'monthly',brandingMode:'self'};
+var B={type:'macbook',slots:4,prices:[],habs:['Coffee shops'],cities:[],universities:[],purpose:'',freq:'Daily',social:'1K\u201310K',socialLinks:{},avatar:'',variantModel:'',termMonths:12,checkinFrequency:'monthly',brandingMode:'assisted'};
 var AVATAR_COUNT=18;
 function setBuildChoiceCards(group,value){
   document.querySelectorAll('[data-choice-group="'+group+'"]').forEach(function(card){
@@ -8485,20 +8466,18 @@ function setBuildChoiceCards(group,value){
   });
 }
 function wireBuildChoices(){
-  document.querySelectorAll('#termChoices .choice-card,#checkinFrequencyChoices .choice-card,#brandingChoices .choice-card').forEach(function(card){
+  document.querySelectorAll('#termChoices .choice-card,#checkinFrequencyChoices .choice-card').forEach(function(card){
     if(card._wired)return;
     card._wired=true;
     card.onclick=function(){
       var group=card.getAttribute('data-choice-group'),value=card.getAttribute('data-value');
       if(group==='term')B.termMonths=termOf({termMonths:value});
       if(group==='checkinFrequency')B.checkinFrequency=value;
-      if(group==='branding')B.brandingMode=value==='assisted'?'assisted':'self';
       refreshBuild();
     };
   });
   setBuildChoiceCards('term',B.termMonths||12);
   setBuildChoiceCards('checkinFrequency',B.checkinFrequency||'monthly');
-  setBuildChoiceCards('branding',B.brandingMode||'self');
 }
 function canonicalAvatar(src){
   var value=String(src||''),match=value.match(/avatars\/avatar-(\d+)\.png$/);
@@ -8887,11 +8866,11 @@ function refreshBuild(){
   document.getElementById('slotPlus').disabled=B.slots>=ITEMS[B.type].maxSlots;
   document.getElementById('cadOut').textContent=checkinCadenceText(B);
   var termOut=document.getElementById('buildTermOut');if(termOut)termOut.textContent=termOf(B)+' months';
-  var assisted=B.brandingMode==='assisted';
-  var fulfillmentOut=document.getElementById('buildFulfillmentOut');if(fulfillmentOut)fulfillmentOut.textContent=assisted?'BrandMyItem applies branding':'You apply branding';
-  var materialOut=document.getElementById('buildMaterialOut');if(materialOut)materialOut.textContent=brandingMaterial(B.type,B.brandingMode);
+  B.brandingMode='assisted';
+  var fulfillmentOut=document.getElementById('buildFulfillmentOut');if(fulfillmentOut)fulfillmentOut.textContent='BrandMyItem applies branding';
+  var materialOut=document.getElementById('buildMaterialOut');if(materialOut)materialOut.textContent=brandingMaterial(B.type);
   var feeOut=document.getElementById('buildFeeOut');if(feeOut)feeOut.textContent=Math.round(feeRateOf(B)*100)+'%';
-  setBuildChoiceCards('term',B.termMonths||12);setBuildChoiceCards('checkinFrequency',B.checkinFrequency||'monthly');setBuildChoiceCards('branding',B.brandingMode||'self');
+  setBuildChoiceCards('term',B.termMonths||12);setBuildChoiceCards('checkinFrequency',B.checkinFrequency||'monthly');
   renderSpotMap(document.getElementById('buildMap'),{type:B.type,slots:B.slots,prices:B.prices,claims:null},
     {mode:'edit',onPrice:function(i,v){B.prices[i]=v;totals()}});
   totals();
@@ -9178,6 +9157,17 @@ function renderCustomStage(el,l,onTap){
   });
   var img=new Image();
   img.onload=function(){
+    var scanType=l.sourceType||l.type;
+    var scanned=scanPhotoPlacements(img,scanType,l.slots||(l.tiles||[]).length);
+    if(scanned&&scanned.length){
+      l.tiles=scanned;
+      var stored=l.id&&DB.listings.find(function(entry){return entry.id===l.id});
+      if(stored&&stored.type===scanType&&!stored.faces){
+        stored.custom=true;stored.photo=stored.photo||ITEM_PHOTOS[scanType];
+        stored.tiles=scanned.map(copyPhotoTile);stored.mtv=PHOTO_PLACEMENT_VERSION;
+        saveDB();
+      }
+    }
     photoReady=true;paint();
   };
   img.src=l.photo;
@@ -9205,11 +9195,13 @@ function cuInit(){
       im.onload=function(){
         CU.photo=cuKnockout(im);
         var im2=new Image();
-        im2.onload=function(){CU.img=im2;CU.template=null;CU.poly=[];CU.tracePointer=null;CU.tracing=false;CU.closed=false;CU.tiles=[];CU.prices=[];
+        im2.onload=function(){CU.img=im2;CU.template=null;CU.poly=[];CU.tracePointer=null;CU.tracing=false;CU.closed=false;
+          CU.tiles=scanPhotoPlacements(im2,'custom',Math.max(1,B.slots||1))||[];CU.prices=CU.tiles.length?boxPrices():[];
+          CU.sel=CU.tiles.length?0:-1;CU.closed=!!CU.tiles.length;
            CU.zoom=1;
           document.getElementById('cuWrap').style.display='block';
-          upl.textContent='Photo loaded &middot; trace each custom placement shape below';
-          traceUI();cuDraw()};
+          upl.textContent=CU.tiles.length?'Photo scanned · adjust the suggested placements below':'Photo loaded · trace each custom placement shape below';
+          traceUI();cuDraw();totals()};
         im2.src=CU.photo;
       };
       im.src=rd.result;
@@ -9430,12 +9422,14 @@ function cuInit(){
   });
   document.getElementById('cuAdd').onclick=function(){
     if(!CU.img){toast('Pick an item or upload a photo first');return}
+    if(CU.template==='headphones'&&CU.tiles.length>=2){toast('Headphones use exactly two full ear-cup placements');return}
     CU.tiles.push(nudgeOff({x:0.5,y:0.5,w:0.26,h:0.15,shape:CU.shape,color:CU.color},keepoutFor()));
     CU.sel=CU.tiles.length-1;CU.closed=true;
     selUI();traceUI();cuDraw();totals();
   };
   document.getElementById('cuCopy').onclick=function(){
     if(CU.sel<0||!CU.tiles[CU.sel]){toast('Select a shape first');return}
+    if(CU.template==='headphones'&&CU.tiles.length>=2){toast('Headphones use exactly two full ear-cup placements');return}
     var src=CU.tiles[CU.sel];
     var copy={x:Math.min(0.92,src.x+0.05),y:Math.min(0.92,src.y+0.05),w:src.w,h:src.h,shape:src.shape,color:src.color};
     if(src.pts)copy.pts=src.pts.map(function(p){return [Math.min(0.98,p[0]+0.05),Math.min(0.98,p[1]+0.05)]});
@@ -9527,6 +9521,7 @@ function cuApplyTemplate(){
   CU.tracing=false;CU.poly=[];CU.tracePointer=null;CU.sel=-1;
   var KO=null; /* logo keep-out retired */
   var mx=tmplMax(t);
+  if(t==='headphones')B.slots=2;
   if(B.slots>mx)B.slots=mx;
   var retail=Math.max(1,parseFloat(document.getElementById('cuRetail').value||ITEMS[t].retail));
   CU.retail=retail;
@@ -9535,7 +9530,9 @@ function cuApplyTemplate(){
   var all=[];
   for(var fi=0;fi<n;fi++){
     base.forEach(function(tt){
-      all.push({x:(fi+tt.x)/n,y:tt.y,w:tt.w/n,h:tt.h});
+      var out={x:(fi+tt.x)/n,y:tt.y,w:tt.w/n,h:tt.h,shape:tt.shape,color:tt.color};
+      if(tt.pts)out.pts=tt.pts.map(function(p){return [(fi+p[0])/n,p[1]]});
+      all.push(out);
     });
   }
   CU.tiles=all;
@@ -9603,6 +9600,8 @@ function cuPickTemplate(t){
   var im=new Image();
   im.onload=function(){
     CU.img=im;CU.photo=CU.angles[0][1];CU.zoom=1;
+    if(t==='headphones')B.slots=2;
+    scanPhotoPlacements(im,t,B.slots);
     document.getElementById('cuWrap').style.display='block';
     cuApplyTemplate();
   };
@@ -9644,8 +9643,14 @@ function postListing(){
     toast('This owner is restricted from posting after missed check-ins');return;
   }
   var selectedTerm=termOf(B);
-  var selectedBranding=B.brandingMode==='assisted'?'assisted':'self';
+  var selectedBranding='assisted';
   var l;
+  if(CU.template==='headphones'){
+    B.slots=2;
+    var headphoneTiles=scanPhotoPlacements(CU.img,'headphones',2)||mapTiles('headphones',2);
+    if(!headphoneTiles||headphoneTiles.length!==2){toast('Headphones require two complete ear-cup placements');return}
+    CU.tiles=headphoneTiles.map(copyPhotoTile);CU.sel=0;CU.closed=true;CU.prices=boxPrices();B.prices=CU.prices.slice();
+  }
   if(CU.template&&CU.angles&&CU.angles.length>1&&!CU.faces.length&&CU.tiles.length){
     /* catalog item: same zone layout offered on each photographed face */
     var retail0=Math.max(1,parseFloat(document.getElementById('cuRetail').value||'100'));
@@ -9668,7 +9673,7 @@ function postListing(){
     var prices=new Array(flatTiles.length);
     pool.order.forEach(function(o,rank){prices[facesOut[o.fi].off+o.i]=pool.prices[rank]});
     var mdl=(document.getElementById('tModel')||{value:''}).value.trim();
-    l={id:uid(),type:'custom',custom:true,photo:CU.faces[0].photo,faces:facesOut,tiles:CU.faces[0].tiles,
+    l={id:uid(),type:'custom',sourceType:CU.template||null,custom:true,photo:CU.faces[0].photo,faces:facesOut,tiles:CU.faces[0].tiles,
       retail:retail,title:mdl||null,owner:name,mail:mail,avatar:B.avatar,habs:B.habs.slice(),cities:B.cities.slice(),universities:B.universities.slice(),purpose:B.purpose.trim(),freq:B.freq,social:B.social,color:B.color,socialLinks:Object.assign({},B.socialLinks),slots:flatTiles.length,
       prices:prices,claims:prices.map(function(){return null}),created:Date.now(),postedAt:Date.now(),unsoldTimeoutDays:60,
       termMonths:selectedTerm,checkinFrequency:B.checkinFrequency||'monthly',termLocked:false,brandingMode:selectedBranding,status:'live',shipping:{}};
@@ -9687,7 +9692,7 @@ function postListing(){
 }
 
 /* ============ ITEM ============ */
-var PHOTO_PLACEMENT_VERSION=6;
+var PHOTO_PLACEMENT_VERSION=8;
 var REFERENCE_PHOTO_TILES={
   macbook:{
     10:[
@@ -9705,8 +9710,8 @@ var REFERENCE_PHOTO_TILES={
   },
   headphones:{
     2:[
-      {x:0.500,y:0.610,w:0.150,h:0.110},
-      {x:0.500,y:0.750,w:0.150,h:0.110}
+      {x:0.500,y:0.570,w:0.478,h:0.220,shape:'poly',pts:[[0.370,0.460],[0.335,0.480],[0.294,0.520],[0.273,0.560],[0.264,0.620],[0.261,0.680],[0.738,0.680],[0.736,0.620],[0.725,0.560],[0.705,0.520],[0.664,0.480],[0.621,0.460]]},
+      {x:0.500,y:0.790,w:0.478,h:0.220,shape:'poly',pts:[[0.261,0.680],[0.262,0.720],[0.265,0.760],[0.273,0.800],[0.290,0.840],[0.315,0.870],[0.343,0.890],[0.366,0.900],[0.640,0.900],[0.657,0.890],[0.687,0.870],[0.709,0.840],[0.720,0.820],[0.727,0.800],[0.734,0.760],[0.737,0.720],[0.738,0.680]]}
     ]
   }
 };
@@ -9716,13 +9721,145 @@ var PRODUCT_PLACEMENT_AREAS={
   bottle:{x0:0.43,x1:0.57,y0:0.42,y1:0.76,cols:1},
   'case':{x0:0.39,x1:0.61,y0:0.48,y1:0.84,cols:2},
   cooler:{x0:0.31,x1:0.69,y0:0.43,y1:0.71,cols:2},
-  headphones:{x0:0.41,x1:0.59,y0:0.54,y1:0.80,cols:1},
+  headphones:{x0:0.25,x1:0.75,y0:0.43,y1:0.91,cols:1},
   golfbag:{x0:0.43,x1:0.59,y0:0.40,y1:0.82,cols:1},
   weekender:{x0:0.31,x1:0.69,y0:0.49,y1:0.74,cols:2},
   paddle:{x0:0.39,x1:0.61,y0:0.37,y1:0.64,cols:1},
   suit:{x0:0.34,x1:0.66,y0:0.37,y1:0.72,cols:2},
   backpack:{x0:0.36,x1:0.64,y0:0.39,y1:0.75,cols:2}
 };
+var PHOTO_SCAN_CACHE={};
+function copyPhotoTile(t){
+  var out={x:t.x,y:t.y,w:t.w,h:t.h};
+  if(t.shape)out.shape=t.shape;
+  if(t.color)out.color=t.color;
+  if(t.pts)out.pts=t.pts.map(function(p){return [p[0],p[1]]});
+  return out;
+}
+function photoTileFromPoints(points){
+  if(!points||points.length<3)return null;
+  var x0=1,x1=0,y0=1,y1=0;
+  points.forEach(function(p){
+    p[0]=Math.max(0,Math.min(1,p[0]));p[1]=Math.max(0,Math.min(1,p[1]));
+    x0=Math.min(x0,p[0]);x1=Math.max(x1,p[0]);y0=Math.min(y0,p[1]);y1=Math.max(y1,p[1]);
+  });
+  if(x1-x0<0.025||y1-y0<0.025)return null;
+  return {x:(x0+x1)/2,y:(y0+y1)/2,w:x1-x0,h:y1-y0,shape:'poly',pts:points};
+}
+function scanPhotoPlacements(img,type,n){
+  n=type==='headphones'?2:Math.max(1,+n||1);
+  if(!img||!(img.naturalWidth||img.width)||!(img.naturalHeight||img.height))return null;
+  var src=img.currentSrc||img.src||'',cacheable=type!=='custom',key=type+'|'+n+'|'+src;
+  if(cacheable&&PHOTO_SCAN_CACHE[key])return PHOTO_SCAN_CACHE[key].map(copyPhotoTile);
+  var iw=img.naturalWidth||img.width,ih=img.naturalHeight||img.height,maxSide=360;
+  var scale=Math.min(1,maxSide/Math.max(iw,ih)),W=Math.max(80,Math.round(iw*scale)),H=Math.max(80,Math.round(ih*scale));
+  var cv=document.createElement('canvas');cv.width=W;cv.height=H;
+  var g=cv.getContext('2d',{willReadFrequently:true});
+  try{g.drawImage(img,0,0,W,H)}catch(err){return null}
+  var px;
+  try{px=g.getImageData(0,0,W,H).data}catch(err2){return null}
+  var area=PRODUCT_PLACEMENT_AREAS[type]||{x0:0.08,x1:0.92,y0:0.08,y1:0.92,cols:Math.max(1,Math.round(Math.sqrt(n)))};
+  var ax0=Math.max(0,Math.floor(area.x0*W)),ax1=Math.min(W-1,Math.ceil(area.x1*W));
+  var ay0=Math.max(0,Math.floor(area.y0*H)),ay1=Math.min(H-1,Math.ceil(area.y1*H));
+  var corners=[[1,1],[W-2,1],[1,H-2],[W-2,H-2]],br=0,bg=0,bb=0;
+  corners.forEach(function(p){var i=(p[1]*W+p[0])*4;br+=px[i];bg+=px[i+1];bb+=px[i+2]});
+  br/=corners.length;bg/=corners.length;bb/=corners.length;
+  var mask=new Uint8Array(W*H),labels=new Int32Array(W*H);
+  for(var y=ay0;y<=ay1;y++)for(var x=ax0;x<=ax1;x++){
+    var k=y*W+x,i=k*4,a=px[i+3],r=px[i],gr=px[i+1],b=px[i+2];
+    var dist=(Math.abs(r-br)+Math.abs(gr-bg)+Math.abs(b-bb))/3;
+    var hi=Math.max(r,gr,b),lo=Math.min(r,gr,b),neutral=hi-lo<68;
+    var visible=a>24&&(a<245||dist>14||hi<238);
+    if(type==='headphones')visible=a>24&&neutral&&dist>3&&hi<253;
+    if(visible)mask[k]=1;
+  }
+  var queue=new Int32Array(W*H),label=0,bestLabel=0,bestSize=0;
+  for(var sy=ay0;sy<=ay1;sy++)for(var sx=ax0;sx<=ax1;sx++){
+    var start=sy*W+sx;
+    if(!mask[start]||labels[start])continue;
+    label++;var qh=0,qt=0,size=0;queue[qt++]=start;labels[start]=label;
+    while(qh<qt){
+      var at=queue[qh++],cy=Math.floor(at/W),cx=at-cy*W;size++;
+      var near=[at-1,at+1,at-W,at+W];
+      for(var ni=0;ni<4;ni++){
+        var nk=near[ni],ny=Math.floor(nk/W),nx=nk-ny*W;
+        if(nx<ax0||nx>ax1||ny<ay0||ny>ay1||!mask[nk]||labels[nk])continue;
+        labels[nk]=label;queue[qt++]=nk;
+      }
+    }
+    if(size>bestSize){bestSize=size;bestLabel=label}
+  }
+  if(!bestLabel||bestSize<Math.max(70,(ax1-ax0)*(ay1-ay0)*0.015))return null;
+  /* Keep generated placements safely inside the scanned silhouette. This is
+     the browser equivalent of the catalog scanner's distance-transform inset. */
+  var surfaceMask=new Uint8Array(W*H),edgeDistance=new Uint16Array(W*H),INF=65535;
+  for(var my=ay0;my<=ay1;my++)for(var mx=ax0;mx<=ax1;mx++){
+    var mk=my*W+mx;
+    if(labels[mk]===bestLabel){surfaceMask[mk]=1;edgeDistance[mk]=INF}
+  }
+  if(type!=='headphones'){
+    for(var dy=ay0;dy<=ay1;dy++)for(var dx=ax0;dx<=ax1;dx++){
+      var dk=dy*W+dx;
+      if(!surfaceMask[dk])continue;
+      var fromLeft=dx>ax0?edgeDistance[dk-1]:0,fromTop=dy>ay0?edgeDistance[dk-W]:0;
+      edgeDistance[dk]=Math.min(edgeDistance[dk],fromLeft+1,fromTop+1);
+    }
+    for(var dy2=ay1;dy2>=ay0;dy2--)for(var dx2=ax1;dx2>=ax0;dx2--){
+      var dk2=dy2*W+dx2;
+      if(!surfaceMask[dk2])continue;
+      var fromRight=dx2<ax1?edgeDistance[dk2+1]:0,fromBottom=dy2<ay1?edgeDistance[dk2+W]:0;
+      edgeDistance[dk2]=Math.min(edgeDistance[dk2],fromRight+1,fromBottom+1);
+    }
+    var inset=Math.max(2,Math.round(Math.min(W,H)*0.045)),insetMask=new Uint8Array(W*H),insetSize=0;
+    for(var iy=ay0;iy<=ay1;iy++)for(var ix=ax0;ix<=ax1;ix++){
+      var ik=iy*W+ix;
+      if(surfaceMask[ik]&&edgeDistance[ik]>=inset){insetMask[ik]=1;insetSize++}
+    }
+    if(insetSize>=Math.max(70,bestSize*0.25))surfaceMask=insetMask;
+  }
+  var bx0=ax1,bx1=ax0,by0=ay1,by1=ay0;
+  for(var yy=ay0;yy<=ay1;yy++)for(var xx=ax0;xx<=ax1;xx++)if(surfaceMask[yy*W+xx]){
+    bx0=Math.min(bx0,xx);bx1=Math.max(bx1,xx);by0=Math.min(by0,yy);by1=Math.max(by1,yy);
+  }
+  if(type==='headphones'){
+    var widest=0,rowWidths=[];
+    for(var cupY=by0;cupY<=by1;cupY++){
+      var rowMin=bx1+1,rowMax=bx0-1;
+      for(var cupX=bx0;cupX<=bx1;cupX++)if(surfaceMask[cupY*W+cupX]){rowMin=Math.min(rowMin,cupX);rowMax=Math.max(rowMax,cupX)}
+      rowWidths[cupY]=rowMax>=rowMin?rowMax-rowMin+1:0;widest=Math.max(widest,rowWidths[cupY]);
+    }
+    for(var trimY=by0;trimY<=by1;trimY++)if(rowWidths[trimY]>=widest*0.45){by0=trimY;break}
+  }
+  function polygonForRegion(rx0,rx1,ry0,ry1){
+    var left=[],right=[],samples=10;
+    for(var si=0;si<samples;si++){
+      var py=Math.round(ry0+(ry1-ry0)*(si/(samples-1))),mn=rx1+1,mx=rx0-1;
+      for(var band=-2;band<=2;band++){
+        var py2=Math.max(by0,Math.min(by1,py+band));
+        for(var qx=rx0;qx<=rx1;qx++)if(surfaceMask[py2*W+qx]){mn=Math.min(mn,qx);mx=Math.max(mx,qx)}
+      }
+      if(mx>=mn){left.push([mn/W,py/H]);right.push([mx/W,py/H])}
+    }
+    if(left.length<3)return null;
+    return photoTileFromPoints(left.concat(right.reverse()));
+  }
+  var cols=type==='headphones'?1:Math.max(1,Math.min(area.cols||1,n));
+  var rows=Math.ceil(n/cols),tiles=[],gap=Math.max(1,Math.round(Math.min(W,H)*0.006));
+  for(var row=0;row<rows;row++){
+    var count=Math.min(cols,n-row*cols);
+    for(var col=0;col<count;col++){
+      var rx0=Math.round(bx0+(bx1-bx0+1)*col/count)+gap;
+      var rx1=Math.round(bx0+(bx1-bx0+1)*(col+1)/count)-gap;
+      var ry0=Math.round(by0+(by1-by0+1)*row/rows)+gap;
+      var ry1=Math.round(by0+(by1-by0+1)*(row+1)/rows)-gap;
+      var tile=polygonForRegion(rx0,rx1,ry0,ry1);
+      if(tile)tiles.push(tile);
+    }
+  }
+  if(tiles.length!==n)return null;
+  if(cacheable)PHOTO_SCAN_CACHE[key]=tiles.map(copyPhotoTile);
+  return tiles.map(copyPhotoTile);
+}
 function curatedPhotoTiles(type,n){
   var area=PRODUCT_PLACEMENT_AREAS[type];
   if(!area||!n)return null;
@@ -9744,8 +9881,11 @@ function curatedPhotoTiles(type,n){
   return tiles;
 }
 function mapTiles(type,n){
+  for(var key in PHOTO_SCAN_CACHE)if(key.indexOf(type+'|'+n+'|')===0){
+    return PHOTO_SCAN_CACHE[key].map(copyPhotoTile);
+  }
   var reference=REFERENCE_PHOTO_TILES[type]&&REFERENCE_PHOTO_TILES[type][n];
-  if(reference)return reference.map(function(t){return {x:t.x,y:t.y,w:t.w,h:t.h}});
+  if(reference)return reference.map(copyPhotoTile);
   var curated=curatedPhotoTiles(type,n);
   if(curated)return curated;
   var sd=(typeof SCANDATA!=='undefined')&&SCANDATA[type];
@@ -9895,10 +10035,9 @@ function trackSubmitHtml(l,c){
     '</div>';
   }
   var status=checkinStatus(l);
-  var firstDeadline=first&&l.brandingMode==='self'&&status.firstDueAt?(' Apply the approved branding and submit both by <b>'+new Date(status.firstDueAt).toLocaleDateString()+'</b>.'):'';
   return '<div class="track-submit">'+
     '<div class="track-submit-title">'+(first?'Submit your receipt and first photo':'Submit month '+(checkins.length+1)+' photo')+'</div>'+
-     '<p class="track-submit-copy">'+(first?'Your receipt proves the item was purchased after funding. Add the first item photo to start the '+termOf(l)+'-month check-in timeline.'+firstDeadline:'Add the latest photo of the item to keep this month\\u2019s check-in on track.')+'</p>'+
+     '<p class="track-submit-copy">'+(first?'Your receipt proves the item was purchased after funding. Add the first item photo to start the '+termOf(l)+'-month check-in timeline.':'Add the latest photo of the item to keep this month\\u2019s check-in on track.')+'</p>'+
     (first?'<div class="track-submit-grid"><div class="field"><label class="label" for="trackDate_'+key+'">Purchase date on receipt</label><input class="input" id="trackDate_'+key+'" type="date"></div><div><label class="label" for="trackReceipt_'+key+'">Receipt</label><input id="trackReceipt_'+key+'" type="file" accept="image/*" class="input" style="padding:9px"></div></div>':'')+
     '<div class="field" style="margin-top:12px"><label class="label" for="trackPhoto_'+key+'">'+(first?'First item photo':'Month '+(checkins.length+1)+' photo')+'</label><input id="trackPhoto_'+key+'" type="file" accept="image/*" class="input" style="padding:9px"></div>'+
     '<p class="finetext" id="trackSubmitErr_'+key+'" style="display:none;color:#B23327;margin:10px 0 0"></p>'+
@@ -9988,9 +10127,8 @@ function trackCardHtml(l,c){
   var checkins=l.checkins||[],checkState=checkinStatus(l);
   for(var i=0;i<termOf(l);i++){
     var ci=checkins[i];
-    var firstSelf=i===0&&l.brandingMode==='self';
-    var dueCopy=firstSelf&&checkState.firstDueAt?((checkState.firstOverdue?'Overdue since ':'Due by ')+new Date(checkState.firstDueAt).toLocaleDateString()):'Not yet submitted';
-    steps.push({done:!!ci,active:!ci&&funded&&i===checkins.length,label:firstSelf?'Branding + first check-in':'Month '+(i+1)+' check-in',sub:ci?('Photo received '+new Date(ci.date).toLocaleDateString()):dueCopy});
+    var dueCopy=i===0&&checkState.firstDueAt?((checkState.firstOverdue?'Overdue since ':'Due by ')+new Date(checkState.firstDueAt).toLocaleDateString()):'Not yet submitted';
+    steps.push({done:!!ci,active:!ci&&funded&&i===checkins.length,label:'Month '+(i+1)+' check-in',sub:ci?('Photo received '+new Date(ci.date).toLocaleDateString()):dueCopy});
   }
   var badge=c.refunded?'Refunded':(checkState.nonCompliant?'Non-compliant':(checkState.overdue?(checkState.firstOverdue?'First check-in overdue':'Check-in overdue'):(l.shippedAt?'Shipped':'Purchased')));
   return '<details class="card track-order">'+
@@ -10069,7 +10207,7 @@ function drawItemMap(){
         el.innerHTML='';el.appendChild(ftabs);
         host=document.createElement('div');el.appendChild(host);
       }
-      renderCustomStage(host,{type:CUR.type,slots:CUR.slots,photo:faces[fi].photo,tiles:faces[fi].tiles,
+      renderCustomStage(host,{type:CUR.type,sourceType:CUR.sourceType,slots:CUR.slots,photo:faces[fi].photo,tiles:faces[fi].tiles,
         claims:CUR.claims.slice(faces[fi].off),prices:CUR.prices.slice(faces[fi].off)},
         function(si){openBid(faces[fi].off+si)});
       return;
@@ -10080,7 +10218,7 @@ function drawItemMap(){
   }else{
     if(CUR.custom){
       var faces2=CUR.faces&&CUR.faces.length?CUR.faces:[{photo:CUR.photo,tiles:CUR.tiles,off:0}];
-      renderCustomStage(el,{type:CUR.type,slots:CUR.slots,photo:faces2[0].photo,tiles:faces2[0].tiles,claims:CUR.claims,prices:CUR.prices},null);
+      renderCustomStage(el,{type:CUR.type,sourceType:CUR.sourceType,slots:CUR.slots,photo:faces2[0].photo,tiles:faces2[0].tiles,claims:CUR.claims,prices:CUR.prices},null);
       return;
     }
     renderFinal(el,CUR,{showOpen:false,h:560});
@@ -10163,17 +10301,14 @@ function refreshItemCards(){
   }
   document.getElementById('iCad').textContent=checkinCadenceText(CUR);
   var shipEl=document.getElementById('iShips');if(shipEl)shipEl.textContent=CUR.closed?'closed · claims refunded':(CUR.shippedAt?'shipped to owner':(pct>=100?'funded · preparing shipment':'new, at 100% claimed'));
-  var assisted=CUR.brandingMode==='assisted';
-  var feeCopy=document.getElementById('iFeeCopy');if(feeCopy)feeCopy.textContent=assisted?
-    'Exact prices, first come, first served. The 20% platform fee is always included; BrandMyItem adds 10% fulfillment, making the total 30% before applicable tax and shipping.':
-    'Exact prices, first come, first served. The 20% platform fee is always included. Applicable tax and shipping may also be added at checkout.';
-  var fulfillmentEl=document.getElementById('iFulfillment');if(fulfillmentEl)fulfillmentEl.textContent=assisted?'BrandMyItem applies branding':'You apply branding';
-  var materialEl=document.getElementById('iMaterial');if(materialEl)materialEl.textContent=brandingMaterial(CUR.type,CUR.brandingMode);
+  var feeCopy=document.getElementById('iFeeCopy');if(feeCopy)feeCopy.textContent='Exact prices, first come, first served. Sponsor purchases include the 20% platform fee and required 10% branding application fee, making the total 30% before applicable tax and shipping.';
+  var fulfillmentEl=document.getElementById('iFulfillment');if(fulfillmentEl)fulfillmentEl.textContent='BrandMyItem applies branding';
+  var materialEl=document.getElementById('iMaterial');if(materialEl)materialEl.textContent=brandingMaterial(CUR.type);
   var totalFeeEl=document.getElementById('iTotalFee');if(totalFeeEl)totalFeeEl.textContent=Math.round(feeRateOf(CUR)*100)+'%';
   var taxEl=document.getElementById('iTax');if(taxEl)taxEl.textContent='Sales tax if applicable at checkout';
   var termEl=document.getElementById('iTerm');if(termEl)termEl.textContent=termOf(CUR)+' months'+(CUR.termLocked?' · locked':'');
   var brandingWindowEl=document.getElementById('iBrandingWindow'),proofCadenceEl=document.getElementById('iProofCadence');
-  if(brandingWindowEl)brandingWindowEl.textContent=CUR.brandingMode==='assisted'?'BrandMyItem applies branding · 60-day delivery window':'Owner applies branding within 7 days of delivery';
+  if(brandingWindowEl)brandingWindowEl.textContent='BrandMyItem applies and verifies branding · 60-day delivery window';
   if(proofCadenceEl)proofCadenceEl.textContent=checkinFrequencyLabel(CUR)+' check-ins';
   var claimed=CUR.slots-openSlots(CUR);
   var spotSummary=document.getElementById('spotSummary');
@@ -10215,16 +10350,15 @@ function renderOwnerTools(){
   }
   if(!CUR.shippedAt){
     cb.innerHTML='<div class="fact"><span>Fulfillment</span><b>Ready for IRLi LLC shipment</b></div>'+
-      '<p class="finetext" style="margin:8px 0 12px">'+(CUR.brandingMode==='assisted'?'IRLi-applied branding has a 60-day delivery window.':'Once fully funded, the item is delivered in under 23 days. After delivery, the owner has a 7-day branding window to apply the approved branding and submit the first check-in.')+' Promised date: '+(CUR.promisedDeliveryAt?new Date(CUR.promisedDeliveryAt).toLocaleDateString():'being scheduled')+'.</p>'+
+      '<p class="finetext" style="margin:8px 0 12px">BrandMyItem applies and verifies every approved sponsor mark before delivery. The pre-branded item has a 60-day delivery window. Promised date: '+(CUR.promisedDeliveryAt?new Date(CUR.promisedDeliveryAt).toLocaleDateString():'being scheduled')+'.</p>'+
       '<button class="btn btn-primary btn-full" id="markShippedBtn" type="button">Mark item shipped to owner</button>'+
       '<button class="btn btn-outline btn-full" id="delayNoticeBtn" type="button" style="margin-top:8px">Send a delivery delay notice</button>'+
       (CUR.delayNotice?'<p class="finetext" style="margin:9px 0 0;color:#8A6D1D">Delay notice sent on '+new Date(CUR.delayNotice.sentAt).toLocaleDateString()+' · proposed date '+new Date(CUR.delayNotice.proposedAt).toLocaleDateString()+'</p>':'');
     document.getElementById('markShippedBtn').onclick=function(){
       CUR.shippedAt=Date.now();CUR.status='shipped';
-      if(CUR.brandingMode==='self')CUR.brandingDueAt=CUR.shippedAt+7*86400000;
-      else if(CUR.brandingDueAt)delete CUR.brandingDueAt;
+      if(CUR.brandingDueAt)delete CUR.brandingDueAt;
       refreshCheckinStatus(CUR);saveDB();refreshItemCards();
-      toast(CUR.brandingMode==='self'?'Shipment marked · branding and first check-in due in 7 days':'Shipment marked · monthly check-ins are now available');
+      toast('Shipment marked · check-ins are now available');
     };
     document.getElementById('delayNoticeBtn').onclick=function(){sendDelayNotice(CUR);renderOwnerTools()};
     return;
@@ -10238,7 +10372,7 @@ function renderOwnerTools(){
   if(status.nonCompliant)prog+='<p class="finetext" style="margin:0 0 12px;color:#B23327"><b>Posting restricted:</b> two consecutive missed check-ins restrict this owner from new listings.</p>';
   var isFirst=checkins.length===0,fundedDate=CUR.fundedAt?new Date(CUR.fundedAt).toLocaleDateString():'the funding date';
   if(isFirst){
-    cb.innerHTML=prog+'<p class="finetext" style="margin:0 0 12px">First check-in requires a receipt and purchase date on or after '+fundedDate+'.'+(CUR.brandingMode==='self'&&status.firstDueAt?' Apply the approved branding and submit both by <b>'+new Date(status.firstDueAt).toLocaleDateString()+'</b>.':'')+'</p>'+
+    cb.innerHTML=prog+'<p class="finetext" style="margin:0 0 12px">First check-in requires a receipt and purchase date on or after '+fundedDate+'.</p>'+
       '<div class="field"><label class="label" for="receiptDate">Purchase date on receipt</label><input class="input" id="receiptDate" type="date"></div>'+
       '<input type="file" id="receiptInput" accept="image/*" style="display:none"><div class="upl" id="receiptBox" style="margin-bottom:12px">Upload receipt · required</div>'+
       '<input type="file" id="checkinInput" accept="image/*" style="display:none"><div class="upl" id="checkinBox">Upload check-in photo · required</div>'+

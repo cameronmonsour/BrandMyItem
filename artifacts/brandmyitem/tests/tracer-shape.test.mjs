@@ -45,7 +45,7 @@ test('Delete and Backspace remove a selected shape when not tracing', () => {
     html,
     /else if\(\(e\.key==='Backspace'\|\|e\.key==='Delete'\)&&!CU\.tracing&&CU\.sel>=0\)\{\s*e\.preventDefault\(\);deleteSelectedShape\(true\);/,
   );
-  assert.match(html, /cv\.focus\(\);\s*\/\* boxes first: resize handle, then body \*\//);
+  assert.match(html, /cv\.focus\(\);\s*\/\* Boxes first: invisible corner hit areas, then body\. \*\//);
 });
 
 test('the custom item photo can be panned with a hand drag', () => {

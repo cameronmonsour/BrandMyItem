@@ -14,23 +14,23 @@ test('removes the screenshot-only homepage and page headers', () => {
   assert.doesNotMatch(html, />See live items &rarr;</);
   assert.doesNotMatch(html, /<h2>Live items<\/h2>/);
   assert.doesNotMatch(html, /font-size:clamp\(28px,4vw,40px\)[^>]*>Track my item</);
-  assert.match(html, /class="home-bento"/);
+  assert.match(html, /class="feature-bento"/);
   assert.match(html, /id="home-faq"/);
   assert.match(html, /class="faq-grid"/);
-  assert.match(html, /\.faq-grid\{[^}]*grid-template-rows:repeat\(5,auto\)[^}]*grid-auto-flow:column/);
-  assert.match(html, /@media\(max-width:640px\)\{\.faq-grid\{grid-template-columns:1fr;grid-template-rows:none;grid-auto-flow:row\}/);
+  assert.match(html, /\.faq-grid\{max-width:none;display:grid;grid-template-columns:repeat\(2,minmax\(0,1fr\)\);gap:12px 14px\}/);
+  assert.match(html, /\.faq-grid\{grid-template-columns:1fr;gap:10px\}/);
   assert.doesNotMatch(html, />Questions</);
   assert.doesNotMatch(html, />Asked and answered\.</);
-  assert.match(html, /home-flow-index">5<\/span><h3>Monthly check-in<\/h3>/);
+  assert.match(html, /home-flow-index">5<\/span><h3>Photo check-ins<\/h3>/);
   assert.match(html, /how-it-works-monthly-check-in\.png/);
   assert.match(html, /\.home-flow-icon\.photo\.monthly img\{object-fit:contain\}/);
-  assert.match(html, /\.home-flow\{position:relative;margin:0 auto 48px/);
+  assert.match(html, /\.home-flow\{position:relative;margin:0;padding:12px 0 0\}/);
   assert.match(html, /\.home-flow-step:nth-child\(3\)\{transform:translateY\(10px\)\}/);
-  assert.match(html, /Choose the item, the ad spots, and the term\. Pick whether BrandMyItem brands it for you \(\+10%\) or you handle it yourself\./);
-  assert.match(html, /They claim a placement and submit the logo file for the approved branding method, then pay in full upfront\./);
-  assert.match(html, /Once fully funded, BrandMyItem buys the item and ships it straight to you\./);
-  assert.match(html, /<h3>Shows up as you chose<\/h3><p>Pre-branded if you picked that option, or clean and ready for you to apply yourself\./);
-  assert.match(html, /One photo a month keeps the whole thing verified and current\./);
+  assert.match(html, /Choose the item, ad spots, term, and check-in frequency\./);
+  assert.match(html, /Brands claim a spot, upload their logo, and pay in full upfront\./);
+  assert.match(html, /Once fully funded, BrandMyItem buys and ships the item to you\./);
+  assert.match(html, /<h3>We apply every brand<\/h3><p>BrandMyItem applies every approved sponsor mark before shipping to reduce fraud\./);
+  assert.match(html, /Send weekly, biweekly, or monthly photos for your selected term\./);
 });
 
 test('keeps outlined hero art while referenced suit and backpack photos remain in the picker', () => {
@@ -84,8 +84,8 @@ test('dashboard keeps compact tracker cards without a duplicate left category bo
   assert.match(html, /class="brand-deal-section"/);
   assert.doesNotMatch(builderHtml, /<div class="card-t">The deal<\/div>/);
   assert.match(builderHtml, /id="termChoices"/);
-  assert.match(builderHtml, /id="brandingChoices"/);
-  assert.match(builderHtml, /id="termConfidenceOut"/);
+  assert.doesNotMatch(builderHtml, /id="brandingChoices"/);
+  assert.doesNotMatch(builderHtml, /id="termConfidenceOut"/);
   assert.match(builderHtml, /class="card details-card"/);
   assert.match(builderHtml, /<div class="card-t">Details<\/div>/);
   assert.match(builderHtml, /id="totalOut"/);
@@ -100,13 +100,13 @@ test('dashboard keeps compact tracker cards without a duplicate left category bo
   assert.match(html, /\.grid\{display:grid;grid-template-columns:repeat\(auto-fill,minmax\(236px,1fr\)\);gap:20px\}/);
   assert.match(html, /\.habs button\.on\{background:#1D1D1F;border:1px solid #1D1D1F;color:#fff\}/);
   assert.match(html, /\.choice-card\.on\{border:1px solid #1D1D1F;background:#1D1D1F;color:#fff;box-shadow:none\}/);
-  assert.match(builderHtml, /<strong>BrandMyItem applied<\/strong><small>\+10% fulfillment fee/);
-  assert.doesNotMatch(builderHtml, /IRLi applies the approved sponsor branding/);
-  assert.doesNotMatch(builderHtml, /You apply the approved sponsor branding after delivery/);
-  assert.match(html, /\.term-runway\{margin-top:11px;padding:11px 12px 10px;border-radius:12px;background:transparent\}/);
+  assert.match(builderHtml, /BrandMyItem applies and verifies every approved sponsor mark before shipping to reduce fraud/);
+  assert.doesNotMatch(builderHtml, /Who applies the branding\?/);
+  assert.doesNotMatch(builderHtml, /You apply it/);
+  assert.doesNotMatch(html, /\.term-runway\{/);
   assert.match(builderHtml, /<div class="label">Check-in term<\/div>/);
-  assert.match(builderHtml, /Send check-ins for 6 months/);
-  assert.match(builderHtml, /This sets how long you want to send check-ins after delivery\. The listing stays posted for 60 days, until it is completed or deleted\./);
+  assert.match(builderHtml, /data-value="6"[^>]*><strong>6 months<\/strong>/);
+  assert.doesNotMatch(builderHtml, /This sets how long you want to send check-ins after delivery/);
   assert.match(builderHtml, /<span>Listing window<\/span><b>60 days, until completed or deleted<\/b>/);
   assert.match(html, /\.brand-profile-card \.label\{margin-top:16px;color:var\(--fg\)\}/);
   assert.doesNotMatch(html, /function listingBrandFitHtml\(l\)/);
@@ -118,18 +118,20 @@ test('dashboard keeps compact tracker cards without a duplicate left category bo
   assert.match(html, /id="fItemMin"/);
   assert.match(html, /id="fOpenMin"/);
   assert.match(html, /id="fMethod"/);
-  assert.match(html, /id="fFulfillment"/);
+  assert.doesNotMatch(html, /id="fFulfillment"/);
   assert.match(html, /id="fTerm"/);
   assert.match(html, /id="fCadence"/);
   assert.match(html, /listingContextHtml\(l\)\+'<div class="iname">/);
   assert.match(html, /<span class="chipg sold-count">/);
 });
 
-test('fulfillment copy states the delivery and branding windows', () => {
-  assert.match(html, /\+10% fulfillment fee · 60-day delivery window/);
-  assert.match(html, /Delivered in under 23 days · 7-day branding window/);
-  assert.match(html, /Once fully funded, the item is delivered in under 23 days/);
-  assert.match(html, /IRLi-applied branding has a 60-day delivery window/);
+test('fulfillment copy enforces BrandMyItem-applied branding', () => {
+  assert.match(html, /required 10% branding application fee/);
+  assert.match(html, /delivers it pre-branded within 60 days/);
+  assert.match(html, /function feeRateOf\(\)\{return 0\.30\}/);
+  assert.match(html, /function deliveryDaysOf\(\)\{return 60\}/);
+  assert.doesNotMatch(html, /self-appl/i);
+  assert.doesNotMatch(html, /You apply it/);
 });
 
 test('every catalog item has an item-specific branding method', () => {
@@ -146,9 +148,9 @@ test('every catalog item has an item-specific branding method', () => {
   assert.match(methodsBlock, /suit:'embroidered patch'/);
   assert.match(methodsBlock, /paddle:'printed decal'/);
   assert.match(methodsBlock, /weekender:'leather patch or debossed logo'/);
-  assert.match(html, /brandingMaterial\(B\.type,B\.brandingMode\)/);
-  assert.match(html, /<span>Branding method<\/span><b>'\+safeCardText\(brandingMaterial\(l\.type,l\.brandingMode\)\)/);
-  assert.match(html, /Branding method: '\+safeCardText\(brandingMethod\(CUR\.type\)\)/);
+  assert.match(html, /brandingMaterial\(B\.type\)/);
+  assert.match(html, /<span>Branding method<\/span><b>'\+safeCardText\(brandingMaterial\(l\.type\)\)/);
+  assert.match(html, /the '\+safeCardText\(brandingMethod\(CUR\.type\)\)\+' is produced from that file/);
 });
 
 test('sold and price pills keep the same compact height', () => {

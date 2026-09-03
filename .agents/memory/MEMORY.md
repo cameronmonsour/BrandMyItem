@@ -8,3 +8,4 @@
 - [Campaign preview hierarchy](campaign-preview-hierarchy.md) — campaign details use one editorial surface with dividers, not nested gray cards.
 - [Product-page purchase hierarchy](product-page-purchase-hierarchy.md) — keep the product contained and make an explicit spot selector the primary buying path.
 - [Playwright assertion compatibility](playwright-assertion-compatibility.md) — use built-in matchers or plain assertions; optional matcher extensions are not installed.
+- [Mandatory branding application](mandatory-branding-application.md) — BrandMyItem applies every sponsor mark; there is no owner-applied fulfillment path.

@@ -18,7 +18,7 @@ test.describe('item-specific branding methods', () => {
     await expect(page.locator('#buildMaterialOut')).toBeVisible();
   });
 
-  test('keeps every catalog method in sync while switching items and fulfillment', async ({ page }) => {
+  test('keeps every catalog method BrandMyItem-applied while switching items', async ({ page }) => {
     const catalog = await page.evaluate(() =>
       Object.keys(ITEMS).map((key) => ({
         key,
@@ -34,12 +34,11 @@ test.describe('item-specific branding methods', () => {
     for (const [index, item] of catalog.entries()) {
       await itemButtons.nth(index).click();
       await expect(page.locator('#buildMaterialOut')).toHaveText(
-        new RegExp(`${titleCaseMethod(item.method)} for you to apply`, 'i'),
+        new RegExp(`${titleCaseMethod(item.method)} applied by BrandMyItem`, 'i'),
       );
     }
 
     await itemButtons.filter({ hasText: 'Quencher' }).click();
-    await page.getByRole('button', { name: /BrandMyItem applied/i }).click();
     await expect(page.locator('#buildFulfillmentOut')).toHaveText(
       'BrandMyItem applies branding',
     );
@@ -52,11 +51,8 @@ test.describe('item-specific branding methods', () => {
     await expect(page.locator('#buildMaterialOut')).toHaveText(
       'Embroidered patch applied by BrandMyItem',
     );
-    await page.getByRole('button', { name: /You apply it/i }).click();
-    await expect(page.locator('#buildMaterialOut')).toHaveText(
-      'Embroidered patch for you to apply',
-    );
-    await expect(page.locator('#buildFeeOut')).toHaveText('20%');
+    await expect(page.locator('#buildFeeOut')).toHaveText('30%');
+    await expect(page.getByRole('button', { name: /You apply it/i })).toHaveCount(0);
   });
 
   test('shows the method in campaign details and open spot details', async ({ page }) => {
