@@ -83,7 +83,7 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;pointer-events:none}
 .countstrip{text-align:center;font-size:14.5px;color:var(--mfg);padding:16px 0 4px;font-weight:400}
 .countstrip b{font-weight:600;font-variant-numeric:tabular-nums;color:var(--fg)}
 
-/* ============ THE SPOT MAP (brandmymac screen) ============ */
+/* --- THE SPOT MAP (brandmymac screen) --- */
 .mapcard{background:#FFFFFF;border:1px solid var(--border);border-radius:34px;padding:34px;box-shadow:0 24px 60px rgba(0,0,0,.07);margin:14px 0 0}
 .mapgrid{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:minmax(170px,auto);gap:22px}
 .mapcenter{display:flex;align-items:center;justify-content:center;font-size:96px;background:#FFFFFF;border-radius:18px}
@@ -116,7 +116,7 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;pointer-events:none}
 .itemtabs button:hover{background:var(--wash)}
 .itemtabs button.on{background:#1D1D1F;border-color:#1D1D1F;color:#fff}
 
-/* ============ FINAL LOOK (CSS 3D item) ============ */
+/* --- FINAL LOOK (CSS 3D item) --- */
 .finalwrap{display:flex;align-items:center;justify-content:center;padding:28px 0 14px;perspective:1400px;min-height:420px}
 .item3d{position:relative;transform-style:preserve-3d;transform:rotateX(12deg) rotateY(-26deg);transition:transform .2s ease-out}
 .lid{position:relative;border-radius:18px;box-shadow:24px 34px 60px rgba(17,17,19,.28),inset 0 1px 0 rgba(255,255,255,.6);overflow:hidden}
@@ -1259,7 +1259,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 }
 
 
-/* ============ APPLE-STYLE ITEM PAGE ============ */
+/* --- APPLE-STYLE ITEM PAGE --- */
 #v-item {
   background: #F2F2F7;
   min-height: 100vh;
@@ -6575,7 +6575,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 <script>
 console.log('BMI BUILD 57');
 var T=window.THREE;
-/* ============ STATE ============ */
+/* --- STATE --- */
 var mem={};
 var store={
   get:function(k){try{var v=localStorage.getItem(k);return v?JSON.parse(v):(mem[k]||null)}catch(e){return mem[k]||null}},
@@ -6827,7 +6827,7 @@ var DEMO_CONTEXT={
   if(changed)store.set('bmi_db4',DB);
 })();
 function saveDB(){store.set('bmi_db4',DB);cloudPush()}
-/* ============ SHARED DATABASE (artifact storage) ============ */
+/* --- SHARED DATABASE (artifact storage) --- */
 var CLOUD={on:false,busy:false,dirty:false,last:0};
 function slimDB(){
   /* strip catalog photos before upload; restore by reference on download */
@@ -7074,7 +7074,7 @@ function suggest(type,count){
   return out;
 }
 
-/* ============ SPOT MAP RENDER ============ */
+/* --- SPOT MAP RENDER --- */
 /* opts: mode 'auction'|'edit', listing or builder state, onTap(i), onPrice(i,val) */
 function monoTile(name,cls){
   var init=(name||'?').trim().slice(0,2).toUpperCase();
@@ -7166,11 +7166,11 @@ function renderSpotMap_DEAD(el,st,opts){
   }
 }
 
-/* ============ FINAL LOOK RENDER ============ */
+/* --- FINAL LOOK RENDER --- */
 var STICKPOS={tl:[24,22],t:[50,17],tr:[76,22],l:[20,50],r:[80,50],bl:[24,80],b:[50,84],br:[76,80]};
 
 
-/* ============ 3D ENGINE (three.js) ============ */
+/* --- 3D ENGINE (three.js) --- */
 /* Optional product-logo layer; empty by default. */
 var ITEM_LOGOS={macbook:'',iphone:'',bottle:'','case':'',cooler:'',headphones:'',golfbag:'',weekender:'',paddle:'',suit:''};
 var HERO_CUTOUTS={};
@@ -7894,7 +7894,7 @@ function runCountdown(elId,l){
   tick();countTimers[elId]=setInterval(tick,15000);
 }
 
-/* ============ ROUTER ============ */
+/* --- ROUTER --- */
 var views=['home','dashboard','build','item','track'];
 var LAST_PRODUCT_VIEW_KEY='';
 function route(){
@@ -7937,7 +7937,7 @@ setTimeout(placeBuilder,0);
 window.addEventListener('hashchange',route);
 if(!location.hash||location.hash==='#')location.hash='home';
 
-/* ============ HOME ============ */
+/* --- HOME --- */
 var homeMode='auction',homeType=null;
 function featured(){return DB.listings.slice().sort(function(a,b){return raisedOf(b)-raisedOf(a)})[0]}
 function featuredOf(type){
@@ -8133,7 +8133,7 @@ function drawHomeMap(f){
   renderSeg(document.getElementById('homeSeg'),homeMode,function(m){homeMode=m;drawHomeMap(f)});
 }
 
-/* ============ DASHBOARD ============ */
+/* --- DASHBOARD --- */
 var F={
   q:'',cat:'All',status:'all',min:'',max:'',sort:'new',
   social:'',freq:'',location:'',university:'',itemMin:'',itemMax:'',
@@ -8455,7 +8455,7 @@ function renderDash(){
   startCardCountdowns();
 }
 
-/* ============ BUILD ============ */
+/* --- BUILD --- */
 var B={type:'macbook',slots:4,prices:[],habs:['Coffee shops'],cities:[],universities:[],purpose:'',freq:'Daily',social:'1K\u201310K',socialLinks:{},avatar:'',variantModel:'',termMonths:12,checkinFrequency:'monthly',brandingMode:'assisted'};
 var AVATAR_COUNT=18;
 function setBuildChoiceCards(group,value){
@@ -8905,7 +8905,7 @@ function renderBuildSpecs(k){
   sourceRow.innerHTML='<td>Source</td><td><a href="'+sp.source+'" target="_blank" rel="noopener">Official '+sp.brand+' product page</a></td>';
   table.appendChild(sourceRow);
 }
-/* ============ CUSTOM ITEM: photo + trace ============ */
+/* --- CUSTOM ITEM: photo + trace --- */
 var CU={img:null,photo:null,poly:[],tracePointer:null,closed:false,tiles:[],prices:[],mixed:true,retail:0,faces:[],shape:'rect',color:'#1D1D1F',tracing:false,customized:false,sel:-1,zoom:1};
 var FACE_NAMES=['Front','Back','Left','Right'];
 function cuFaceChips(){
@@ -9013,6 +9013,21 @@ function cuCreateTracedShape(){
   CU.prices=boxPrices();
   B.prices=CU.prices.slice();
   return true;
+}
+function pointInPolygon(x,y,pts){
+  if(!pts||pts.length<3)return false;
+  var inside=false,epsilon=1e-9;
+  for(var i=0,j=pts.length-1;i<pts.length;j=i++){
+    var ax=pts[j][0],ay=pts[j][1],bx=pts[i][0],by=pts[i][1];
+    var cross=(x-ax)*(by-ay)-(y-ay)*(bx-ax);
+    if(Math.abs(cross)<=epsilon&&x>=Math.min(ax,bx)-epsilon&&x<=Math.max(ax,bx)+epsilon&&y>=Math.min(ay,by)-epsilon&&y<=Math.max(ay,by)+epsilon)return true;
+    if((ay>y)!==(by>y)&&x<(bx-ax)*(y-ay)/(by-ay)+ax)inside=!inside;
+  }
+  return inside;
+}
+function tileContainsPoint(t,x,y){
+  if(t.shape==='poly'&&t.pts&&t.pts.length>2)return pointInPolygon(x,y,t.pts);
+  return Math.abs(x-t.x)<=t.w/2&&Math.abs(y-t.y)<=t.h/2;
 }
 function cuDraw(){
   var cv=document.getElementById('cuCanvas');
@@ -9157,15 +9172,17 @@ function renderCustomStage(el,l,onTap){
   });
   var img=new Image();
   img.onload=function(){
-    var scanType=l.sourceType||l.type;
-    var scanned=scanPhotoPlacements(img,scanType,l.slots||(l.tiles||[]).length);
-    if(scanned&&scanned.length){
-      l.tiles=scanned;
-      var stored=l.id&&DB.listings.find(function(entry){return entry.id===l.id});
-      if(stored&&stored.type===scanType&&!stored.faces){
-        stored.custom=true;stored.photo=stored.photo||ITEM_PHOTOS[scanType];
-        stored.tiles=scanned.map(copyPhotoTile);stored.mtv=PHOTO_PLACEMENT_VERSION;
-        saveDB();
+    if(!l.tiles||!l.tiles.length){
+      var scanType=l.sourceType||l.type;
+      var scanned=scanPhotoPlacements(img,scanType,l.slots||1);
+      if(scanned&&scanned.length){
+        l.tiles=scanned;
+        var stored=l.id&&DB.listings.find(function(entry){return entry.id===l.id});
+        if(stored&&!stored.faces&&(!stored.tiles||!stored.tiles.length)){
+          stored.custom=true;stored.photo=stored.photo||ITEM_PHOTOS[scanType];
+          stored.tiles=scanned.map(copyPhotoTile);stored.mtv=PHOTO_PLACEMENT_VERSION;
+          saveDB();
+        }
       }
     }
     photoReady=true;paint();
@@ -9348,7 +9365,7 @@ function cuInit(){
           }
         }
       }
-      if(Math.abs(x-t.x)<=t.w/2&&Math.abs(y-t.y)<=t.h/2){
+      if(tileContainsPoint(t,x,y)){
         CU.sel=i;DRAG={i:i,mode:'move',dx:x-t.x,dy:y-t.y};
         selUI();cuDraw();cv.setPointerCapture(e.pointerId);return;
       }
@@ -9647,9 +9664,9 @@ function postListing(){
   var l;
   if(CU.template==='headphones'){
     B.slots=2;
-    var headphoneTiles=scanPhotoPlacements(CU.img,'headphones',2)||mapTiles('headphones',2);
+    var headphoneTiles=CU.tiles;
     if(!headphoneTiles||headphoneTiles.length!==2){toast('Headphones require two complete ear-cup placements');return}
-    CU.tiles=headphoneTiles.map(copyPhotoTile);CU.sel=0;CU.closed=true;CU.prices=boxPrices();B.prices=CU.prices.slice();
+    CU.closed=true;CU.prices=boxPrices();B.prices=CU.prices.slice();
   }
   if(CU.template&&CU.angles&&CU.angles.length>1&&!CU.faces.length&&CU.tiles.length){
     /* catalog item: same zone layout offered on each photographed face */
@@ -9691,7 +9708,7 @@ function postListing(){
   location.hash='item/'+l.id;
 }
 
-/* ============ ITEM ============ */
+/* --- ITEM --- */
 var PHOTO_PLACEMENT_VERSION=8;
 var REFERENCE_PHOTO_TILES={
   macbook:{

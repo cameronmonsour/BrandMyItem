@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
+import vm from 'node:vm';
 
 const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
 
@@ -35,4 +36,33 @@ test('polygon points and catalog identity survive template and detail rendering'
   assert.match(html, /sourceType:CU\.template\|\|null/);
   assert.match(html, /sourceType:CUR\.sourceType/);
   assert.match(html, /var scanType=l\.sourceType\|\|l\.type/);
+});
+
+test('posting and rendering preserve adjusted polygon placement geometry', () => {
+  const copySource = html.match(/function copyPhotoTile\(t\)\{[\s\S]*?\n\}/)?.[0];
+  assert.ok(copySource, 'copyPhotoTile should exist in index.html');
+
+  const sandbox = {};
+  vm.runInNewContext(copySource, sandbox);
+  const adjusted = {
+    x: 0.48,
+    y: 0.56,
+    w: 0.42,
+    h: 0.19,
+    shape: 'poly',
+    pts: [[0.29, 0.5], [0.42, 0.44], [0.68, 0.51], [0.63, 0.65], [0.34, 0.64]],
+  };
+  const saved = sandbox.copyPhotoTile(adjusted);
+
+  assert.deepEqual(JSON.parse(JSON.stringify(saved.pts)), adjusted.pts);
+  assert.notEqual(saved.pts, adjusted.pts);
+  assert.match(html, /if\(!l\.tiles\|\|!l\.tiles\.length\)\{\s*var scanType=l\.sourceType\|\|l\.type;/);
+  assert.doesNotMatch(
+    html,
+    /if\(CU\.template==='headphones'\)\{[\s\S]*?scanPhotoPlacements\(CU\.img,'headphones',2\)/,
+  );
+  assert.match(
+    html,
+    /if\(CU\.template==='headphones'\)\{\s*B\.slots=2;\s*var headphoneTiles=CU\.tiles;/,
+  );
 });
