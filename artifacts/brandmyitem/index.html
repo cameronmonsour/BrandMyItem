@@ -7143,7 +7143,7 @@ function listingContextHtml(l){
   if(!locations.length)(l.habs||[]).slice(0,2).forEach(function(v){if(v&&!locations.includes(v))locations.push(v)});
   if(l.social)parts.push('<span class="card-context-em">'+safeCardText(l.social)+' followers</span>');
   locations.slice(0,2).forEach(function(v){parts.push(safeCardText(v))});
-  if(!parts.length)return '';
+  if(!parts.length)return '<div class="card-context card-context-empty" aria-hidden="true"></div>';
   return '<div class="card-context" aria-label="'+safeCardText(parts.map(function(v){return v.replace(/<[^>]+>/g,'')}).join(', '))+'"><span class="card-context-value">'+parts.join(', ')+'</span></div>';
 }
 function renderSpotMap(el,st){if(el)el.innerHTML='';return}
