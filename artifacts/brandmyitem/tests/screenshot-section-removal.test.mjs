@@ -97,7 +97,7 @@ test('dashboard keeps compact tracker cards without a duplicate left category bo
   assert.match(builderHtml, /class="card details-card"/);
   assert.match(builderHtml, /<div class="card-t">Details<\/div><p class="details-subheadline">Item sales tax, shipping, and handling are included in the platform fee\.<\/p>/);
   assert.match(builderHtml, /id="totalOut"/);
-  assert.match(builderHtml, /Goal when fully claimed \(includes 30%\)/);
+  assert.match(builderHtml, /Goal when fully claimed \(includes 40%\)/);
   assert.doesNotMatch(builderHtml, /<span>Platform fee<\/span>/);
   assert.doesNotMatch(builderHtml, /<span>Branding application<\/span>/);
   assert.doesNotMatch(builderHtml, /Total fee before tax &amp; shipping/);
@@ -145,18 +145,24 @@ test('dashboard keeps compact tracker cards without a duplicate left category bo
 });
 
 test('fulfillment copy enforces BrandMyItem-applied branding', () => {
-  assert.match(html, /required 10% branding application fee/);
+  assert.match(html, /purchase total includes 40% covering BrandMyItem-applied branding, item sales tax, shipping, and handling/i);
   assert.match(html, /delivers it pre-branded within 60 days/);
-  assert.match(html, /function feeRateOf\(\)\{return 0\.30\}/);
+  assert.match(html, /function feeRateOf\(\)\{return 0\.40\}/);
   assert.match(html, /function deliveryDaysOf\(\)\{return 60\}/);
   assert.doesNotMatch(html, /self-appl/i);
   assert.doesNotMatch(html, /You apply it/);
+  assert.doesNotMatch(html, /20% platform fee/);
+  assert.doesNotMatch(html, /10% branding application fee/);
+  assert.doesNotMatch(html, /id="mFee"/);
 });
 
-test('builder goal includes every spot price and its 30% fee', () => {
+test('builder and campaign goals include the complete 40% purchase amount', () => {
   assert.match(html, /var fees=prices\.reduce\(function\(a,b\)\{return a\+feeFor\(B,b\)\},0\)/);
   assert.match(html, /document\.getElementById\('totalOut'\)\.textContent=money\(v\+fees\)/);
   assert.match(html, /Item sales tax, shipping, and handling are included in the platform fee\./);
+  assert.match(html, /function goalOf\(l\)\{return l\.prices\.reduce\(function\(s,p\)\{return s\+p\+feeFor\(l,p\)\},0\)\}/);
+  assert.match(html, /function raisedOf\(l\)\{return \(l\.claims\|\|\[\]\)\.reduce/);
+  assert.match(html, /Total today \(includes 40%\)/);
 });
 
 test('builder separates placement sizing from per-spot pricing', () => {

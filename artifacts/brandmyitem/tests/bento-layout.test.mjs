@@ -80,7 +80,7 @@ test('every bento claim matches the actual marketplace rules', () => {
   assert.match(html, /one current photo on the locked weekly, biweekly, or monthly cadence/);
   assert.match(html, /If every spot isn't purchased by day 60, refunds are initiated to the original payment method within 5 business days/);
   assert.match(html, /applies every sponsor mark, and delivers it to the Owner within 60 days/);
-  assert.match(html, /spot prices = retail<br>\+30% fees at checkout/);
+  assert.match(html, /spot prices = retail<br>purchase total includes 40%/);
   assert.match(html, /<h3>Spot price = surface share\.<\/h3>/);
   assert.match(html, /\.fb-math\{[^}]*top:116px/);
   assert.match(html, /Example: first spot sold/);
