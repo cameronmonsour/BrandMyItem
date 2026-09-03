@@ -6,7 +6,7 @@ import vm from 'node:vm';
 const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
 
 test('photo placement migration includes the surface scanner geometry', () => {
-  assert.match(html, /var PHOTO_PLACEMENT_VERSION=9/);
+  assert.match(html, /var PHOTO_PLACEMENT_VERSION=10/);
   assert.match(html, /function scanPhotoPlacements\(img,type,n\)/);
   assert.match(html, /var CATALOG_SURFACES=\{/);
   assert.match(html, /function lockedCatalogPlacements\(img,type,n\)/);
@@ -22,6 +22,15 @@ test('photo placement migration includes the surface scanner geometry', () => {
   assert.match(html, /rowWidths\[trimY\]>=widest\*0\.45/);
   assert.match(html, /while\(qh<qt\)/);
   assert.match(html, /shape:'poly',pts:points/);
+});
+
+test('iPhone placements fill the usable back panel below the camera', () => {
+  assert.match(
+    html,
+    /iphone:\{size:\[952,1275\],surface:\[230,400,492,720\],cols:2,source:'campaign\/product-iphone\.png'\}/,
+  );
+  assert.match(html, /iphone:\{x0:0\.242,x1:0\.758,y0:0\.314,y1:0\.878,cols:2\}/);
+  assert.doesNotMatch(html, /iphone:\{size:\[952,1275\],surface:\[381,625,190,421\]/);
 });
 
 test('headphones always use two full-width polygon placements', () => {
