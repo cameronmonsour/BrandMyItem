@@ -1819,9 +1819,12 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           <div class="fb-bagwrap" aria-hidden="true">
             <img src="bento/bag.png" alt="">
             <svg viewBox="0 0 187 324">
-              <path class="fb-spotline" d="M8 88H179V282H8ZM93.5 88V282M8 185H179"/>
-              <g class="fb-lead-price"><text x="50.75" y="136.5">$543</text><text x="136.25" y="136.5">$543</text><text x="50.75" y="233.5">$542</text><text x="136.25" y="233.5">$542</text></g>
-              <g class="fb-lead-logo"><use href="#fbLidMark" x="38.75" y="124.5" width="24" height="24"/><use href="#fbLidMark" x="124.25" y="124.5" width="24" height="24"/><use href="#fbLidMark" x="38.75" y="221.5" width="24" height="24"/><use href="#fbLidMark" x="124.25" y="221.5" width="24" height="24"/></g>
+              <rect class="fb-spotline" x="15" y="92" width="77.5" height="90.5" rx="6"/>
+              <rect class="fb-spotline" x="94.5" y="92" width="77.5" height="90.5" rx="6"/>
+              <rect class="fb-spotline" x="15" y="184.5" width="77.5" height="90.5" rx="6"/>
+              <rect class="fb-spotline" x="94.5" y="184.5" width="77.5" height="90.5" rx="6"/>
+              <g class="fb-lead-price"><text x="53.75" y="137.25">$543</text><text x="133.25" y="137.25">$543</text><text x="53.75" y="229.75">$542</text><text x="133.25" y="229.75">$542</text></g>
+              <g class="fb-lead-logo"><use href="#fbLidMark" x="41.75" y="125.25" width="24" height="24"/><use href="#fbLidMark" x="121.25" y="125.25" width="24" height="24"/><use href="#fbLidMark" x="41.75" y="217.75" width="24" height="24"/><use href="#fbLidMark" x="121.25" y="217.75" width="24" height="24"/></g>
             </svg>
           </div>
         </article>
@@ -9848,10 +9851,10 @@ var REFERENCE_PHOTO_TILES={
   },
   'case':{
     4:[
-      {x:0.3600,y:0.44375,w:0.2800,h:0.2675},
-      {x:0.6400,y:0.44375,w:0.2800,h:0.2675},
-      {x:0.3600,y:0.71125,w:0.2800,h:0.2675},
-      {x:0.6400,y:0.71125,w:0.2800,h:0.2675}
+      {x:0.3585,y:0.4425,w:0.2770,h:0.2650,round:18},
+      {x:0.6415,y:0.4425,w:0.2770,h:0.2650,round:18},
+      {x:0.3585,y:0.7125,w:0.2770,h:0.2650,round:18},
+      {x:0.6415,y:0.7125,w:0.2770,h:0.2650,round:18}
     ]
   }
 };
@@ -9916,6 +9919,7 @@ var PHOTO_SCAN_CACHE={};
 function copyPhotoTile(t){
   var out={x:t.x,y:t.y,w:t.w,h:t.h};
   if(t.shape)out.shape=t.shape;
+  if(t.round)out.round=t.round;
   if(t.color)out.color=t.color;
   if(t.pts)out.pts=t.pts.map(function(p){return [p[0],p[1]]});
   return out;
@@ -10816,7 +10820,7 @@ function initHomeFeatureBento(){
     if(!d) return '';
     var placements = lockedCatalogPlacements({width:d.size[0], height:d.size[1]}, type, n);
     if(!placements) return '';
-    var unitsSvg='',boundarySegments=[],segmentKeys={};
+    var unitsSvg='',roundedSvg='',boundarySegments=[],segmentKeys={};
     function addBoundary(a,b){
       var forward=a[0]+','+a[1]+'|'+b[0]+','+b[1];
       var reverse=b[0]+','+b[1]+'|'+a[0]+','+a[1];
@@ -10842,10 +10846,14 @@ function initHomeFeatureBento(){
         var w = Number((p.w * d.size[0]).toFixed(3));
         var h = Number((p.h * d.size[1]).toFixed(3));
         bounds={x:x,y:y,w:w,h:h};
-        addBoundary([x,y],[x+w,y]);
-        addBoundary([x+w,y],[x+w,y+h]);
-        addBoundary([x+w,y+h],[x,y+h]);
-        addBoundary([x,y+h],[x,y]);
+        if(p.round){
+          roundedSvg += '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="'+p.round+'" ry="'+p.round+'" class="'+spotClass+'"/>';
+        }else{
+          addBoundary([x,y],[x+w,y]);
+          addBoundary([x+w,y],[x+w,y+h]);
+          addBoundary([x+w,y+h],[x,y+h]);
+          addBoundary([x,y+h],[x,y]);
+        }
       }
       var cx=bounds.x+bounds.w/2,cy=bounds.y+bounds.h/2;
       var badgeW=Math.min(bounds.w*.74,d.size[0]*.15),badgeH=Math.min(bounds.h*.3,d.size[1]*.064);
@@ -10856,7 +10864,8 @@ function initHomeFeatureBento(){
       unitsSvg += '<g class="fb-spot-logo"><use href="#fbLidMark" x="'+(cx-logoSize/2)+'" y="'+(cy-logoSize/2)+'" width="'+logoSize+'" height="'+logoSize+'"/></g>';
       unitsSvg += '</g>';
     });
-    return '<svg viewBox="0 0 '+d.size[0]+' '+d.size[1]+'" class="'+(mapClass||'')+'" aria-hidden="true"><path class="'+spotClass+'" d="'+boundarySegments.join('')+'"/>'+unitsSvg+'</svg>';
+    var boundarySvg=boundarySegments.length?'<path class="'+spotClass+'" d="'+boundarySegments.join('')+'"/>':'';
+    return '<svg viewBox="0 0 '+d.size[0]+' '+d.size[1]+'" class="'+(mapClass||'')+'" aria-hidden="true">'+boundarySvg+roundedSvg+unitsSvg+'</svg>';
   }
 
   function loadFeatureItem(){

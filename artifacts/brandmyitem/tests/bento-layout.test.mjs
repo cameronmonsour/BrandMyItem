@@ -30,12 +30,13 @@ test('every rotating bento item uses an exact-dimension transparent cutout with 
   assert.match(html, /img:'bento\/cutout-iphone\.png',n:5,type:'iphone'/);
   assert.match(html, /img:'bento\/cutout-headphones\.png',n:2,type:'headphones'/);
   assert.match(html, /img:'bento\/cutout-case\.png',n:4,type:'case'/);
-  assert.match(html, /'case':\{\s*4:\[\s*\{x:0\.3600,y:0\.44375,w:0\.2800,h:0\.2675\}/);
+  assert.match(html, /'case':\{\s*4:\[\s*\{x:0\.3585,y:0\.4425,w:0\.2770,h:0\.2650,round:18\}/);
   assert.match(html, /'case':\{size:\[952,1275\],surface:\[209,395,534,682\]/);
   assert.match(html, /\.fb-stage \.fb-spot\{fill:none;stroke:#000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;vector-effect:non-scaling-stroke;visibility:visible\}/);
   assert.match(html, /boundarySegments=\[\],segmentKeys=\{\}/);
   assert.match(html, /if\(segmentKeys\[key\]\)return/);
-  assert.match(html, /<path class="'\+spotClass\+'" d="'\+boundarySegments\.join\(''\)\+'"/);
+  assert.match(html, /roundedSvg \+= '<rect x="'/);
+  assert.match(html, /if\(t\.round\)out\.round=t\.round/);
   assert.match(html, /class="fb-spot-price"/);
   assert.match(html, /class="fb-spot-logo"/);
   assert.doesNotMatch(html, /class="fb-logo-cover"/);
@@ -43,10 +44,11 @@ test('every rotating bento item uses an exact-dimension transparent cutout with 
   assert.match(html, /itemMeta\.textContent='\$'\+item\.price\.toLocaleString\(\)\+' retail · '\+item\.n\+' spots'/);
 });
 
-test('lead suitcase uses four full-shell boxes that stop above the wheels', () => {
+test('lead suitcase uses four rounded silver-shell boxes that avoid the halo and wheels', () => {
   assert.deepEqual(pngSize('bento/bag.png'), [187, 324]);
   assert.match(html, /<img src="bento\/bag\.png" alt="">\s*<svg viewBox="0 0 187 324">/);
-  assert.match(html, /<path class="fb-spotline" d="M8 88H179V282H8ZM93\.5 88V282M8 185H179"\/>/);
+  assert.match(html, /<rect class="fb-spotline" x="15" y="92" width="77\.5" height="90\.5" rx="6"\/>/);
+  assert.match(html, /<rect class="fb-spotline" x="94\.5" y="184\.5" width="77\.5" height="90\.5" rx="6"\/>/);
   assert.match(html, /\.fb-spotline\{fill:none;stroke:#000;stroke-width:1;vector-effect:non-scaling-stroke;visibility:visible\}/);
   assert.match(html, /class="fb-lead-price"><text[^>]*>\$543<\/text><text[^>]*>\$543<\/text><text[^>]*>\$542<\/text><text[^>]*>\$542<\/text>/);
   assert.match(html, /class="fb-lead-logo"(?:[\s\S]*?<use href="#fbLidMark"){4}/);
