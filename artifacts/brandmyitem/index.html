@@ -1168,9 +1168,8 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 .feature-bento .fb-bagwrap{position:absolute;right:40px;top:156px;height:254px;aspect-ratio:187/324;z-index:2;transition:transform 1.5s var(--fb-ease)}
 .feature-bento .fb-bagwrap img{height:100%;width:100%;position:relative;z-index:2}
 .feature-bento .fb-bagwrap>svg{position:absolute;inset:0;width:100%;height:100%;z-index:3;overflow:visible}
-.feature-bento .fb-spotline{fill:none;stroke:#000;stroke-width:1.5;vector-effect:non-scaling-stroke;visibility:visible}
+.feature-bento .fb-spotline{fill:none;stroke:#000;stroke-width:1;vector-effect:non-scaling-stroke;visibility:visible}
 .feature-bento .fb-lead-price,.feature-bento .fb-lead-logo{transition:opacity .35s var(--fb-ease)}
-.feature-bento .fb-lead-price rect{fill:#fff;stroke:#000;stroke-width:1;vector-effect:non-scaling-stroke}
 .feature-bento .fb-lead-price text{fill:#000;font-size:16px;font-weight:800;text-anchor:middle;dominant-baseline:middle}
 .feature-bento .fb-lead-logo{color:#000;opacity:0}
 .feature-bento .fb-hero[data-phase="3"] .fb-lead-price,.feature-bento .fb-hero[data-phase="4"] .fb-lead-price{opacity:0}
@@ -1199,9 +1198,8 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 .feature-bento .fb-stage-inner{position:relative;display:flex;max-width:88%;max-height:88%;filter:drop-shadow(0 18px 18px rgba(0,0,0,.14))}
 .feature-bento .fb-stage-inner>img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;transition:opacity .25s}
 .feature-bento .fb-stage-inner>svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
-.feature-bento .fb-stage .fb-spot{fill:none;stroke:#000;stroke-width:1.5;vector-effect:non-scaling-stroke;visibility:visible}
+.feature-bento .fb-stage .fb-spot{fill:none;stroke:#000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;vector-effect:non-scaling-stroke;visibility:visible}
 .feature-bento .fb-spot-price,.feature-bento .fb-spot-logo{transition:opacity .28s var(--fb-ease)}
-.feature-bento .fb-spot-price rect,.feature-bento .fb-spot-logo .fb-logo-cover{fill:#fff;stroke:#000;stroke-width:1;vector-effect:non-scaling-stroke}
 .feature-bento .fb-spot-price text{fill:#000;font-family:'Inter',-apple-system,sans-serif;font-weight:800;text-anchor:middle;dominant-baseline:middle}
 .feature-bento .fb-spot-logo{color:#000;opacity:0}
 .feature-bento .fb-spot-unit.is-bought .fb-spot-price{opacity:0}
@@ -1235,7 +1233,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 .feature-bento .fb-price-visual{position:absolute;right:22px;top:50%;transform:translateY(-50%);height:130px;width:calc(130px * (952 / 1275))}
 .feature-bento .fb-price-phone{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
 .feature-bento .fb-price-map{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
-.feature-bento .fb-price-map .fb-ps{fill:none;stroke:#000;stroke-width:1.5;vector-effect:non-scaling-stroke;opacity:1;transition:opacity .4s}
+.feature-bento .fb-price-map .fb-ps{fill:none;stroke:#000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;vector-effect:non-scaling-stroke;opacity:1;transition:opacity .4s}
 .feature-bento .fb-price-map .fb-ps.on{opacity:1}
 .feature-bento .fb-sum{position:absolute;left:28px;bottom:14px;display:flex;align-items:baseline;gap:7px}.feature-bento .fb-sum b{font-size:25px;font-weight:800;letter-spacing:-.06em}.feature-bento .fb-sum small{font-size:10.5px;color:var(--mfg);opacity:0}.feature-bento .fb-price[data-phase="4"] .fb-sum small{opacity:1}
 .feature-bento .fb-term h3,.feature-bento .fb-term p{max-width:190px;text-align:left;margin-left:0;margin-right:0}.feature-bento .fb-term p{max-width:178px}
@@ -1822,8 +1820,8 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
             <img src="bento/bag.png" alt="">
             <svg viewBox="0 0 187 324">
               <rect class="fb-spotline" x="13" y="86" width="160" height="225" rx="8"/>
-              <g class="fb-lead-price"><rect x="55" y="187" width="76" height="28" rx="7"/><text x="93" y="201">$2,170</text></g>
-              <g class="fb-lead-logo"><rect x="60" y="180" width="66" height="42" rx="8" fill="#fff"/><use href="#fbLidMark" x="77" y="185" width="32" height="32"/></g>
+              <g class="fb-lead-price"><text x="93" y="201">$2,170</text></g>
+              <g class="fb-lead-logo"><use href="#fbLidMark" x="77" y="185" width="32" height="32"/></g>
             </svg>
           </div>
         </article>
@@ -10810,40 +10808,47 @@ function initHomeFeatureBento(){
     if(!d) return '';
     var placements = lockedCatalogPlacements({width:d.size[0], height:d.size[1]}, type, n);
     if(!placements) return '';
-    var svg = '<svg viewBox="0 0 '+d.size[0]+' '+d.size[1]+'" class="'+(mapClass||'')+'" aria-hidden="true">';
+    var unitsSvg='',boundarySegments=[],segmentKeys={};
+    function addBoundary(a,b){
+      var forward=a[0]+','+a[1]+'|'+b[0]+','+b[1];
+      var reverse=b[0]+','+b[1]+'|'+a[0]+','+a[1];
+      var key=forward<reverse?forward:reverse;
+      if(segmentKeys[key])return;
+      segmentKeys[key]=true;
+      boundarySegments.push('M'+a[0]+' '+a[1]+'L'+b[0]+' '+b[1]);
+    }
     placements.forEach(function(p, i) {
       var kAttr = ' data-k="'+i+'"';
       var bounds;
-      svg += '<g class="fb-spot-unit"'+kAttr+'>';
+      unitsSvg += '<g class="fb-spot-unit"'+kAttr+'>';
       if(p.shape === 'poly' && p.pts) {
-        var absPts = p.pts.map(function(pt){ return [pt[0]*d.size[0],pt[1]*d.size[1]] });
-        var pts = absPts.map(function(pt){ return pt[0]+','+pt[1] }).join(' ');
+        var absPts = p.pts.map(function(pt){ return [Number((pt[0]*d.size[0]).toFixed(3)),Number((pt[1]*d.size[1]).toFixed(3))] });
         var xs=absPts.map(function(pt){return pt[0]}),ys=absPts.map(function(pt){return pt[1]});
         bounds={x:Math.min.apply(Math,xs),y:Math.min.apply(Math,ys)};
         bounds.w=Math.max.apply(Math,xs)-bounds.x;
         bounds.h=Math.max.apply(Math,ys)-bounds.y;
-        svg += '<polygon points="'+pts+'" class="'+spotClass+'" />';
+        absPts.forEach(function(pt,index){addBoundary(pt,absPts[(index+1)%absPts.length])});
       } else {
-        var x = (p.x - p.w/2) * d.size[0];
-        var y = (p.y - p.h/2) * d.size[1];
-        var w = p.w * d.size[0];
-        var h = p.h * d.size[1];
-        var rx = 6;
+        var x = Number(((p.x - p.w/2) * d.size[0]).toFixed(3));
+        var y = Number(((p.y - p.h/2) * d.size[1]).toFixed(3));
+        var w = Number((p.w * d.size[0]).toFixed(3));
+        var h = Number((p.h * d.size[1]).toFixed(3));
         bounds={x:x,y:y,w:w,h:h};
-        svg += '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="'+rx+'" class="'+spotClass+'" />';
+        addBoundary([x,y],[x+w,y]);
+        addBoundary([x+w,y],[x+w,y+h]);
+        addBoundary([x+w,y+h],[x,y+h]);
+        addBoundary([x,y+h],[x,y]);
       }
       var cx=bounds.x+bounds.w/2,cy=bounds.y+bounds.h/2;
       var badgeW=Math.min(bounds.w*.74,d.size[0]*.15),badgeH=Math.min(bounds.h*.3,d.size[1]*.064);
       badgeW=Math.max(badgeW,d.size[0]*.075);badgeH=Math.max(badgeH,d.size[1]*.034);
-      var bx=cx-badgeW/2,by=cy-badgeH/2,br=Math.min(badgeH*.24,10);
       var fontSize=badgeH*.46,logoSize=badgeH*.72;
       var amount=prices&&prices[i]!=null?prices[i]:'';
-      svg += '<g class="fb-spot-price"><rect x="'+bx+'" y="'+by+'" width="'+badgeW+'" height="'+badgeH+'" rx="'+br+'"/><text x="'+cx+'" y="'+cy+'" font-size="'+fontSize+'">$'+amount+'</text></g>';
-      svg += '<g class="fb-spot-logo"><rect class="fb-logo-cover" x="'+bx+'" y="'+by+'" width="'+badgeW+'" height="'+badgeH+'" rx="'+br+'"/><use href="#fbLidMark" x="'+(cx-logoSize/2)+'" y="'+(cy-logoSize/2)+'" width="'+logoSize+'" height="'+logoSize+'"/></g>';
-      svg += '</g>';
+      unitsSvg += '<g class="fb-spot-price"><text x="'+cx+'" y="'+cy+'" font-size="'+fontSize+'">$'+amount+'</text></g>';
+      unitsSvg += '<g class="fb-spot-logo"><use href="#fbLidMark" x="'+(cx-logoSize/2)+'" y="'+(cy-logoSize/2)+'" width="'+logoSize+'" height="'+logoSize+'"/></g>';
+      unitsSvg += '</g>';
     });
-    svg += '</svg>';
-    return svg;
+    return '<svg viewBox="0 0 '+d.size[0]+' '+d.size[1]+'" class="'+(mapClass||'')+'" aria-hidden="true"><path class="'+spotClass+'" d="'+boundarySegments.join('')+'"/>'+unitsSvg+'</svg>';
   }
 
   function loadFeatureItem(){

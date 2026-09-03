@@ -30,10 +30,13 @@ test('every rotating bento item uses an exact-dimension transparent cutout with 
   assert.match(html, /img:'bento\/cutout-iphone\.png',n:5,type:'iphone'/);
   assert.match(html, /img:'bento\/cutout-headphones\.png',n:2,type:'headphones'/);
   assert.match(html, /img:'bento\/cutout-case\.png',n:4,type:'case'/);
-  assert.match(html, /\.fb-stage \.fb-spot\{fill:none;stroke:#000;stroke-width:1\.5;vector-effect:non-scaling-stroke;visibility:visible\}/);
-  assert.match(html, /var rx = 6;/);
+  assert.match(html, /\.fb-stage \.fb-spot\{fill:none;stroke:#000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;vector-effect:non-scaling-stroke;visibility:visible\}/);
+  assert.match(html, /boundarySegments=\[\],segmentKeys=\{\}/);
+  assert.match(html, /if\(segmentKeys\[key\]\)return/);
+  assert.match(html, /<path class="'\+spotClass\+'" d="'\+boundarySegments\.join\(''\)\+'"/);
   assert.match(html, /class="fb-spot-price"/);
   assert.match(html, /class="fb-spot-logo"/);
+  assert.doesNotMatch(html, /class="fb-logo-cover"/);
   assert.match(html, /unit\.classList\.toggle\('is-bought',index<boughtCount\)/);
   assert.match(html, /itemMeta\.textContent='\$'\+item\.price\.toLocaleString\(\)\+' retail · '\+item\.n\+' spots'/);
 });
@@ -42,9 +45,10 @@ test('lead suitcase restores the approved framing', () => {
   assert.deepEqual(pngSize('bento/bag.png'), [187, 324]);
   assert.match(html, /<img src="bento\/bag\.png" alt="">\s*<svg viewBox="0 0 187 324">/);
   assert.match(html, /<rect class="fb-spotline" x="13" y="86" width="160" height="225" rx="8"\/>/);
-  assert.match(html, /\.fb-spotline\{fill:none;stroke:#000;stroke-width:1\.5;vector-effect:non-scaling-stroke;visibility:visible\}/);
-  assert.match(html, /class="fb-lead-price"[\s\S]*\$2,170/);
-  assert.match(html, /class="fb-lead-logo"[\s\S]*href="#fbLidMark"/);
+  assert.match(html, /\.fb-spotline\{fill:none;stroke:#000;stroke-width:1;vector-effect:non-scaling-stroke;visibility:visible\}/);
+  assert.match(html, /class="fb-lead-price"><text[\s\S]*\$2,170/);
+  assert.match(html, /class="fb-lead-logo"><use href="#fbLidMark"/);
+  assert.doesNotMatch(html, /class="fb-lead-(?:price|logo)"><rect/);
 });
 
 test('price tile uses the transparent iPhone cutout with black priced tracker spots', () => {
@@ -55,7 +59,7 @@ test('price tile uses the transparent iPhone cutout with black priced tracker sp
   assert.match(html, /\.fb-price\{padding:24px 140px 48px 28px\}/);
   assert.match(html, /\.fb-price h3\{[^}]*max-width:10ch/);
   assert.match(html, /\.fb-price-visual\{[^}]*height:130px;width:calc\(130px \* \(952 \/ 1275\)\)/);
-  assert.match(html, /\.fb-price-map \.fb-ps\{fill:none;stroke:#000;stroke-width:1\.5/);
+  assert.match(html, /\.fb-price-map \.fb-ps\{fill:none;stroke:#000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter/);
   assert.match(html, /parts=\[307,308,308,308,308\]/);
   assert.match(html, /buildOverlaySvg\('iphone', 5, 'fb-ps', 'fb-price-map', parts\)/);
   assert.match(html, /priceUnits\[index\]\.classList\.toggle\('is-bought',fraction>\.92\)/);
