@@ -125,3 +125,10 @@ test('FAQ and footer use the supplied complete structure without legacy duplicat
   assert.match(html, /The term is locked from the moment the listing goes live and cannot be changed\./);
   assert.match(html, /both are locked from the moment the listing is published\./);
 });
+
+test('check-in proofs use a clean transparent four-column structure', () => {
+  assert.match(html, /\.feature-bento \.fb-proof\{display:grid;grid-template-columns:repeat\(4,minmax\(0,1fr\)\);gap:10px;width:min\(100%,300px\)/);
+  assert.match(html, /\.feature-bento \.fb-proof img,\.feature-bento \.fb-proof \.fb-next-proof\{[^}]*aspect-ratio:4\/3;[^}]*border:2px solid #000/);
+  assert.match(html, /\.feature-bento \.fb-next-proof\{position:relative;background:transparent;overflow:hidden\}/);
+  assert.doesNotMatch(html, /\.feature-bento \.fb-next-proof\{[^}]*background:#fff/);
+});

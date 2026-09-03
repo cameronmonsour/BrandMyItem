@@ -1212,15 +1212,15 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 .feature-bento .fb-done svg{width:12px;height:12px}
 .feature-bento .fb-mac[data-phase="3"] .fb-done,.feature-bento .fb-mac[data-phase="4"] .fb-done{opacity:1;transform:translate(-50%,0)}
 .feature-bento .fb-done .fb-shipped{display:none}.feature-bento .fb-mac[data-phase="4"] .fb-done .fb-funded{display:none}.feature-bento .fb-mac[data-phase="4"] .fb-done .fb-shipped{display:inline}
-.feature-bento .fb-proof{display:flex;gap:8px;margin-top:4px;position:relative;z-index:3}
-.feature-bento .fb-proof figure{margin:0;width:64px}
-.feature-bento .fb-proof img,.feature-bento .fb-proof .fb-next-proof{display:block;width:64px;height:48px;border-radius:10px;object-fit:cover;border:1px solid var(--fg)}
-.feature-bento .fb-next-proof{position:relative;background:#fff;overflow:hidden}
+.feature-bento .fb-proof{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;width:min(100%,300px);margin-top:4px;position:relative;z-index:3}
+.feature-bento .fb-proof figure{display:grid;grid-template-rows:auto 16px;gap:5px;min-width:0;margin:0}
+.feature-bento .fb-proof img,.feature-bento .fb-proof .fb-next-proof{display:block;width:100%;aspect-ratio:4/3;height:auto;border-radius:11px;object-fit:cover;object-position:center 58%;border:2px solid #000;box-sizing:border-box}
+.feature-bento .fb-next-proof{position:relative;background:transparent;overflow:hidden}
 .feature-bento .fb-next-proof img{position:absolute;inset:0;opacity:0;transition:opacity .4s;border:none}
 .feature-bento .fb-next-proof svg{position:absolute;inset:0;width:100%;height:100%;transition:opacity .4s}
 .feature-bento .fb-checkin[data-phase="3"] .fb-next-proof img,.feature-bento .fb-checkin[data-phase="4"] .fb-next-proof img{opacity:1}
 .feature-bento .fb-checkin[data-phase="3"] .fb-next-proof svg,.feature-bento .fb-checkin[data-phase="4"] .fb-next-proof svg{opacity:0}
-.feature-bento .fb-proof figcaption{font-size:11px;color:var(--mfg);margin-top:4px;text-align:center}
+.feature-bento .fb-proof figcaption{font-size:11px;line-height:16px;color:var(--mfg);margin:0;text-align:center;white-space:nowrap}
 .feature-bento .fb-shot{position:absolute;left:-30px;top:var(--fb-shot-top,250px);height:236px}.feature-bento .fb-shot img{height:100%}
 .feature-bento .fb-flash{position:absolute;inset:0;background:#fff;opacity:0;transition:opacity .12s}
 .feature-bento .fb-checkin[data-phase="2"] .fb-flash{opacity:.85}
