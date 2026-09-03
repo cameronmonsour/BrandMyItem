@@ -726,7 +726,7 @@ details.faq .fa b{color:var(--fg);font-weight:600}
 .choice-card span{font-size:12.5px;line-height:1.35;color:var(--mfg)}
 .choice-card small{font-size:11.5px;line-height:1.35;color:var(--mfg);margin-top:5px}
 .choice-note{font-size:12px;line-height:1.45;color:var(--mfg);margin:7px 0 0}
-.tax-note{font-size:11.5px;line-height:1.45;color:var(--mfg);margin:8px 0 0}
+.details-subheadline{font-size:12px;line-height:1.4;color:var(--mfg);margin:5px 0 0}
 .brand-deal-section{border-top:1px solid var(--border);margin-top:20px;padding-top:18px}
 @media(max-width:620px){.choice-grid.term-choice-grid,.choice-grid.checkin-frequency-grid,.choice-grid.fulfillment-choice-grid{grid-template-columns:1fr}}
 .total{display:flex;justify-content:space-between;align-items:baseline;margin:6px 0 0}
@@ -1114,13 +1114,13 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 
 /* Homepage model explainer */
 .home-model-head{max-width:760px;text-align:center;margin:0 auto 46px}
-.home-flow{position:relative;margin:0;padding:12px 0 0}
-.home-how-band{padding:32px 0 126px!important}
+.home-flow{position:relative;margin:0;padding:0}
+.home-how-band{padding:56px 0!important}
+#home-onboard{padding-bottom:0!important}
 .home-flow-line{display:none}
-.home-flow-list{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px;list-style:none;margin:0;padding:0;position:relative}
+.home-flow-list{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px;list-style:none;max-width:1100px;margin:0 auto;padding:0;position:relative}
 .home-flow-step{text-align:center;min-width:0}
-.home-flow-step:nth-child(2),.home-flow-step:nth-child(4){transform:translateY(6px)}
-.home-flow-step:nth-child(3){transform:translateY(10px)}
+.home-flow-step:nth-child(2),.home-flow-step:nth-child(3),.home-flow-step:nth-child(4){transform:none}
 .home-flow-icon{width:82px;height:82px;margin:0 auto 18px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--fg);color:var(--bg);box-shadow:0 0 0 8px var(--bg);position:relative}
 .home-flow-icon.photo{width:154px;height:126px;margin-bottom:4px;border:0;border-radius:0;background:transparent;box-shadow:none;overflow:hidden}
 .home-flow-icon.photo img{display:block;width:100%;height:100%;object-fit:cover;border-radius:0}
@@ -1182,7 +1182,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 .feature-bento .fb-itemline{margin-top:8px;display:flex;flex-direction:column;gap:2px;position:relative;z-index:3}
 .feature-bento .fb-itemline b{font-size:13px}.feature-bento .fb-itemline span{font-size:11px;color:var(--mfg)}
 .feature-bento .fb-stage{position:absolute;left:20px;right:20px;top:156px;bottom:58px;display:grid;place-items:center}
-.feature-bento .fb-stage>img{max-width:88%;max-height:88%;object-fit:contain;filter:drop-shadow(0 18px 18px rgba(0,0,0,.14));transition:opacity .25s}
+.feature-bento .fb-stage>img{max-width:88%;max-height:88%;width:auto;height:auto;filter:drop-shadow(0 18px 18px rgba(0,0,0,.14));transition:opacity .25s}
 .feature-bento .fb-stage>svg{position:absolute;pointer-events:none;overflow:visible}
 .feature-bento .fb-stage .fb-spot{fill:none;stroke:currentColor;stroke-width:1.5;stroke-dasharray:6 5;opacity:0;transform:scale(.95);transform-origin:center;transition:opacity .3s,transform .5s var(--fb-ease)}
 .feature-bento .fb-mac[data-phase="1"] .fb-spot,.feature-bento .fb-mac[data-phase="2"] .fb-spot,.feature-bento .fb-mac[data-phase="3"] .fb-spot{opacity:1;transform:none}
@@ -1199,7 +1199,11 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 .feature-bento .fb-proof{display:flex;gap:8px;margin-top:4px;position:relative;z-index:3}
 .feature-bento .fb-proof figure{margin:0;width:64px}
 .feature-bento .fb-proof img,.feature-bento .fb-proof .fb-next-proof{display:block;width:64px;height:48px;border-radius:10px;object-fit:cover;border:1px solid var(--fg)}
-.feature-bento .fb-next-proof{background:#fff}
+.feature-bento .fb-next-proof{position:relative;background:#fff;overflow:hidden}
+.feature-bento .fb-next-proof img{position:absolute;inset:0;opacity:0;transition:opacity .4s;border:none}
+.feature-bento .fb-next-proof svg{position:absolute;inset:0;width:100%;height:100%;transition:opacity .4s}
+.feature-bento .fb-checkin[data-phase="3"] .fb-next-proof img,.feature-bento .fb-checkin[data-phase="4"] .fb-next-proof img{opacity:1}
+.feature-bento .fb-checkin[data-phase="3"] .fb-next-proof svg,.feature-bento .fb-checkin[data-phase="4"] .fb-next-proof svg{opacity:0}
 .feature-bento .fb-proof figcaption{font-size:11px;color:var(--mfg);margin-top:4px;text-align:center}
 .feature-bento .fb-shot{position:absolute;left:-30px;bottom:-92px;height:236px}.feature-bento .fb-shot img{height:100%}
 .feature-bento .fb-flash{position:absolute;inset:0;background:#fff;opacity:0;transition:opacity .12s}
@@ -1207,13 +1211,14 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 .feature-bento .fb-due,.feature-bento .fb-verified{position:absolute;right:24px;bottom:40px;font-size:12px;font-weight:600;border-radius:999px;padding:7px 12px;opacity:0;transform:translateY(-6px);transition:opacity .4s,transform .5s var(--fb-ease)}
 .feature-bento .fb-due{background:#fff;border:1px solid var(--fg)}.feature-bento .fb-verified{background:var(--fg);color:#fff}
 .feature-bento .fb-checkin[data-phase="1"] .fb-due,.feature-bento .fb-checkin[data-phase="3"] .fb-verified,.feature-bento .fb-checkin[data-phase="4"] .fb-verified{opacity:1;transform:none}
-.feature-bento .fb-price{padding:30px 176px 22px 28px}
-.feature-bento .fb-price h3{font-size:34px;line-height:1.02;text-align:left;max-width:7ch;margin-left:0;margin-right:0}
-.feature-bento .fb-math{position:absolute;left:28px;bottom:64px;max-width:150px;font-size:12px;font-weight:600;line-height:1.15;display:flex;gap:4px;align-items:center;flex-wrap:wrap;z-index:3}
+.feature-bento .fb-price{padding:26px 140px 22px 28px}
+.feature-bento .fb-price h3{font-size:28px;line-height:1.05;text-align:left;max-width:9ch;margin-left:0;margin-right:0;letter-spacing:-0.03em}
+.feature-bento .fb-math{position:absolute;left:28px;bottom:54px;max-width:130px;font-size:11.5px;font-weight:600;line-height:1.15;display:flex;gap:4px;align-items:center;flex-wrap:wrap;z-index:3}
 .feature-bento .fb-math span{opacity:.2;transition:opacity .3s}.feature-bento .fb-math span.on{opacity:1}.feature-bento .fb-math em{font-style:normal;color:var(--mfg)}
-.feature-bento .fb-math b{display:block;width:100%;opacity:0;transition:opacity .4s}.feature-bento .fb-price[data-phase="4"] .fb-math b{opacity:1}
-.feature-bento .fb-price-phone{position:absolute;right:26px;top:50%;transform:translateY(-50%);height:140px}
-.feature-bento .fb-price-map{position:absolute;right:26px;top:50%;transform:translateY(-50%);height:140px;overflow:visible}
+.feature-bento .fb-math b{display:block;width:100%;opacity:0;transition:opacity .4s;margin-top:2px}.feature-bento .fb-price[data-phase="4"] .fb-math b{opacity:1}
+.feature-bento .fb-price-visual{position:absolute;right:22px;top:50%;transform:translateY(-50%);height:130px;width:calc(130px * (68 / 149))}
+.feature-bento .fb-price-phone{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.feature-bento .fb-price-map{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 .feature-bento .fb-price-map .fb-ps{fill:none;stroke:var(--fg);stroke-width:1.2;opacity:0;transition:opacity .35s}
 .feature-bento .fb-price-map .fb-ps.on{opacity:1}
 .feature-bento .fb-price-map .fb-lead{stroke:var(--fg);stroke-width:1;fill:none;stroke-dasharray:40;stroke-dashoffset:40;opacity:0;transition:stroke-dashoffset .45s,opacity .3s}
@@ -1223,7 +1228,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 .feature-bento .fb-term h3,.feature-bento .fb-term p{max-width:190px;text-align:left;margin-left:0;margin-right:0}.feature-bento .fb-term p{max-width:178px}
 .feature-bento .fb-term .fb-suit{position:absolute;right:22px;top:40px;height:116px}
 .feature-bento .fb-options{margin:auto 0 64px;display:flex;flex-direction:column;gap:6px}
-.feature-bento .fb-option{display:grid;grid-template-columns:64px 1fr;align-items:center;gap:12px}
+.feature-bento .fb-option{display:grid;grid-template-columns:44px 1fr max-content;align-items:center;gap:12px}
 .feature-bento .fb-option .fb-n{font-size:38px;font-weight:800;letter-spacing:-.06em;line-height:1;color:#D2D2D7;transition:color .5s}.feature-bento .fb-option.on .fb-n{color:var(--fg)}
 .feature-bento .fb-option .fb-option-bar{height:6px;border-radius:3px;background:#D2D2D7;position:relative;overflow:hidden}.feature-bento .fb-option-bar i{position:absolute;inset:0;background:var(--fg);transform:scaleX(0);transform-origin:left;transition:transform .7s}.feature-bento .fb-option.on .fb-option-bar i{transform:scaleX(1)}
 .feature-bento .fb-option small{font-size:11px;color:var(--mfg)}
@@ -1252,6 +1257,22 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
   .feature-bento{grid-auto-rows:auto}
   .feature-bento .fb-tile{min-height:440px}
   .feature-bento .fb-price{min-height:260px}
+}
+@media(max-width:600px){
+  .feature-bento .fb-tile{padding:28px;min-height:440px}
+  .feature-bento .fb-bagwrap{right:22px;top:210px;height:200px}
+  .feature-bento .fb-days .fb-num{font-size:90px}
+  .feature-bento .fb-stage{left:16px;right:16px;top:205px;bottom:64px}
+  .feature-bento .fb-fund{left:28px;right:28px}
+  .feature-bento .fb-proof{gap:5px}
+  .feature-bento .fb-proof figure{width:54px}
+  .feature-bento .fb-proof img,.feature-bento .fb-proof .fb-next-proof{width:54px;height:41px}
+  .feature-bento .fb-shot{left:auto;right:-22px;bottom:-62px;height:190px}
+  .feature-bento .fb-due,.feature-bento .fb-verified{right:20px;bottom:24px}
+  .feature-bento .fb-price{padding:26px 132px 22px 28px;min-height:260px}
+  .feature-bento .fb-price-visual{right:18px}
+  .feature-bento .fb-term .fb-suit{right:18px;top:34px;height:96px}
+  .feature-bento .fb-options{margin-bottom:62px}
 }
 @media(prefers-reduced-motion:reduce){
   .home-flow-icon, .home-flow-icon *, .feature-bento *, .feature-bento .fb-tile{animation:none!important;transition:none!important}
@@ -1833,15 +1854,17 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
         <article class="fb-tile fb-price" data-phase="0" data-loop="9000" style="--i:5">
           <h3>Priced by surface.</h3>
           <div class="fb-math"><span data-k="0">56%</span><em>+</em><span data-k="1">22%</span><em>+</em><span data-k="2">22%</span><em>=</em><b>100% of retail</b></div>
-          <img class="fb-price-phone" src="bento/phone.png" alt="" aria-hidden="true">
-          <svg class="fb-price-map" viewBox="0 0 68 149" aria-hidden="true">
-            <rect class="fb-ps" data-k="0" x="14" y="72" width="40" height="34" rx="5"/>
-            <rect class="fb-ps" data-k="1" x="14" y="110" width="19" height="20" rx="4"/>
-            <rect class="fb-ps" data-k="2" x="35" y="110" width="19" height="20" rx="4"/>
-            <path class="fb-lead" data-k="0" d="M14 89 H -10"/><text class="fb-label" data-k="0" x="-13" y="91" text-anchor="end">56% · $309</text>
-            <path class="fb-lead" data-k="1" d="M14 120 H -10"/><text class="fb-label" data-k="1" x="-13" y="122" text-anchor="end">22% · $120</text>
-            <path class="fb-lead" data-k="2" d="M44 130 V 144 H -10"/><text class="fb-label" data-k="2" x="-13" y="146" text-anchor="end">22% · $120</text>
-          </svg>
+          <div class="fb-price-visual">
+            <img class="fb-price-phone" src="bento/phone.png" alt="" aria-hidden="true">
+            <svg class="fb-price-map" viewBox="0 0 68 149" aria-hidden="true">
+              <rect class="fb-ps" data-k="0" x="14" y="72" width="40" height="34" rx="5"/>
+              <rect class="fb-ps" data-k="1" x="14" y="110" width="19" height="20" rx="4"/>
+              <rect class="fb-ps" data-k="2" x="35" y="110" width="19" height="20" rx="4"/>
+              <path class="fb-lead" data-k="0" d="M14 89 H -10"/><text class="fb-label" data-k="0" x="-13" y="91" text-anchor="end">56% · $309</text>
+              <path class="fb-lead" data-k="1" d="M14 120 H -10"/><text class="fb-label" data-k="1" x="-13" y="122" text-anchor="end">22% · $120</text>
+              <path class="fb-lead" data-k="2" d="M44 130 V 144 H -10"/><text class="fb-label" data-k="2" x="-13" y="146" text-anchor="end">22% · $120</text>
+            </svg>
+          </div>
           <div class="fb-sum"><b>$<span id="fbSumNum">0</span></b><small>= retail, exactly</small></div>
         </article>
 
@@ -1911,7 +1934,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
         <details class="faq"><summary>Is this real?</summary><div class="fa">Completely. The items are real, the stickers are real die-cut vinyl, and every listing belongs to a real person who takes it where they work, study, and travel. The only fiction is the idea that a laptop lid or a suitcase isn't premium ad inventory.</div></details>
         <details class="faq"><summary>Does the owner make money?</summary><div class="fa">No, and that's the point. Once a listing is fully funded, IRLi LLC buys the item and ships it to the owner. Spot money funds that purchase, the platform fee runs the business, and cash never changes hands with the owner at any point.</div></details>
         <details class="faq"><summary>What does a brand actually get?</summary><div class="fa">Your logo printed on the item itself, visible everywhere it goes and in everything its owner posts, plus your spot on the listing page with a link to your site, for as long as the owner's chosen term runs (6, 12, or 18 months). No impressions promised, just real presence in real rooms your ads can't reach.</div></details>
-        <details class="faq"><summary>How does payment work?</summary><div class="fa">Buying a spot charges your card immediately for the listed price plus the platform fee. No holds, no waiting. If a listing doesn't sell out within 60 days, every brand on it is refunded automatically. If it sells out but shipment runs late, you'll get a notice before the promised date passes, with the choice to wait or take a full refund. If the item can never be delivered, you're refunded in full without having to ask.</div></details>
+        <details class="faq"><summary>How does payment work?</summary><div class="fa">Buying a spot charges your card immediately for the listed price plus 30% total fees. Item sales tax, shipping, and handling are included in the platform fee. No holds, no waiting. If a listing doesn't sell out within 60 days, every brand on it is refunded automatically. If it sells out but shipment runs late, you'll get a notice before the promised date passes, with the choice to wait or take a full refund. If the item can never be delivered, you're refunded in full without having to ask.</div></details>
         <details class="faq"><summary>Can any brand join?</summary><div class="fa">Almost. Every sponsor is approved by hand before anything is printed. Alcohol, cannabis, tobacco, and political ads aren't accepted, and the item's owner has the final say on what rides on their stuff. Refused purchases are refunded in full.</div></details>
         <details class="faq"><summary>What keeps the owner honest?</summary><div class="fa">Monthly photo check-ins, public on the listing for anyone to see. The first one requires a receipt dated after the listing funded, so nobody can claim credit for an item they already owned. Miss a check-in and the listing gets flagged publicly; miss two in a row and that owner can't post another listing.</div></details>
         <details class="faq"><summary>What can I post?</summary><div class="fa">Objects and wearables. Laptops, phones, tumblers, luggage, coolers, wedding suits, graduation gowns. Nothing that needs insurance or permits, so no cars or property.</div></details>
@@ -2264,10 +2287,9 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
               </div>
               <p class="choice-note">Choose how often the owner sends photo check-ins during the selected term.</p>
             </div>
-            <p class="tax-note">BrandMyItem applies and verifies every approved sponsor mark before shipping to reduce fraud. Sales tax, if applicable, is calculated at checkout based on the transaction and buyer location. Listing proceeds may have tax implications for the owner; this demo does not determine filing obligations or provide tax advice.</p>
           </div>
         </div></div>
-        <div class="card details-card"><div class="card-h"><div class="card-t">Details</div></div>
+        <div class="card details-card"><div class="card-h"><div><div class="card-t">Details</div><p class="details-subheadline">Item sales tax, shipping, and handling are included in the platform fee.</p></div></div>
         <div class="card-c" style="padding-top:8px">
           <div class="fact"><span>Item ships</span><b>new, at 100% claimed</b></div>
           <div class="fact"><span>Listing window</span><b>60 days, until completed or deleted</b></div>
@@ -2275,11 +2297,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           <div class="fact"><span>Check-in term</span><b id="buildTermOut">12 months</b></div>
           <div class="fact"><span>Fulfillment</span><b id="buildFulfillmentOut">BrandMyItem applies branding</b></div>
           <div class="fact"><span>Branded material</span><b id="buildMaterialOut">Adhesive sticker/decal applied by BrandMyItem</b></div>
-          <div class="fact"><span>Platform fee</span><b>20%</b></div>
-          <div class="fact"><span>Branding application</span><b>10%</b></div>
-          <div class="fact"><span>Total fee before tax &amp; shipping</span><b id="buildFeeOut">30%</b></div>
-          <div class="fact"><span>Tax + shipping</span><b id="buildTaxOut">If applicable at checkout</b></div>
-          <div class="total"><span class="t1">Goal when fully claimed</span><span class="t2" id="totalOut">$0</span></div>
+          <div class="total"><span class="t1">Goal when fully claimed (includes 30%)</span><span class="t2" id="totalOut">$0</span></div>
         </div></div>
         <div class="card"><div class="card-h"><div class="card-t">Post it</div></div>
         <div class="card-c" style="padding-top:12px">
@@ -2289,6 +2307,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
            </div>
           <div class="field"><label class="label" for="pName">Your name</label><input class="input" id="pName" placeholder="Cam"></div>
           <div class="field"><label class="label" for="pMail">Email for purchases and shipping</label><input class="input" id="pMail" type="email" placeholder="you@email.com"></div>
+          <div class="field"><label class="label" for="pAddress">Shipping address</label><textarea class="input" id="pAddress" rows="2" autocomplete="street-address" placeholder="Street address, city, state, ZIP"></textarea></div>
           <button class="btn btn-primary btn-full btn-lg" id="postBtn">Post my item live</button>
         </div></div>
       </div>
@@ -2389,9 +2408,9 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
               <tr><td>Check-in cadence</td><td id="iCad"></td></tr>
               <tr><td>Visibility term</td><td id="iTerm">12 months</td></tr>
               <tr><td>Fulfillment</td><td id="iFulfillment">BrandMyItem applies branding</td></tr>
-              <tr><td>Platform fee</td><td>20%</td></tr>
-              <tr><td>Total before tax &amp; shipping</td><td id="iTotalFee">20%</td></tr>
-              <tr><td>Tax + shipping</td><td id="iTax">If applicable at checkout</td></tr>
+              <tr><td>Platform fee</td><td>20% · includes item sales tax, shipping &amp; handling</td></tr>
+              <tr><td>Branding application</td><td>10%</td></tr>
+              <tr><td>Total fees</td><td id="iTotalFee">30%</td></tr>
             </tbody>
           </table>
         </article>
@@ -2414,7 +2433,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 <footer class="site-footer">
   <div class="fwrap">
     <div class="fine">
-      <p>* Spot prices are set by surface share and always add up to the item's retail price, exactly. Every spot is charged in full at purchase. If a listing is not fully funded within 60 days, every purchase is refunded automatically to the original payment method; no request is required. Once a listing is fully funded, BrandMyItem purchases the item new, applies and verifies every approved sponsor mark, and delivers it pre-branded within 60 days. Owners never receive, hold, or handle money at any point. Sponsor purchases include a 20% platform fee and a required 10% branding application fee before applicable tax and shipping. The owner selects the commitment term (6, 12, or 18 months) and check-in cadence (weekly, biweekly, or monthly) when posting; both lock when the first spot sells. Missed check-ins result in a public flag and, if continued, restriction from posting new items; there is no financial penalty. Items are purchased new and carry the manufacturer's warranty. Availability is first come, first served, while spots last.</p>
+      <p>* Spot prices are set by surface share and always add up to the item's retail price, exactly. Every spot is charged in full at purchase. If a listing is not fully funded within 60 days, every purchase is refunded automatically to the original payment method; no request is required. Once a listing is fully funded, BrandMyItem purchases the item new, applies and verifies every approved sponsor mark, and delivers it pre-branded within 60 days. Owners never receive, hold, or handle money at any point. Sponsor purchases include a 20% platform fee and a required 10% branding application fee. Item sales tax, shipping, and handling are included in the platform fee. The owner selects the commitment term (6, 12, or 18 months) and check-in cadence (weekly, biweekly, or monthly) when posting; both lock when the first spot sells. Missed check-ins result in a public flag and, if continued, restriction from posting new items; there is no financial penalty. Items are purchased new and carry the manufacturer's warranty. Availability is first come, first served, while spots last.</p>
       <p>Owners who post about their item on social media must clearly disclose the material connection in accordance with the FTC Endorsement Guides. Brands confirm they hold the rights to any mark they submit and license BrandMyItem to reproduce it once, on the purchased spot, and to display the owner's check-in photos publicly. Placements that are unlawful, that use marks the purchaser does not own, or that fall into restricted categories will be declined. Receiving an item may be taxable income; owners are responsible for taxes that apply to them, and forms are issued where required. All product names shown in listings are the property of their respective manufacturers, and no listing implies any affiliation with, or endorsement by, the manufacturer of the item.</p>
       <p><b>The story, short version.</b> BrandMyItem started with one laptop. Vincent (<a href="https://x.com/vynsedev" target="_blank" rel="noopener">@vynsedev</a>) sold the lid of his MacBook to the internet, sticker by sticker, with <a href="https://brandmymac.com" target="_blank" rel="noopener">BrandMyMac</a>, and proved that people will fund a real thing for a real spot on it. BrandMyItem is Cam's (<a href="https://x.com/imce0bitch" target="_blank" rel="noopener">@imce0bitch</a>) answer to the obvious next question: why stop at one Mac? Same honest trade, every item worth carrying. Respect where it started.</p>
       <p>BrandMyItem is operated by IRLi LLC, a California limited liability company. BrandMyItem is a marketplace for physical advertising placements; it is not a bank, a money transmitter, a crowdfunding platform, or an investment of any kind.</p>
@@ -8869,7 +8888,6 @@ function refreshBuild(){
   B.brandingMode='assisted';
   var fulfillmentOut=document.getElementById('buildFulfillmentOut');if(fulfillmentOut)fulfillmentOut.textContent='BrandMyItem applies branding';
   var materialOut=document.getElementById('buildMaterialOut');if(materialOut)materialOut.textContent=brandingMaterial(B.type);
-  var feeOut=document.getElementById('buildFeeOut');if(feeOut)feeOut.textContent=Math.round(feeRateOf(B)*100)+'%';
   setBuildChoiceCards('term',B.termMonths||12);setBuildChoiceCards('checkinFrequency',B.checkinFrequency||'monthly');
   renderSpotMap(document.getElementById('buildMap'),{type:B.type,slots:B.slots,prices:B.prices,claims:null},
     {mode:'edit',onPrice:function(i,v){B.prices[i]=v;totals()}});
@@ -9648,13 +9666,16 @@ function boxPrices(){
   return pr;
 }
 function totals(){
-  var v=CU.tiles.length?boxPrices().reduce(function(a,b){return a+b},0):B.prices.reduce(function(a,b){return a+b},0);
-  document.getElementById('totalOut').textContent=money(v);
+  var prices=CU.tiles.length?boxPrices():B.prices;
+  var v=prices.reduce(function(a,b){return a+b},0);
+  var fees=prices.reduce(function(a,b){return a+feeFor(B,b)},0);
+  document.getElementById('totalOut').textContent=money(v+fees);
 }
 function postListing(){
   var name=document.getElementById('pName').value.trim();
   var mail=document.getElementById('pMail').value.trim();
-  if(!name||!mail){toast('Add your name and email to post');return}
+  var address=document.getElementById('pAddress').value.trim();
+  if(!name||!mail||!address){toast('Add your name, email, and shipping address to post');return}
   if(!B.avatar){toast('Select a character before posting');return}
   if(DB.listings.some(function(existing){return existing.ownerRestricted&&existing.mail&&existing.mail.toLowerCase()===mail.toLowerCase()})){
     toast('This owner is restricted from posting after missed check-ins');return;
@@ -9693,12 +9714,12 @@ function postListing(){
     l={id:uid(),type:'custom',sourceType:CU.template||null,custom:true,photo:CU.faces[0].photo,faces:facesOut,tiles:CU.faces[0].tiles,
       retail:retail,title:mdl||null,owner:name,mail:mail,avatar:B.avatar,habs:B.habs.slice(),cities:B.cities.slice(),universities:B.universities.slice(),purpose:B.purpose.trim(),freq:B.freq,social:B.social,color:B.color,socialLinks:Object.assign({},B.socialLinks),slots:flatTiles.length,
       prices:prices,claims:prices.map(function(){return null}),created:Date.now(),postedAt:Date.now(),unsoldTimeoutDays:60,
-      termMonths:selectedTerm,checkinFrequency:B.checkinFrequency||'monthly',termLocked:false,brandingMode:selectedBranding,status:'live',shipping:{}};
+      termMonths:selectedTerm,checkinFrequency:B.checkinFrequency||'monthly',termLocked:false,brandingMode:selectedBranding,status:'live',shipping:{name:name,address:address}};
     CU.faces=[];cuFaceChips();
   }else{
     l={id:uid(),type:B.type,owner:name,mail:mail,avatar:B.avatar,habs:B.habs.slice(),cities:B.cities.slice(),universities:B.universities.slice(),purpose:B.purpose.trim(),freq:B.freq,social:B.social,color:B.color,variantModel:B.variantModel,variantSize:B.variantSize,retail:variantRetail(B.type,B.variantSize),source:ITEMS[B.type].source,verified:ITEMS[B.type].verified,socialLinks:Object.assign({},B.socialLinks),slots:B.slots,
       prices:B.prices.slice(),claims:B.prices.map(function(){return null}),created:Date.now(),postedAt:Date.now(),unsoldTimeoutDays:60,
-      termMonths:selectedTerm,checkinFrequency:B.checkinFrequency||'monthly',termLocked:false,brandingMode:selectedBranding,status:'live',shipping:{}};
+      termMonths:selectedTerm,checkinFrequency:B.checkinFrequency||'monthly',termLocked:false,brandingMode:selectedBranding,status:'live',shipping:{name:name,address:address}};
   }
   DB.listings.unshift(l);
   logAct('<b>'+name+'</b> posted a <b>'+LBLL(l)+'</b> &middot; '+l.slots+' spot'+(l.slots>1?'s':''),
@@ -10215,7 +10236,7 @@ function trackCardHtml(l,c){
         '<div style="margin-top:10px;font-size:13px;color:#3a3a3c;line-height:2">'+
           '<div>Submission ID <b style="float:right">'+c.subId+'</b></div>'+
           '<div>Spot price <b style="float:right">'+money(c.amt)+'</b></div>'+
-          '<div>Total fee before tax &amp; shipping ('+Math.round((c.feeRate===undefined?feeRateOf(l):c.feeRate)*100)+'%) <b style="float:right">'+money(c.fee)+'</b></div>'+
+          '<div>Total fees ('+Math.round((c.feeRate===undefined?feeRateOf(l):c.feeRate)*100)+'%) <b style="float:right">'+money(c.fee)+'</b></div>'+
           '<div>Total charged <b style="float:right">'+money(c.amt+c.fee)+'</b></div>'+
           '<div>Fulfillment status <b style="float:right">'+badge+'</b></div>'+
           '<div>Check-ins on file <b style="float:right">'+checkins.length+' of '+termOf(l)+'</b></div>'+
@@ -10369,11 +10390,10 @@ function refreshItemCards(){
   }
   document.getElementById('iCad').textContent=checkinCadenceText(CUR);
   var shipEl=document.getElementById('iShips');if(shipEl)shipEl.textContent=CUR.closed?'closed · claims refunded':(CUR.shippedAt?'shipped to owner':(pct>=100?'funded · preparing shipment':'new, at 100% claimed'));
-  var feeCopy=document.getElementById('iFeeCopy');if(feeCopy)feeCopy.textContent='Exact prices, first come, first served. Sponsor purchases include the 20% platform fee and required 10% branding application fee, making the total 30% before applicable tax and shipping.';
+  var feeCopy=document.getElementById('iFeeCopy');if(feeCopy)feeCopy.textContent='Exact prices, first come, first served. Sponsor purchases include the 20% platform fee and required 10% branding application fee, making the total 30%. Item sales tax, shipping, and handling are included in the platform fee.';
   var fulfillmentEl=document.getElementById('iFulfillment');if(fulfillmentEl)fulfillmentEl.textContent='BrandMyItem applies branding';
   var materialEl=document.getElementById('iMaterial');if(materialEl)materialEl.textContent=brandingMaterial(CUR.type);
   var totalFeeEl=document.getElementById('iTotalFee');if(totalFeeEl)totalFeeEl.textContent=Math.round(feeRateOf(CUR)*100)+'%';
-  var taxEl=document.getElementById('iTax');if(taxEl)taxEl.textContent='Sales tax if applicable at checkout';
   var termEl=document.getElementById('iTerm');if(termEl)termEl.textContent=termOf(CUR)+' months'+(CUR.termLocked?' · locked':'');
   var brandingWindowEl=document.getElementById('iBrandingWindow'),proofCadenceEl=document.getElementById('iProofCadence');
   if(brandingWindowEl)brandingWindowEl.textContent='BrandMyItem applies and verifies branding · 60-day delivery window';
@@ -10499,7 +10519,7 @@ function openBid(i,trigger){
   document.getElementById('mTitle').textContent='All ad placements are estimates. Pictures and sizing are estimated.';
   document.getElementById('mPrice').textContent=money(price);
   document.getElementById('mFee').textContent=money(fee);
-  var feeLabel=document.getElementById('mFeeLabel');if(feeLabel)feeLabel.textContent='Total fee before tax & shipping ('+Math.round(feeRateOf(CUR)*100)+'%)';
+  var feeLabel=document.getElementById('mFeeLabel');if(feeLabel)feeLabel.textContent='Platform + branding fees ('+Math.round(feeRateOf(CUR)*100)+'%; tax, shipping & handling included)';
   document.getElementById('mTotal').textContent=money(total);
   document.getElementById('uplBox').innerHTML='Upload your logo · required (PNG, transparent works best)';
   document.getElementById('mBrand').value='';document.getElementById('mMail').value='';document.getElementById('mLink').value='';

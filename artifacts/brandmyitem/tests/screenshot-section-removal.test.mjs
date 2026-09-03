@@ -24,8 +24,8 @@ test('removes the screenshot-only homepage and page headers', () => {
   assert.match(html, /home-flow-index">5<\/span><h3>Photo check-ins<\/h3>/);
   assert.match(html, /how-it-works-monthly-check-in\.png/);
   assert.match(html, /\.home-flow-icon\.photo\.monthly img\{object-fit:contain\}/);
-  assert.match(html, /\.home-flow\{position:relative;margin:0;padding:12px 0 0\}/);
-  assert.match(html, /\.home-flow-step:nth-child\(3\)\{transform:translateY\(10px\)\}/);
+  assert.match(html, /\.home-flow\{position:relative;margin:0;padding:0\}/);
+  assert.match(html, /\.home-flow-step:nth-child\(2\),\.home-flow-step:nth-child\(3\),\.home-flow-step:nth-child\(4\)\{transform:none\}/);
   assert.match(html, /Choose the item, ad spots, term, and check-in frequency\./);
   assert.match(html, /Brands claim a spot, upload their logo, and pay in full upfront\./);
   assert.match(html, /Once fully funded, BrandMyItem buys and ships the item to you\./);
@@ -87,9 +87,16 @@ test('dashboard keeps compact tracker cards without a duplicate left category bo
   assert.doesNotMatch(builderHtml, /id="brandingChoices"/);
   assert.doesNotMatch(builderHtml, /id="termConfidenceOut"/);
   assert.match(builderHtml, /class="card details-card"/);
-  assert.match(builderHtml, /<div class="card-t">Details<\/div>/);
+  assert.match(builderHtml, /<div class="card-t">Details<\/div><p class="details-subheadline">Item sales tax, shipping, and handling are included in the platform fee\.<\/p>/);
   assert.match(builderHtml, /id="totalOut"/);
+  assert.match(builderHtml, /Goal when fully claimed \(includes 30%\)/);
+  assert.doesNotMatch(builderHtml, /<span>Platform fee<\/span>/);
+  assert.doesNotMatch(builderHtml, /<span>Branding application<\/span>/);
+  assert.doesNotMatch(builderHtml, /Total fee before tax &amp; shipping/);
+  assert.doesNotMatch(builderHtml, /id="buildTaxOut"/);
   assert.match(builderHtml, /Choose your character/);
+  assert.match(builderHtml, /<label class="label" for="pAddress">Shipping address<\/label>/);
+  assert.match(builderHtml, /id="pAddress"[^>]*autocomplete="street-address"/);
   assert.doesNotMatch(builderHtml, /avatarPickStatus/);
   assert.doesNotMatch(builderHtml, /Memoji selected/);
   assert.match(builderHtml, /\.avatar-option\.on\{border:1px solid var\(--fg\);box-shadow:none\}/);
@@ -98,9 +105,13 @@ test('dashboard keeps compact tracker cards without a duplicate left category bo
   assert.match(html, /class="ios-box"/);
   assert.doesNotMatch(html, /class="card filter-card"/);
   assert.match(html, /\.grid\{display:grid;grid-template-columns:repeat\(auto-fill,minmax\(236px,1fr\)\);gap:20px\}/);
+  assert.match(html, /#home-onboard\{padding-bottom:0!important\}/);
+  assert.match(html, /\.home-how-band\{padding:56px 0!important\}/);
+  assert.match(html, /\.home-flow-list\{[^}]*max-width:1100px;margin:0 auto/);
+  assert.match(html, /\.home-flow-step:nth-child\(2\),\.home-flow-step:nth-child\(3\),\.home-flow-step:nth-child\(4\)\{transform:none\}/);
   assert.match(html, /\.habs button\.on\{background:#1D1D1F;border:1px solid #1D1D1F;color:#fff\}/);
   assert.match(html, /\.choice-card\.on\{border:1px solid #1D1D1F;background:#1D1D1F;color:#fff;box-shadow:none\}/);
-  assert.match(builderHtml, /BrandMyItem applies and verifies every approved sponsor mark before shipping to reduce fraud/);
+  assert.doesNotMatch(builderHtml, /class="tax-note"/);
   assert.doesNotMatch(builderHtml, /Who applies the branding\?/);
   assert.doesNotMatch(builderHtml, /You apply it/);
   assert.doesNotMatch(html, /\.term-runway\{/);
@@ -132,6 +143,18 @@ test('fulfillment copy enforces BrandMyItem-applied branding', () => {
   assert.match(html, /function deliveryDaysOf\(\)\{return 60\}/);
   assert.doesNotMatch(html, /self-appl/i);
   assert.doesNotMatch(html, /You apply it/);
+});
+
+test('builder goal includes every spot price and its 30% fee', () => {
+  assert.match(html, /var fees=prices\.reduce\(function\(a,b\)\{return a\+feeFor\(B,b\)\},0\)/);
+  assert.match(html, /document\.getElementById\('totalOut'\)\.textContent=money\(v\+fees\)/);
+  assert.match(html, /Item sales tax, shipping, and handling are included in the platform fee\./);
+});
+
+test('posting requires and saves the owner shipping address', () => {
+  assert.match(html, /var address=document\.getElementById\('pAddress'\)\.value\.trim\(\)/);
+  assert.match(html, /if\(!name\|\|!mail\|\|!address\)\{toast\('Add your name, email, and shipping address to post'\);return\}/);
+  assert.equal((html.match(/shipping:\{name:name,address:address\}/g) || []).length, 2);
 });
 
 test('every catalog item has an item-specific branding method', () => {

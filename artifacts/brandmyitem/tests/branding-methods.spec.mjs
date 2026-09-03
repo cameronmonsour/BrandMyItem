@@ -45,13 +45,13 @@ test.describe('item-specific branding methods', () => {
     await expect(page.locator('#buildMaterialOut')).toHaveText(
       'Laser-engraved logo applied by BrandMyItem',
     );
-    await expect(page.locator('#buildFeeOut')).toHaveText('30%');
+    await expect(page.locator('#buildFeeOut')).toHaveCount(0);
 
     await itemButtons.filter({ hasText: 'Search Backpack' }).click();
     await expect(page.locator('#buildMaterialOut')).toHaveText(
       'Embroidered patch applied by BrandMyItem',
     );
-    await expect(page.locator('#buildFeeOut')).toHaveText('30%');
+    await expect(page.locator('#buildFeeOut')).toHaveCount(0);
     await expect(page.getByRole('button', { name: /You apply it/i })).toHaveCount(0);
   });
 
