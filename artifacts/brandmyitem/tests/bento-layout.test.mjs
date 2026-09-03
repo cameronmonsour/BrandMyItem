@@ -119,8 +119,8 @@ test('every bento claim matches the actual marketplace rules', () => {
 });
 
 test('FAQ and footer use the supplied complete structure without legacy duplicates', () => {
-  assert.match(html, /<h2>Asked and answered\.<\/h2>/);
-  assert.match(html, /Everything owners and brands ask before they use BrandMyItem, in plain language\. BrandMyItem is operated by IRLi LLC\./);
+  assert.doesNotMatch(html, /<h2>Asked and answered\.<\/h2>/);
+  assert.doesNotMatch(html, /Everything owners and brands ask before they use BrandMyItem, in plain language\. BrandMyItem is operated by IRLi LLC\./);
   assert.doesNotMatch(html, /class="faq-grid legacy-faq-grid"/);
   assert.match(html, /The term is locked from the moment the listing goes live and cannot be changed\./);
   assert.match(html, /both are locked from the moment the listing is published\./);

@@ -20,7 +20,7 @@ test('removes the screenshot-only homepage and page headers', () => {
   assert.match(html, /\.faq-grid\{max-width:none;display:grid;grid-template-columns:repeat\(2,minmax\(0,1fr\)\);gap:12px 14px\}/);
   assert.match(html, /\.faq-grid\{grid-template-columns:1fr;gap:10px\}/);
   assert.doesNotMatch(html, />Questions</);
-  assert.match(html, />Asked and answered\.</);
+  assert.doesNotMatch(html, />Asked and answered\.</);
   assert.match(html, /home-flow-index">5<\/span><h3>Photo check-ins<\/h3>/);
   assert.match(html, /how-it-works-monthly-check-in\.png/);
   assert.match(html, /\.home-flow-icon\.photo\.monthly img\{object-fit:contain\}/);
@@ -155,6 +155,10 @@ test('fulfillment copy enforces BrandMyItem-applied branding', () => {
   assert.doesNotMatch(html, /20% platform fee/);
   assert.doesNotMatch(html, /10% branding application fee/);
   assert.doesNotMatch(html, /id="mFee"/);
+});
+
+test('footer omits the legacy BrandMyMac attribution', () => {
+  assert.doesNotMatch(html, /BrandMyMac by @vynsedev/);
 });
 
 test('builder and campaign goals include the complete 40% purchase amount', () => {
