@@ -144,7 +144,7 @@ test('dashboard keeps compact tracker cards without a duplicate left category bo
   assert.match(html, /id="fTerm"/);
   assert.match(html, /id="fCadence"/);
   assert.match(html, /listingContextHtml\(l\)\+'<div class="iname">/);
-  assert.match(html, /\.lcard \.who\{[^}]*height:26px;min-width:0;margin-bottom:6px/);
+  assert.match(html, /\.lcard \.who\{[^}]*height:24px;min-width:0;margin-bottom:5px/);
   assert.match(html, /\.lcard \.who \.oname\{[^}]*overflow:hidden;text-overflow:ellipsis;white-space:nowrap/);
   assert.match(html, /\.lcard \.iname\{[^}]*width:100%;height:19px;line-height:19px;[^}]*margin:0 0 2px/);
   assert.match(html, /\.lcard \.card-context\{[^}]*width:100%;height:15px;[^}]*margin:0 0 3px/);
@@ -227,5 +227,5 @@ test('sold and price pills keep the same compact height', () => {
   assert.match(html, /\.lcard \.moneyrow\{[^}]*min-height:32px/);
   assert.match(html, /\.lcard \.moneyrow \.amts\{display:inline-flex;align-items:center;height:21px;line-height:1\.2;/);
   assert.match(html, /\.lcard \.chips\{display:flex;align-items:flex-end;gap:5px/);
-  assert.match(html, /\.lcard \.chipg\.sold-count\{padding:4px 8px\}/);
+  assert.match(html, /\.lcard \.chipg\.sold-count\{padding:3px 7px\}/);
 });
