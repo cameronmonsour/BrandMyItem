@@ -164,7 +164,9 @@ test('dashboard keeps compact tracker cards without a duplicate left category bo
   assert.match(html, /\.brand-profile-card \.label\{margin-top:16px;color:var\(--fg\)\}/);
   assert.match(html, /<div class="campaign-label">Purpose<\/div><p>'\+safeCardText\(purpose\)\+'<\/p>/);
   assert.doesNotMatch(html, /<div class="campaign-label">Campaign brief<\/div>/);
-  assert.doesNotMatch(html, /<span>Seen how often<\/span>/);
+  assert.match(html, /<span>How often it&(?:rsquo|#8217);s seen<\/span><b>'\+safeCardText\(l\.freq\|\|'Not provided'\)\+'<\/b>/);
+  assert.match(html, /\.campaign-lower-grid\{grid-column:1\/-1;border-top:1px solid #D2D2D7\}/);
+  assert.doesNotMatch(html, /Sponsor activity|campaign-sponsor-panel|campaignSponsorHtml|shownSponsors|extraSponsors|campaign-more-sponsors/);
   assert.match(html, /String\(v\)\.split\(/);
   assert.match(html, /return out\.length\?out\.join\(', '\)/);
   assert.doesNotMatch(html, /function listingBrandFitHtml\(l\)/);

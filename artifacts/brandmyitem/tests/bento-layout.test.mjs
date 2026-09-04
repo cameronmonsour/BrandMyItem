@@ -51,11 +51,11 @@ test('every rotating bento item uses an exact-dimension transparent cutout with 
 
 test('lead suitcase uses four rounded silver-shell boxes that avoid the halo and wheels', () => {
   assert.deepEqual(pngSize('bento/bag.png'), [187, 324]);
-  assert.match(html, /<img src="bento\/bag\.png" alt="">\s*<svg viewBox="0 0 187 324">/);
+  assert.match(html, /<img class="fb-photo-cutout" src="bento\/bag\.png" alt="">\s*<svg viewBox="0 0 187 324">/);
   assert.match(html, /<rect class="fb-spotline" x="15" y="92" width="77\.5" height="90\.5" rx="6"\/>/);
   assert.match(html, /<rect class="fb-spotline" x="94\.5" y="184\.5" width="77\.5" height="90\.5" rx="6"\/>/);
   assert.match(html, /\.fb-spotline\{fill:none;stroke:#000;stroke-width:1;vector-effect:non-scaling-stroke;visibility:visible\}/);
-  assert.match(html, /class="fb-lead-price"><text[^>]*>\$543<\/text><text[^>]*>\$543<\/text><text[^>]*>\$542<\/text><text[^>]*>\$542<\/text>/);
+  assert.match(html, /class="fb-lead-price"><text[^>]*>\$542\.50<\/text><text[^>]*>\$542\.50<\/text><text[^>]*>\$542\.50<\/text><text[^>]*>\$542\.50<\/text>/);
   assert.match(html, /class="fb-lead-logo"(?:[\s\S]*?<use href="#fbLidMark"){4}/);
   assert.doesNotMatch(html, /class="fb-lead-(?:price|logo)"><rect/);
 });
@@ -64,7 +64,7 @@ test('price tile uses the transparent iPhone cutout with black priced tracker sp
   assert.deepEqual(pngSize('bento/cutout-iphone.png'), [952, 1275]);
   const priceTile = html.match(/<article class="fb-tile fb-price"[\s\S]*?<\/article>/)?.[0];
   assert.ok(priceTile);
-  assert.match(priceTile, /class="fb-price-visual"[\s\S]*class="fb-price-phone"/);
+  assert.match(priceTile, /class="fb-price-visual"[\s\S]*class="fb-price-phone fb-photo-cutout"/);
   assert.match(html, /\.fb-price\{padding:24px 140px 48px 28px\}/);
   assert.match(html, /\.fb-price h3\{[^}]*max-width:10ch/);
   assert.match(html, /\.fb-price-visual\{[^}]*height:130px;width:calc\(130px \* \(952 \/ 1275\)\)/);
@@ -83,6 +83,18 @@ test('all bento artwork is contained away from copy on narrow screens', () => {
   assert.match(html, /checkinTile\.style\.setProperty\('--fb-shot-top',Math\.ceil\(proofRect\.bottom-tileRect\.top\+16\)\+'px'\)/);
   assert.match(html, /\.fb-price\{padding:26px 132px 48px 28px;min-height:260px\}/);
   assert.match(html, /\.fb-term \.fb-suit\{right:18px;top:34px;height:96px\}/);
+});
+
+test('every bento photo has the locked white outline treatment', () => {
+  assert.match(html, /\.feature-bento \.fb-photo-cutout\{filter:drop-shadow\(3px 0 0 #fff\)[^}]*drop-shadow\(0 5px 5px rgba\(0,0,0,\.12\)\)\}/);
+  assert.match(html, /\.feature-bento \.fb-photo-frame\{box-shadow:0 0 0 3px #fff,0 5px 9px rgba\(0,0,0,\.12\)\}/);
+  assert.match(html, /<img class="fb-photo-cutout" src="bento\/bag\.png"/);
+  assert.match(html, /<img class="fb-photo-cutout" id="fbItemImg" src="bento\/cutout-macbook\.png"/);
+  assert.equal((html.match(/<figure><img class="fb-photo-frame" src="bento\/checkin-cycle-[123]\.png"/g) || []).length, 3);
+  assert.equal((html.match(/class="fb-proof-flight fb-photo-frame"/g) || []).length, 3);
+  assert.match(html, /<div class="fb-shot"[^>]*><img class="fb-photo-cutout" src="bento\/checkin\.png"/);
+  assert.match(html, /<img class="fb-price-phone fb-photo-cutout" src="bento\/cutout-iphone\.png"/);
+  assert.match(html, /<img class="fb-suit fb-photo-cutout" src="bento\/suit\.png"/);
 });
 
 test('the direct bento anchor remains on the home view', () => {
@@ -132,9 +144,9 @@ test('check-in proofs use a clean transparent four-column structure', () => {
   assert.deepEqual(pngSize('bento/checkin-cycle-1.png'), [1536, 2752]);
   assert.deepEqual(pngSize('bento/checkin-cycle-2.png'), [1536, 2752]);
   assert.deepEqual(pngSize('bento/checkin-cycle-3.png'), [1536, 2752]);
-  assert.match(html, /<figure><img src="bento\/checkin-cycle-1\.png" alt=""><figcaption>Cycle 1<\/figcaption><\/figure>/);
-  assert.match(html, /<figure><img src="bento\/checkin-cycle-2\.png" alt=""><figcaption>Cycle 2<\/figcaption><\/figure>/);
-  assert.match(html, /<figure><img src="bento\/checkin-cycle-3\.png" alt=""><figcaption>Cycle 3<\/figcaption><\/figure>/);
+  assert.match(html, /<figure><img class="fb-photo-frame" src="bento\/checkin-cycle-1\.png" alt=""><figcaption>Cycle 1<\/figcaption><\/figure>/);
+  assert.match(html, /<figure><img class="fb-photo-frame" src="bento\/checkin-cycle-2\.png" alt=""><figcaption>Cycle 2<\/figcaption><\/figure>/);
+  assert.match(html, /<figure><img class="fb-photo-frame" src="bento\/checkin-cycle-3\.png" alt=""><figcaption>Cycle 3<\/figcaption><\/figure>/);
   assert.match(html, /\.fb-checkin\[data-phase="3"\] \.fb-proof-flight:nth-child\(1\)\{animation:fbProofFly/);
   assert.match(html, /@keyframes fbProofFly/);
   assert.match(html, /var startX=shotRect\.left-tileRect\.left\+shotRect\.width\*\.096/);

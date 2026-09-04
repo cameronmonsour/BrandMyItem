@@ -829,10 +829,8 @@ details.faq .fa b{color:var(--fg);font-weight:600}
 .campaign-progress i{display:block;height:100%;border-radius:99px;background:#1D1D1F}
 .campaign-funding-meta{display:flex;justify-content:space-between;gap:12px;font-size:12px;color:#6E6E73}
 .campaign-funding-panel{padding:30px 0 28px;border-top:1px solid #D2D2D7}
-.campaign-lower-grid{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);border-top:1px solid #D2D2D7}
+.campaign-lower-grid{grid-column:1/-1;border-top:1px solid #D2D2D7}
 .campaign-lower-grid .campaign-panel{padding:26px 0 30px}
-.campaign-lower-grid .campaign-panel:first-child{padding-right:30px}
-.campaign-lower-grid .campaign-panel:last-child{padding-left:30px;border-left:1px solid #D2D2D7}
 .campaign-prices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
 .campaign-price{display:flex;flex-direction:column;gap:8px;min-width:0;padding:11px 12px;border:1px solid var(--border);border-radius:12px;background:#fff}
 .campaign-price.claimed{background:#F5F5F7}
@@ -846,16 +844,6 @@ details.faq .fa b{color:var(--fg);font-weight:600}
 .campaign-price-logo span{font-size:9px;font-weight:700;color:var(--fg)}
 .campaign-price-open-mark{width:26px;height:26px;border-radius:50%;border:1px dashed #A1A1A6;display:flex;align-items:center;justify-content:center;color:#6E6E73;font-size:14px;line-height:1;flex:0 0 auto}
 .campaign-no-open{font-size:13px;color:var(--mfg)}
-.campaign-sponsors{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-.campaign-sponsor{display:flex;align-items:center;gap:8px;min-width:0}
-.campaign-sponsor-mark{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#fff;border:1px solid var(--border);flex:0 0 auto}
-.campaign-sponsor-mark img{width:100%;height:100%;object-fit:contain;padding:3px}
-.campaign-sponsor-mark span{font-size:9px;font-weight:700}
-.campaign-sponsor-copy{min-width:0}
-.campaign-sponsor-copy b,.campaign-sponsor-copy span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.campaign-sponsor-copy b{font-size:12px;font-weight:600}
-.campaign-sponsor-copy span{font-size:11px;color:var(--mfg)}
-.campaign-more-sponsors{font-size:12px;color:var(--mfg);margin-top:10px}
 .campaign-footer{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 34px;border-top:1px solid #D2D2D7;background:#fff}
 .campaign-footer-note{font-size:12px;line-height:1.4;color:var(--mfg)}
 .campaign-continue{flex:0 0 auto;border-radius:999px;min-height:48px;padding:0 22px}
@@ -938,7 +926,6 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
   .campaign-price{padding:10px}
   .campaign-price-top>span:first-child{font-size:10px}
   .campaign-panel-wide{grid-column:auto}
-  .campaign-sponsors{grid-template-columns:1fr}
   .campaign-footer{align-items:flex-end;padding:14px 20px;gap:10px}
   .campaign-footer-note{max-width:58%}
   .campaign-continue{width:auto;padding:0 18px}
@@ -1158,6 +1145,8 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 @keyframes homeFlowPulse{0%,58%,76%,100%{transform:scale(1)}67%{transform:scale(1.025)}}
 .feature-bento{--fb-r:30px;--fb-gap:14px;--fb-ease:cubic-bezier(.2,.7,.2,1);display:grid;grid-template-columns:repeat(12,1fr);grid-auto-rows:213px;gap:var(--fb-gap)}
 .feature-bento .fb-tile{position:relative;overflow:hidden;background:#F5F5F7;border-radius:var(--fb-r);padding:36px;display:flex;flex-direction:column;opacity:0;transform:translateY(18px) scale(.985);transition:opacity .7s var(--fb-ease),transform .7s var(--fb-ease);transition-delay:calc(var(--i)*90ms)}
+.feature-bento .fb-photo-cutout{filter:drop-shadow(3px 0 0 #fff) drop-shadow(-3px 0 0 #fff) drop-shadow(0 3px 0 #fff) drop-shadow(0 -3px 0 #fff) drop-shadow(2px 2px 0 #fff) drop-shadow(-2px 2px 0 #fff) drop-shadow(2px -2px 0 #fff) drop-shadow(-2px -2px 0 #fff) drop-shadow(0 5px 5px rgba(0,0,0,.12))}
+.feature-bento .fb-photo-frame{box-shadow:0 0 0 3px #fff,0 5px 9px rgba(0,0,0,.12)}
 .feature-bento.in .fb-tile{opacity:1;transform:none}
 .feature-bento .fb-tile h3{font-family:'Inter',-apple-system,sans-serif;font-size:clamp(25px,2.65vw,38px);font-weight:700;letter-spacing:-.045em;line-height:1.06;text-align:left;margin:0 0 10px;max-width:17ch;position:relative;z-index:3}
 .feature-bento .fb-tile p{font-family:'Inter',-apple-system,sans-serif;font-size:16px;line-height:1.35;letter-spacing:-.012em;color:var(--fg);text-align:left;margin:0 0 16px;max-width:30ch;position:relative;z-index:3}
@@ -1831,13 +1820,13 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           <h3>Your logo, actually on something.</h3>
           <p>Sticker, patch, embroidery, or engraving. Applied to a real item, carried in public for the whole term.</p>
           <div class="fb-bagwrap" aria-hidden="true">
-            <img src="bento/bag.png" alt="">
+            <img class="fb-photo-cutout" src="bento/bag.png" alt="">
             <svg viewBox="0 0 187 324">
               <rect class="fb-spotline" x="15" y="92" width="77.5" height="90.5" rx="6"/>
               <rect class="fb-spotline" x="94.5" y="92" width="77.5" height="90.5" rx="6"/>
               <rect class="fb-spotline" x="15" y="184.5" width="77.5" height="90.5" rx="6"/>
               <rect class="fb-spotline" x="94.5" y="184.5" width="77.5" height="90.5" rx="6"/>
-              <g class="fb-lead-price"><text x="53.75" y="137.25">$543</text><text x="133.25" y="137.25">$543</text><text x="53.75" y="229.75">$542</text><text x="133.25" y="229.75">$542</text></g>
+              <g class="fb-lead-price"><text x="53.75" y="137.25">$542.50</text><text x="133.25" y="137.25">$542.50</text><text x="53.75" y="229.75">$542.50</text><text x="133.25" y="229.75">$542.50</text></g>
               <g class="fb-lead-logo"><use href="#fbLidMark" x="41.75" y="125.25" width="24" height="24"/><use href="#fbLidMark" x="121.25" y="125.25" width="24" height="24"/><use href="#fbLidMark" x="41.75" y="217.75" width="24" height="24"/><use href="#fbLidMark" x="121.25" y="217.75" width="24" height="24"/></g>
             </svg>
           </div>
@@ -1863,7 +1852,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           <div class="fb-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg><span class="fb-funded">Fully funded. Purchase triggered.</span><span class="fb-shipped">Delivered pre-branded to the Owner</span></div>
           <div class="fb-stage" id="fbItemStage">
             <div class="fb-stage-inner">
-              <img id="fbItemImg" src="bento/cutout-macbook.png" alt="">
+              <img class="fb-photo-cutout" id="fbItemImg" src="bento/cutout-macbook.png" alt="">
             </div>
           </div>
           <div class="fb-fund"><span id="fbFundPct">0%</span><div class="fb-bar"><i id="fbFundBar"></i></div><span id="fbFundAmt">$0 of $1,599</span></div>
@@ -1873,16 +1862,16 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           <h3>Proof, on a schedule.</h3>
           <p>One photo each cycle, weekly, biweekly, or monthly, showing the item and its placements in use.</p>
           <div class="fb-proof" aria-hidden="true">
-            <figure><img src="bento/checkin-cycle-1.png" alt=""><figcaption>Cycle 1</figcaption></figure>
-            <figure><img src="bento/checkin-cycle-2.png" alt=""><figcaption>Cycle 2</figcaption></figure>
-            <figure><img src="bento/checkin-cycle-3.png" alt=""><figcaption>Cycle 3</figcaption></figure>
+            <figure><img class="fb-photo-frame" src="bento/checkin-cycle-1.png" alt=""><figcaption>Cycle 1</figcaption></figure>
+            <figure><img class="fb-photo-frame" src="bento/checkin-cycle-2.png" alt=""><figcaption>Cycle 2</figcaption></figure>
+            <figure><img class="fb-photo-frame" src="bento/checkin-cycle-3.png" alt=""><figcaption>Cycle 3</figcaption></figure>
             <figure><span class="fb-next-proof"></span><figcaption>Next</figcaption></figure>
           </div>
-          <div class="fb-shot" aria-hidden="true"><img src="bento/checkin.png" alt=""></div>
+          <div class="fb-shot" aria-hidden="true"><img class="fb-photo-cutout" src="bento/checkin.png" alt=""></div>
           <div class="fb-proof-flights" aria-hidden="true">
-            <img class="fb-proof-flight" src="bento/checkin-cycle-1.png" alt="">
-            <img class="fb-proof-flight" src="bento/checkin-cycle-2.png" alt="">
-            <img class="fb-proof-flight" src="bento/checkin-cycle-3.png" alt="">
+            <img class="fb-proof-flight fb-photo-frame" src="bento/checkin-cycle-1.png" alt="">
+            <img class="fb-proof-flight fb-photo-frame" src="bento/checkin-cycle-2.png" alt="">
+            <img class="fb-proof-flight fb-photo-frame" src="bento/checkin-cycle-3.png" alt="">
           </div>
           <div class="fb-flash" aria-hidden="true"></div>
           <div class="fb-due">Next check-in due this cycle</div>
@@ -1892,7 +1881,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
         <article class="fb-tile fb-price" data-phase="0" data-loop="9000" style="--i:5">
           <h3>Priced by surface.</h3>
           <div class="fb-price-visual" id="fbPriceVisual">
-            <img class="fb-price-phone" src="bento/cutout-iphone.png" alt="" aria-hidden="true">
+            <img class="fb-price-phone fb-photo-cutout" src="bento/cutout-iphone.png" alt="" aria-hidden="true">
           </div>
           <div class="fb-sum"><b>$<span id="fbSumNum">0</span></b><small>combined all-in<br>spot total</small></div>
         </article>
@@ -1900,7 +1889,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
         <article class="fb-tile fb-term" data-phase="0" data-loop="9000" style="--i:4">
           <h3>Pick the term.</h3>
           <p>The owner chooses 6, 12, or 18 months when posting. Locked from the moment it's live.</p>
-          <img class="fb-suit" src="bento/suit.png" alt="" aria-hidden="true">
+          <img class="fb-suit fb-photo-cutout" src="bento/suit.png" alt="" aria-hidden="true">
           <div class="fb-options">
             <div class="fb-option" data-k="0"><div class="fb-n">6</div><div><div class="fb-option-bar" style="width:33%"><i></i></div><small>months</small></div></div>
             <div class="fb-option" data-k="1"><div class="fb-n">12</div><div><div class="fb-option-bar" style="width:66%"><i></i></div><small>months</small></div></div>
@@ -8328,12 +8317,6 @@ function campaignSocialLinks(l){
     return '<a href="'+p.url+safeCardText(handle)+'" target="_blank" rel="noopener">'+safeCardText(p.label)+' @'+safeCardText(handle)+'</a>';
   }).join('')+'</div>':'';
 }
-function campaignSponsorHtml(c){
-  var brand=(c.brand||'Sponsor').trim()||'Sponsor';
-  var mark=c.logo?'<img src="'+c.logo+'" alt="'+safeCardText(brand)+' logo">':'<span>'+safeCardText(brand.slice(0,2).toUpperCase())+'</span>';
-  return '<div class="campaign-sponsor"><div class="campaign-sponsor-mark">'+mark+'</div>'+
-    '<div class="campaign-sponsor-copy"><b>'+safeCardText(brand)+'</b><span>'+money(c.amt||0)+' — '+ago(c.purchasedAt||Date.now())+'</span></div></div>';
-}
 function campaignSpotHtml(price,meta,claim,index){
   var brand=claim&&claim.brand?(claim.brand.trim()||'Sponsor'):'';
   var mark=claim?(claim.logo?'<img src="'+claim.logo+'" alt="'+safeCardText(brand)+' logo">':'<span>'+safeCardText(brand.slice(0,2).toUpperCase())+'</span>'):'';
@@ -8353,8 +8336,6 @@ function renderCampaignDetails(l){
   var purpose=l.purpose||'The owner has not added a purpose statement yet.';
   var claimed=(l.claims||[]).filter(Boolean).length,open=openSlots(l),raised=raisedOf(l),goal=goalOf(l),pct=Math.round(pctOf(l));
   var spotPrices=(l.prices||[]).map(function(price,i){return{price:price,meta:campaignSpotMeta(l,i),claim:(l.claims||[])[i]||null}});
-  var sponsors=(l.claims||[]).filter(Boolean).slice().sort(function(a,b){return(b.purchasedAt||0)-(a.purchasedAt||0)});
-  var shownSponsors=sponsors.slice(0,3),extraSponsors=Math.max(0,sponsors.length-shownSponsors.length);
   var photoHtml=photo?'<img src="'+photo+'" alt="'+safeCardText(label)+'">':'<div class="campaign-cover-fallback">'+safeCardText(label)+'</div>';
   var profile=ownerAvatarHtml(l);
   el.innerHTML=
@@ -8382,6 +8363,7 @@ function renderCampaignDetails(l){
           '<div class="campaign-reach-stat"><span>Most visited cities</span><b>'+safeCardText(campaignValues(l.cities))+'</b></div>'+
           '<div class="campaign-reach-stat"><span>Universities</span><b>'+safeCardText(campaignValues(l.universities))+'</b></div>'+
           '<div class="campaign-reach-stat"><span>Everyday settings</span><b>'+safeCardText(campaignValues(l.habs))+'</b></div>'+
+          '<div class="campaign-reach-stat"><span>How often it&rsquo;s seen</span><b>'+safeCardText(l.freq||'Not provided')+'</b></div>'+
         '</div>'+campaignSocialLinks(l)+
       '</section>'+
       '<section class="campaign-panel campaign-panel-wide campaign-funding-panel">'+
@@ -8393,10 +8375,6 @@ function renderCampaignDetails(l){
       '<section class="campaign-panel campaign-spot-panel">'+
         '<div class="campaign-label">Spot pricing</div>'+
         (spotPrices.length?'<div class="campaign-prices">'+spotPrices.map(function(o,i){return campaignSpotHtml(o.price,o.meta,o.claim,i)}).join('')+'</div>':'<p class="campaign-no-open">No placements have been added yet.</p>')+
-      '</section>'+
-      '<section class="campaign-panel campaign-sponsor-panel">'+
-        '<div class="campaign-label">Sponsor activity</div>'+
-        (shownSponsors.length?'<div class="campaign-sponsors">'+shownSponsors.map(campaignSponsorHtml).join('')+'</div>'+'<div class="campaign-more-sponsors">'+(extraSponsors?'+ '+extraSponsors+' more sponsor'+(extraSponsors===1?'':'s'):'Latest sponsors on this campaign')+'</div>':'<p class="campaign-no-open">No sponsors yet.</p>')+
       '</section>'+
       '</div>'+
     '</div>';
