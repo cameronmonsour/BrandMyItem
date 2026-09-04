@@ -129,6 +129,17 @@ test('FAQ and footer use the supplied complete structure without legacy duplicat
 test('check-in proofs use a clean transparent four-column structure', () => {
   assert.match(html, /\.feature-bento \.fb-proof\{display:grid;grid-template-columns:repeat\(4,minmax\(0,1fr\)\);gap:10px;width:min\(100%,300px\)/);
   assert.match(html, /\.feature-bento \.fb-proof img,\.feature-bento \.fb-proof \.fb-next-proof\{[^}]*aspect-ratio:4\/3;[^}]*border:2px solid #000/);
+  assert.deepEqual(pngSize('bento/checkin-cycle-1.png'), [1536, 2752]);
+  assert.deepEqual(pngSize('bento/checkin-cycle-2.png'), [1536, 2752]);
+  assert.deepEqual(pngSize('bento/checkin-cycle-3.png'), [1536, 2752]);
+  assert.match(html, /<figure><img src="bento\/checkin-cycle-1\.png" alt=""><figcaption>Cycle 1<\/figcaption><\/figure>/);
+  assert.match(html, /<figure><img src="bento\/checkin-cycle-2\.png" alt=""><figcaption>Cycle 2<\/figcaption><\/figure>/);
+  assert.match(html, /<figure><img src="bento\/checkin-cycle-3\.png" alt=""><figcaption>Cycle 3<\/figcaption><\/figure>/);
+  assert.match(html, /\.fb-checkin\[data-phase="3"\] \.fb-proof-flight:nth-child\(1\)\{animation:fbProofFly/);
+  assert.match(html, /@keyframes fbProofFly/);
+  assert.match(html, /var startX=shotRect\.left-tileRect\.left\+shotRect\.width\*\.096/);
+  assert.match(html, /flight\.style\.setProperty\('--flight-dx'/);
+  assert.match(html, /flight\.style\.setProperty\('--flight-dy'/);
   assert.match(html, /\.feature-bento \.fb-next-proof\{position:relative;background:transparent;overflow:hidden\}/);
   assert.doesNotMatch(html, /\.feature-bento \.fb-next-proof\{[^}]*background:#fff/);
 });

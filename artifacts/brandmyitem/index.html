@@ -1219,13 +1219,23 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 .feature-bento .fb-proof{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;width:min(100%,300px);margin-top:4px;position:relative;z-index:3}
 .feature-bento .fb-proof figure{display:grid;grid-template-rows:auto 16px;gap:5px;min-width:0;margin:0}
 .feature-bento .fb-proof img,.feature-bento .fb-proof .fb-next-proof{display:block;width:100%;aspect-ratio:4/3;height:auto;border-radius:11px;object-fit:cover;object-position:center 58%;border:2px solid #000;box-sizing:border-box}
+.feature-bento .fb-proof figure:nth-child(-n+3)>img{opacity:0;transition:opacity .12s linear}
+.feature-bento .fb-checkin[data-phase="3"] .fb-proof figure:nth-child(1)>img,.feature-bento .fb-checkin[data-phase="4"] .fb-proof figure:nth-child(1)>img{opacity:1;transition-delay:.62s}
+.feature-bento .fb-checkin[data-phase="3"] .fb-proof figure:nth-child(2)>img,.feature-bento .fb-checkin[data-phase="4"] .fb-proof figure:nth-child(2)>img{opacity:1;transition-delay:1.2s}
+.feature-bento .fb-checkin[data-phase="3"] .fb-proof figure:nth-child(3)>img,.feature-bento .fb-checkin[data-phase="4"] .fb-proof figure:nth-child(3)>img{opacity:1;transition-delay:1.78s}
 .feature-bento .fb-next-proof{position:relative;background:transparent;overflow:hidden}
 .feature-bento .fb-next-proof img{position:absolute;inset:0;opacity:0;transition:opacity .4s;border:none}
 .feature-bento .fb-next-proof svg{position:absolute;inset:0;width:100%;height:100%;transition:opacity .4s}
 .feature-bento .fb-checkin[data-phase="3"] .fb-next-proof img,.feature-bento .fb-checkin[data-phase="4"] .fb-next-proof img{opacity:1}
 .feature-bento .fb-checkin[data-phase="3"] .fb-next-proof svg,.feature-bento .fb-checkin[data-phase="4"] .fb-next-proof svg{opacity:0}
 .feature-bento .fb-proof figcaption{font-size:11px;line-height:16px;color:var(--mfg);margin:0;text-align:center;white-space:nowrap}
- .feature-bento .fb-shot{position:absolute;left:-30px;right:auto;top:var(--fb-shot-top,250px);height:236px;z-index:1;pointer-events:none}.feature-bento .fb-shot img{height:100%;display:block}
+.feature-bento .fb-proof-flights{position:absolute;inset:0;z-index:4;pointer-events:none}
+.feature-bento .fb-proof-flight{position:absolute;left:var(--flight-x,0px);top:var(--flight-y,0px);width:var(--flight-w,72px);aspect-ratio:4/3;border:2px solid #000;border-radius:11px;box-sizing:border-box;object-fit:cover;object-position:center 58%;opacity:0;transform-origin:top left}
+.feature-bento .fb-checkin[data-phase="3"] .fb-proof-flight:nth-child(1){animation:fbProofFly .72s var(--fb-ease) 0s both}
+.feature-bento .fb-checkin[data-phase="3"] .fb-proof-flight:nth-child(2){animation:fbProofFly .72s var(--fb-ease) .58s both}
+.feature-bento .fb-checkin[data-phase="3"] .fb-proof-flight:nth-child(3){animation:fbProofFly .72s var(--fb-ease) 1.16s both}
+@keyframes fbProofFly{0%{opacity:0;transform:translate3d(0,0,0) scale(1)}8%{opacity:1}82%{opacity:1;transform:translate3d(var(--flight-dx,0px),var(--flight-dy,0px),0) scale(var(--flight-scale,1))}100%{opacity:0;transform:translate3d(var(--flight-dx,0px),var(--flight-dy,0px),0) scale(var(--flight-scale,1))}}
+.feature-bento .fb-shot{position:absolute;left:-30px;right:auto;top:var(--fb-shot-top,250px);height:236px;z-index:1;pointer-events:none}.feature-bento .fb-shot img{height:100%;display:block}
 .feature-bento .fb-flash{position:absolute;inset:0;background:#fff;opacity:0;transition:opacity .12s}
 .feature-bento .fb-checkin[data-phase="2"] .fb-flash{opacity:.85}
 .feature-bento .fb-due,.feature-bento .fb-verified{position:absolute;right:24px;bottom:40px;font-size:12px;font-weight:600;border-radius:999px;padding:7px 12px;opacity:0;transform:translateY(-6px);transition:opacity .4s,transform .5s var(--fb-ease)}
@@ -1863,12 +1873,17 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           <h3>Proof, on a schedule.</h3>
           <p>One photo each cycle, weekly, biweekly, or monthly, showing the item and its placements in use.</p>
           <div class="fb-proof" aria-hidden="true">
-            <figure><img src="bento/proof-1.jpg" alt=""><figcaption>Cycle 1</figcaption></figure>
-            <figure><img src="bento/proof-2.jpg" alt=""><figcaption>Cycle 2</figcaption></figure>
-            <figure><img src="bento/proof-3.jpg" alt=""><figcaption>Cycle 3</figcaption></figure>
+            <figure><img src="bento/checkin-cycle-1.png" alt=""><figcaption>Cycle 1</figcaption></figure>
+            <figure><img src="bento/checkin-cycle-2.png" alt=""><figcaption>Cycle 2</figcaption></figure>
+            <figure><img src="bento/checkin-cycle-3.png" alt=""><figcaption>Cycle 3</figcaption></figure>
             <figure><span class="fb-next-proof"></span><figcaption>Next</figcaption></figure>
           </div>
           <div class="fb-shot" aria-hidden="true"><img src="bento/checkin.png" alt=""></div>
+          <div class="fb-proof-flights" aria-hidden="true">
+            <img class="fb-proof-flight" src="bento/checkin-cycle-1.png" alt="">
+            <img class="fb-proof-flight" src="bento/checkin-cycle-2.png" alt="">
+            <img class="fb-proof-flight" src="bento/checkin-cycle-3.png" alt="">
+          </div>
           <div class="fb-flash" aria-hidden="true"></div>
           <div class="fb-due">Next check-in due this cycle</div>
           <div class="fb-verified">Check-in received</div>
@@ -11128,7 +11143,8 @@ function initHomeFeatureBento(){
   ];
   var itemIndex=0,itemImg=document.getElementById('fbItemImg'),itemName=document.getElementById('fbItemName'),itemMeta=document.getElementById('fbItemMeta'),itemStage=document.querySelector('.fb-stage-inner'),itemLine=q('.fb-itemline'),itemTile=q('.fb-mac');
   var fundPct=document.getElementById('fbFundPct'),fundBar=document.getElementById('fbFundBar'),fundAmt=document.getElementById('fbFundAmt');
-  var checkinTile=q('.fb-checkin'),proofRow=q('.fb-proof');
+  var checkinTile=q('.fb-checkin'),proofRow=q('.fb-proof'),checkinShot=q('.fb-shot img');
+  var proofFlights=qa('.fb-proof-flight'),proofTargets=qa('.fb-proof figure:nth-child(-n+3)>img');
   function syncItemStageTop(){
     if(!itemLine||!itemTile)return;
     itemTile.style.setProperty('--fb-stage-top',Math.ceil(itemLine.offsetTop+itemLine.offsetHeight+16)+'px');
@@ -11138,11 +11154,29 @@ function initHomeFeatureBento(){
     var tileRect=checkinTile.getBoundingClientRect(),proofRect=proofRow.getBoundingClientRect();
     checkinTile.style.setProperty('--fb-shot-top',Math.ceil(proofRect.bottom-tileRect.top+16)+'px');
   }
-  function syncBentoArtwork(){syncItemStageTop();syncCheckinShotTop()}
+  function syncCheckinFlights(){
+    if(!checkinTile||!checkinShot||!proofFlights.length||!proofTargets.length)return;
+    var tileRect=checkinTile.getBoundingClientRect(),shotRect=checkinShot.getBoundingClientRect();
+    var startX=shotRect.left-tileRect.left+shotRect.width*.096;
+    var startY=shotRect.top-tileRect.top+shotRect.height*.207;
+    var startW=shotRect.width*.522;
+    proofFlights.forEach(function(flight,index){
+      var target=proofTargets[index];if(!target)return;
+      var targetRect=target.getBoundingClientRect();
+      flight.style.setProperty('--flight-x',startX+'px');
+      flight.style.setProperty('--flight-y',startY+'px');
+      flight.style.setProperty('--flight-w',startW+'px');
+      flight.style.setProperty('--flight-dx',(targetRect.left-tileRect.left-startX)+'px');
+      flight.style.setProperty('--flight-dy',(targetRect.top-tileRect.top-startY)+'px');
+      flight.style.setProperty('--flight-scale',String(targetRect.width/startW));
+    });
+  }
+  function syncBentoArtwork(){syncItemStageTop();syncCheckinShotTop();syncCheckinFlights()}
   window.addEventListener('resize',syncBentoArtwork);
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(syncBentoArtwork);
   requestAnimationFrame(syncBentoArtwork);
   window.addEventListener('load',syncBentoArtwork,{once:true});
+  qa('.fb-proof img,.fb-shot img').forEach(function(img){if(!img.complete)img.addEventListener('load',syncBentoArtwork,{once:true})});
 
   function buildOverlaySvg(type, n, spotClass, mapClass, prices) {
     var d=CATALOG_SURFACES[type];
