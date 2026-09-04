@@ -105,6 +105,11 @@ test('launch examples rotate through supplied fake sponsor logos', () => {
   assert.match(html, /prices:\[300,249\]/);
 });
 
+test('locked MacBook campaign prices follow the two visible surface sizes', () => {
+  assert.match(html, /var LOCKED_MACBOOK_PRICES=\[309,309,309,147,147,147,147,309,309,309\]/);
+  assert.match(html, /demo1:\{[\s\S]*?prices:LOCKED_MACBOOK_PRICES\.slice\(\)[\s\S]*?fakeSponsorClaim\(2,309,'BMI-DEMO11'\)[\s\S]*?fakeSponsorClaim\(5,147,'BMI-DEMO16'\)[\s\S]*?fakeSponsorClaim\(7,309,'BMI-DEMO19'\)/);
+});
+
 test('funded campaign cards show a green funded state', () => {
   assert.match(html, /\.lcard \.countdown-badge\.funded\{background:#E8F5EC;color:#1F7A44\}/);
   assert.match(html, /\.pbar\.funded i\{background:#1F7A44\}/);

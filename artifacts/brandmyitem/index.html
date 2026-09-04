@@ -6744,21 +6744,22 @@ function fakeSponsorClaim(logoIndex,amt,subId){
   return {brand:'Your Brand Here',link:'',logo:FAKE_SPONSOR_LOGOS[logoIndex%FAKE_SPONSOR_LOGOS.length],amt:amt,subId:subId};
 }
 
+var LOCKED_MACBOOK_PRICES=[309,309,309,147,147,147,147,309,309,309];
 var DB=store.get('bmi_db4');
 if(!DB){
   var now=Date.now();
   DB={listings:[
     {id:'demo1',type:'macbook',owner:'Cam',mail:'',habs:['Coffee shops','Events'],slots:10,
-      prices:[250,250,165,500,165,225,225,225,219,219],
+      prices:LOCKED_MACBOOK_PRICES.slice(),
       claims:[
-        fakeSponsorClaim(0,250),
-        fakeSponsorClaim(1,250),
-        fakeSponsorClaim(2,165),
+        fakeSponsorClaim(0,309),
+        fakeSponsorClaim(1,309),
+        fakeSponsorClaim(2,309),
         null,null,
-        fakeSponsorClaim(3,225),
-        fakeSponsorClaim(4,225),
+        fakeSponsorClaim(3,147),
+        fakeSponsorClaim(4,147),
         null,
-        fakeSponsorClaim(5,219),
+        fakeSponsorClaim(5,309),
         null],
       created:now-1000*60*42},
     {id:'demo2',type:'bottle',owner:'Maya',mail:'',habs:['Gym'],slots:2,
@@ -6825,16 +6826,16 @@ function lockLaunchExamples(){
     },
     demo1:{
       created:now-1000*60*47,
-      prices:[250,250,165,500,165,225,225,225,219,219],
+      prices:LOCKED_MACBOOK_PRICES.slice(),
       claims:[
-        fakeSponsorClaim(2,250,'BMI-DEMO11'),
-        fakeSponsorClaim(3,250,'BMI-DEMO12'),
-        fakeSponsorClaim(4,165,'BMI-DEMO13'),
+        fakeSponsorClaim(2,309,'BMI-DEMO11'),
+        fakeSponsorClaim(3,309,'BMI-DEMO12'),
+        fakeSponsorClaim(4,309,'BMI-DEMO13'),
         null,null,
-        fakeSponsorClaim(5,225,'BMI-DEMO16'),
-        fakeSponsorClaim(6,225,'BMI-DEMO17'),
+        fakeSponsorClaim(5,147,'BMI-DEMO16'),
+        fakeSponsorClaim(6,147,'BMI-DEMO17'),
         null,
-        fakeSponsorClaim(7,219,'BMI-DEMO19'),
+        fakeSponsorClaim(7,309,'BMI-DEMO19'),
         null
       ],
       status:'live'
