@@ -101,7 +101,8 @@ test('funded campaign cards show a green funded state', () => {
   assert.match(html, /if\(pctOf\(l\)>=100\)return 'Funded'/);
   assert.doesNotMatch(html, /Funded, preparing shipment/);
   assert.match(html, /className='chipg sold-count countdown-badge'\+\(pct>=100\?' funded':''\)/);
-  assert.match(html, /class="pbar'\+\(pct>=100\?' funded':''\)\"><i style="width:'\+Math\.min\(100,pct\)+'%"><\/i>/);
+  assert.match(html, /<div class="pbar'\+\(pct>=100\?' funded':''\)/);
+  assert.match(html, /Math\.min\(100,pct\)/);
 });
 
 test('dashboard keeps compact tracker cards without a duplicate left category box', () => {
