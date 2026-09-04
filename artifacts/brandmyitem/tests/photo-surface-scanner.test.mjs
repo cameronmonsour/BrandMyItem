@@ -41,10 +41,10 @@ test('iPhone placements fill the usable back panel below the camera', () => {
   assert.match(html, /l\.claims=\[iphoneClaim,null,null,null,null\]/);
 });
 
-test('customer-facing campaign surfaces use clean photos without traced placements', () => {
-  assert.match(html, /function renderFinal\(el,st\)\{\s*renderPhotoOnly\(el,st\)/);
-  assert.match(html, /img\.className=el\.classList&&el\.classList\.contains\('thumb'\)\?'pimg':'clean-product-photo'/);
-  assert.doesNotMatch(html, /if\(f\.custom\)\{renderCustomStage\(el,f,tap\)/);
+test('customer-facing campaign surfaces use photo-aligned placement outlines and logos', () => {
+  assert.match(html, /function renderFinal\(el,st\)\{[\s\S]*?var l=normalizeListingPhoto\(st\);[\s\S]*?renderCustomStage\(el,l,null\);return/);
+  assert.match(html, /var placementStroke=\(compactCard\?1\.25:2\)\*cv\.width\/cssWidth/);
+  assert.match(html, /drawPricePlacement\(g,t,frame,price,c\?logoImages\[i\]:null,c&&c\.brand,placementStroke\)/);
   assert.match(html, /Choose an open spot from the list to buy it for your brand/);
 });
 

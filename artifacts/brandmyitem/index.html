@@ -7887,7 +7887,13 @@ function renderPhotoOnly(el,st){
   el.appendChild(img);
 }
 function renderFinal(el,st){
-  renderPhotoOnly(el,st);
+  var l=normalizeListingPhoto(st);
+  if(!l.photo){
+    var ph=(typeof ITEM_PHOTOS!=='undefined')&&ITEM_PHOTOS[l.type];
+    if(ph)l={photo:ph,tiles:mapTiles(l.type,l.slots)||[],claims:l.claims||[],prices:l.prices||[],custom:true,id:l.id,preview:l.preview,type:l.type,sourceType:l.sourceType};
+  }
+  if(l.photo){renderCustomStage(el,l,null);return}
+  el.innerHTML='';
 }
 
 /* segmented control */

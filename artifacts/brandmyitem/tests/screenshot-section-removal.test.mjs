@@ -176,6 +176,13 @@ test('homepage and Live Items cards use the same all-in spot pricing', () => {
   assert.match(html, /Math\.min\.apply\(null,l\.prices\.map\(function\(p\)\{return spotPurchaseTotal\(l,p\)\}\)\)/);
 });
 
+test('campaign cards keep sponsor logos and 1.25px placement outlines on product photos', () => {
+  assert.match(html, /function renderFinal\(el,st\)\{[\s\S]*?var l=normalizeListingPhoto\(st\);[\s\S]*?renderCustomStage\(el,l,null\);return/);
+  assert.match(html, /var compactCard=!!cv\.closest\('\.lcard'\);/);
+  assert.match(html, /var placementStroke=\(compactCard\?1\.25:2\)\*cv\.width\/cssWidth;/);
+  assert.match(html, /drawPricePlacement\(g,t,frame,price,c\?logoImages\[i\]:null,c&&c\.brand,placementStroke\)/);
+});
+
 test('fulfillment copy enforces BrandMyItem-applied branding', () => {
   assert.match(html, /purchase total includes 40% covering BrandMyItem-applied branding, item sales tax, shipping, and handling/i);
   assert.match(html, /delivers it pre-branded within 60 days/);
