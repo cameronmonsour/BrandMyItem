@@ -56,6 +56,7 @@ import {
 import { isSafeCampaignPresentation } from "../lib/campaignPresentation.ts";
 import { sendTransactionalEmail } from "../emailDelivery.ts";
 import {
+  campaignItemDisplayName,
   reservationConfirmationEmail,
   trackingMagicLinkEmail,
 } from "../emailTemplates.ts";
@@ -245,6 +246,22 @@ router.post("/tracking/magic-link", async (req, res): Promise<void> => {
     res.status(202).json({ message: "If that email is linked to an item, a one-time tracking link is on its way." });
     return;
   }
+  const [ownerMatch, reservationMatch] = await Promise.all([
+    db
+      .select({ id: campaignsTable.id })
+      .from(campaignsTable)
+      .where(sql`lower(${campaignsTable.ownerEmail}) = ${email}`)
+      .limit(1),
+    db
+      .select({ id: placementOrdersTable.id })
+      .from(placementOrdersTable)
+      .where(sql`lower(${placementOrdersTable.email}) = ${email}`)
+      .limit(1),
+  ]);
+  if (!ownerMatch.length && !reservationMatch.length) {
+    res.status(202).json({ message: "If that email is linked to an item, a one-time tracking link is on its way." });
+    return;
+  }
   await db.insert(trackingMagicLinkRequestsTable).values({ id: randomUUID(), normalizedEmail: email });
   const token = createAccessToken();
   const tokenHash = hashAccessToken(token);
@@ -273,12 +290,13 @@ router.post("/tracking/magic-link", async (req, res): Promise<void> => {
     const trackingUrl = new URL("/", canonicalOrigin);
     trackingUrl.searchParams.set("tracking_token", token);
 
-    await sendTransactionalEmail(
+    const delivery = await sendTransactionalEmail(
       trackingMagicLinkEmail({
         email,
         trackingUrl: trackingUrl.toString(),
       }),
     );
+    logger.info({ resendMessageId: delivery.messageId }, "Tracking magic link sent");
   } catch (error) {
     await db
       .delete(trackingMagicLinksTable)
@@ -662,7 +680,10 @@ router.post("/checkout/reservations/:orderId/confirmation-email", async (req, re
     return;
   }
   const [campaign] = await db
-    .select({ title: campaignsTable.title })
+    .select({
+      itemType: campaignsTable.itemType,
+      presentation: campaignsTable.presentation,
+    })
     .from(campaignsTable)
     .where(eq(campaignsTable.id, order.campaignId))
     .limit(1);
@@ -675,7 +696,7 @@ router.post("/checkout/reservations/:orderId/confirmation-email", async (req, re
       reservationConfirmationEmail({
         email: order.email,
         reservationId: `BMI-${order.id.toUpperCase().slice(0, 6)}`,
-        campaignTitle: campaign.title,
+        itemDisplayName: campaignItemDisplayName(campaign),
         amountCents: order.amountCents,
       }),
     );

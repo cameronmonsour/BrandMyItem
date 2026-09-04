@@ -19,6 +19,30 @@ function wrap(title: string, body: string): string {
   return `<div style="font-family:Arial,sans-serif;line-height:1.5;color:#1d1d1f"><h1>${title}</h1><p>${body}</p><p>BrandMyItem</p></div>`;
 }
 
+const ITEM_DISPLAY_NAMES: Record<string, string> = {
+  backpack: "Backpack",
+  bottle: "Bottle",
+  case: "Phone case",
+  cooler: "Cooler",
+  headphones: "Headphones",
+  iphone: "iPhone 17",
+  macbook: "MacBook Pro",
+  paddle: "Paddle",
+  suit: "Suit",
+  weekender: "Weekender",
+};
+
+export function campaignItemDisplayName(input: {
+  itemType: string;
+  presentation?: Record<string, unknown> | null;
+}): string {
+  const itemName = input.presentation?.itemName;
+  if (typeof itemName === "string" && itemName.trim()) {
+    return itemName.trim();
+  }
+  return ITEM_DISPLAY_NAMES[input.itemType] ?? "Your item";
+}
+
 export function contactSupportEmail(input: {
   name: string;
   email: string;
@@ -43,17 +67,18 @@ export function contactSupportEmail(input: {
 export function reservationConfirmationEmail(input: {
   email: string;
   reservationId: string;
-  campaignTitle: string;
+  itemDisplayName: string;
   amountCents: number;
 }): TransactionalEmail {
   const amount = `$${(input.amountCents / 100).toFixed(2)}`;
+  const itemDisplayName = escapeHtml(input.itemDisplayName);
   return {
     to: input.email,
     subject: `Your BrandMyItem reservation is confirmed`,
-    text: `Your spot on ${input.campaignTitle} is reserved. Reservation ID: ${input.reservationId}. Your card has not been charged. If every spot is reserved and the listing funds, your saved card will be charged ${amount} off-session.`,
+    text: `Your spot on ${input.itemDisplayName} is reserved. Reservation ID: ${input.reservationId}. Your card has not been charged. If every spot is reserved and the listing funds, your saved card will be charged ${amount} off-session.`,
     html: wrap(
       "Reservation confirmed",
-      `Your spot on ${input.campaignTitle} is reserved. Your card has not been charged. If the listing fully funds, the saved card will be charged ${amount} off-session. Reservation ID: ${input.reservationId}.`,
+      `Your spot on ${itemDisplayName} is reserved. Your card has not been charged. If the listing fully funds, the saved card will be charged ${amount} off-session. Reservation ID: ${input.reservationId}.`,
     ),
   };
 }
@@ -77,15 +102,16 @@ export function paymentDeclinedEmail(input: {
 export function reservationReleaseEmail(input: {
   email: string;
   reservationId: string;
-  campaignTitle: string;
+  itemDisplayName: string;
 }): TransactionalEmail {
+  const itemDisplayName = escapeHtml(input.itemDisplayName);
   return {
     to: input.email,
     subject: `Your BrandMyItem reservation was released`,
-    text: `The ${input.campaignTitle} listing did not fully fund within 60 days. Reservation ${input.reservationId} was released. Your card was never charged.`,
+    text: `The ${input.itemDisplayName} listing did not fully fund within 60 days. Reservation ${input.reservationId} was released. Your card was never charged.`,
     html: wrap(
       "Reservation released",
-      `The ${input.campaignTitle} listing did not fully fund within 60 days. Your reservation was released and your card was never charged.`,
+      `The ${itemDisplayName} listing did not fully fund within 60 days. Your reservation was released and your card was never charged.`,
     ),
   };
 }
@@ -93,16 +119,17 @@ export function reservationReleaseEmail(input: {
 export function fundingConfirmationEmail(input: {
   email: string;
   reservationId: string;
-  campaignTitle: string;
+  itemDisplayName: string;
   amountCents: number;
 }): TransactionalEmail {
+  const itemDisplayName = escapeHtml(input.itemDisplayName);
   return {
     to: input.email,
     subject: `Your BrandMyItem reservation funded`,
-    text: `The ${input.campaignTitle} listing fully funded. Your saved card was charged $${(input.amountCents / 100).toFixed(2)} for reservation ${input.reservationId}.`,
+    text: `The ${input.itemDisplayName} listing fully funded. Your saved card was charged $${(input.amountCents / 100).toFixed(2)} for reservation ${input.reservationId}.`,
     html: wrap(
       "Listing funded",
-      `The ${input.campaignTitle} listing fully funded. Your saved card was charged $${(input.amountCents / 100).toFixed(2)} for reservation ${input.reservationId}.`,
+      `The ${itemDisplayName} listing fully funded. Your saved card was charged $${(input.amountCents / 100).toFixed(2)} for reservation ${input.reservationId}.`,
     ),
   };
 }

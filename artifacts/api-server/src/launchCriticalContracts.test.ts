@@ -95,6 +95,8 @@ test("tracking links normalize addresses durably and use only an allowlisted can
     trackingHandler,
     /trackingMagicLinkRequestsTable\)\.values\(\{ id: randomUUID\(\), normalizedEmail: email \}\)/,
   );
+  assert.match(trackingHandler, /lower\(\$\{campaignsTable\.ownerEmail\}\) = \$\{email\}/);
+  assert.match(trackingHandler, /lower\(\$\{placementOrdersTable\.email\}\) = \$\{email\}/);
   assert.match(schema, /normalizedEmail: text\("normalized_email"\)\.notNull\(\)/);
   assert.match(
     schema,

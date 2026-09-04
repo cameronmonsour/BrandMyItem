@@ -2110,7 +2110,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
             </label>
             <label class="ios-item">
               <input type="radio" name="fst" value="done" class="ios-radio">
-              <span class="ios-label">Fully branded</span>
+               <span class="ios-label">Funded</span>
               <svg class="ios-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
             </label>
           </div>
@@ -2630,7 +2630,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
       <h3>You&rsquo;re in. Save this ID.</h3>
        <p class="mp" id="mEmailStatus">Save this ID — email confirmation is not available right now.</p>
       <div class="subid-box">
-        <div class="subid-label">Submission ID</div>
+       <div class="subid-label">Reservation ID</div>
         <div class="subid-val" id="mSubId"></div>
       </div>
       <div class="mrow">
@@ -7451,14 +7451,19 @@ function listingContextHtml(l){
   if(l.closed)parts.push('<span style="color:#B23327">Closed, refunded</span>');
   else if(l.nonCompliant)parts.push('<span style="color:#B23327">Check-in overdue, posting restricted</span>');
   else if(l.shippedAt)parts.push('<span style="color:#1F7A44">Shipped, check-ins active</span>');
-  var locations=[];
-  (l.cities||[]).slice(0,2).forEach(function(v){if(v&&!locations.includes(v))locations.push(v)});
-  (l.universities||[]).slice(0,1).forEach(function(v){if(v&&!locations.includes(v))locations.push(v)});
-  if(!locations.length)(l.habs||[]).slice(0,2).forEach(function(v){if(v&&!locations.includes(v))locations.push(v)});
+  var locationLine=listingLocationLine(l);
   if(l.social)parts.push('<span class="card-context-em">'+safeCardText(l.social)+' followers</span>');
-  locations.slice(0,2).forEach(function(v){parts.push(safeCardText(v))});
+  if(locationLine)parts.push(safeCardText(locationLine));
   if(!parts.length)return '<div class="card-context card-context-empty" aria-hidden="true"></div>';
   return '<div class="card-context" aria-label="'+safeCardText(parts.map(function(v){return v.replace(/<[^>]+>/g,'')}).join(', '))+'"><span class="card-context-value">'+parts.join(', ')+'</span></div>';
+}
+function listingLocationLine(l){
+  var city=(l.cities||[]).find(function(value){return value&&String(value).trim()});
+  var university=(l.universities||[]).find(function(value){return value&&String(value).trim()});
+  if(city&&university)return String(city).trim()+' \u00b7 '+String(university).trim();
+  if(city)return String(city).trim();
+  if(university)return String(university).trim();
+  return (l.habs||[]).filter(function(value){return value&&String(value).trim()}).slice(0,2).join(', ');
 }
 function renderSpotMap(el,st){if(el)el.innerHTML='';return}
 function renderSpotMap_DEAD(el,st,opts){
@@ -11125,7 +11130,7 @@ function refreshItemCards(){
     return value&&values.indexOf(value)===index;
   });
   if(ownerLocationEl){
-    ownerLocationEl.textContent=ownerLocations.join(', ');
+     ownerLocationEl.textContent=listingLocationLine(CUR);
     ownerLocationEl.classList.toggle('has-value',ownerLocations.length>0);
   }
   if(ownerSocialsEl){
@@ -11139,7 +11144,7 @@ function refreshItemCards(){
   }
   document.getElementById('iHab').textContent=[CUR.freq,CUR.social&&(CUR.social+' followers')].filter(Boolean).join(' \u00b7 ');
   var locEl=document.getElementById('iBrandLocations'),purposeEl=document.getElementById('iPurpose'),socialEl=document.getElementById('iSocial'),linksEl=document.getElementById('iSocialLinks');
-  if(locEl)locEl.textContent=campaignValues(CUR.habs);
+   if(locEl)locEl.textContent=listingLocationLine(CUR)||'Not provided';
   if(purposeEl)purposeEl.textContent=CUR.purpose||'The owner has not added a purpose statement yet.';
   if(socialEl)socialEl.textContent=CUR.social?CUR.social+' followers':'Not provided';
   var citiesEl=document.getElementById('iCities'),universitiesEl=document.getElementById('iUniversities');
@@ -11483,7 +11488,7 @@ async function beginStripeCheckout(){
     checkoutWindow.document.title='Opening secure checkout…';
   }
    button.disabled=true;button.textContent='Opening secure reservation…';
-  var pending={campaignId:CUR.id,spotIndex:claimSlot,brand:brand,mail:mail,link:link};
+   var pending={campaignId:CUR.id,spotIndex:claimSlot,brand:brand,mail:mail,link:link,returnHash:location.hash||('#item/'+encodeURIComponent(CUR.id)),returnSearch:new URLSearchParams(location.search).get('demo')==='1'?'?demo=1':''};
   try{
     var reservationResponse=await fetch('/api/sponsor-reservation-drafts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({campaignId:CUR.id,spotIndex:claimSlot})});
     var reservationDraft=await apiResponse(reservationResponse,'Reservation draft could not be created.');
@@ -11554,8 +11559,9 @@ async function finalizeReservation(order,pending){
 async function resumeStripeCheckout(){
   var params=new URLSearchParams(location.search);
   if(params.get('checkout')==='cancelled'){
-    try{var cancelledPending=JSON.parse(sessionStorage.getItem('bmi_pending_checkout')||'null');if(cancelledPending&&cancelledPending.reservationDraftId){activeReservationDraftId=cancelledPending.reservationDraftId;await releaseReservationDraft();}sessionStorage.removeItem('bmi_pending_checkout');}catch(error){}
-    history.replaceState(null,'',location.pathname+location.hash);
+     var cancelledPending=null;
+     try{cancelledPending=JSON.parse(sessionStorage.getItem('bmi_pending_checkout')||'null');if(cancelledPending&&cancelledPending.reservationDraftId){activeReservationDraftId=cancelledPending.reservationDraftId;await releaseReservationDraft();}sessionStorage.removeItem('bmi_pending_checkout');}catch(error){}
+     history.replaceState(null,'',checkoutReturnUrl(cancelledPending,cancelledPending&&cancelledPending.campaignId));
      toast('Reservation cancelled. Your card was not charged.');
     return;
   }
@@ -11567,17 +11573,24 @@ async function resumeStripeCheckout(){
     var response=await fetch('/api/checkout/sessions/'+encodeURIComponent(sessionId));
     var order=await response.json();
      if(!response.ok||!['reserved','funded','payment_failed'].includes(order.status))throw new Error('Your reservation is still being confirmed');
-    sessionStorage.removeItem('bmi_pending_checkout');
-    history.replaceState(null,'',location.pathname+location.hash);
+     sessionStorage.removeItem('bmi_pending_checkout');
+     history.replaceState(null,'',checkoutReturnUrl(pending,order.campaignId));
      await finalizeReservation(order,pending);
   }catch(error){
      try{var failedPending=JSON.parse(sessionStorage.getItem('bmi_pending_checkout')||'null');if(failedPending&&failedPending.reservationDraftId){activeReservationDraftId=failedPending.reservationDraftId;await releaseReservationDraft();}sessionStorage.removeItem('bmi_pending_checkout');}catch(releaseError){}
      toast(error&&error.message?error.message:'Could not confirm reservation');
   }
 }
+function checkoutReturnUrl(pending,campaignId){
+  pending=pending||{};
+  var demoSearch='';
+  try{if(new URLSearchParams(pending.returnSearch||'').get('demo')==='1')demoSearch='?demo=1'}catch(error){}
+  var returnHash=typeof pending.returnHash==='string'&&/^#item\/[^/?#]+$/.test(pending.returnHash)?pending.returnHash:'#item/'+encodeURIComponent(campaignId||pending.campaignId||'');
+  return location.pathname+demoSearch+returnHash;
+}
 document.getElementById('mCopyId').onclick=function(){
   var id=document.getElementById('mSubId').textContent;
-  var done=function(){toast('Submission ID copied')};
+   var done=function(){toast('Reservation ID copied')};
   if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(id).then(done,done);
   else done();
 };

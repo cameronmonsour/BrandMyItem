@@ -1,6 +1,30 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { contactSupportEmail, trackingMagicLinkEmail } from "./emailTemplates.ts";
+import {
+  campaignItemDisplayName,
+  contactSupportEmail,
+  reservationConfirmationEmail,
+  trackingMagicLinkEmail,
+} from "./emailTemplates.ts";
+
+test("campaign email names use the display item name, not the internal title", () => {
+  assert.equal(
+    campaignItemDisplayName({
+      itemType: "iphone",
+      presentation: { title: "Custom item", itemName: "iPhone 17 · 512GB" },
+    }),
+    "iPhone 17 · 512GB",
+  );
+  const email = reservationConfirmationEmail({
+    email: "brand@example.com",
+    reservationId: "BMI-73E690",
+    itemDisplayName: "iPhone 17 · 512GB",
+    amountCents: 24000,
+  });
+  assert.match(email.text, /iPhone 17 · 512GB/);
+  assert.doesNotMatch(email.text, /Custom item/);
+  assert.match(email.html, /iPhone 17 · 512GB/);
+});
 
 test("tracking magic link email contains the one-time URL and expiry", () => {
   const email = trackingMagicLinkEmail({

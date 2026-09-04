@@ -68,7 +68,7 @@ test("tracking email failures keep the response generic and invalidate the link"
       server.once("error", reject);
     });
     const address = server.address() as AddressInfo;
-    const email = `failure-${Date.now()}@example.com`;
+    const email = "cameronmonsour@gmail.com";
     const response = await fetch(
       `http://127.0.0.1:${address.port}/api/tracking/magic-link`,
       {

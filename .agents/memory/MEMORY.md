@@ -25,3 +25,4 @@
 - [Active upload response policy](active-upload-response-policy.md) — user uploads must be raster-only inline; unknown or active formats download under sandboxed, non-cacheable responses.
 - [Pre-publication upload capabilities](prepublication-upload-capabilities.md) — sensitive uploads start from expiring resource drafts and are consumed once by the matching transition.
 - [Resend delivery boundary](resend-delivery-boundary.md) — transactional mail uses direct Resend HTTPS with environment-configured sender and a fixed support Reply-To.
+- [Browser preview API boundary](browser-preview-api-boundary.md) — direct Vite-port browser checks do not include the API proxy; use the managed proxy or inject a controlled fixture.
