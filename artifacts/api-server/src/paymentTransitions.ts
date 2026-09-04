@@ -49,6 +49,13 @@ export function checkoutIdempotencyKey(
   return `brandmyitem-order-${orderId}-checkout${retry}`;
 }
 
+export function isMissingCheckoutSessionError(error: unknown): boolean {
+  return (
+    error instanceof Error &&
+    /^No such checkout\.session:/i.test(error.message)
+  );
+}
+
 export function isRefundSucceeded(status: string): boolean {
   return status === "succeeded";
 }

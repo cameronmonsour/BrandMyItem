@@ -3,6 +3,7 @@ import { and, eq, isNotNull, lte } from "drizzle-orm";
 import { logger } from "./lib/logger";
 import {
   checkoutTransition,
+  isMissingCheckoutSessionError,
   isRefundRetryable,
   isRefundSucceeded,
   refundIdempotencyKey,
@@ -51,6 +52,22 @@ export async function reconcilePayments(now = new Date()): Promise<void> {
           ),
         );
     } catch (err) {
+      if (isMissingCheckoutSessionError(err)) {
+        await db
+          .update(placementOrdersTable)
+          .set({
+            status: "expired",
+            stripeCheckoutSessionId: null,
+            updatedAt: now,
+          })
+          .where(
+            and(
+              eq(placementOrdersTable.id, order.id),
+              eq(placementOrdersTable.status, "pending"),
+            ),
+          );
+        continue;
+      }
       logger.error(
         { err, orderId: order.id },
         "Checkout reconciliation failed",

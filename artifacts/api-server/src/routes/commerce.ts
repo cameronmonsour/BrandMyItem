@@ -17,6 +17,7 @@ import { stripeRequest } from "../stripeClient";
 import {
   checkoutIdempotencyKey,
   checkoutTransition,
+  isMissingCheckoutSessionError,
   type CheckoutSnapshot,
 } from "../paymentTransitions";
 import { verifyImageObject } from "../lib/objectStorage";
@@ -256,48 +257,57 @@ router.post("/checkout/sessions", async (req, res): Promise<void> => {
       ? existing.stripeCheckoutSessionId
       : null;
   if (existing?.status === "pending" && existing.stripeCheckoutSessionId) {
-    const previousSession = await stripeRequest<
-      CheckoutSnapshot & { id: string; url: string | null }
-    >(
-      `/v1/checkout/sessions/${encodeURIComponent(existing.stripeCheckoutSessionId)}`,
-    );
-    const transition = checkoutTransition(existing.status, previousSession);
-    if (transition?.status === "paid") {
-      await db
-        .update(placementOrdersTable)
-        .set({
-          status: "paid",
-          stripePaymentIntentId: transition.paymentIntentId,
-          updatedAt: new Date(),
-        })
-        .where(
-          and(
-            eq(placementOrdersTable.id, existing.id),
-            eq(placementOrdersTable.status, "pending"),
-          ),
-        );
-      res.status(409).json({ error: "Placement has already been purchased" });
-      return;
+    let previousSession:
+      | (CheckoutSnapshot & { id: string; url: string | null })
+      | null = null;
+    try {
+      previousSession = await stripeRequest<
+        CheckoutSnapshot & { id: string; url: string | null }
+      >(
+        `/v1/checkout/sessions/${encodeURIComponent(existing.stripeCheckoutSessionId)}`,
+      );
+    } catch (error) {
+      if (!isMissingCheckoutSessionError(error)) throw error;
+      previousExpiredSessionId = existing.stripeCheckoutSessionId;
     }
-    if (transition?.status !== "expired") {
-      if (previousSession.url) {
-        res.status(200).json(
-          CreatePlacementCheckoutResponse.parse({
-            url: previousSession.url,
+    if (previousSession) {
+      const transition = checkoutTransition(existing.status, previousSession);
+      if (transition?.status === "paid") {
+        await db
+          .update(placementOrdersTable)
+          .set({
+            status: "paid",
+            stripePaymentIntentId: transition.paymentIntentId,
+            updatedAt: new Date(),
+          })
+          .where(
+            and(
+              eq(placementOrdersTable.id, existing.id),
+              eq(placementOrdersTable.status, "pending"),
+            ),
+          );
+        res.status(409).json({ error: "Placement has already been purchased" });
+        return;
+      }
+      if (transition?.status !== "expired") {
+        if (previousSession.url) {
+          res.status(200).json(
+            CreatePlacementCheckoutResponse.parse({
+              url: previousSession.url,
+              orderId,
+              sessionId: previousSession.id,
+            }),
+          );
+        } else {
+          res.status(409).json({
+            error: "Checkout payment is still processing",
             orderId,
             sessionId: previousSession.id,
-          }),
-        );
-      } else {
-        res.status(409).json({
-          error: "Checkout payment is still processing",
-          orderId,
-          sessionId: previousSession.id,
-        });
+          });
+        }
+        return;
       }
-      return;
     }
-    previousExpiredSessionId = existing.stripeCheckoutSessionId;
   }
 
   const idempotencyKey =

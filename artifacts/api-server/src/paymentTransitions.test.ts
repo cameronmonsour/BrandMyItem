@@ -4,6 +4,7 @@ import { GetPlacementCheckoutResponse } from "../../../lib/api-zod/src/generated
 import {
   checkoutTransition,
   checkoutIdempotencyKey,
+  isMissingCheckoutSessionError,
   isRefundRetryable,
   isRefundSucceeded,
   refundIdempotencyKey,
@@ -33,6 +34,20 @@ test("checkout retries reuse one key and expired sessions get a new key", () => 
     checkoutIdempotencyKey("order-1"),
     checkoutIdempotencyKey("order-1", "cs_expired"),
   );
+});
+
+test("missing Stripe Checkout Sessions are safe to replace", () => {
+  assert.equal(
+    isMissingCheckoutSessionError(
+      new Error("No such checkout.session: cs_test_missing"),
+    ),
+    true,
+  );
+  assert.equal(
+    isMissingCheckoutSessionError(new Error("Stripe request failed (500)")),
+    false,
+  );
+  assert.equal(isMissingCheckoutSessionError("missing"), false);
 });
 
 test("a reconciled expired session produces a fresh checkout key", () => {

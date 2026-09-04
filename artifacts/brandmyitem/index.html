@@ -11008,7 +11008,9 @@ async function beginStripeCheckout(){
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({campaignId:CUR.id,spotIndex:claimSlot,brandName:brand,email:mail,destinationUrl:link||undefined,logoObjectPath:logoObjectPath})
     });
-    var result=await response.json();
+    var result={};
+    var contentType=response.headers.get('content-type')||'';
+    if(contentType.toLowerCase().includes('application/json'))result=await response.json();
     if(!response.ok||!result.url)throw new Error(result.error||'Checkout could not be started');
     if(checkoutWindow&&!checkoutWindow.closed)checkoutWindow.location.replace(result.url);
     else window.top.location.assign(result.url);
