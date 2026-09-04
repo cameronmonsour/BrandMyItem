@@ -3,8 +3,8 @@ name: Stripe mode verification
 description: How to verify whether the connected Stripe account is operating in test or live mode.
 ---
 
-Treat Stripe mode as live unless the connector itself returns `livemode: false` from a safe read such as the balance endpoint.
+Treat Stripe mode as live unless the env-provided secret key starts with `sk_test_` and a safe Stripe read confirms `livemode: false`.
 
-**Why:** Replit’s Stripe connector can create live Checkout Sessions while raw Stripe environment keys are intentionally absent. Environment-key inference once reported test mode for a live connector and allowed a test-card attempt against live Checkout.
+**Why:** The installed Replit Stripe connector was connected to live mode while the app had no raw key access. The server now uses only `STRIPE_SECRET_KEY`, rejects missing or malformed keys, and must still confirm the account mode before card acceptance.
 
-**How to apply:** Before any automated card acceptance flow, read mode through the connector. If that probe fails or is ambiguous, fail safe to live and do not submit test cards.
+**How to apply:** Before any automated card acceptance flow, check the startup mode and `/api/health`. If either reports live, or the Stripe mode is ambiguous, do not submit test cards or create a Checkout Session.
