@@ -262,6 +262,20 @@ test('posting requires and saves the owner shipping address', () => {
   assert.match(html, /var address=document\.getElementById\('pAddress'\)\.value\.trim\(\)/);
   assert.match(html, /if\(!name\|\|!mail\|\|!address\)\{toast\('Add your name, email, and shipping address to post'\);return\}/);
   assert.equal((html.match(/shipping:\{name:name,address:address\}/g) || []).length, 2);
+  assert.match(html, /ownerEmail:l\.mail/);
+});
+
+test('tracking is launch ready for campaign owners and brand purchases', () => {
+  assert.match(html, /<span class="badge">LAUNCH READY<\/span>/);
+  assert.match(html, /\.track-page \.site-footer\{display:none\}/);
+  assert.match(html, /document\.body\.classList\.toggle\('track-page',h==='track'\)/);
+  assert.match(html, /fetch\('\/api\/tracking\?email='\+encodeURIComponent\(mail\)\)/);
+  assert.match(html, /function localTrackMatches\(mail\)/);
+  assert.match(html, /ownerView:true/);
+  assert.match(html, /function serverTrackingMatches\(payload,mail\)/);
+  assert.match(html, /c\.orderStatus=order\.status/);
+  assert.match(html, /await syncTrackingOwnerEmail\(mail\)/);
+  assert.match(html, /No items found for that email yet\./);
 });
 
 test('every catalog item has an item-specific branding method', () => {

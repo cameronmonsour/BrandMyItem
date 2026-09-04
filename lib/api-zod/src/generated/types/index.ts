@@ -8,8 +8,13 @@
 
 export * from './campaign';
 export * from './campaignInput';
+export * from './getTrackingParams';
 export * from './healthStatus';
 export * from './placementCheckoutInput';
 export * from './placementCheckoutSession';
 export * from './placementOrder';
 export * from './placementOrderStatus';
+export * from './trackingCampaign';
+export * from './trackingOrder';
+export * from './trackingOrderStatus';
+export * from './trackingResult';

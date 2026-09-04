@@ -5,7 +5,10 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQuery
+} from '@tanstack/react-query';
 import type {
   MutationFunction,
   QueryFunction,
@@ -13,36 +16,38 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult,
-} from "@tanstack/react-query";
+  UseQueryResult
+} from '@tanstack/react-query';
 
 import type {
   Campaign,
   CampaignInput,
+  GetTrackingParams,
   HealthStatus,
   PlacementCheckoutInput,
   PlacementCheckoutSession,
   PlacementOrder,
-} from "./api.schemas";
+  TrackingResult
+} from './api.schemas';
 
-import { customFetch } from "../custom-fetch";
-import type { ErrorType, BodyType } from "../custom-fetch";
+import { customFetch } from '../custom-fetch';
+import type { ErrorType , BodyType } from '../custom-fetch';
 
 type AwaitedInput<T> = PromiseLike<T> | T;
 
-type Awaited<O> = O extends AwaitedInput<infer T> ? T : never;
+      type Awaited<O> = O extends AwaitedInput<infer T> ? T : never;
+
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
-const withQueryKey = <T extends object, K>(
-  query: T,
-  queryKey: K,
-): T & { queryKey: K } => {
+
+
+const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKey: K } => {
   const result = { queryKey } as T & { queryKey: K };
   for (const key of Object.keys(query)) {
     // The explicit queryKey always wins, matching the previous
     // `{ ...query, queryKey }` spread where it was set last.
-    if (key === "queryKey") continue;
+    if (key === 'queryKey') continue;
     Object.defineProperty(result, key, {
       enumerable: true,
       configurable: true,
@@ -53,417 +58,433 @@ const withQueryKey = <T extends object, K>(
 };
 
 export const getHealthCheckUrl = () => {
-  return `/api/healthz`;
-};
+
+
+
+
+  return `/api/healthz`
+}
 
 /**
  * Returns server health status
  * @summary Health check
  */
-export const healthCheck = async (
-  options?: Parameters<typeof customFetch>[1],
-): Promise<HealthStatus> => {
-  return customFetch<HealthStatus>(getHealthCheckUrl(), {
+export const healthCheck = async ( options?: Parameters<typeof customFetch>[1]): Promise<HealthStatus> => {
+
+  return customFetch<HealthStatus>(getHealthCheckUrl(),
+  {
     ...options,
-    method: "GET",
-  });
-};
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
 
 export const getHealthCheckQueryKey = () => {
-  return [`/api/healthz`] as const;
-};
+    return [
+    `/api/healthz`
+    ] as const;
+    }
 
-export const getHealthCheckQueryOptions = <
-  TData = Awaited<ReturnType<typeof healthCheck>>,
-  TError = ErrorType<unknown>,
->(options?: {
-  query?: UseQueryOptions<
-    Awaited<ReturnType<typeof healthCheck>>,
-    TError,
-    TData
-  >;
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getHealthCheckQueryKey();
+export const getHealthCheckQueryOptions = <TData = Awaited<ReturnType<typeof healthCheck>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof healthCheck>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof healthCheck>>> = ({
-    signal,
-  }) => healthCheck({ signal, ...requestOptions });
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof healthCheck>>,
-    TError,
-    TData
-  > & { queryKey: QueryKey };
-};
+  const queryKey =  queryOptions?.queryKey ?? getHealthCheckQueryKey();
 
-export type HealthCheckQueryResult = NonNullable<
-  Awaited<ReturnType<typeof healthCheck>>
->;
-export type HealthCheckQueryError = ErrorType<unknown>;
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof healthCheck>>> = ({ signal }) => healthCheck({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof healthCheck>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type HealthCheckQueryResult = NonNullable<Awaited<ReturnType<typeof healthCheck>>>
+export type HealthCheckQueryError = ErrorType<unknown>
+
 
 /**
  * @summary Health check
  */
 
-export function useHealthCheck<
-  TData = Awaited<ReturnType<typeof healthCheck>>,
-  TError = ErrorType<unknown>,
->(options?: {
-  query?: UseQueryOptions<
-    Awaited<ReturnType<typeof healthCheck>>,
-    TError,
-    TData
-  >;
-  request?: SecondParameter<typeof customFetch>;
-}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getHealthCheckQueryOptions(options);
+export function useHealthCheck<TData = Awaited<ReturnType<typeof healthCheck>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof healthCheck>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: QueryKey;
-  };
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getHealthCheckQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
   return withQueryKey(query, queryOptions.queryKey);
 }
-
 export const getRegisterCampaignUrl = () => {
-  return `/api/campaigns`;
-};
+
+
+
+
+  return `/api/campaigns`
+}
 
 /**
  * @summary Register a campaign and its authoritative spot prices
  */
-export const registerCampaign = async (
-  campaignInput: CampaignInput,
-  options?: Parameters<typeof customFetch>[1],
-): Promise<Campaign> => {
-  return customFetch<Campaign>(getRegisterCampaignUrl(), {
+export const registerCampaign = async (campaignInput: CampaignInput, options?: Parameters<typeof customFetch>[1]): Promise<Campaign> => {
+
+  return customFetch<Campaign>(getRegisterCampaignUrl(),
+  {
     ...options,
-    method: "POST",
-    headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(campaignInput),
-  });
-};
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(campaignInput)
+  }
+);}
 
-export const getRegisterCampaignMutationOptions = <
-  TError = ErrorType<void>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof registerCampaign>>,
-    TError,
-    { data: BodyType<CampaignInput> },
-    TContext
-  >;
-  request?: SecondParameter<typeof customFetch>;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof registerCampaign>>,
-  TError,
-  { data: BodyType<CampaignInput> },
-  TContext
-> => {
-  const mutationKey = ["registerCampaign"];
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      "mutationKey" in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof registerCampaign>>,
-    { data: BodyType<CampaignInput> }
-  > = (props) => {
-    const { data } = props ?? {};
 
-    return registerCampaign(data, requestOptions);
-  };
 
-  return { mutationFn, ...mutationOptions };
-};
 
-export type RegisterCampaignMutationResult = NonNullable<
-  Awaited<ReturnType<typeof registerCampaign>>
->;
-export type RegisterCampaignMutationBody = BodyType<CampaignInput>;
-export type RegisterCampaignMutationError = ErrorType<void>;
+export const getRegisterCampaignMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof registerCampaign>>, TError,{data: BodyType<CampaignInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof registerCampaign>>, TError,{data: BodyType<CampaignInput>}, TContext> => {
 
-/**
+const mutationKey = ['registerCampaign'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof registerCampaign>>, {data: BodyType<CampaignInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  registerCampaign(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RegisterCampaignMutationResult = NonNullable<Awaited<ReturnType<typeof registerCampaign>>>
+    export type RegisterCampaignMutationBody = BodyType<CampaignInput>
+    export type RegisterCampaignMutationError = ErrorType<void>
+
+    /**
  * @summary Register a campaign and its authoritative spot prices
  */
-export const useRegisterCampaign = <
-  TError = ErrorType<void>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof registerCampaign>>,
-    TError,
-    { data: BodyType<CampaignInput> },
-    TContext
-  >;
-  request?: SecondParameter<typeof customFetch>;
-}): UseMutationResult<
-  Awaited<ReturnType<typeof registerCampaign>>,
-  TError,
-  { data: BodyType<CampaignInput> },
-  TContext
-> => {
-  return useMutation(getRegisterCampaignMutationOptions(options));
-};
+export const useRegisterCampaign = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof registerCampaign>>, TError,{data: BodyType<CampaignInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof registerCampaign>>,
+        TError,
+        {data: BodyType<CampaignInput>},
+        TContext
+      > => {
+      return useMutation(getRegisterCampaignMutationOptions(options));
+    }
 
 export const getListCampaignsUrl = () => {
-  return `/api/campaigns`;
-};
+
+
+
+
+  return `/api/campaigns`
+}
 
 /**
  * @summary List active real campaigns
  */
-export const listCampaigns = async (
-  options?: Parameters<typeof customFetch>[1],
-): Promise<Campaign[]> => {
-  return customFetch<Campaign[]>(getListCampaignsUrl(), {
+export const listCampaigns = async ( options?: Parameters<typeof customFetch>[1]): Promise<Campaign[]> => {
+
+  return customFetch<Campaign[]>(getListCampaignsUrl(),
+  {
     ...options,
-    method: "GET",
-  });
-};
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
 
 export const getListCampaignsQueryKey = () => {
-  return [`/api/campaigns`] as const;
-};
+    return [
+    `/api/campaigns`
+    ] as const;
+    }
 
-export const getListCampaignsQueryOptions = <
-  TData = Awaited<ReturnType<typeof listCampaigns>>,
-  TError = ErrorType<unknown>,
->(options?: {
-  query?: UseQueryOptions<
-    Awaited<ReturnType<typeof listCampaigns>>,
-    TError,
-    TData
-  >;
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getListCampaignsQueryKey();
+export const getListCampaignsQueryOptions = <TData = Awaited<ReturnType<typeof listCampaigns>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listCampaigns>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof listCampaigns>>> = ({
-    signal,
-  }) => listCampaigns({ signal, ...requestOptions });
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof listCampaigns>>,
-    TError,
-    TData
-  > & { queryKey: QueryKey };
-};
+  const queryKey =  queryOptions?.queryKey ?? getListCampaignsQueryKey();
 
-export type ListCampaignsQueryResult = NonNullable<
-  Awaited<ReturnType<typeof listCampaigns>>
->;
-export type ListCampaignsQueryError = ErrorType<unknown>;
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listCampaigns>>> = ({ signal }) => listCampaigns({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listCampaigns>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListCampaignsQueryResult = NonNullable<Awaited<ReturnType<typeof listCampaigns>>>
+export type ListCampaignsQueryError = ErrorType<unknown>
+
 
 /**
  * @summary List active real campaigns
  */
 
-export function useListCampaigns<
-  TData = Awaited<ReturnType<typeof listCampaigns>>,
-  TError = ErrorType<unknown>,
->(options?: {
-  query?: UseQueryOptions<
-    Awaited<ReturnType<typeof listCampaigns>>,
-    TError,
-    TData
-  >;
-  request?: SecondParameter<typeof customFetch>;
-}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getListCampaignsQueryOptions(options);
+export function useListCampaigns<TData = Awaited<ReturnType<typeof listCampaigns>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listCampaigns>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: QueryKey;
-  };
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListCampaignsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
   return withQueryKey(query, queryOptions.queryKey);
 }
 
 export const getCreatePlacementCheckoutUrl = () => {
-  return `/api/checkout/sessions`;
-};
+
+
+
+
+  return `/api/checkout/sessions`
+}
 
 /**
  * @summary Create a Stripe Checkout session for one campaign placement
  */
-export const createPlacementCheckout = async (
-  placementCheckoutInput: PlacementCheckoutInput,
-  options?: Parameters<typeof customFetch>[1],
-): Promise<PlacementCheckoutSession> => {
-  return customFetch<PlacementCheckoutSession>(
-    getCreatePlacementCheckoutUrl(),
-    {
-      ...options,
-      method: "POST",
-      headers: { "Content-Type": "application/json", ...options?.headers },
-      body: JSON.stringify(placementCheckoutInput),
-    },
-  );
-};
+export const createPlacementCheckout = async (placementCheckoutInput: PlacementCheckoutInput, options?: Parameters<typeof customFetch>[1]): Promise<PlacementCheckoutSession> => {
 
-export const getCreatePlacementCheckoutMutationOptions = <
-  TError = ErrorType<void>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof createPlacementCheckout>>,
-    TError,
-    { data: BodyType<PlacementCheckoutInput> },
-    TContext
-  >;
-  request?: SecondParameter<typeof customFetch>;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof createPlacementCheckout>>,
-  TError,
-  { data: BodyType<PlacementCheckoutInput> },
-  TContext
-> => {
-  const mutationKey = ["createPlacementCheckout"];
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      "mutationKey" in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof createPlacementCheckout>>,
-    { data: BodyType<PlacementCheckoutInput> }
-  > = (props) => {
-    const { data } = props ?? {};
-
-    return createPlacementCheckout(data, requestOptions);
-  };
-
-  return { mutationFn, ...mutationOptions };
-};
-
-export type CreatePlacementCheckoutMutationResult = NonNullable<
-  Awaited<ReturnType<typeof createPlacementCheckout>>
->;
-export type CreatePlacementCheckoutMutationBody =
-  BodyType<PlacementCheckoutInput>;
-export type CreatePlacementCheckoutMutationError = ErrorType<void>;
-
-/**
- * @summary Create a Stripe Checkout session for one campaign placement
- */
-export const useCreatePlacementCheckout = <
-  TError = ErrorType<void>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof createPlacementCheckout>>,
-    TError,
-    { data: BodyType<PlacementCheckoutInput> },
-    TContext
-  >;
-  request?: SecondParameter<typeof customFetch>;
-}): UseMutationResult<
-  Awaited<ReturnType<typeof createPlacementCheckout>>,
-  TError,
-  { data: BodyType<PlacementCheckoutInput> },
-  TContext
-> => {
-  return useMutation(getCreatePlacementCheckoutMutationOptions(options));
-};
-
-export const getGetPlacementCheckoutUrl = (sessionId: string) => {
-  return `/api/checkout/sessions/${sessionId}`;
-};
-
-/**
- * @summary Verify a Stripe Checkout session and return its order
- */
-export const getPlacementCheckout = async (
-  sessionId: string,
-  options?: Parameters<typeof customFetch>[1],
-): Promise<PlacementOrder> => {
-  return customFetch<PlacementOrder>(getGetPlacementCheckoutUrl(sessionId), {
+  return customFetch<PlacementCheckoutSession>(getCreatePlacementCheckoutUrl(),
+  {
     ...options,
-    method: "GET",
-  });
-};
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(placementCheckoutInput)
+  }
+);}
 
-export const getGetPlacementCheckoutQueryKey = (sessionId: string) => {
-  return [`/api/checkout/sessions/${sessionId}`] as const;
-};
 
-export const getGetPlacementCheckoutQueryOptions = <
-  TData = Awaited<ReturnType<typeof getPlacementCheckout>>,
-  TError = ErrorType<void>,
->(
-  sessionId: string,
-  options?: {
-    query?: UseQueryOptions<
-      Awaited<ReturnType<typeof getPlacementCheckout>>,
-      TError,
-      TData
-    >;
-    request?: SecondParameter<typeof customFetch>;
-  },
+
+
+
+export const getCreatePlacementCheckoutMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPlacementCheckout>>, TError,{data: BodyType<PlacementCheckoutInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createPlacementCheckout>>, TError,{data: BodyType<PlacementCheckoutInput>}, TContext> => {
+
+const mutationKey = ['createPlacementCheckout'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createPlacementCheckout>>, {data: BodyType<PlacementCheckoutInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createPlacementCheckout(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreatePlacementCheckoutMutationResult = NonNullable<Awaited<ReturnType<typeof createPlacementCheckout>>>
+    export type CreatePlacementCheckoutMutationBody = BodyType<PlacementCheckoutInput>
+    export type CreatePlacementCheckoutMutationError = ErrorType<void>
+
+    /**
+ * @summary Create a Stripe Checkout session for one campaign placement
+ */
+export const useCreatePlacementCheckout = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPlacementCheckout>>, TError,{data: BodyType<PlacementCheckoutInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createPlacementCheckout>>,
+        TError,
+        {data: BodyType<PlacementCheckoutInput>},
+        TContext
+      > => {
+      return useMutation(getCreatePlacementCheckoutMutationOptions(options));
+    }
+
+export const getGetPlacementCheckoutUrl = (sessionId: string,) => {
+
+
+
+
+  return `/api/checkout/sessions/${sessionId}`
+}
+
+/**
+ * @summary Verify a Stripe Checkout session and return its order
+ */
+export const getPlacementCheckout = async (sessionId: string, options?: Parameters<typeof customFetch>[1]): Promise<PlacementOrder> => {
+
+  return customFetch<PlacementOrder>(getGetPlacementCheckoutUrl(sessionId),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetPlacementCheckoutQueryKey = (sessionId: string,) => {
+    return [
+    `/api/checkout/sessions/${sessionId}`
+    ] as const;
+    }
+
+
+export const getGetPlacementCheckoutQueryOptions = <TData = Awaited<ReturnType<typeof getPlacementCheckout>>, TError = ErrorType<void>>(sessionId: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPlacementCheckout>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey =
-    queryOptions?.queryKey ?? getGetPlacementCheckoutQueryKey(sessionId);
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof getPlacementCheckout>>
-  > = ({ signal }) =>
-    getPlacementCheckout(sessionId, { signal, ...requestOptions });
+  const queryKey =  queryOptions?.queryKey ?? getGetPlacementCheckoutQueryKey(sessionId);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: sessionId !== null && sessionId !== undefined,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof getPlacementCheckout>>,
-    TError,
-    TData
-  > & { queryKey: QueryKey };
-};
 
-export type GetPlacementCheckoutQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getPlacementCheckout>>
->;
-export type GetPlacementCheckoutQueryError = ErrorType<void>;
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPlacementCheckout>>> = ({ signal }) => getPlacementCheckout(sessionId, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: sessionId !== null && sessionId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPlacementCheckout>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetPlacementCheckoutQueryResult = NonNullable<Awaited<ReturnType<typeof getPlacementCheckout>>>
+export type GetPlacementCheckoutQueryError = ErrorType<void>
+
 
 /**
  * @summary Verify a Stripe Checkout session and return its order
  */
 
-export function useGetPlacementCheckout<
-  TData = Awaited<ReturnType<typeof getPlacementCheckout>>,
-  TError = ErrorType<void>,
->(
-  sessionId: string,
-  options?: {
-    query?: UseQueryOptions<
-      Awaited<ReturnType<typeof getPlacementCheckout>>,
-      TError,
-      TData
-    >;
-    request?: SecondParameter<typeof customFetch>;
-  },
-): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getGetPlacementCheckoutQueryOptions(sessionId, options);
+export function useGetPlacementCheckout<TData = Awaited<ReturnType<typeof getPlacementCheckout>>, TError = ErrorType<void>>(
+ sessionId: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPlacementCheckout>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: QueryKey;
-  };
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetPlacementCheckoutQueryOptions(sessionId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+export const getGetTrackingUrl = (params: GetTrackingParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/tracking?${stringifiedParams}` : `/api/tracking`
+}
+
+/**
+ * @summary Find campaigns and placement orders linked to an email
+ */
+export const getTracking = async (params: GetTrackingParams, options?: Parameters<typeof customFetch>[1]): Promise<TrackingResult> => {
+
+  return customFetch<TrackingResult>(getGetTrackingUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetTrackingQueryKey = (params?: GetTrackingParams,) => {
+    return [
+    `/api/tracking`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetTrackingQueryOptions = <TData = Awaited<ReturnType<typeof getTracking>>, TError = ErrorType<void>>(params: GetTrackingParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getTracking>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetTrackingQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getTracking>>> = ({ signal }) => getTracking(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getTracking>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetTrackingQueryResult = NonNullable<Awaited<ReturnType<typeof getTracking>>>
+export type GetTrackingQueryError = ErrorType<void>
+
+
+/**
+ * @summary Find campaigns and placement orders linked to an email
+ */
+
+export function useGetTracking<TData = Awaited<ReturnType<typeof getTracking>>, TError = ErrorType<void>>(
+ params: GetTrackingParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getTracking>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetTrackingQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
   return withQueryKey(query, queryOptions.queryKey);
 }

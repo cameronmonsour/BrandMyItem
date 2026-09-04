@@ -27,6 +27,8 @@ export interface CampaignInput {
      * @maxLength 120
      */
   ownerName: string;
+  /** @maxLength 320 */
+  ownerEmail: string;
   /**
      * @minItems 1
      * @maxItems 20

@@ -5,15 +5,16 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { TrackingOrder } from './trackingOrder';
 
-export interface Campaign {
+export interface TrackingCampaign {
   id: string;
   itemType: string;
   title: string;
   ownerName: string;
-  /** @nullable */
-  ownerEmail: string | null;
   pricesCents: number[];
   active: boolean;
+  ownerMatch: boolean;
   createdAt: Date;
+  orders: TrackingOrder[];
 }

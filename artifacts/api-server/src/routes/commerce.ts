@@ -9,11 +9,13 @@ import {
   CreatePlacementCheckoutResponse,
   GetPlacementCheckoutParams,
   GetPlacementCheckoutResponse,
+  GetTrackingQueryParams,
+  GetTrackingResponse,
   ListCampaignsResponse,
   RegisterCampaignBody,
   RegisterCampaignResponse,
 } from "@workspace/api-zod";
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, inArray, sql } from "drizzle-orm";
 import { Router, type IRouter } from "express";
 import { stripeRequest } from "../stripeClient";
 
@@ -35,6 +37,7 @@ router.post("/campaigns", async (req, res): Promise<void> => {
         itemType: input.itemType,
         title: input.title,
         ownerName: input.ownerName,
+        ownerEmail: input.ownerEmail.toLowerCase(),
         pricesCents: input.pricesCents,
         active: true,
         updatedAt: new Date(),
@@ -56,6 +59,90 @@ router.get("/campaigns", async (_req, res): Promise<void> => {
     .where(eq(campaignsTable.active, true))
     .orderBy(desc(campaignsTable.createdAt));
   res.json(ListCampaignsResponse.parse(campaigns));
+});
+
+router.get("/tracking", async (req, res): Promise<void> => {
+  const parsed = GetTrackingQueryParams.safeParse(req.query);
+  if (!parsed.success) {
+    res.status(400).json({ error: "Invalid email" });
+    return;
+  }
+
+  const email = parsed.data.email.trim().toLowerCase();
+  const ownerCampaigns = await db
+    .select()
+    .from(campaignsTable)
+    .where(sql`lower(${campaignsTable.ownerEmail}) = ${email}`)
+    .orderBy(desc(campaignsTable.createdAt));
+  const brandOrders = await db
+    .select()
+    .from(placementOrdersTable)
+    .where(sql`lower(${placementOrdersTable.email}) = ${email}`)
+    .orderBy(desc(placementOrdersTable.createdAt));
+
+  const ownerCampaignIds = ownerCampaigns.map((campaign) => campaign.id);
+  const ownerOrders = ownerCampaignIds.length
+    ? await db
+        .select()
+        .from(placementOrdersTable)
+        .where(inArray(placementOrdersTable.campaignId, ownerCampaignIds))
+        .orderBy(desc(placementOrdersTable.createdAt))
+    : [];
+  const campaignIds = Array.from(
+    new Set([
+      ...ownerCampaignIds,
+      ...brandOrders.map((order) => order.campaignId),
+    ]),
+  );
+  const campaigns = campaignIds.length
+    ? await db
+        .select()
+        .from(campaignsTable)
+        .where(inArray(campaignsTable.id, campaignIds))
+        .orderBy(desc(campaignsTable.createdAt))
+    : [];
+
+  const ownerIdSet = new Set(ownerCampaignIds);
+  const ordersByCampaign = new Map<
+    string,
+    Map<string, (typeof brandOrders)[number]>
+  >();
+  for (const order of [...ownerOrders, ...brandOrders]) {
+    const campaignOrders =
+      ordersByCampaign.get(order.campaignId) ??
+      new Map<string, (typeof brandOrders)[number]>();
+    campaignOrders.set(order.id, order);
+    ordersByCampaign.set(order.campaignId, campaignOrders);
+  }
+
+  res.json(
+    GetTrackingResponse.parse({
+      email,
+      campaigns: campaigns.map((campaign) => ({
+        id: campaign.id,
+        itemType: campaign.itemType,
+        title: campaign.title,
+        ownerName: campaign.ownerName,
+        pricesCents: campaign.pricesCents,
+        active: campaign.active,
+        ownerMatch: ownerIdSet.has(campaign.id),
+        createdAt: campaign.createdAt,
+        orders: Array.from(
+          ordersByCampaign.get(campaign.id)?.values() ?? [],
+        ).map((order) => ({
+          id: order.id,
+          campaignId: order.campaignId,
+          spotIndex: order.spotIndex,
+          amountCents: order.amountCents,
+          brandName: order.brandName,
+          email: order.email,
+          destinationUrl: order.destinationUrl,
+          status: order.status,
+          createdAt: order.createdAt,
+        })),
+      })),
+    }),
+  );
 });
 
 router.post("/checkout/sessions", async (req, res): Promise<void> => {

@@ -865,6 +865,7 @@ details.faq .fa b{color:var(--fg);font-weight:600}
 .toast.on{transform:translateX(-50%) translateY(0)}
 
 footer.site-footer{border-top:1px solid var(--border);background:var(--wash);color:var(--mfg);font-size:12px;line-height:1.55}
+.track-page .site-footer{display:none}
 .site-footer .fwrap{max-width:1024px;margin:0 auto;padding:34px 22px 22px}
 .site-footer .fine p{margin:0 0 14px;max-width:none}
 .site-footer .fine a{color:var(--mfg);text-decoration:underline}
@@ -2437,6 +2438,25 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 
 </div>
 
+<!-- TRACK -->
+<div class="view" id="v-track">
+  <div class="wrap-narrow" style="max-width:640px">
+    <div style="margin:0 0 22px">
+      <span class="badge">LAUNCH READY</span>
+      <h1 style="font-size:32px;letter-spacing:-.035em;margin:10px 0 6px">Track orders and campaigns</h1>
+      <p class="mp" style="margin:0">Use the email from your item posting or brand purchase to see everything connected to it.</p>
+    </div>
+    <div class="card" style="margin:0 0 24px">
+      <div class="card-c" style="padding:22px">
+        <div class="field"><label class="label" for="tkMail">Email</label><input class="input" id="tkMail" type="email" placeholder="you@brand.com"></div>
+        <button class="btn btn-primary btn-full btn-lg" id="tkBtn" type="button">Track everything</button>
+        <p class="finetext" id="tkErr" style="display:none;color:#B23327;margin-top:10px"></p>
+      </div>
+    </div>
+    <div id="tkResult" style="display:none;margin-bottom:60px"></div>
+  </div>
+</div>
+
 <footer class="site-footer">
   <div class="fwrap">
     <div class="fine">
@@ -2517,30 +2537,6 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
     </div>
   </div>
 </footer>
-
-<!-- TRACK -->
-<div class="view" id="v-track">
-  <div class="wrap-narrow" style="max-width:640px">
-    <div class="card" style="margin:0 0 24px">
-      <div class="card-c" style="padding:22px">
-        <div class="field"><label class="label" for="tkMail">Email</label><input class="input" id="tkMail" type="email" placeholder="you@brand.com"></div>
-        <button class="btn btn-primary btn-full btn-lg" id="tkBtn" type="button">Track my item</button>
-        <p class="finetext" id="tkErr" style="display:none;color:#B23327;margin-top:10px"></p>
-      </div>
-    </div>
-    <div id="tkResult" style="display:none;margin-bottom:60px"></div>
-    <div class="card" id="tkDemoCard" style="margin:24px 0 60px">
-      <div class="card-h">
-        <div class="card-t">See how tracking works <span class="badge" style="margin-left:6px;vertical-align:2px">DEMO</span></div>
-        <div class="card-d">Multiple sample purchases tied to one email, each with its own purchase-to-check-in timeline.</div>
-      </div>
-      <div class="card-c" style="padding-top:12px">
-        <div id="tkDemoResult"></div>
-        <p class="finetext" style="margin:2px 0 0">This preview is illustrative. Enter the work email from a real spot purchase above to see every item connected to that email.</p>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- CAMPAIGN DETAILS -->
 <div class="campaign-bg" id="campaignDetailsBg">
@@ -8027,6 +8023,7 @@ function route(){
   if(h==='feed')h='dashboard';
   if(h.indexOf('home-')===0||anchorId)h='home';
   if(h!=='item')LAST_PRODUCT_VIEW_KEY='';
+  document.body.classList.toggle('track-page',h==='track');
   views.forEach(function(v){document.getElementById('v-'+v).classList.toggle('on',v===h)});
   if(location.hash.indexOf('home-')<0&&!anchorId)window.scrollTo(0,0);
   if(h==='home')showHome();
@@ -9994,6 +9991,7 @@ async function postListing(){
         itemType:l.sourceType||l.type,
         title:LBLL(l),
         ownerName:l.owner,
+        ownerEmail:l.mail,
         pricesCents:l.prices.map(function(price){return Math.round(spotPurchaseTotal(l,price)*100)})
       })
     });
@@ -10377,25 +10375,93 @@ function renderTrackDemos(){
   demo.innerHTML='<p class="finetext" style="margin:0 0 14px">'+matches.length+' items linked to <b>demo@brandmyitem.com</b>.</p>'+
     matches.map(function(m){return trackCardHtml(m.l,m.c)}).join('<div style="height:14px"></div>');
 }
+function localTrackMatches(mail){
+  var matches=[];
+  DB.listings.forEach(function(l){
+    var ownerMatch=(l.mail||'').toLowerCase()===mail;
+    if(ownerMatch){
+      matches.push({l:l,c:{ownerView:true,brand:'Campaign owner',mail:mail,amt:0,fee:0,purchasedAt:l.created||Date.now(),subId:'CAM-'+String(l.id).toUpperCase().slice(0,8)}});
+    }
+    (l.claims||[]).forEach(function(c,spotIndex){
+      if(!c)return;
+      var brandMatch=(c.mail||'').toLowerCase()===mail;
+      if(!ownerMatch&&!brandMatch)return;
+      matches.push({l:l,c:Object.assign({},c,{spotIndex:spotIndex,ownerOrder:ownerMatch})});
+    });
+  });
+  return matches;
+}
+function serverTrackingMatches(payload,mail){
+  var matches=[];
+  (payload&&payload.campaigns||[]).forEach(function(campaign){
+    var l=DB.listings.filter(function(item){return item.id===campaign.id})[0];
+    if(!l){
+      l={id:campaign.id,type:campaign.itemType,title:campaign.title,owner:campaign.ownerName,mail:campaign.ownerMatch?mail:'',
+        prices:(campaign.pricesCents||[]).map(function(cents){return cents/100}),pricesIncludeMarkup:true,
+        claims:(campaign.pricesCents||[]).map(function(){return null}),slots:(campaign.pricesCents||[]).length,
+        created:new Date(campaign.createdAt).getTime(),postedAt:new Date(campaign.createdAt).getTime(),
+        status:campaign.active?'live':'closed',termMonths:12,checkins:[],serverFundedPercent:0};
+    }
+    var paidCount=(campaign.orders||[]).filter(function(order){return order.status==='paid'}).length;
+    l.serverFundedPercent=l.slots?Math.min(100,paidCount/l.slots*100):0;
+    if(campaign.ownerMatch){
+      matches.push({l:l,c:{ownerView:true,remoteOnly:!DB.listings.some(function(item){return item.id===campaign.id}),brand:'Campaign owner',mail:mail,
+        amt:0,fee:0,purchasedAt:new Date(campaign.createdAt).getTime(),subId:'CAM-'+String(campaign.id).toUpperCase().slice(0,8)}});
+    }
+    (campaign.orders||[]).forEach(function(order){
+      var existing=(l.claims||[])[order.spotIndex];
+      var c=existing&&existing.stripeOrderId===order.id?Object.assign({},existing):{
+        brand:order.brandName,mail:order.email,link:order.destinationUrl||'',logo:null,amt:order.amountCents/100,fee:0,
+        purchasedAt:new Date(order.createdAt).getTime(),subId:'BMI-'+String(order.id).toUpperCase().slice(0,6),stripeOrderId:order.id
+      };
+      c.spotIndex=order.spotIndex;c.orderStatus=order.status;c.ownerOrder=campaign.ownerMatch;
+      matches.push({l:l,c:c});
+    });
+  });
+  return matches;
+}
+function mergeTrackMatches(localMatches,serverMatches){
+  var byKey={};
+  localMatches.concat(serverMatches).forEach(function(match){
+    var c=match.c||{},key=c.ownerView?'owner:'+match.l.id:'order:'+(c.stripeOrderId||c.subId||match.l.id+'-'+c.spotIndex+'-'+c.brand);
+    byKey[key]=match;
+  });
+  return Object.keys(byKey).map(function(key){return byKey[key]});
+}
+async function syncTrackingOwnerEmail(mail){
+  var owned=DB.listings.filter(function(l){return !isDemoListing(l)&&(l.mail||'').toLowerCase()===mail});
+  await Promise.all(owned.map(function(l){
+    return fetch('/api/campaigns',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        id:l.id,itemType:l.sourceType||l.type,title:LBLL(l),ownerName:l.owner,ownerEmail:l.mail,
+        pricesCents:l.prices.map(function(price){return Math.round(spotPurchaseTotal(l,price)*100)})
+      })
+    }).then(function(response){if(!response.ok)throw new Error('Owner email sync failed')});
+  }));
+}
 function showTrack(){
   var btn=document.getElementById('tkBtn');
   if(btn&&!btn._wired){
     btn._wired=1;
-    btn.onclick=function(){
+    btn.onclick=async function(){
       var mail=document.getElementById('tkMail').value.trim().toLowerCase();
       var err=document.getElementById('tkErr');
       err.style.display='none';
       if(!mail){err.textContent='Enter the email you used.';err.style.display='block';return}
-      var matches=[];
-      DB.listings.forEach(function(l){
-        (l.claims||[]).forEach(function(c){
-          if(!c)return;
-          if((c.mail||'').toLowerCase()!==mail)return;
-          matches.push({l:l,c:c});
-        });
-      });
+      btn.disabled=true;btn.textContent='Loading…';
+      var localMatches=localTrackMatches(mail),serverMatches=[],serverFailed=false;
+      try{
+        await syncTrackingOwnerEmail(mail);
+        var response=await fetch('/api/tracking?email='+encodeURIComponent(mail));
+        if(!response.ok)throw new Error('Tracking request failed');
+        serverMatches=serverTrackingMatches(await response.json(),mail);
+      }catch(error){serverFailed=true}
+      var matches=mergeTrackMatches(localMatches,serverMatches);
+      btn.disabled=false;btn.textContent='Track everything';
       if(!matches.length){
-        err.textContent='No items found for that email yet.';
+        err.textContent=serverFailed?'Tracking is temporarily unavailable. Please try again.':'No items found for that email yet.';
         err.style.display='block';
         document.getElementById('tkResult').style.display='none';
         return;
@@ -10404,23 +10470,22 @@ function showTrack(){
        TRACK_MATCHES=matches;
        renderTrackResults(matches);
     };
-  }
-  var demo=document.getElementById('tkDemoResult');
-  if(demo&&!demo._rendered){
-    renderTrackDemos();
-    demo._rendered=1;
+    var input=document.getElementById('tkMail');
+    input.onkeydown=function(event){if(event.key==='Enter'){event.preventDefault();btn.click()}};
   }
 }
 function renderTrackResults(matches){
   var el=document.getElementById('tkResult');
   el.style.display='block';
-  el.innerHTML='<p class="finetext" style="margin:0 0 14px">'+matches.length+' item'+(matches.length>1?'s':'')+' linked to this email.</p>'+
+  el.innerHTML='<p class="finetext" style="margin:0 0 14px">'+matches.length+' tracking record'+(matches.length>1?'s':'')+' linked to this email.</p>'+
     matches.map(function(m){return trackCardHtml(m.l,m.c)}).join('<div style="height:14px"></div>');
 }
 function trackSubmitKey(subId){
   return String(subId||'demo').replace(/[^a-z0-9_-]/gi,'_');
 }
 function trackSubmitHtml(l,c){
+  if(!c.ownerView)return '';
+  if(c.remoteOnly)return '';
   var key=trackSubmitKey(c.subId);
   var checkins=l.checkins||[];
   var first=checkins.length===0;
@@ -10517,8 +10582,10 @@ function delayActionHtml(l,c){
 function trackCardHtml(l,c){
   var photo=listingPhoto(l);
   var steps=[];
-  steps.push({done:true,label:'Spot purchased',sub:new Date(c.purchasedAt).toLocaleDateString()+' \u00b7 '+money(c.amt+c.fee)+' charged'});
-  var pct=pctOf(l);
+  var orderStatus=c.orderStatus||'paid';
+  if(c.ownerView)steps.push({done:true,label:'Campaign launch ready',sub:new Date(c.purchasedAt).toLocaleDateString()+' \u00b7 linked to your posting email'});
+  else steps.push({done:orderStatus!=='pending',active:orderStatus==='pending',label:orderStatus==='pending'?'Checkout started':(orderStatus==='refunded'?'Spot refunded':'Spot purchased'),sub:new Date(c.purchasedAt).toLocaleDateString()+' \u00b7 '+money(c.amt+c.fee)+(orderStatus==='pending'?' pending':' charged')});
+  var pct=l.serverFundedPercent!=null?l.serverFundedPercent:pctOf(l);
   var funded=pct>=100;
   steps.push({done:!!l.shippedAt,active:funded&&!l.shippedAt,label:'Item fully funded & shipped',sub:l.shippedAt?'All spots sold \u2014 item purchased and shipped to the owner':(funded?'All spots sold \u2014 shipment is being prepared':Math.round(pct)+'% funded so far')});
   var checkins=l.checkins||[],checkState=checkinStatus(l);
@@ -10527,24 +10594,23 @@ function trackCardHtml(l,c){
     var dueCopy=i===0&&checkState.firstDueAt?((checkState.firstOverdue?'Overdue since ':'Due by ')+new Date(checkState.firstDueAt).toLocaleDateString()):'Not yet submitted';
     steps.push({done:!!ci,active:!ci&&funded&&i===checkins.length,label:'Month '+(i+1)+' check-in',sub:ci?('Photo received '+new Date(ci.date).toLocaleDateString()):dueCopy});
   }
-  var badge=c.refunded?'Refunded':(checkState.nonCompliant?'Non-compliant':(checkState.overdue?(checkState.firstOverdue?'First check-in overdue':'Check-in overdue'):(l.shippedAt?'Shipped':'Purchased')));
+  var badge=c.ownerView?(funded?'Funded':'Launch ready'):(orderStatus==='pending'?'Pending':(c.refunded||orderStatus==='refunded'?'Refunded':(checkState.nonCompliant?'Non-compliant':(checkState.overdue?(checkState.firstOverdue?'First check-in overdue':'Check-in overdue'):(l.shippedAt?'Shipped':'Purchased')))));
   return '<details class="card track-order">'+
       '<summary class="track-order-summary">'+
         (photo?'<img src="'+photo+'" style="width:56px;height:56px;object-fit:contain;background:#fff;border:1px solid var(--border);border-radius:12px;flex-shrink:0" alt="">':'')+
-        '<div class="track-order-summary-copy"><div class="track-order-title">'+LBLL(l)+'</div><div class="track-order-meta">'+c.brand+' \u00b7 '+c.subId+'</div></div>'+
-        '<span class="status-badge '+(c.refunded?'risk':(checkState.nonCompliant||checkState.overdue?'risk':'active'))+'">'+badge+'</span>'+
+        '<div class="track-order-summary-copy"><div class="track-order-title">'+LBLL(l)+'</div><div class="track-order-meta">'+(c.ownerView?'Owner campaign':(c.ownerOrder?'Brand order received':c.brand))+' \u00b7 '+c.subId+'</div></div>'+
+        '<span class="status-badge '+(c.refunded||orderStatus==='refunded'||checkState.nonCompliant||checkState.overdue?'risk':'active')+'">'+badge+'</span>'+
         '<span class="track-order-chevron" aria-hidden="true">&#8964;</span>'+
       '</summary>'+
       '<div class="track-order-content">'+
       '<div class="track-timeline">'+steps.map(function(s){
         return '<div class="track-step '+(s.done?'done':(s.active?'active':''))+'"><div class="track-dot"></div><div class="track-line"></div><div class="track-body"><b>'+s.label+'</b><span>'+s.sub+'</span></div></div>';
       }).join('')+'</div>'+
-       trackSubmitHtml(l,c)+delayActionHtml(l,c)+
+       trackSubmitHtml(l,c)+(c.ownerView?'':delayActionHtml(l,c))+
       '<details style="margin-top:4px"><summary style="cursor:pointer;font-size:13px;font-weight:600;color:#6e6e73">Advanced details</summary>'+
         '<div style="margin-top:10px;font-size:13px;color:#3a3a3c;line-height:2">'+
-          '<div>Submission ID <b style="float:right">'+c.subId+'</b></div>'+
-          '<div>Spot price <b style="float:right">'+money(c.amt)+'</b></div>'+
-          '<div>Total charged <b style="float:right">'+money(c.amt+c.fee)+'</b></div>'+
+          '<div>'+(c.ownerView?'Campaign ID':'Submission ID')+' <b style="float:right">'+c.subId+'</b></div>'+
+          (c.ownerView?'':'<div>Spot number <b style="float:right">'+((c.spotIndex||0)+1)+'</b></div><div>Spot price <b style="float:right">'+money(c.amt)+'</b></div><div>Total charged <b style="float:right">'+money(c.amt+c.fee)+'</b></div>')+
           '<div>Fulfillment status <b style="float:right">'+badge+'</b></div>'+
           '<div>Check-ins on file <b style="float:right">'+checkins.length+' of '+termOf(l)+'</b></div>'+
         '</div>'+

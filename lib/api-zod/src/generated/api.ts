@@ -5,15 +5,17 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import * as zod from "zod";
+import * as zod from 'zod';
+
 
 /**
  * Returns server health status
  * @summary Health check
  */
 export const HealthCheckResponse = zod.object({
-  status: zod.string(),
-});
+  "status": zod.string()
+})
+
 
 /**
  * @summary Register a campaign and its authoritative spot prices
@@ -26,102 +28,51 @@ export const registerCampaignBodyTitleMax = 200;
 
 export const registerCampaignBodyOwnerNameMax = 120;
 
+export const registerCampaignBodyOwnerEmailMax = 320;
+
 export const registerCampaignBodyPricesCentsItemMin = 100;
 export const registerCampaignBodyPricesCentsItemMax = 10000000;
 
 export const registerCampaignBodyPricesCentsMax = 20;
 
+
+
 export const RegisterCampaignBody = zod.object({
-  id: zod.string().min(1).max(registerCampaignBodyIdMax),
-  itemType: zod.string().min(1).max(registerCampaignBodyItemTypeMax),
-  title: zod.string().min(1).max(registerCampaignBodyTitleMax),
-  ownerName: zod.string().min(1).max(registerCampaignBodyOwnerNameMax),
-  pricesCents: zod
-    .array(
-      zod
-        .int()
-        .min(registerCampaignBodyPricesCentsItemMin)
-        .max(registerCampaignBodyPricesCentsItemMax),
-    )
-    .min(1)
-    .max(registerCampaignBodyPricesCentsMax),
-});
+  "id": zod.string().min(1).max(registerCampaignBodyIdMax),
+  "itemType": zod.string().min(1).max(registerCampaignBodyItemTypeMax),
+  "title": zod.string().min(1).max(registerCampaignBodyTitleMax),
+  "ownerName": zod.string().min(1).max(registerCampaignBodyOwnerNameMax),
+  "ownerEmail": zod.email().max(registerCampaignBodyOwnerEmailMax),
+  "pricesCents": zod.array(zod.int().min(registerCampaignBodyPricesCentsItemMin).max(registerCampaignBodyPricesCentsItemMax)).min(1).max(registerCampaignBodyPricesCentsMax)
+})
 
-export const registerCampaignResponseOneIdMax = 100;
+export const RegisterCampaignResponse = zod.object({
+  "id": zod.string(),
+  "itemType": zod.string(),
+  "title": zod.string(),
+  "ownerName": zod.string(),
+  "ownerEmail": zod.string().nullable(),
+  "pricesCents": zod.array(zod.int()),
+  "active": zod.boolean(),
+  "createdAt": zod.coerce.date()
+})
 
-export const registerCampaignResponseOneItemTypeMax = 50;
-
-export const registerCampaignResponseOneTitleMax = 200;
-
-export const registerCampaignResponseOneOwnerNameMax = 120;
-
-export const registerCampaignResponseOnePricesCentsItemMin = 100;
-export const registerCampaignResponseOnePricesCentsItemMax = 10000000;
-
-export const registerCampaignResponseOnePricesCentsMax = 20;
-
-export const RegisterCampaignResponse = zod
-  .object({
-    id: zod.string().min(1).max(registerCampaignResponseOneIdMax),
-    itemType: zod.string().min(1).max(registerCampaignResponseOneItemTypeMax),
-    title: zod.string().min(1).max(registerCampaignResponseOneTitleMax),
-    ownerName: zod.string().min(1).max(registerCampaignResponseOneOwnerNameMax),
-    pricesCents: zod
-      .array(
-        zod
-          .int()
-          .min(registerCampaignResponseOnePricesCentsItemMin)
-          .max(registerCampaignResponseOnePricesCentsItemMax),
-      )
-      .min(1)
-      .max(registerCampaignResponseOnePricesCentsMax),
-  })
-  .and(
-    zod.object({
-      active: zod.boolean(),
-      createdAt: zod.coerce.date(),
-    }),
-  );
 
 /**
  * @summary List active real campaigns
  */
-export const listCampaignsResponseOneIdMax = 100;
+export const ListCampaignsResponseItem = zod.object({
+  "id": zod.string(),
+  "itemType": zod.string(),
+  "title": zod.string(),
+  "ownerName": zod.string(),
+  "ownerEmail": zod.string().nullable(),
+  "pricesCents": zod.array(zod.int()),
+  "active": zod.boolean(),
+  "createdAt": zod.coerce.date()
+})
+export const ListCampaignsResponse = zod.array(ListCampaignsResponseItem)
 
-export const listCampaignsResponseOneItemTypeMax = 50;
-
-export const listCampaignsResponseOneTitleMax = 200;
-
-export const listCampaignsResponseOneOwnerNameMax = 120;
-
-export const listCampaignsResponseOnePricesCentsItemMin = 100;
-export const listCampaignsResponseOnePricesCentsItemMax = 10000000;
-
-export const listCampaignsResponseOnePricesCentsMax = 20;
-
-export const ListCampaignsResponseItem = zod
-  .object({
-    id: zod.string().min(1).max(listCampaignsResponseOneIdMax),
-    itemType: zod.string().min(1).max(listCampaignsResponseOneItemTypeMax),
-    title: zod.string().min(1).max(listCampaignsResponseOneTitleMax),
-    ownerName: zod.string().min(1).max(listCampaignsResponseOneOwnerNameMax),
-    pricesCents: zod
-      .array(
-        zod
-          .int()
-          .min(listCampaignsResponseOnePricesCentsItemMin)
-          .max(listCampaignsResponseOnePricesCentsItemMax),
-      )
-      .min(1)
-      .max(listCampaignsResponseOnePricesCentsMax),
-  })
-  .and(
-    zod.object({
-      active: zod.boolean(),
-      createdAt: zod.coerce.date(),
-    }),
-  );
-export const ListCampaignsResponse = zod.array(ListCampaignsResponseItem);
 
 /**
  * @summary Create a Stripe Checkout session for one campaign placement
@@ -137,42 +88,78 @@ export const createPlacementCheckoutBodyEmailMax = 320;
 
 export const createPlacementCheckoutBodyDestinationUrlMax = 2048;
 
+
+
 export const CreatePlacementCheckoutBody = zod.object({
-  campaignId: zod.string().min(1).max(createPlacementCheckoutBodyCampaignIdMax),
-  spotIndex: zod
-    .int()
-    .min(createPlacementCheckoutBodySpotIndexMin)
-    .max(createPlacementCheckoutBodySpotIndexMax),
-  brandName: zod.string().min(1).max(createPlacementCheckoutBodyBrandNameMax),
-  email: zod.email().max(createPlacementCheckoutBodyEmailMax),
-  destinationUrl: zod
-    .string()
-    .max(createPlacementCheckoutBodyDestinationUrlMax)
-    .optional(),
-});
+  "campaignId": zod.string().min(1).max(createPlacementCheckoutBodyCampaignIdMax),
+  "spotIndex": zod.int().min(createPlacementCheckoutBodySpotIndexMin).max(createPlacementCheckoutBodySpotIndexMax),
+  "brandName": zod.string().min(1).max(createPlacementCheckoutBodyBrandNameMax),
+  "email": zod.email().max(createPlacementCheckoutBodyEmailMax),
+  "destinationUrl": zod.string().max(createPlacementCheckoutBodyDestinationUrlMax).optional()
+})
 
 export const CreatePlacementCheckoutResponse = zod.object({
-  url: zod.url(),
-  orderId: zod.string(),
-  sessionId: zod.string(),
-});
+  "url": zod.url(),
+  "orderId": zod.string(),
+  "sessionId": zod.string()
+})
+
 
 /**
  * @summary Verify a Stripe Checkout session and return its order
  */
 
+
+
 export const GetPlacementCheckoutParams = zod.object({
-  sessionId: zod.coerce.string().min(1),
-});
+  "sessionId": zod.coerce.string().min(1)
+})
 
 export const GetPlacementCheckoutResponse = zod.object({
-  id: zod.string(),
-  campaignId: zod.string(),
-  spotIndex: zod.int(),
-  amountCents: zod.int(),
-  brandName: zod.string(),
-  email: zod.string(),
-  destinationUrl: zod.string().nullish(),
-  status: zod.enum(["pending", "paid", "expired", "refunded"]),
-  stripeCheckoutSessionId: zod.string().nullish(),
-});
+  "id": zod.string(),
+  "campaignId": zod.string(),
+  "spotIndex": zod.int(),
+  "amountCents": zod.int(),
+  "brandName": zod.string(),
+  "email": zod.string(),
+  "destinationUrl": zod.string().nullish(),
+  "status": zod.enum(['pending', 'paid', 'expired', 'refunded']),
+  "stripeCheckoutSessionId": zod.string().nullish()
+})
+
+
+/**
+ * @summary Find campaigns and placement orders linked to an email
+ */
+export const getTrackingQueryEmailMax = 320;
+
+
+
+export const GetTrackingQueryParams = zod.object({
+  "email": zod.email().max(getTrackingQueryEmailMax)
+})
+
+export const GetTrackingResponse = zod.object({
+  "email": zod.string(),
+  "campaigns": zod.array(zod.object({
+  "id": zod.string(),
+  "itemType": zod.string(),
+  "title": zod.string(),
+  "ownerName": zod.string(),
+  "pricesCents": zod.array(zod.int()),
+  "active": zod.boolean(),
+  "ownerMatch": zod.boolean(),
+  "createdAt": zod.coerce.date(),
+  "orders": zod.array(zod.object({
+  "id": zod.string(),
+  "campaignId": zod.string(),
+  "spotIndex": zod.int(),
+  "amountCents": zod.int(),
+  "brandName": zod.string(),
+  "email": zod.string(),
+  "destinationUrl": zod.string().nullish(),
+  "status": zod.enum(['pending', 'paid', 'expired', 'refunded']),
+  "createdAt": zod.coerce.date()
+}))
+}))
+})

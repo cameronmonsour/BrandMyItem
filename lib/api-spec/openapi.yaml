@@ -14,6 +14,8 @@ tags:
     description: Public campaign operations
   - name: checkout
     description: Stripe placement checkout operations
+  - name: tracking
+    description: Email-linked campaign and placement tracking
 paths:
   /healthz:
     get:
@@ -106,6 +108,28 @@ paths:
                 $ref: "#/components/schemas/PlacementOrder"
         "404":
           description: Checkout session not found
+  /tracking:
+    get:
+      operationId: getTracking
+      tags: [tracking]
+      summary: Find campaigns and placement orders linked to an email
+      parameters:
+        - in: query
+          name: email
+          required: true
+          schema:
+            type: string
+            format: email
+            maxLength: 320
+      responses:
+        "200":
+          description: Email-linked tracking records
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TrackingResult"
+        "400":
+          description: Invalid email
 components:
   schemas:
     HealthStatus:
@@ -117,7 +141,7 @@ components:
         - status
     CampaignInput:
       type: object
-      required: [id, itemType, title, ownerName, pricesCents]
+      required: [id, itemType, title, ownerName, ownerEmail, pricesCents]
       properties:
         id:
           type: string
@@ -135,6 +159,10 @@ components:
           type: string
           minLength: 1
           maxLength: 120
+        ownerEmail:
+          type: string
+          format: email
+          maxLength: 320
         pricesCents:
           type: array
           minItems: 1
@@ -144,16 +172,28 @@ components:
             minimum: 100
             maximum: 10000000
     Campaign:
-      allOf:
-        - $ref: "#/components/schemas/CampaignInput"
-        - type: object
-          required: [active, createdAt]
-          properties:
-            active:
-              type: boolean
-            createdAt:
-              type: string
-              format: date-time
+      type: object
+      required: [id, itemType, title, ownerName, ownerEmail, pricesCents, active, createdAt]
+      properties:
+        id:
+          type: string
+        itemType:
+          type: string
+        title:
+          type: string
+        ownerName:
+          type: string
+        ownerEmail:
+          type: ["string", "null"]
+        pricesCents:
+          type: array
+          items:
+            type: integer
+        active:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
     PlacementCheckoutInput:
       type: object
       required: [campaignId, spotIndex, brandName, email]
@@ -211,4 +251,65 @@ components:
           enum: [pending, paid, expired, refunded]
         stripeCheckoutSessionId:
           type: ["string", "null"]
+    TrackingOrder:
+      type: object
+      required: [id, campaignId, spotIndex, amountCents, brandName, email, status, createdAt]
+      properties:
+        id:
+          type: string
+        campaignId:
+          type: string
+        spotIndex:
+          type: integer
+        amountCents:
+          type: integer
+        brandName:
+          type: string
+        email:
+          type: string
+        destinationUrl:
+          type: ["string", "null"]
+        status:
+          type: string
+          enum: [pending, paid, expired, refunded]
+        createdAt:
+          type: string
+          format: date-time
+    TrackingCampaign:
+      type: object
+      required: [id, itemType, title, ownerName, pricesCents, active, ownerMatch, createdAt, orders]
+      properties:
+        id:
+          type: string
+        itemType:
+          type: string
+        title:
+          type: string
+        ownerName:
+          type: string
+        pricesCents:
+          type: array
+          items:
+            type: integer
+        active:
+          type: boolean
+        ownerMatch:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        orders:
+          type: array
+          items:
+            $ref: "#/components/schemas/TrackingOrder"
+    TrackingResult:
+      type: object
+      required: [email, campaigns]
+      properties:
+        email:
+          type: string
+        campaigns:
+          type: array
+          items:
+            $ref: "#/components/schemas/TrackingCampaign"
 

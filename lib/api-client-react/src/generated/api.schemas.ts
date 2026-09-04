@@ -11,54 +11,63 @@ export interface HealthStatus {
 
 export interface CampaignInput {
   /**
-   * @minLength 1
-   * @maxLength 100
-   */
+     * @minLength 1
+     * @maxLength 100
+     */
   id: string;
   /**
-   * @minLength 1
-   * @maxLength 50
-   */
+     * @minLength 1
+     * @maxLength 50
+     */
   itemType: string;
   /**
-   * @minLength 1
-   * @maxLength 200
-   */
+     * @minLength 1
+     * @maxLength 200
+     */
   title: string;
   /**
-   * @minLength 1
-   * @maxLength 120
-   */
+     * @minLength 1
+     * @maxLength 120
+     */
   ownerName: string;
+  /** @maxLength 320 */
+  ownerEmail: string;
   /**
-   * @minItems 1
-   * @maxItems 20
-   * @items.minimum 100
-   * @items.maximum 10000000
-   */
+     * @minItems 1
+     * @maxItems 20
+     * @items.minimum 100
+     * @items.maximum 10000000
+     */
   pricesCents: number[];
 }
 
-export type Campaign = CampaignInput & {
+export interface Campaign {
+  id: string;
+  itemType: string;
+  title: string;
+  ownerName: string;
+  /** @nullable */
+  ownerEmail: string | null;
+  pricesCents: number[];
   active: boolean;
   createdAt: string;
-};
+}
 
 export interface PlacementCheckoutInput {
   /**
-   * @minLength 1
-   * @maxLength 100
-   */
+     * @minLength 1
+     * @maxLength 100
+     */
   campaignId: string;
   /**
-   * @minimum 0
-   * @maximum 19
-   */
+     * @minimum 0
+     * @maximum 19
+     */
   spotIndex: number;
   /**
-   * @minLength 1
-   * @maxLength 120
-   */
+     * @minLength 1
+     * @maxLength 120
+     */
   brandName: string;
   /** @maxLength 320 */
   email: string;
@@ -72,14 +81,14 @@ export interface PlacementCheckoutSession {
   sessionId: string;
 }
 
-export type PlacementOrderStatus =
-  (typeof PlacementOrderStatus)[keyof typeof PlacementOrderStatus];
+export type PlacementOrderStatus = typeof PlacementOrderStatus[keyof typeof PlacementOrderStatus];
+
 
 export const PlacementOrderStatus = {
-  pending: "pending",
-  paid: "paid",
-  expired: "expired",
-  refunded: "refunded",
+  pending: 'pending',
+  paid: 'paid',
+  expired: 'expired',
+  refunded: 'refunded',
 } as const;
 
 export interface PlacementOrder {
@@ -95,3 +104,50 @@ export interface PlacementOrder {
   /** @nullable */
   stripeCheckoutSessionId?: string | null;
 }
+
+export type TrackingOrderStatus = typeof TrackingOrderStatus[keyof typeof TrackingOrderStatus];
+
+
+export const TrackingOrderStatus = {
+  pending: 'pending',
+  paid: 'paid',
+  expired: 'expired',
+  refunded: 'refunded',
+} as const;
+
+export interface TrackingOrder {
+  id: string;
+  campaignId: string;
+  spotIndex: number;
+  amountCents: number;
+  brandName: string;
+  email: string;
+  /** @nullable */
+  destinationUrl?: string | null;
+  status: TrackingOrderStatus;
+  createdAt: string;
+}
+
+export interface TrackingCampaign {
+  id: string;
+  itemType: string;
+  title: string;
+  ownerName: string;
+  pricesCents: number[];
+  active: boolean;
+  ownerMatch: boolean;
+  createdAt: string;
+  orders: TrackingOrder[];
+}
+
+export interface TrackingResult {
+  email: string;
+  campaigns: TrackingCampaign[];
+}
+
+export type GetTrackingParams = {
+/**
+ * @maxLength 320
+ */
+email: string;
+};

@@ -13,6 +13,7 @@ export const campaignsTable = pgTable("campaigns", {
   itemType: text("item_type").notNull(),
   title: text("title").notNull(),
   ownerName: text("owner_name").notNull(),
+  ownerEmail: text("owner_email"),
   pricesCents: jsonb("prices_cents").$type<number[]>().notNull(),
   active: boolean("active").notNull().default(true),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
