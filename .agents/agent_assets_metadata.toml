@@ -1,0 +1,30 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "14tzGhaZcsTQZAIK-H5SR"
+uri = "file://screenshots/audit-home-mobile.jpg"
+type = "image"
+title = "BrandMyItem audit, mobile home"
+description = "390px preview captured during the pre-ship audit."
+logical_id = "9fe93d2e-32d8-43aa-916d-0781d438965e"
+content_hash = "sha256:c1a77347ff87c94e330ce7fd195c70fd42679aa416adf32b2f4e415df5988f2f"
+size = 24037
+mtime_ms = 1788539923121
+storage_uri = "gcs://replit-rams-assets-riker/rams/assets/repl:3f7c2cc8-f08b-4158-944b-09fd3b52c7cc/9fe93d2e-32d8-43aa-916d-0781d438965e/e78d8cdb-d0d0-4ce1-b242-69352748f055"
+storage_version_token = "1788540011590732"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "xsnP_V9DVWgNKX5Dkh1eJ"
+uri = "file://screenshots/audit-home-desktop.jpg"
+type = "image"
+title = "BrandMyItem audit, desktop home"
+description = "1440px preview captured during the pre-ship audit."
+logical_id = "2768f3c3-c51d-4edc-b686-b64f66bbc4ef"
+content_hash = "sha256:ca431d43fedbbe29ac12f08beb911ec6732f2e7636027ee97f118420310b71f1"
+size = 66482
+mtime_ms = 1788539927225
+storage_uri = "gcs://replit-rams-assets-riker/rams/assets/repl:3f7c2cc8-f08b-4158-944b-09fd3b52c7cc/2768f3c3-c51d-4edc-b686-b64f66bbc4ef/4b97a1b4-c551-48bf-98fe-3510f8ec7dbf"
+storage_version_token = "1788540012441073"
+content_type = "image/jpeg"

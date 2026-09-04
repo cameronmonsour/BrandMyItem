@@ -1,0 +1,77 @@
+# PART D — Remaining website gaps, minimal launch version (Replit prompt)
+
+Paste after the consolidated prompt (Parts A–C). Where Part D conflicts with earlier parts, Part D wins. Build exactly what is listed; do not add systems beyond it. Run the acceptance checks at the end before reporting done.
+
+---
+
+## 1. Proof approval (patch, embroidery, engraving spots)
+
+- Add one boolean per spot: `proof_approved` (default false), plus `proof_sent_at`.
+- Admin sets `proof_sent_at` when the proof is emailed to the brand (email is sent manually from support@; no brand-side UI).
+- Admin checkbox marks `proof_approved`. A spot cannot be marked `applied` unless `proof_approved` is true (sticker spots are exempt — set `proof_approved` true automatically at funding).
+- **Auto-approve at 7 days:** the hourly job sets `proof_approved = true` on any non-sticker spot where `proof_sent_at` is more than 7 days old and no admin override flag is set. The proof email template says: "Reply with 'approved' or your changes. If we don't hear back within 7 days, the proof is approved so the owner's delivery isn't delayed."
+
+## 2. Logo upload
+
+- Uploader accepts **SVG or PDF only**, every method, max 20 MB. Any other type is rejected with: "Please upload your logo as an SVG or PDF."
+- Store the file; render a preview on the item before "Reserve this spot."
+- One line under the uploader: "By uploading, you confirm you hold all rights to this mark."
+
+## 3. Shipping
+
+- Owner address as structured fields: street, unit (optional), city, state (dropdown), ZIP (5 digits).
+- Reject street values matching `/\bP\.?\s*O\.?\s*BOX\b/i` with: "We can't ship to PO boxes."
+- No API validation. Labels, insurance, and signature-required are handled in the label tool outside the site.
+- Admin enters carrier + tracking number on the funded listing; owner's Track page shows the tracking link. Admin "Delivered" checkbox starts the 7-day first-check-in clock.
+
+## 4. Security
+
+- Magic-link requests: max 5 per email per hour. Over the limit, return the same generic message and send nothing.
+- Check-in photo upload: images only, 25 MB max, strip all EXIF metadata on save (one library call, e.g. sharp `.withMetadata(false)` / Pillow re-save).
+- All `/admin` routes behind authentication.
+
+## 5. Pages and assets
+
+- **404:** wordmark, "That page isn't here.", links to Home and Live items. Same nav and footer.
+- **Contact** (`/contact`): support@brandmyitem.com, legal@, privacy@, and a three-field form (name, email, message) that emails support@ via Resend. Link from footer Company column and bottom bar.
+- **Accessibility statement:** one paragraph appended to the Legal page (not a new route): commitment to WCAG 2.1 AA, report barriers to support@, last reviewed date. Link text "Accessibility" in the footer Legal column, anchored to that paragraph.
+- **Favicon:** single 512×512 PNG (existing app icon) referenced as `<link rel="icon">` and `<link rel="apple-touch-icon">`.
+- **OG image:** one static 1200×630 PNG — wash background (#F5F5F7), wordmark centered, line beneath: "Brands buy the ad space. You get the item." Set site-wide as `og:image` and `twitter:image` with `twitter:card = summary_large_image`.
+- **Meta:** unique `<title>` and `meta description` (≤ 155 chars) on the eight pages: Home, How it works, Live items, FAQ, Build your item, Track my item, Legal, Contact.
+- **Sitemap:** static `sitemap.xml` listing those eight pages. `robots.txt` allows all.
+
+## 6. Analytics
+
+- Install nothing at launch. No consent banner, no Privacy Policy change. If analytics is added later, that change comes with its own prompt.
+
+## 7. Hosting and operations
+
+- Deploy on Replit Autoscale at `https://brandmyitem.com`; `www` and `http` redirect to it; SSL enforced.
+- Database: enable Replit Postgres point-in-time restore. Document the restore steps in `/docs/ops.md`.
+- Uptime: UptimeRobot (free) on `https://brandmyitem.com`, alert to support@.
+- Secrets (Stripe, Resend, DB) in Replit Secrets only; Stripe webhook signatures verified.
+- Email: Resend from `hello@mail.brandmyitem.com`, display name "BrandMyItem", Reply-To `support@brandmyitem.com`; SPF, DKIM, DMARC (`p=none`) records set.
+- **One hourly scheduled job** that runs these sweeps in order, each idempotent, each logged with counts:
+  1. Listing expiry (day 60 → release reservations, expire, emails)
+  2. Declined-card 48h window (→ reopen spot, emails)
+  3. Check-in reminders (3 days before due, day of, 2 days after)
+  4. Missed check-in → flag; repeated → posting restriction
+  5. Proof auto-approve at 7 days (§1)
+  6. Make-good 30-day fallback → prorated refund
+
+## 8. Acceptance checks
+
+- [ ] Non-sticker spot: `applied` is blocked until `proof_approved`; with `proof_sent_at` set 8 days in the past, the hourly job flips `proof_approved` to true. Sticker spot: `proof_approved` true at funding automatically.
+- [ ] Upload PNG → rejected with the SVG/PDF message; upload SVG → accepted, preview shown.
+- [ ] Address "PO Box 12" rejected; "P.O. Box 12" rejected; "12 Main St" accepted. State is a dropdown; ZIP requires 5 digits.
+- [ ] Admin enters tracking → owner Track page shows link; "Delivered" starts the 7-day clock.
+- [ ] 6th magic-link request within an hour returns the generic message, no email sent.
+- [ ] Photo with GPS EXIF uploaded → stored file has no EXIF.
+- [ ] `/admin/*` redirects to login when unauthenticated.
+- [ ] `/404`, `/contact` render with nav/footer; contact form delivers to support@; Accessibility anchor exists on Legal page and is linked from the footer.
+- [ ] Favicon shows in tab; OG image appears in a link-preview tester; `twitter:card` is `summary_large_image`.
+- [ ] Eight pages have unique titles and descriptions ≤ 155 chars; `sitemap.xml` lists exactly those eight; `robots.txt` present.
+- [ ] No analytics script in any page (`grep -ri "gtag\|plausible\|fbq\|twq"` returns zero).
+- [ ] Production responds at `https://brandmyitem.com`; `http://` and `www` redirect; `grep -r "sk_live\|re_\|postgres://"` in repo returns zero.
+- [ ] Hourly job runs end-to-end on a simulated clock and each sweep logs its count; running it twice produces no duplicate emails or state changes.
+- [ ] Screenshots: admin spot with proof checkbox, rejected upload, address form error, owner Track page with tracking, 404, contact, OG preview.
