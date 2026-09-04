@@ -1,5 +1,6 @@
 import {
   boolean,
+  index,
   integer,
   jsonb,
   pgTable,
@@ -94,4 +95,18 @@ export const placementOrdersTable = pgTable(
       table.stripeCheckoutSessionId,
     ),
   ],
+);
+
+export const trackingMagicLinksTable = pgTable(
+  "tracking_magic_links",
+  {
+    tokenHash: text("token_hash").primaryKey(),
+    email: text("email").notNull(),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    usedAt: timestamp("used_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [index("tracking_magic_links_expires_at_idx").on(table.expiresAt)],
 );

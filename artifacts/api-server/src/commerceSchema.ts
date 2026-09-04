@@ -10,6 +10,15 @@ export async function ensureCommerceSchema(): Promise<void> {
       ADD COLUMN IF NOT EXISTS logo_object_path text;
     ALTER TABLE campaigns
       ADD COLUMN IF NOT EXISTS presentation jsonb NOT NULL DEFAULT '{}'::jsonb,
-      ADD COLUMN IF NOT EXISTS owner_access_token_hash text
+      ADD COLUMN IF NOT EXISTS owner_access_token_hash text;
+    CREATE TABLE IF NOT EXISTS tracking_magic_links (
+      token_hash text PRIMARY KEY,
+      email text NOT NULL,
+      expires_at timestamptz NOT NULL,
+      used_at timestamptz,
+      created_at timestamptz NOT NULL DEFAULT now()
+    );
+    CREATE INDEX IF NOT EXISTS tracking_magic_links_expires_at_idx
+      ON tracking_magic_links (expires_at)
   `);
 }
