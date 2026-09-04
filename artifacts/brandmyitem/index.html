@@ -228,9 +228,7 @@ details.faq .fa b{color:var(--fg);font-weight:600}
 .dash-head .eyebrow{margin-bottom:7px}
 .dash-head h1{font-family:var(--serif);font-size:clamp(36px,5vw,56px);font-weight:500;letter-spacing:-.025em;line-height:1;padding-bottom:5px}
 .dash-head p{max-width:620px;color:var(--mfg);font-size:15px;line-height:1.55}
-.searchbar{position:relative;margin:0 0 12px}
-.searchbar input{height:48px;border-radius:999px;padding-left:46px;font-size:15px}
-.searchbar svg{position:absolute;left:17px;top:50%;transform:translateY(-50%);color:var(--mfg)}
+#v-dashboard .catstrip{margin-top:20px}
 .catstrip{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 14px;scrollbar-width:none}
 .catstrip::-webkit-scrollbar{display:none}
 .cat{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:8px;min-width:96px;height:54px;padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg);font-size:12.5px;font-weight:500;color:var(--fg)}
@@ -1936,10 +1934,6 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 <!-- DASHBOARD -->
 <div class="view" id="v-dashboard">
   <div class="wrap">
-    <div class="searchbar">
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      <input class="input" id="dq" placeholder="Search items, owners, habitats&hellip;">
-    </div>
     <div class="catstrip" id="catStrip"></div>
     <div class="dash">
       <aside class="rail">
@@ -8296,7 +8290,7 @@ function drawHomeMap(f){
 
 /* --- DASHBOARD --- */
 var F={
-  q:'',cat:'All',status:'all',min:'',max:'',sort:'new',
+  cat:'All',status:'all',min:'',max:'',sort:'new',
   social:'',freq:'',location:'',university:'',itemMin:'',itemMax:'',
   openMin:'',method:'',term:'',checkin:''
 };
@@ -8425,8 +8419,6 @@ function showDash(){
     b.onclick=function(){F.cat=c.id;showDash()};
     cs.appendChild(b);
   });
-  document.getElementById('dq').value=F.q;
-  document.getElementById('dq').oninput=function(){F.q=this.value;renderDash()};
   var methodSelect=document.getElementById('fMethod');
   if(methodSelect&&methodSelect.options.length===1){
     var methods=[];
@@ -8468,7 +8460,7 @@ function showDash(){
   fs.onchange=function(){F.sort=this.value;renderDash()};
   document.getElementById('clearDashFilters').onclick=function(){
     F={
-      q:'',cat:'All',status:'all',min:'',max:'',sort:'new',
+      cat:'All',status:'all',min:'',max:'',sort:'new',
       social:'',freq:'',location:'',university:'',itemMin:'',itemMax:'',
       openMin:'',method:'',term:'',checkin:''
     };
@@ -8524,9 +8516,8 @@ function postActivityText(row){
   return row.txt||'A user posted an item';
 }
 function syncDashboardFilterState(){
-  var q=document.getElementById('dq'),min=document.getElementById('fmin'),max=document.getElementById('fmax'),sort=document.getElementById('fsort');
+  var min=document.getElementById('fmin'),max=document.getElementById('fmax'),sort=document.getElementById('fsort');
   var status=document.querySelector('input[name=fst]:checked');
-  if(q)F.q=q.value;
   if(min)F.min=min.value;
   if(max)F.max=max.value;
   if(sort)F.sort=sort.value;
@@ -8545,7 +8536,6 @@ function renderDash(){
   syncDashboardFilterState();
   var all=DB.listings.filter(isLaunchLiveCampaign);
   renderDashboardLiveFeed();
-  var q=F.q.toLowerCase();
   var list=all.filter(function(l){
     var it={label:LBLL(l),cat:listingCategory(l)};
     if(F.cat!=='All'&&it.cat!==F.cat)return false;
@@ -8566,8 +8556,6 @@ function renderDash(){
     if(F.method&&brandingMethod(l.type)!==F.method)return false;
     if(F.term&&String(termOf(l))!==F.term)return false;
     if(F.checkin&&checkinCadenceText(l)!==F.checkin)return false;
-    var searchable=[it.label,it.cat,l.owner,l.purpose,l.social].concat(l.habs||[],l.cities||[],l.universities||[]).join(' ').toLowerCase();
-    if(q&&!searchable.includes(q))return false;
     var mo=listingSpotPrice(l);
     var min=F.min===''?null:parseFloat(F.min),max=F.max===''?null:parseFloat(F.max);
     if(min!==null&&!isNaN(min)&&(mo===Infinity||mo<min))return false;
@@ -9255,7 +9243,7 @@ function cuDraw(){
       g.arcTo(rx,ry+rh,rx,ry,rad);g.arcTo(rx,ry,rx+rw,ry,rad);g.closePath();
       g.stroke();
     }
-    g.fillStyle='rgba(29,29,31,.72)';
+     g.fillStyle=outlineColor;
     g.font='600 '+Math.max(12,Math.min(18,iw*.018))+'px Inter,Arial';
     g.textAlign='center';
     g.textBaseline='middle';
@@ -11259,6 +11247,7 @@ function initHomeFeatureBento(){
     var item=items[itemIndex];
     var frame=CATALOG_SURFACES[item.type];
     if(!itemImg)return;
+    itemImg.classList.toggle('fb-photo-cutout',item.type!=='case');
     itemImg.classList.toggle('fb-rimowa',item.type==='case');
     itemImg.src=item.img;
     if(itemName)itemName.textContent=item.name;

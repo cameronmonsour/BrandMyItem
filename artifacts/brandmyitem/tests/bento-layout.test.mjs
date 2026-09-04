@@ -96,9 +96,10 @@ test('all bento artwork is contained away from copy on narrow screens', () => {
   assert.match(html, /\.fb-term \.fb-suit\{right:18px;top:34px;height:96px\}/);
 });
 
-test('every bento photo has the locked white outline treatment', () => {
+test('bento photos keep one white outline without doubling the Rimowa edge', () => {
   assert.match(html, /\.feature-bento \.fb-photo-cutout\{filter:drop-shadow\(3px 0 0 #fff\)[^}]*drop-shadow\(0 5px 5px rgba\(0,0,0,\.12\)\)\}/);
   assert.match(html, /\.feature-bento \.fb-stage-inner>img\.fb-rimowa\{filter:none\}/);
+  assert.match(html, /itemImg\.classList\.toggle\('fb-photo-cutout',item\.type!=='case'\)/);
   assert.match(html, /itemImg\.classList\.toggle\('fb-rimowa',item\.type==='case'\)/);
   assert.match(html, /\.feature-bento \.fb-photo-frame\{box-shadow:0 0 0 3px #fff,0 5px 9px rgba\(0,0,0,\.12\)\}/);
   assert.match(html, /<img class="fb-photo-cutout" src="bento\/bag\.png"/);

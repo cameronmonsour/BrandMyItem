@@ -87,6 +87,7 @@ test('polygon points and catalog identity survive template and detail rendering'
 
 test('builder placement outlines use the locked 1.25px stroke', () => {
   assert.match(html, /var visibleTiles=cuVisibleEditorTiles\(\);[\s\S]*?visibleTiles\.forEach\(function\(viewTile\)\{[\s\S]*?g\.strokeStyle=outlineColor;\s*g\.lineWidth=1\.25;/);
+  assert.match(html, /g\.strokeStyle=outlineColor;[\s\S]*?g\.fillStyle=outlineColor;[\s\S]*?g\.fillText\(String\(i\+1\),t\.x\*iw,t\.y\*ih\)/);
 });
 
 test('posting and rendering preserve adjusted polygon placement geometry', () => {

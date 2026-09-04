@@ -128,6 +128,10 @@ test('homepage campaign cards label locked campaigns as examples', () => {
 });
 
 test('dashboard keeps compact tracker cards without a duplicate left category box', () => {
+  assert.doesNotMatch(html, /class="searchbar"/);
+  assert.doesNotMatch(html, /id="dq"/);
+  assert.doesNotMatch(html, /Search items, owners, habitats/);
+  assert.match(html, /#v-dashboard \.catstrip\{margin-top:20px\}/);
   assert.doesNotMatch(html, /id="railCats"/);
   assert.doesNotMatch(html, /<h5>Category<\/h5>/);
   assert.doesNotMatch(html, /id="statRow"/);
