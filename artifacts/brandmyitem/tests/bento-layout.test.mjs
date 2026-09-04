@@ -79,8 +79,8 @@ test('all bento artwork is contained away from copy on narrow screens', () => {
   assert.match(html, /\.fb-bagwrap\{right:22px;top:210px;height:200px\}/);
   assert.match(html, /\.fb-stage\{left:16px;right:16px;bottom:64px\}/);
   assert.match(html, /\.fb-shot\{left:auto;right:-22px;height:190px\}/);
-  assert.match(html, /\.fb-shot\{position:absolute;left:-30px;top:var\(--fb-shot-top,250px\);height:236px\}/);
-  assert.match(html, /checkinTile\.style\.setProperty\('--fb-shot-top',Math\.ceil\(proofRow\.offsetTop\+proofRow\.offsetHeight\+16\)\+'px'\)/);
+  assert.match(html, /\.fb-shot\{position:absolute;left:auto;right:-30px;top:var\(--fb-shot-top,250px\);height:236px;z-index:1/);
+  assert.match(html, /checkinTile\.style\.setProperty\('--fb-shot-top',Math\.ceil\(proofRect\.bottom-tileRect\.top\+16\)\+'px'\)/);
   assert.match(html, /\.fb-price\{padding:26px 132px 48px 28px;min-height:260px\}/);
   assert.match(html, /\.fb-term \.fb-suit\{right:18px;top:34px;height:96px\}/);
 });
