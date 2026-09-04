@@ -9223,6 +9223,11 @@ function cuDraw(){
       g.arcTo(rx,ry+rh,rx,ry,rad);g.arcTo(rx,ry,rx+rw,ry,rad);g.closePath();
       g.stroke();
     }
+    g.fillStyle='rgba(29,29,31,.72)';
+    g.font='600 '+Math.max(9,Math.min(14,iw*.012))+'px Inter,Arial';
+    g.textAlign='center';
+    g.textBaseline='middle';
+    g.fillText(String(i+1),t.x*iw,t.y*ih);
   });
 }
 function cuVisibleEditorTiles(){

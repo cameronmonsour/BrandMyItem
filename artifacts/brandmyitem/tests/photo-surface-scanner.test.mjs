@@ -71,6 +71,7 @@ test('headphone builder includes right and left product faces', () => {
   assert.match(html, /id="cuSideTools" role="group" aria-label="Edit headphone side"/);
   assert.match(html, /className='cu-side-button'/);
   assert.match(html, /var rx=\(t\.x-t\.w\/2\)\*iw,ry=\(t\.y-t\.h\/2\)\*ih,rw=t\.w\*iw/);
+  assert.match(html, /g\.fillText\(String\(i\+1\),t\.x\*iw,t\.y\*ih\)/);
   assert.match(html, /cuWriteEditorTile\(DRAG\.i,t\)/);
   assert.match(html, /split the composite editor coordinates back into each photographed face/);
 });
