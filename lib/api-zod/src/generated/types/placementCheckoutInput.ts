@@ -26,4 +26,6 @@ export interface PlacementCheckoutInput {
   email: string;
   /** @maxLength 2048 */
   destinationUrl?: string;
+  /** @pattern ^/objects/uploads/[A-Za-z0-9-]+$ */
+  logoObjectPath: string;
 }

@@ -9,6 +9,8 @@ export interface HealthStatus {
   status: string;
 }
 
+export type CampaignInputPresentation = { [key: string]: unknown };
+
 export interface CampaignInput {
   /**
      * @minLength 1
@@ -39,6 +41,21 @@ export interface CampaignInput {
      * @items.maximum 10000000
      */
   pricesCents: number[];
+  presentation: CampaignInputPresentation;
+}
+
+export type CampaignPresentation = { [key: string]: unknown };
+
+export interface PublicClaim {
+  orderId: string;
+  spotIndex: number;
+  brandName: string;
+  /** @nullable */
+  destinationUrl?: string | null;
+  /** @nullable */
+  logoObjectPath?: string | null;
+  amountCents: number;
+  purchasedAt: string;
 }
 
 export interface Campaign {
@@ -46,9 +63,9 @@ export interface Campaign {
   itemType: string;
   title: string;
   ownerName: string;
-  /** @nullable */
-  ownerEmail: string | null;
   pricesCents: number[];
+  presentation: CampaignPresentation;
+  claims: (PublicClaim | null)[];
   active: boolean;
   createdAt: string;
 }
@@ -73,6 +90,8 @@ export interface PlacementCheckoutInput {
   email: string;
   /** @maxLength 2048 */
   destinationUrl?: string;
+  /** @pattern ^/objects/uploads/[A-Za-z0-9-]+$ */
+  logoObjectPath: string;
 }
 
 export interface PlacementCheckoutSession {
@@ -101,6 +120,8 @@ export interface PlacementOrder {
   email: string;
   /** @nullable */
   destinationUrl?: string | null;
+  /** @nullable */
+  logoObjectPath?: string | null;
   status: PlacementOrderStatus;
   /** @nullable */
   stripeCheckoutSessionId?: string | null;
@@ -126,6 +147,8 @@ export interface TrackingOrder {
   email: string;
   /** @nullable */
   destinationUrl?: string | null;
+  /** @nullable */
+  logoObjectPath?: string | null;
   status: TrackingOrderStatus;
   createdAt: string;
 }
@@ -145,6 +168,37 @@ export interface TrackingCampaign {
 export interface TrackingResult {
   email: string;
   campaigns: TrackingCampaign[];
+}
+
+export type UploadUrlRequestContentType = typeof UploadUrlRequestContentType[keyof typeof UploadUrlRequestContentType];
+
+
+export const UploadUrlRequestContentType = {
+  'image/png': 'image/png',
+  'image/jpeg': 'image/jpeg',
+  'image/webp': 'image/webp',
+  'image/gif': 'image/gif',
+  'image/svg+xml': 'image/svg+xml',
+} as const;
+
+export interface UploadUrlRequest {
+  /**
+     * @minLength 1
+     * @maxLength 255
+     */
+  name: string;
+  /**
+     * @minimum 1
+     * @maximum 10000000
+     */
+  size: number;
+  contentType: UploadUrlRequestContentType;
+}
+
+export interface UploadUrlResponse {
+  uploadURL: string;
+  objectPath: string;
+  metadata?: UploadUrlRequest;
 }
 
 export type GetTrackingParams = {

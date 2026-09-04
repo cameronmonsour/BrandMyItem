@@ -15,6 +15,7 @@ export const campaignsTable = pgTable("campaigns", {
   ownerName: text("owner_name").notNull(),
   ownerEmail: text("owner_email"),
   pricesCents: jsonb("prices_cents").$type<number[]>().notNull(),
+  presentation: jsonb("presentation").$type<Record<string, unknown>>().notNull().default({}),
   active: boolean("active").notNull().default(true),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
@@ -37,6 +38,7 @@ export const placementOrdersTable = pgTable(
     brandName: text("brand_name").notNull(),
     email: text("email").notNull(),
     destinationUrl: text("destination_url"),
+    logoObjectPath: text("logo_object_path"),
     status: text("status").notNull().default("pending"),
     stripeCheckoutSessionId: text("stripe_checkout_session_id"),
     stripeCheckoutIdempotencyKey: text("stripe_checkout_idempotency_key"),

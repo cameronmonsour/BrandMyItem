@@ -16,6 +16,8 @@ export interface TrackingOrder {
   email: string;
   /** @nullable */
   destinationUrl?: string | null;
+  /** @nullable */
+  logoObjectPath?: string | null;
   status: TrackingOrderStatus;
   createdAt: Date;
 }

@@ -5,6 +5,7 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { CampaignInputPresentation } from './campaignInputPresentation';
 
 export interface CampaignInput {
   /**
@@ -36,4 +37,5 @@ export interface CampaignInput {
      * @items.maximum 10000000
      */
   pricesCents: number[];
+  presentation: CampaignInputPresentation;
 }

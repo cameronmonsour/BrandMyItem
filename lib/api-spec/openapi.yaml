@@ -16,6 +16,8 @@ tags:
     description: Stripe placement checkout operations
   - name: tracking
     description: Email-linked campaign and placement tracking
+  - name: storage
+    description: Durable image upload and serving
 paths:
   /healthz:
     get:
@@ -63,6 +65,47 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Campaign"
+  /storage/uploads/request-url:
+    post:
+      operationId: requestUploadUrl
+      tags: [storage]
+      summary: Request a direct image upload URL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UploadUrlRequest"
+      responses:
+        "200":
+          description: Upload URL created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UploadUrlResponse"
+        "400":
+          description: Invalid image metadata
+  /storage/objects/{objectPath}:
+    get:
+      operationId: getStorageObject
+      tags: [storage]
+      summary: Serve a durable campaign image
+      parameters:
+        - name: objectPath
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Image bytes
+          content:
+            "*/*":
+              schema:
+                type: string
+                format: binary
+        "404":
+          description: Image not found
   /checkout/sessions:
     post:
       operationId: createPlacementCheckout
@@ -141,7 +184,7 @@ components:
         - status
     CampaignInput:
       type: object
-      required: [id, itemType, title, ownerName, ownerEmail, pricesCents]
+      required: [id, itemType, title, ownerName, ownerEmail, pricesCents, presentation]
       properties:
         id:
           type: string
@@ -171,9 +214,12 @@ components:
             type: integer
             minimum: 100
             maximum: 10000000
+        presentation:
+          type: object
+          additionalProperties: true
     Campaign:
       type: object
-      required: [id, itemType, title, ownerName, ownerEmail, pricesCents, active, createdAt]
+      required: [id, itemType, title, ownerName, pricesCents, presentation, claims, active, createdAt]
       properties:
         id:
           type: string
@@ -183,12 +229,19 @@ components:
           type: string
         ownerName:
           type: string
-        ownerEmail:
-          type: ["string", "null"]
         pricesCents:
           type: array
           items:
             type: integer
+        presentation:
+          type: object
+          additionalProperties: true
+        claims:
+          type: array
+          items:
+            anyOf:
+              - $ref: "#/components/schemas/PublicClaim"
+              - type: "null"
         active:
           type: boolean
         createdAt:
@@ -196,7 +249,7 @@ components:
           format: date-time
     PlacementCheckoutInput:
       type: object
-      required: [campaignId, spotIndex, brandName, email]
+      required: [campaignId, spotIndex, brandName, email, logoObjectPath]
       properties:
         campaignId:
           type: string
@@ -217,6 +270,9 @@ components:
         destinationUrl:
           type: string
           maxLength: 2048
+        logoObjectPath:
+          type: string
+          pattern: "^/objects/uploads/[A-Za-z0-9-]+$"
     PlacementCheckoutSession:
       type: object
       required: [url, orderId, sessionId]
@@ -247,6 +303,8 @@ components:
           type: string
         destinationUrl:
           type: ["string", "null"]
+        logoObjectPath:
+          type: ["string", "null"]
         status:
           type: string
           enum: [pending, paid, expired, refunding, refunded]
@@ -269,6 +327,8 @@ components:
         email:
           type: string
         destinationUrl:
+          type: ["string", "null"]
+        logoObjectPath:
           type: ["string", "null"]
         status:
           type: string
@@ -313,3 +373,48 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/TrackingCampaign"
+    PublicClaim:
+      type: object
+      required: [orderId, spotIndex, brandName, amountCents, purchasedAt]
+      properties:
+        orderId:
+          type: string
+        spotIndex:
+          type: integer
+        brandName:
+          type: string
+        destinationUrl:
+          type: ["string", "null"]
+        logoObjectPath:
+          type: ["string", "null"]
+        amountCents:
+          type: integer
+        purchasedAt:
+          type: string
+          format: date-time
+    UploadUrlRequest:
+      type: object
+      required: [name, size, contentType]
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        size:
+          type: integer
+          minimum: 1
+          maximum: 10000000
+        contentType:
+          type: string
+          enum: [image/png, image/jpeg, image/webp, image/gif, image/svg+xml]
+    UploadUrlResponse:
+      type: object
+      required: [uploadURL, objectPath]
+      properties:
+        uploadURL:
+          type: string
+          format: uri
+        objectPath:
+          type: string
+        metadata:
+          $ref: "#/components/schemas/UploadUrlRequest"

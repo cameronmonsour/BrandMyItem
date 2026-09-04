@@ -6864,7 +6864,7 @@ function lockLaunchExamples(){
 }
 lockLaunchExamples();
 function isLaunchLiveCampaign(l){
-  return !!(l&&!isDemoListing(l)&&(Number(l.created)||0)>=LIVE_CAMPAIGN_CUTOFF);
+  return !!(l&&!isDemoListing(l));
 }
 function removePrelaunchTestCampaigns(){
   DB.listings=(DB.listings||[]).filter(function(l){
@@ -6877,6 +6877,95 @@ function removePrelaunchTestCampaigns(){
 }
 removePrelaunchTestCampaigns();
 function saveDB(){lockLaunchExamples();store.set('bmi_db4',DB);cloudPush()}
+function storedAssetUrl(path){
+  return path&&path.indexOf('/objects/')===0?'/api/storage'+path:path;
+}
+async function uploadImageAsset(source,name){
+  if(String(source||'').indexOf('/api/storage/objects/')===0)return String(source).slice('/api/storage'.length);
+  if(!source||(!String(source).startsWith('data:')&&!String(source).startsWith('blob:')))return source;
+  var blob=await fetch(source).then(function(response){return response.blob()});
+  var contentType=blob.type||'image/png';
+  var metadata=await fetch('/api/storage/uploads/request-url',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({name:name||'campaign-image',size:blob.size,contentType:contentType})
+  });
+  var upload=await metadata.json();
+  if(!metadata.ok||!upload.uploadURL||!upload.objectPath)throw new Error(upload.error||'Image upload could not be started');
+  var stored=await fetch(upload.uploadURL,{method:'PUT',headers:{'Content-Type':contentType},body:blob});
+  if(!stored.ok)throw new Error('Image upload failed');
+  return upload.objectPath;
+}
+async function durableCampaignPresentation(listing){
+  var presentation={},publicFields=[
+    'type','sourceType','custom','photo','faces','tiles','retail','title','owner','avatar',
+    'habs','cities','universities','purpose','freq','social','color','variantModel','variantSize',
+    'source','verified','socialLinks','slots','pricesIncludeMarkup','postedAt','unsoldTimeoutDays',
+    'termMonths','checkinFrequency','brandingMode','status','mtv'
+  ];
+  publicFields.forEach(function(key){if(listing[key]!==undefined)presentation[key]=listing[key]});
+  if(presentation.photo)presentation.photo=await uploadImageAsset(presentation.photo,'campaign-photo');
+  if(presentation.faces){
+    presentation.faces=await Promise.all(presentation.faces.map(async function(face,index){
+      var saved=Object.assign({},face);
+      saved.photo=await uploadImageAsset(saved.photo,'campaign-angle-'+(index+1));
+      return saved;
+    }));
+  }
+  return presentation;
+}
+function campaignFromApi(campaign){
+  var presentation=Object.assign({},campaign.presentation||{});
+  if(presentation.photo)presentation.photo=storedAssetUrl(presentation.photo);
+  if(presentation.faces)presentation.faces=presentation.faces.map(function(face){
+    return Object.assign({},face,{photo:storedAssetUrl(face.photo)});
+  });
+  var created=new Date(campaign.createdAt).getTime();
+  var listing=Object.assign(presentation,{
+    id:campaign.id,type:presentation.type||campaign.itemType,title:presentation.title||campaign.title,
+    owner:presentation.owner||campaign.ownerName,mail:campaign.ownerEmail||'',
+    prices:(campaign.pricesCents||[]).map(function(cents){return cents/100}),pricesIncludeMarkup:true,
+    slots:(campaign.pricesCents||[]).length,created:created,postedAt:presentation.postedAt||created,
+    status:campaign.active?(presentation.status||'live'):'closed'
+  });
+  listing.claims=(campaign.claims||[]).map(function(claim){
+    if(!claim)return null;
+    return {
+      brand:claim.brandName,link:claim.destinationUrl||'',logo:storedAssetUrl(claim.logoObjectPath),
+      amt:claim.amountCents/100,fee:0,purchasedAt:new Date(claim.purchasedAt).getTime(),
+      subId:'BMI-'+String(claim.orderId).toUpperCase().slice(0,6),stripeOrderId:claim.orderId,
+      itemId:campaign.id,ts:new Date(claim.purchasedAt).getTime()
+    };
+  });
+  return listing;
+}
+async function hydratePublicCampaigns(){
+  var response=await fetch('/api/campaigns');
+  if(!response.ok)throw new Error('Campaigns could not be loaded');
+  var campaigns=await response.json();
+  DB.listings=DB.listings.filter(isDemoListing);
+  campaigns.forEach(function(campaign){DB.listings.push(campaignFromApi(campaign))});
+  DB.listings.sort(function(a,b){return (b.created||0)-(a.created||0)});
+  store.set('bmi_db4',DB);
+  return campaigns;
+}
+async function backfillLocalCampaigns(){
+  var local=(DB.listings||[]).filter(isLaunchLiveCampaign);
+  await Promise.all(local.map(async function(listing){
+    var presentation=await durableCampaignPresentation(listing);
+    var response=await fetch('/api/campaigns',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        id:listing.id,itemType:listing.sourceType||listing.type,title:LBLL(listing),
+        ownerName:listing.owner,ownerEmail:listing.mail,
+        pricesCents:listing.prices.map(function(price){return Math.round(spotPurchaseTotal(listing,price)*100)}),
+        presentation:presentation
+      })
+    });
+    if(!response.ok)throw new Error('Campaign backfill failed');
+  }));
+}
 /* --- SHARED DATABASE (artifact storage) --- */
 var CLOUD={on:false,busy:false,dirty:false,last:0};
 function slimDB(){
@@ -8447,9 +8536,7 @@ function syncDashboardFilterState(){
 }
 function renderDash(){
   syncDashboardFilterState();
-  var all=LOCKED_LAUNCH_EXAMPLE_IDS.map(function(id){
-    return DB.listings.find(function(l){return l.id===id});
-  }).filter(Boolean).concat(DB.listings.filter(isLaunchLiveCampaign));
+  var all=DB.listings.filter(isLaunchLiveCampaign);
   renderDashboardLiveFeed();
   var q=F.q.toLowerCase();
   var list=all.filter(function(l){
@@ -9924,6 +10011,7 @@ async function postListing(){
       termMonths:selectedTerm,checkinFrequency:B.checkinFrequency||'monthly',termLocked:false,brandingMode:selectedBranding,status:'live',shipping:{name:name,address:address}};
   }
   try{
+    var presentation=await durableCampaignPresentation(l);
     var registerResponse=await fetch('/api/campaigns',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
@@ -9933,10 +10021,14 @@ async function postListing(){
         title:LBLL(l),
         ownerName:l.owner,
         ownerEmail:l.mail,
-        pricesCents:l.prices.map(function(price){return Math.round(spotPurchaseTotal(l,price)*100)})
+        pricesCents:l.prices.map(function(price){return Math.round(spotPurchaseTotal(l,price)*100)}),
+        presentation:presentation
       })
     });
     if(!registerResponse.ok)throw new Error('Campaign registration failed');
+    var registeredCampaign=await registerResponse.json();
+    registeredCampaign.ownerEmail=l.mail;
+    l=campaignFromApi(registeredCampaign);
   }catch(error){
     toast('Could not publish this campaign. Please try again.');
     return;
@@ -10285,7 +10377,7 @@ function migratePhoto(){
 normalizeModelState();
 suitFix();migratePhoto();
 processListingLifecycle();
-var CUR=null,itemMode='auction',claimSlot=-1,logoData=null,buyReturnFocus=null;
+var CUR=null,itemMode='auction',claimSlot=-1,logoData=null,logoFile=null,buyReturnFocus=null;
 var TRACK_MATCHES=[];
 function demoTrackMatches(){
   var demoRows=[
@@ -10353,7 +10445,7 @@ function serverTrackingMatches(payload,mail){
     (campaign.orders||[]).forEach(function(order){
       var existing=(l.claims||[])[order.spotIndex];
       var c=existing&&existing.stripeOrderId===order.id?Object.assign({},existing):{
-        brand:order.brandName,mail:order.email,link:order.destinationUrl||'',logo:null,amt:order.amountCents/100,fee:0,
+        brand:order.brandName,mail:order.email,link:order.destinationUrl||'',logo:storedAssetUrl(order.logoObjectPath),amt:order.amountCents/100,fee:0,
         purchasedAt:new Date(order.createdAt).getTime(),subId:'BMI-'+String(order.id).toUpperCase().slice(0,6),stripeOrderId:order.id
       };
       c.spotIndex=order.spotIndex;c.orderStatus=order.status;c.ownerOrder=campaign.ownerMatch;
@@ -10372,13 +10464,15 @@ function mergeTrackMatches(localMatches,serverMatches){
 }
 async function syncTrackingOwnerEmail(mail){
   var owned=DB.listings.filter(function(l){return !isDemoListing(l)&&(l.mail||'').toLowerCase()===mail});
-  await Promise.all(owned.map(function(l){
+  await Promise.all(owned.map(async function(l){
+    var presentation=await durableCampaignPresentation(l);
     return fetch('/api/campaigns',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         id:l.id,itemType:l.sourceType||l.type,title:LBLL(l),ownerName:l.owner,ownerEmail:l.mail,
-        pricesCents:l.prices.map(function(price){return Math.round(spotPurchaseTotal(l,price)*100)})
+        pricesCents:l.prices.map(function(price){return Math.round(spotPurchaseTotal(l,price)*100)}),
+        presentation:presentation
       })
     }).then(function(response){if(!response.ok)throw new Error('Owner email sync failed')});
   }));
@@ -10824,7 +10918,7 @@ function openBid(i,trigger){
   var c=CUR.claims[i];
   if(c||CUR.closed){toast(c?'That spot is sold':'This listing is closed');return}
   buyReturnFocus=trigger||document.activeElement;
-  claimSlot=i;logoData=null;
+  claimSlot=i;logoData=null;logoFile=null;
   var meta=slotMeta(CUR.type,CUR.slots,i);
   var price=CUR.prices[i],total=spotPurchaseTotal(CUR,price);
   var analyticsData=spotAnalyticsData(i,price);
@@ -10841,6 +10935,7 @@ function openBid(i,trigger){
 document.getElementById('uplBox').onclick=function(){document.getElementById('uplInput').click()};
 document.getElementById('uplInput').onchange=function(e){
   var f=e.target.files[0];if(!f)return;
+  logoFile=f;
   var r=new FileReader();
   r.onload=function(){logoData=r.result;document.getElementById('uplBox').innerHTML='<img src="'+logoData+'" alt="logo">'};
   r.readAsDataURL(f);
@@ -10861,13 +10956,15 @@ async function beginStripeCheckout(){
   if(isDemoListing(CUR)){toast('This is an example campaign and is not accepting payments.');return}
   var button=document.getElementById('mNext'),link=document.getElementById('mLink').value.trim();
   button.disabled=true;button.textContent='Opening Stripe…';
-  var pending={campaignId:CUR.id,spotIndex:claimSlot,brand:brand,mail:mail,link:link,logo:logoData};
+  var pending={campaignId:CUR.id,spotIndex:claimSlot,brand:brand,mail:mail,link:link};
   try{
+    var logoObjectPath=await uploadImageAsset(logoData,logoFile&&logoFile.name||'sponsor-logo');
+    pending.logoObjectPath=logoObjectPath;
     sessionStorage.setItem('bmi_pending_checkout',JSON.stringify(pending));
     var response=await fetch('/api/checkout/sessions',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({campaignId:CUR.id,spotIndex:claimSlot,brandName:brand,email:mail,destinationUrl:link||undefined})
+      body:JSON.stringify({campaignId:CUR.id,spotIndex:claimSlot,brandName:brand,email:mail,destinationUrl:link||undefined,logoObjectPath:logoObjectPath})
     });
     var result=await response.json();
     if(!response.ok||!result.url)throw new Error(result.error||'Checkout could not be started');
@@ -10877,18 +10974,17 @@ async function beginStripeCheckout(){
     toast(error&&error.message?error.message:'Could not open secure checkout');
   }
 }
-function finalizePaidPurchase(order,pending){
+async function finalizePaidPurchase(order,pending){
+  await hydratePublicCampaigns();
   var listing=DB.listings.find(function(entry){return entry.id===order.campaignId});
-  if(!listing||listing.claims[order.spotIndex])return;
+  if(!listing)return;
   var now=Date.now(),price=order.amountCents/100,subId='BMI-'+String(order.id).toUpperCase().slice(0,6);
-  listing.claims[order.spotIndex]={brand:pending.brand,mail:pending.mail,link:pending.link,logo:pending.logo,amt:price,fee:0,
-    feeRate:feeRateOf(listing),purchasedAt:now,subId:subId,itemId:listing.id,ts:now,stripeOrderId:order.id};
   CUR=listing;
   claimSlot=order.spotIndex;
   if(!listing.termLocked){listing.termLocked=true;listing.termLockedAt=now}
   if(pctOf(listing)>=100&&!listing.fundedAt){listing.fundedAt=now;listing.status='funded';listing.promisedDeliveryAt=now+deliveryDaysOf(listing)*86400000}
   logAct('<b>'+pending.brand+'</b> bought a spot on '+listing.owner+'&rsquo;s <b>'+LBLL(listing)+'</b> — '+money(price)+' charged today');
-  saveDB();
+  store.set('bmi_db4',DB);
   trackEvent('spot_purchase_completed',spotAnalyticsData(order.spotIndex,price));
   drawItemMap();refreshItemCards();
   document.getElementById('modalBg').classList.add('on');
@@ -10914,7 +11010,7 @@ async function resumeStripeCheckout(){
     if(!response.ok||order.status!=='paid')throw new Error('Payment is still being confirmed');
     sessionStorage.removeItem('bmi_pending_checkout');
     history.replaceState(null,'',location.pathname+location.hash);
-    finalizePaidPurchase(order,pending);
+    await finalizePaidPurchase(order,pending);
   }catch(error){
     toast(error&&error.message?error.message:'Could not confirm payment');
   }
@@ -11220,6 +11316,7 @@ loadItemLogos();
 initHomeFeatureBento();
 startHeroWordCycle();
 route();
+backfillLocalCampaigns().then(hydratePublicCampaigns).then(function(){route()}).catch(function(){});
 resumeStripeCheckout();
 </script>
 </body>

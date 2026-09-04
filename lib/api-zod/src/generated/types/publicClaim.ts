@@ -5,20 +5,15 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import type { PlacementOrderStatus } from './placementOrderStatus';
 
-export interface PlacementOrder {
-  id: string;
-  campaignId: string;
+export interface PublicClaim {
+  orderId: string;
   spotIndex: number;
-  amountCents: number;
   brandName: string;
-  email: string;
   /** @nullable */
   destinationUrl?: string | null;
   /** @nullable */
   logoObjectPath?: string | null;
-  status: PlacementOrderStatus;
-  /** @nullable */
-  stripeCheckoutSessionId?: string | null;
+  amountCents: number;
+  purchasedAt: Date;
 }

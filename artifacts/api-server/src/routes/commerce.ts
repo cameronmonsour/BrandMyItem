@@ -19,8 +19,55 @@ import {
   checkoutTransition,
   type CheckoutSnapshot,
 } from "../paymentTransitions";
+import { verifyImageObject } from "../lib/objectStorage";
 
 const router: IRouter = Router();
+
+function publicClaim(order: typeof placementOrdersTable.$inferSelect) {
+  return {
+    orderId: order.id,
+    spotIndex: order.spotIndex,
+    brandName: order.brandName,
+    destinationUrl: order.destinationUrl,
+    logoObjectPath: order.logoObjectPath,
+    amountCents: order.amountCents,
+    purchasedAt: order.updatedAt,
+  };
+}
+
+async function publicCampaigns(
+  campaigns: Array<typeof campaignsTable.$inferSelect>,
+) {
+  const ids = campaigns.map((campaign) => campaign.id);
+  const orders = ids.length
+    ? await db
+        .select()
+        .from(placementOrdersTable)
+        .where(
+          and(
+            inArray(placementOrdersTable.campaignId, ids),
+            eq(placementOrdersTable.status, "paid"),
+          ),
+        )
+    : [];
+  const claimsByCampaign = new Map<string, Array<ReturnType<typeof publicClaim>>>();
+  for (const order of orders) {
+    const claims = claimsByCampaign.get(order.campaignId) ?? [];
+    claims.push(publicClaim(order));
+    claimsByCampaign.set(order.campaignId, claims);
+  }
+  return campaigns.map((campaign) => {
+    const claims: Array<ReturnType<typeof publicClaim> | null> =
+      campaign.pricesCents.map(() => null);
+    for (const claim of claimsByCampaign.get(campaign.id) ?? []) {
+      if (claim.spotIndex >= 0 && claim.spotIndex < claims.length) {
+        claims[claim.spotIndex] = claim;
+      }
+    }
+    const { ownerEmail: _ownerEmail, ...publicCampaign } = campaign;
+    return { ...publicCampaign, claims };
+  });
+}
 
 router.post("/campaigns", async (req, res): Promise<void> => {
   const parsed = RegisterCampaignBody.safeParse(req.body);
@@ -29,28 +76,37 @@ router.post("/campaigns", async (req, res): Promise<void> => {
     return;
   }
   const input = parsed.data;
-  const [campaign] = await db
-    .insert(campaignsTable)
-    .values(input)
-    .onConflictDoUpdate({
-      target: campaignsTable.id,
-      set: {
-        itemType: input.itemType,
-        title: input.title,
-        ownerName: input.ownerName,
-        ownerEmail: input.ownerEmail,
-        pricesCents: input.pricesCents,
-        active: true,
-        updatedAt: new Date(),
-      },
-    })
-    .returning();
-  res.status(201).json(
-    RegisterCampaignResponse.parse({
-      ...campaign,
-      createdAt: campaign.createdAt,
-    }),
-  );
+  const [existing] = await db
+    .select()
+    .from(campaignsTable)
+    .where(eq(campaignsTable.id, input.id))
+    .limit(1);
+  let campaign: typeof campaignsTable.$inferSelect;
+  if (existing) {
+    const sameCore =
+      existing.itemType === input.itemType &&
+      existing.title === input.title &&
+      existing.ownerName === input.ownerName &&
+      existing.ownerEmail === input.ownerEmail &&
+      JSON.stringify(existing.pricesCents) === JSON.stringify(input.pricesCents);
+    if (!sameCore) {
+      res.status(409).json({ error: "Campaign identity or prices cannot be changed" });
+      return;
+    }
+    if (Object.keys(existing.presentation ?? {}).length > 0) {
+      campaign = existing;
+    } else {
+      [campaign] = await db
+        .update(campaignsTable)
+        .set({ presentation: input.presentation, updatedAt: new Date() })
+        .where(eq(campaignsTable.id, input.id))
+        .returning();
+    }
+  } else {
+    [campaign] = await db.insert(campaignsTable).values(input).returning();
+  }
+  const [registered] = await publicCampaigns([campaign]);
+  res.status(201).json(RegisterCampaignResponse.parse(registered));
 });
 
 router.get("/campaigns", async (_req, res): Promise<void> => {
@@ -59,7 +115,7 @@ router.get("/campaigns", async (_req, res): Promise<void> => {
     .from(campaignsTable)
     .where(eq(campaignsTable.active, true))
     .orderBy(desc(campaignsTable.createdAt));
-  res.json(ListCampaignsResponse.parse(campaigns));
+  res.json(ListCampaignsResponse.parse(await publicCampaigns(campaigns)));
 });
 
 router.get("/tracking", async (req, res): Promise<void> => {
@@ -138,6 +194,7 @@ router.get("/tracking", async (req, res): Promise<void> => {
           brandName: order.brandName,
           email: order.email,
           destinationUrl: order.destinationUrl,
+          logoObjectPath: order.logoObjectPath,
           status: order.status,
           createdAt: order.createdAt,
         })),
@@ -153,6 +210,10 @@ router.post("/checkout/sessions", async (req, res): Promise<void> => {
     return;
   }
   const input = parsed.data;
+  if (!(await verifyImageObject(input.logoObjectPath))) {
+    res.status(400).json({ error: "Sponsor logo upload is missing or invalid" });
+    return;
+  }
   const [campaign] = await db
     .select()
     .from(campaignsTable)
@@ -253,6 +314,7 @@ router.post("/checkout/sessions", async (req, res): Promise<void> => {
     brandName: input.brandName,
     email: input.email,
     destinationUrl: input.destinationUrl || null,
+    logoObjectPath: input.logoObjectPath || null,
     status: "pending",
     stripeCheckoutSessionId: null,
     stripeCheckoutIdempotencyKey: idempotencyKey,

@@ -43,7 +43,8 @@ export const RegisterCampaignBody = zod.object({
   "title": zod.string().min(1).max(registerCampaignBodyTitleMax),
   "ownerName": zod.string().min(1).max(registerCampaignBodyOwnerNameMax),
   "ownerEmail": zod.email().max(registerCampaignBodyOwnerEmailMax),
-  "pricesCents": zod.array(zod.int().min(registerCampaignBodyPricesCentsItemMin).max(registerCampaignBodyPricesCentsItemMax)).min(1).max(registerCampaignBodyPricesCentsMax)
+  "pricesCents": zod.array(zod.int().min(registerCampaignBodyPricesCentsItemMin).max(registerCampaignBodyPricesCentsItemMax)).min(1).max(registerCampaignBodyPricesCentsMax),
+  "presentation": zod.record(zod.string(), zod.unknown())
 })
 
 export const RegisterCampaignResponse = zod.object({
@@ -51,8 +52,17 @@ export const RegisterCampaignResponse = zod.object({
   "itemType": zod.string(),
   "title": zod.string(),
   "ownerName": zod.string(),
-  "ownerEmail": zod.string().nullable(),
   "pricesCents": zod.array(zod.int()),
+  "presentation": zod.record(zod.string(), zod.unknown()),
+  "claims": zod.array(zod.union([zod.object({
+  "orderId": zod.string(),
+  "spotIndex": zod.int(),
+  "brandName": zod.string(),
+  "destinationUrl": zod.string().nullish(),
+  "logoObjectPath": zod.string().nullish(),
+  "amountCents": zod.int(),
+  "purchasedAt": zod.coerce.date()
+}),zod.null()])),
   "active": zod.boolean(),
   "createdAt": zod.coerce.date()
 })
@@ -66,12 +76,63 @@ export const ListCampaignsResponseItem = zod.object({
   "itemType": zod.string(),
   "title": zod.string(),
   "ownerName": zod.string(),
-  "ownerEmail": zod.string().nullable(),
   "pricesCents": zod.array(zod.int()),
+  "presentation": zod.record(zod.string(), zod.unknown()),
+  "claims": zod.array(zod.union([zod.object({
+  "orderId": zod.string(),
+  "spotIndex": zod.int(),
+  "brandName": zod.string(),
+  "destinationUrl": zod.string().nullish(),
+  "logoObjectPath": zod.string().nullish(),
+  "amountCents": zod.int(),
+  "purchasedAt": zod.coerce.date()
+}),zod.null()])),
   "active": zod.boolean(),
   "createdAt": zod.coerce.date()
 })
 export const ListCampaignsResponse = zod.array(ListCampaignsResponseItem)
+
+
+/**
+ * @summary Request a direct image upload URL
+ */
+export const requestUploadUrlBodyNameMax = 255;
+
+export const requestUploadUrlBodySizeMax = 10000000;
+
+
+
+export const RequestUploadUrlBody = zod.object({
+  "name": zod.string().min(1).max(requestUploadUrlBodyNameMax),
+  "size": zod.int().min(1).max(requestUploadUrlBodySizeMax),
+  "contentType": zod.enum(['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/svg+xml'])
+})
+
+export const requestUploadUrlResponseMetadataNameMax = 255;
+
+export const requestUploadUrlResponseMetadataSizeMax = 10000000;
+
+
+
+export const RequestUploadUrlResponse = zod.object({
+  "uploadURL": zod.url(),
+  "objectPath": zod.string(),
+  "metadata": zod.object({
+  "name": zod.string().min(1).max(requestUploadUrlResponseMetadataNameMax),
+  "size": zod.int().min(1).max(requestUploadUrlResponseMetadataSizeMax),
+  "contentType": zod.enum(['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/svg+xml'])
+}).optional()
+})
+
+
+/**
+ * @summary Serve a durable campaign image
+ */
+export const GetStorageObjectParams = zod.object({
+  "objectPath": zod.coerce.string()
+})
+
+export const GetStorageObjectResponse = zod.unknown()
 
 
 /**
@@ -88,6 +149,7 @@ export const createPlacementCheckoutBodyEmailMax = 320;
 
 export const createPlacementCheckoutBodyDestinationUrlMax = 2048;
 
+export const createPlacementCheckoutBodyLogoObjectPathRegExp = new RegExp('^/objects/uploads/[A-Za-z0-9-]+$');
 
 
 export const CreatePlacementCheckoutBody = zod.object({
@@ -95,7 +157,8 @@ export const CreatePlacementCheckoutBody = zod.object({
   "spotIndex": zod.int().min(createPlacementCheckoutBodySpotIndexMin).max(createPlacementCheckoutBodySpotIndexMax),
   "brandName": zod.string().min(1).max(createPlacementCheckoutBodyBrandNameMax),
   "email": zod.email().max(createPlacementCheckoutBodyEmailMax),
-  "destinationUrl": zod.string().max(createPlacementCheckoutBodyDestinationUrlMax).optional()
+  "destinationUrl": zod.string().max(createPlacementCheckoutBodyDestinationUrlMax).optional(),
+  "logoObjectPath": zod.string().regex(createPlacementCheckoutBodyLogoObjectPathRegExp)
 })
 
 export const CreatePlacementCheckoutResponse = zod.object({
@@ -123,6 +186,7 @@ export const GetPlacementCheckoutResponse = zod.object({
   "brandName": zod.string(),
   "email": zod.string(),
   "destinationUrl": zod.string().nullish(),
+  "logoObjectPath": zod.string().nullish(),
   "status": zod.enum(['pending', 'paid', 'expired', 'refunding', 'refunded']),
   "stripeCheckoutSessionId": zod.string().nullish()
 })
@@ -158,6 +222,7 @@ export const GetTrackingResponse = zod.object({
   "brandName": zod.string(),
   "email": zod.string(),
   "destinationUrl": zod.string().nullish(),
+  "logoObjectPath": zod.string().nullish(),
   "status": zod.enum(['pending', 'paid', 'expired', 'refunding', 'refunded']),
   "createdAt": zod.coerce.date()
 }))

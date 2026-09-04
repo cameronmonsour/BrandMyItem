@@ -16,3 +16,4 @@
 - [Fee disclosure placement](fee-disclosure-placement.md) — disclose the 40% amount only in FAQ answers; elsewhere use neutral all-in purchase-total language.
 - [Scanner coordinate source](scanner-coordinate-source.md) — locked surfaces must use campaign-image dimensions; bento cutout coordinates do not transfer.
 - [Stripe connector boundary](stripe-connector-boundary.md) — use the connector proxy; this connection does not expose raw Stripe or webhook secrets.
+- [Campaign financial immutability](campaign-financial-immutability.md) — public campaign updates must never rewrite spot prices or identity after creation.

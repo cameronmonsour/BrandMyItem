@@ -5,15 +5,17 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { CampaignPresentation } from './campaignPresentation';
+import type { PublicClaim } from './publicClaim';
 
 export interface Campaign {
   id: string;
   itemType: string;
   title: string;
   ownerName: string;
-  /** @nullable */
-  ownerEmail: string | null;
   pricesCents: number[];
+  presentation: CampaignPresentation;
+  claims: (PublicClaim | null)[];
   active: boolean;
   createdAt: Date;
 }
