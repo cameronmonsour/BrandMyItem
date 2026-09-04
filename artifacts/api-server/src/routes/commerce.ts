@@ -31,6 +31,7 @@ import {
   attemptCampaignFunding,
   relistCampaign,
 } from "../paymentFunding";
+import { isSafeCampaignPresentation } from "../lib/campaignPresentation";
 
 const router: IRouter = Router();
 const TRACKING_LINK_TTL_MS = 15 * 60 * 1000;
@@ -101,7 +102,11 @@ async function publicCampaigns(
 
 router.post("/campaigns", async (req, res): Promise<void> => {
   const parsed = RegisterCampaignBody.safeParse(req.body);
-  if (!parsed.success || parsed.data.id.startsWith("demo")) {
+  if (
+    !parsed.success ||
+    parsed.data.id.startsWith("demo") ||
+    !isSafeCampaignPresentation(parsed.data.presentation)
+  ) {
     res.status(400).json({ error: "Invalid campaign" });
     return;
   }

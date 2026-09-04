@@ -299,6 +299,41 @@ components:
           $ref: "#/components/schemas/OwnerAssent"
         presentation:
           type: object
+          maxProperties: 32
+          propertyNames:
+            enum:
+              - type
+              - sourceType
+              - itemName
+              - custom
+              - photo
+              - faces
+              - tiles
+              - retail
+              - title
+              - owner
+              - avatar
+              - habs
+              - cities
+              - universities
+              - purpose
+              - freq
+              - social
+              - color
+              - variantModel
+              - variantSize
+              - source
+              - verified
+              - socialLinks
+              - slots
+              - pricesIncludeMarkup
+              - postedAt
+              - unsoldTimeoutDays
+              - termMonths
+              - checkinFrequency
+              - brandingMode
+              - status
+              - mtv
           additionalProperties: true
     Campaign:
       type: object
@@ -318,6 +353,7 @@ components:
             type: integer
         presentation:
           type: object
+          maxProperties: 32
           additionalProperties: true
         claims:
           type: array
@@ -534,7 +570,7 @@ components:
           maximum: 10000000
         contentType:
           type: string
-          enum: [image/png, image/jpeg, image/webp, image/gif, image/svg+xml]
+          enum: [image/png, image/jpeg, image/webp, image/gif]
     UploadUrlResponse:
       type: object
       required: [uploadURL, objectPath]

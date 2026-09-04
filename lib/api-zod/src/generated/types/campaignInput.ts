@@ -5,7 +5,6 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import type { CampaignInputPresentation } from './campaignInputPresentation';
 import type { OwnerAssent } from './ownerAssent';
 
 export interface CampaignInput {
@@ -39,5 +38,5 @@ export interface CampaignInput {
      */
   pricesCents: number[];
   ownerAssent: OwnerAssent;
-  presentation: CampaignInputPresentation;
+  presentation: Partial<Record<'type' | 'sourceType' | 'itemName' | 'custom' | 'photo' | 'faces' | 'tiles' | 'retail' | 'title' | 'owner' | 'avatar' | 'habs' | 'cities' | 'universities' | 'purpose' | 'freq' | 'social' | 'color' | 'variantModel' | 'variantSize' | 'source' | 'verified' | 'socialLinks' | 'slots' | 'pricesIncludeMarkup' | 'postedAt' | 'unsoldTimeoutDays' | 'termMonths' | 'checkinFrequency' | 'brandingMode' | 'status' | 'mtv', unknown>>;
 }

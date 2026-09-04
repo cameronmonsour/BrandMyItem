@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { Readable } from "node:stream";
 import { Storage, type File } from "@google-cloud/storage";
+import { imageResponsePolicy } from "./imageSecurity";
 
 const SIDECAR = "http://127.0.0.1:1106";
 const storage = new Storage({
@@ -78,7 +79,6 @@ export async function verifyImageObject(objectPath: string): Promise<boolean> {
     "image/jpeg",
     "image/webp",
     "image/gif",
-    "image/svg+xml",
   ]);
   return (
     allowed.has(String(metadata.contentType || "").toLowerCase()) &&
@@ -89,8 +89,18 @@ export async function verifyImageObject(objectPath: string): Promise<boolean> {
 
 export async function pipeImage(file: File, res: import("express").Response): Promise<void> {
   const [metadata] = await file.getMetadata();
-  res.setHeader("Content-Type", metadata.contentType || "application/octet-stream");
-  res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+  const policy = imageResponsePolicy(metadata.contentType);
+  res.setHeader("Content-Type", policy.contentType);
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("Content-Security-Policy", "sandbox; default-src 'none'; frame-ancestors 'none'");
+  if (policy.attachment) {
+    res.setHeader("Content-Disposition", 'attachment; filename="download"');
+  }
+  res.setHeader(
+    "Cache-Control",
+    policy.attachment ? "no-store" : "public, max-age=31536000, immutable",
+  );
   if (metadata.size) res.setHeader("Content-Length", String(metadata.size));
   Readable.from(file.createReadStream()).pipe(res);
 }

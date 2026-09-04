@@ -6924,7 +6924,7 @@ function removePrelaunchTestCampaigns(){
 removePrelaunchTestCampaigns();
 function saveDB(){lockLaunchExamples();store.set('bmi_db4',DB);cloudPush()}
 function storedAssetUrl(path){
-  return path&&path.indexOf('/objects/')===0?'/api/storage'+path:path;
+  return path&&path.indexOf('/objects/')===0?'/api/storage'+path+'?safe=2':path;
 }
 async function uploadImageAsset(source,name){
   if(String(source||'').indexOf('/api/storage/objects/')===0)return String(source).slice('/api/storage'.length);
@@ -6966,9 +6966,10 @@ function campaignFromApi(campaign){
   if(apiSourceType)presentation.sourceType=apiSourceType;
   if(!presentation.itemName&&apiSourceType&&ITEMS[apiSourceType])presentation.itemName=ITEMS[apiSourceType].label;
   if(presentation.photo)presentation.photo=storedAssetUrl(presentation.photo);
-  if(presentation.faces)presentation.faces=presentation.faces.map(function(face){
+  if(Array.isArray(presentation.faces))presentation.faces=presentation.faces.map(function(face){
     return Object.assign({},face,{photo:storedAssetUrl(face.photo)});
   });
+  else delete presentation.faces;
   var created=new Date(campaign.createdAt).getTime();
   var listing=Object.assign(presentation,{
     id:campaign.id,type:presentation.type||campaign.itemType,title:presentation.title||campaign.title,
@@ -7300,9 +7301,23 @@ function monoTile(name,cls){
 function safeCardText(value){
   return String(value||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
+function safeInlineArg(value){return safeCardText(JSON.stringify(String(value||'')))}
+function safeImageAttr(value){
+  var raw=String(value||'').trim();
+  if(!raw)return '';
+  if(raw.indexOf('/api/storage/objects/')===0||raw.indexOf('blob:')===0)return safeCardText(raw);
+  if(/^data:image\/(?:png|jpeg|webp|gif);/i.test(raw))return safeCardText(raw);
+  try{
+    var url=new URL(raw,location.origin);
+    if((url.protocol==='http:'||url.protocol==='https:')&&url.origin===location.origin)return safeCardText(url.href);
+    if(url.protocol==='https:')return safeCardText(url.href);
+  }catch(_error){}
+  return '';
+}
 function ownerAvatarHtml(l){
   var name=(l&&l.owner||'?').trim()||'?';
-  if(l&&l.avatar)return '<span class="avatarc avatar-photo"><img src="'+l.avatar+'" alt="'+safeCardText(name)+' profile picture"></span>';
+  var avatar=l&&safeImageAttr(l.avatar);
+  if(avatar)return '<span class="avatarc avatar-photo"><img src="'+avatar+'" alt="'+safeCardText(name)+' profile picture"></span>';
   return '<span class="avatarc">'+safeCardText(name.slice(0,1).toUpperCase())+'</span>';
 }
 function sponsorLogoStack(l){
@@ -7316,7 +7331,7 @@ function sponsorLogoStack(l){
   var shown=unique.slice(0,3),extra=unique.length-shown.length;
   var html='<span class="sponsor-stack" aria-label="Sponsors: '+safeCardText(unique.map(function(c){return c.brand}).join(', '))+'">';
   html+=shown.map(function(c){
-    var mark=c.logo?'<img src="'+c.logo+'" alt="'+safeCardText(c.brand)+' logo">':'<span class="sponsor-monogram">'+safeCardText(c.brand.slice(0,2).toUpperCase())+'</span>';
+    var mark=safeImageAttr(c.logo)?'<img src="'+safeImageAttr(c.logo)+'" alt="'+safeCardText(c.brand)+' logo">':'<span class="sponsor-monogram">'+safeCardText(c.brand.slice(0,2).toUpperCase())+'</span>';
     return '<span class="sponsor-logo">'+mark+'</span>';
   }).join('');
   if(extra)html+='<span class="sponsor-more">+'+extra+'</span>';
@@ -7354,7 +7369,7 @@ function renderSpotMap_DEAD(el,st,opts){
     var meta=slotMeta(type,count,i);
      html+='<div class="spotcell '+(c?'funded':'open')+'" data-i="'+i+'">';
     if(!c)html+='<div class="hourglass">OPEN</div>';
-    html+='<div class="slogo">'+(c?(c.logo?'<img src="'+c.logo+'">':monoTile(c.brand)):'<div class="mono" style="background:transparent;box-shadow:none;color:#A1A1AA;font-size:26px">+</div>')+'</div>';
+    html+='<div class="slogo">'+(c?(safeImageAttr(c.logo)?'<img src="'+safeImageAttr(c.logo)+'">':monoTile(safeCardText(c.brand))):'<div class="mono" style="background:transparent;box-shadow:none;color:#A1A1AA;font-size:26px">+</div>')+'</div>';
     html+='<div class="sname">'+(c?c.brand:meta.pos)+'</div>';
     if(opts.mode==='edit'){
       html+='<input class="editprice" type="number" value="'+st.prices[i]+'" data-i="'+i+'">';
@@ -8249,12 +8264,12 @@ function renderLiveFeed(feedId){
   }
   function itemHtml(row){
     var brand='Your Brand Here',photo=PHO(row.l),label=LBLL(row.l);
-    var brandMark='<img src="'+row.c.logo+'" alt="Your Brand Here logo">';
-    return '<a class="home-activity-item" href="#item/'+row.l.id+'" title="'+label+'">'+
+    var brandMark=safeImageAttr(row.c.logo)?'<img src="'+safeImageAttr(row.c.logo)+'" alt="Your Brand Here logo">':'';
+    return '<a class="home-activity-item" href="#item/'+encodeURIComponent(row.l.id)+'" title="'+safeCardText(label)+'">'+
       '<span class="home-activity-brand" aria-label="'+brand+'">'+brandMark+'</span>'+
       '<span class="home-activity-name">'+brand+'</span>'+
       '<span class="home-activity-action">funded <b>'+money(row.c.amt||row.l.prices[0])+' spot</b></span>'+
-      '<span class="home-activity-product">'+(photo?'<img src="'+photo+'" alt="">':'')+'<span>'+label+'</span></span>'+
+      '<span class="home-activity-product">'+(safeImageAttr(photo)?'<img src="'+safeImageAttr(photo)+'" alt="">':'')+'<span>'+safeCardText(label)+'</span></span>'+
       '<span class="home-activity-static">Example activity</span>'+
     '</a>';
   }
@@ -8299,10 +8314,10 @@ function renderHomeCampaigns(){
   list.forEach(function(l){
     var it={label:LBLL(l)},pct=pctOf(l),sold=l.slots-openSlots(l),init=(l.owner||'?').trim().slice(0,1).toUpperCase();
     var card=document.createElement('button');card.type='button';card.className='lcard home-campaign-card';
-    card.innerHTML='<div class="thumb" id="home-th-'+l.id+'"></div>'+
+    card.innerHTML='<div class="thumb" id="home-th-'+safeCardText(l.id)+'"></div>'+
       '<div class="body">'+
-      '<div class="who">'+ownerAvatarHtml(l)+'<span class="oname">'+l.owner+'</span><span class="when">'+ago(l.created)+'</span><span class="catic"><img src="'+PHO(l)+'" alt=""></span></div>'+
-      listingContextHtml(l)+'<div class="iname">'+it.label+'</div>'+
+      '<div class="who">'+ownerAvatarHtml(l)+'<span class="oname">'+safeCardText(l.owner)+'</span><span class="when">'+safeCardText(ago(l.created))+'</span><span class="catic"><img src="'+safeImageAttr(PHO(l))+'" alt=""></span></div>'+
+      listingContextHtml(l)+'<div class="iname">'+safeCardText(it.label)+'</div>'+
        '<div class="moneyrow"><span class="amts">'+money(raisedOf(l))+'<span>/'+money(goalOf(l))+'</span></span>'+
        '<span class="chips"><span class="chipg sold-count">'+sold+'/'+l.slots+' sold</span><span class="sponsor-price">'+sponsorLogoStack(l)+'<span class="chipb">from '+money(listingSpotPrice(l))+'</span></span></span></div>'+
        '<div class="pbar'+(pct>=100?' funded':'')+'"><i style="width:'+Math.min(100,pct)+'%"></i></div>'+
@@ -8312,7 +8327,7 @@ function renderHomeCampaigns(){
     renderFinal(document.getElementById('home-th-'+l.id),l);
     var countdown=document.createElement('span');
      countdown.className='chipg sold-count countdown-badge'+(pct>=100?' funded':'');
-    countdown.setAttribute('data-countdown-listing',l.id);
+    countdown.setAttribute('data-countdown-listing',String(l.id));
     countdown.textContent=listingCountdownLabel(l);
     document.getElementById('home-th-'+l.id).appendChild(countdown);
   });
@@ -8323,8 +8338,8 @@ function homeReferenceRowHtml(l,c){
   var status=c.refunded?'refunded':(l.shippedAt?'shipped':(pctOf(l)>=100?'funded':'purchased'));
   var label=c.refunded?'Refunded':(l.shippedAt?'Shipped':(pctOf(l)>=100?'Funded':'Purchased'));
   return '<button class="home-reference-row" type="button">'+
-    (photo?'<img class="home-reference-thumb" src="'+photo+'" alt="">':'')+
-    '<span class="home-reference-copy"><span class="home-reference-title">'+LBLL(l)+'</span><span class="home-reference-meta">'+c.brand+' — '+c.subId+'</span></span>'+
+    (safeImageAttr(photo)?'<img class="home-reference-thumb" src="'+safeImageAttr(photo)+'" alt="">':'')+
+    '<span class="home-reference-copy"><span class="home-reference-title">'+safeCardText(LBLL(l))+'</span><span class="home-reference-meta">'+safeCardText(c.brand)+' — '+safeCardText(c.subId)+'</span></span>'+
     '<span class="status-badge '+(c.refunded?'risk':'active')+'">'+label+'</span><span class="home-reference-arrow" aria-hidden="true">&rsaquo;</span>'+
   '</button>';
 }
@@ -8440,7 +8455,7 @@ function campaignSocialLinks(l){
 }
 function campaignSpotHtml(price,meta,claim,index){
   var brand=claim&&claim.brand?(claim.brand.trim()||'Sponsor'):'';
-  var mark=claim?(claim.logo?'<img src="'+claim.logo+'" alt="'+safeCardText(brand)+' logo">':'<span>'+safeCardText(brand.slice(0,2).toUpperCase())+'</span>'):'';
+    var mark=claim?(safeImageAttr(claim.logo)?'<img src="'+safeImageAttr(claim.logo)+'" alt="'+safeCardText(brand)+' logo">':'<span>'+safeCardText(brand.slice(0,2).toUpperCase())+'</span>'):'';
   return '<div class="campaign-price'+(claim?' claimed':'')+'">'+
     '<div class="campaign-price-top"><span>Spot '+(index+1)+'</span>'+
       (claim?'<span class="campaign-price-status">Claimed</span>':'<span class="campaign-price-status">Open</span>')+
@@ -8457,7 +8472,7 @@ function renderCampaignDetails(l){
   var purpose=l.purpose||'The owner has not added a purpose statement yet.';
   var claimed=(l.claims||[]).filter(Boolean).length,open=openSlots(l),raised=raisedOf(l),goal=goalOf(l),pct=Math.round(pctOf(l));
   var spotPrices=(l.prices||[]).map(function(price,i){return{price:price,meta:campaignSpotMeta(l,i),claim:(l.claims||[])[i]||null}});
-  var photoHtml=photo?'<img src="'+photo+'" alt="'+safeCardText(label)+'">':'<div class="campaign-cover-fallback">'+safeCardText(label)+'</div>';
+  var photoHtml=safeImageAttr(photo)?'<img src="'+safeImageAttr(photo)+'" alt="'+safeCardText(label)+'">':'<div class="campaign-cover-fallback">'+safeCardText(label)+'</div>';
   var profile=ownerAvatarHtml(l);
   el.innerHTML=
     '<div class="campaign-intro">'+
@@ -8700,10 +8715,10 @@ function renderDash(){
     card.setAttribute('data-listing-id',l.id);
     card.setAttribute('aria-haspopup','dialog');
     card.setAttribute('aria-label','Preview campaign for '+it.label+' by '+(l.owner||'this owner'));
-    card.innerHTML='<div class="thumb" id="th-'+l.id+'"></div>'+
+    card.innerHTML='<div class="thumb" id="th-'+safeCardText(l.id)+'"></div>'+
       '<div class="body">'+
-      '<div class="who">'+ownerAvatarHtml(l)+'<span class="oname">'+l.owner+'</span><span class="when">'+ago(l.created)+'</span><span class="catic"><img src="'+PHO(l)+'" alt=""></span></div>'+
-      listingContextHtml(l)+'<div class="iname">'+it.label+'</div>'+
+      '<div class="who">'+ownerAvatarHtml(l)+'<span class="oname">'+safeCardText(l.owner)+'</span><span class="when">'+safeCardText(ago(l.created))+'</span><span class="catic"><img src="'+safeImageAttr(PHO(l))+'" alt=""></span></div>'+
+      listingContextHtml(l)+'<div class="iname">'+safeCardText(it.label)+'</div>'+
       '<div class="moneyrow"><span class="amts">'+money(raisedOf(l))+'<span>/'+money(goalOf(l))+'</span></span>'+
       '<span class="chips"><span class="chipg sold-count">'+sold+'/'+l.slots+' sold</span><span class="sponsor-price">'+sponsorLogoStack(l)+'<span class="chipb">from '+money(listingSpotPrice(l))+'</span></span></span></div>'+
        '<div class="pbar'+(pct>=100?' funded':'')+'"><i style="width:'+Math.min(100,pct)+'%"></i></div>'+
@@ -10695,7 +10710,7 @@ function trackSubmitHtml(l,c){
     (first?'<div class="track-submit-grid"><div class="field"><label class="label" for="trackDate_'+key+'">Purchase date on receipt</label><input class="input" id="trackDate_'+key+'" type="date"></div><div><label class="label" for="trackReceipt_'+key+'">Receipt</label><input id="trackReceipt_'+key+'" type="file" accept="image/*" class="input" style="padding:9px"></div></div>':'')+
     '<div class="field" style="margin-top:12px"><label class="label" for="trackPhoto_'+key+'">'+(first?'First item photo':'Month '+(checkins.length+1)+' photo')+'</label><input id="trackPhoto_'+key+'" type="file" accept="image/*" class="input" style="padding:9px"></div>'+
     '<p class="finetext" id="trackSubmitErr_'+key+'" style="display:none;color:#B23327;margin:10px 0 0"></p>'+
-    '<button class="btn btn-primary btn-full" type="button" onclick="submitTrackProof(\''+l.id+'\',\''+c.subId+'\',\''+key+'\')">'+(first?'Submit receipt + first photo':'Submit month '+(checkins.length+1)+' photo')+'</button>'+
+    '<button class="btn btn-primary btn-full" type="button" onclick="submitTrackProof('+safeInlineArg(l.id)+','+safeInlineArg(c.subId)+','+safeInlineArg(key)+')">'+(first?'Submit receipt + first photo':'Submit month '+(checkins.length+1)+' photo')+'</button>'+
   '</div>';
 }
 function submitTrackProof(itemId,subId,key){
@@ -10769,7 +10784,7 @@ function respondDelay(itemId,subId,choice){
 function delayActionHtml(l,c){
   if(!l.delayNotice||c.refunded)return '';
   if(c.delayResponse)return '<div class="track-submit-copy" style="margin-top:12px">Delay response: <b>'+safeCardText(c.delayResponse==='wait'?'Waiting for the new delivery date':'Full refund recorded')+'</b>.</div>';
-  return '<div class="track-submit" style="margin-top:12px"><div class="track-submit-title">Delivery delay notice</div><p class="track-submit-copy">IRLi has proposed delivery by <b>'+new Date(l.delayNotice.proposedAt).toLocaleDateString()+'</b>. Choose to wait, or receive a full refund now.</p><div class="mrow"><button class="btn btn-outline" type="button" onclick="respondDelay(\''+l.id+'\',\''+c.subId+'\',\'refund\')">Refund my spot</button><button class="btn btn-primary" type="button" onclick="respondDelay(\''+l.id+'\',\''+c.subId+'\',\'wait\')">I&rsquo;ll wait</button></div></div>';
+  return '<div class="track-submit" style="margin-top:12px"><div class="track-submit-title">Delivery delay notice</div><p class="track-submit-copy">IRLi has proposed delivery by <b>'+safeCardText(new Date(l.delayNotice.proposedAt).toLocaleDateString())+'</b>. Choose to wait, or receive a full refund now.</p><div class="mrow"><button class="btn btn-outline" type="button" onclick="respondDelay('+safeInlineArg(l.id)+','+safeInlineArg(c.subId)+',&quot;refund&quot;)">Refund my spot</button><button class="btn btn-primary" type="button" onclick="respondDelay('+safeInlineArg(l.id)+','+safeInlineArg(c.subId)+',&quot;wait&quot;)">I&rsquo;ll wait</button></div></div>';
 }
 async function retryFailedReservation(orderId,campaignId,spotIndex,brand,mail,link){
   try{
@@ -10800,21 +10815,21 @@ function trackCardHtml(l,c){
    var badge=c.ownerView?(funded?'Funded':'Launch ready'):(orderStatus==='pending'?'Pending':(orderStatus==='payment_failed'?'Payment failed':(orderStatus==='cancelled'||orderStatus==='released'?'Released':(orderStatus==='funded'?'Funded':(checkState.nonCompliant?'Non-compliant':(checkState.overdue?(checkState.firstOverdue?'First check-in overdue':'Check-in overdue'):(l.shippedAt?'Shipped':'Reserved')))))));
   return '<details class="card track-order">'+
       '<summary class="track-order-summary">'+
-        (photo?'<img src="'+photo+'" style="width:56px;height:56px;object-fit:contain;background:#fff;border:1px solid var(--border);border-radius:12px;flex-shrink:0" alt="">':'')+
-        '<div class="track-order-summary-copy"><div class="track-order-title">'+LBLL(l)+'</div><div class="track-order-meta">'+(c.ownerView?'Owner campaign':(c.ownerOrder?'Brand order received':c.brand))+' \u00b7 '+c.subId+'</div></div>'+
-        '<span class="status-badge '+(c.refunded||orderStatus==='refunded'||checkState.nonCompliant||checkState.overdue?'risk':'active')+'">'+badge+'</span>'+
+        (safeImageAttr(photo)?'<img src="'+safeImageAttr(photo)+'" style="width:56px;height:56px;object-fit:contain;background:#fff;border:1px solid var(--border);border-radius:12px;flex-shrink:0" alt="">':'')+
+        '<div class="track-order-summary-copy"><div class="track-order-title">'+safeCardText(LBLL(l))+'</div><div class="track-order-meta">'+safeCardText(c.ownerView?'Owner campaign':(c.ownerOrder?'Brand order received':c.brand))+' \u00b7 '+safeCardText(c.subId)+'</div></div>'+
+        '<span class="status-badge '+(c.refunded||orderStatus==='refunded'||checkState.nonCompliant||checkState.overdue?'risk':'active')+'">'+safeCardText(badge)+'</span>'+
         '<span class="track-order-chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m7 9 5 5 5-5"/></svg></span>'+
       '</summary>'+
       '<div class="track-order-content">'+
       '<div class="track-timeline">'+steps.map(function(s){
-        return '<div class="track-step '+(s.done?'done':(s.active?'active':''))+'"><div class="track-dot"></div><div class="track-line"></div><div class="track-body"><b>'+s.label+'</b><span>'+s.sub+'</span></div></div>';
+        return '<div class="track-step '+(s.done?'done':(s.active?'active':''))+'"><div class="track-dot"></div><div class="track-line"></div><div class="track-body"><b>'+safeCardText(s.label)+'</b><span>'+safeCardText(s.sub)+'</span></div></div>';
       }).join('')+'</div>'+
-       trackSubmitHtml(l,c)+(c.ownerView?'':(orderStatus==='payment_failed'?'<div class="track-submit" style="margin-top:12px"><div class="track-submit-title">Payment failed</div><p class="track-submit-copy">No new charge was made. Update your card within 48 hours to keep this reservation.</p><button class="btn btn-primary" type="button" onclick="retryFailedReservation(\''+c.stripeOrderId+'\',\''+l.id+'\','+(c.spotIndex||0)+',\''+String(c.brand||'').replace(/'/g,"&#39;")+'\',\''+String(c.mail||'').replace(/'/g,"&#39;")+'\',\''+String(c.link||'').replace(/'/g,"&#39;")+'\')">Update card</button></div>':delayActionHtml(l,c)))+
+       trackSubmitHtml(l,c)+(c.ownerView?'':(orderStatus==='payment_failed'?'<div class="track-submit" style="margin-top:12px"><div class="track-submit-title">Payment failed</div><p class="track-submit-copy">No new charge was made. Update your card within 48 hours to keep this reservation.</p><button class="btn btn-primary" type="button" onclick="retryFailedReservation('+safeInlineArg(c.stripeOrderId)+','+safeInlineArg(l.id)+','+(c.spotIndex||0)+','+safeInlineArg(c.brand)+','+safeInlineArg(c.mail)+','+safeInlineArg(c.link)+')">Update card</button></div>':delayActionHtml(l,c)))+
       '<details style="margin-top:4px"><summary style="cursor:pointer;font-size:13px;font-weight:600;color:#6e6e73">Advanced details</summary>'+
         '<div style="margin-top:10px;font-size:13px;color:#3a3a3c;line-height:2">'+
-          '<div>'+(c.ownerView?'Campaign ID':'Submission ID')+' <b style="float:right">'+c.subId+'</b></div>'+
+          '<div>'+(c.ownerView?'Campaign ID':'Submission ID')+' <b style="float:right">'+safeCardText(c.subId)+'</b></div>'+
            (c.ownerView?'':'<div>Spot number <b style="float:right">'+((c.spotIndex||0)+1)+'</b></div><div>Spot price <b style="float:right">'+money(c.amt)+'</b></div><div>Charge timing <b style="float:right">'+(orderStatus==='funded'?'At funding':'Never charged yet')+'</b></div>')+
-          '<div>Fulfillment status <b style="float:right">'+badge+'</b></div>'+
+          '<div>Fulfillment status <b style="float:right">'+safeCardText(badge)+'</b></div>'+
           '<div>Check-ins on file <b style="float:right">'+checkins.length+' of '+termOf(l)+'</b></div>'+
         '</div>'+
       '</details>'+
@@ -10909,7 +10924,7 @@ function renderItemSpotList(){
         ('Reserve Spot '+(i+1)+' for '+money(price)));
     var brand=(claim&&claim.brand||'Sponsor').trim();
     var mark=claim?
-      (claim.logo?'<img src="'+claim.logo+'" alt="'+safeCardText(brand)+' logo">':'<span>'+safeCardText(brand.slice(0,2).toUpperCase())+'</span>'):
+      (safeImageAttr(claim.logo)?'<img src="'+safeImageAttr(claim.logo)+'" alt="'+safeCardText(brand)+' logo">':'<span>'+safeCardText(brand.slice(0,2).toUpperCase())+'</span>'):
       '<svg class="ap-spot-plus" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>';
     button.innerHTML=
       '<span class="ap-spot-mark">'+mark+'</span>'+
@@ -10961,8 +10976,8 @@ function refreshItemCards(){
   if(linksEl){
     var linked=SOCIAL_PLATFORMS.filter(function(p){return CUR.socialLinks&&CUR.socialLinks[p.key]});
     linksEl.innerHTML=linked.length?'<span class="finetext" style="align-self:center">Verify the owner on</span>'+linked.map(function(p){
-      var handle=CUR.socialLinks[p.key];
-      return '<a href="'+p.url+handle+'" target="_blank" rel="noopener">'+
+      var handle=String(CUR.socialLinks[p.key]).replace(/^@/,'');
+      return '<a href="'+p.url+encodeURIComponent(handle)+'" target="_blank" rel="noopener">'+
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">'+p.icon+'</svg>'+
         p.label+'</a>';
     }).join(''):'<p class="finetext">No public profiles linked yet.</p>';

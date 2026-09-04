@@ -9,7 +9,6 @@
 export * from './brandAssent';
 export * from './campaign';
 export * from './campaignInput';
-export * from './campaignInputPresentation';
 export * from './campaignLifecycleStatus';
 export * from './campaignPresentation';
 export * from './getTrackingParams';

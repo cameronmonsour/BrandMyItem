@@ -27,6 +27,9 @@ app.use(
 app.disable("x-powered-by");
 app.use((_req, res, next) => {
   res.setHeader("Referrer-Policy", "no-referrer");
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("Content-Security-Policy", "frame-ancestors 'none'; object-src 'none'; base-uri 'self'");
   next();
 });
 app.use(express.json());

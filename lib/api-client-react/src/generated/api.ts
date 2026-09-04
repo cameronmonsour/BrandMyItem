@@ -154,13 +154,7 @@ export const registerCampaign = async (campaignInput: CampaignInput, options?: P
 
     const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
     if (!h) return {};
-    if (h instanceof Headers) {
-      const values: Record<string, string> = {};
-      h.forEach((value, key) => {
-        values[key] = value;
-      });
-      return values;
-    }
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
     if (Array.isArray(h)) return Object.fromEntries(h);
     return h;
   };
@@ -317,13 +311,7 @@ export const requestUploadUrl = async (uploadUrlRequest: UploadUrlRequest, optio
 
     const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
     if (!h) return {};
-    if (h instanceof Headers) {
-      const values: Record<string, string> = {};
-      h.forEach((value, key) => {
-        values[key] = value;
-      });
-      return values;
-    }
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
     if (Array.isArray(h)) return Object.fromEntries(h);
     return h;
   };
@@ -480,13 +468,7 @@ export const createPlacementCheckout = async (placementCheckoutInput: PlacementC
 
     const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
     if (!h) return {};
-    if (h instanceof Headers) {
-      const values: Record<string, string> = {};
-      h.forEach((value, key) => {
-        values[key] = value;
-      });
-      return values;
-    }
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
     if (Array.isArray(h)) return Object.fromEntries(h);
     return h;
   };
@@ -952,13 +934,7 @@ export const requestTrackingMagicLink = async (trackingMagicLinkInput: TrackingM
 
     const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
     if (!h) return {};
-    if (h instanceof Headers) {
-      const values: Record<string, string> = {};
-      h.forEach((value, key) => {
-        values[key] = value;
-      });
-      return values;
-    }
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
     if (Array.isArray(h)) return Object.fromEntries(h);
     return h;
   };

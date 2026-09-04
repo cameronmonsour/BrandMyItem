@@ -9,8 +9,6 @@ export interface HealthStatus {
   status: string;
 }
 
-export type CampaignInputPresentation = { [key: string]: unknown };
-
 export interface OwnerAssent {
   accepted: true;
   termsVersion: string;
@@ -49,7 +47,7 @@ export interface CampaignInput {
      */
   pricesCents: number[];
   ownerAssent: OwnerAssent;
-  presentation: CampaignInputPresentation;
+  presentation: Partial<Record<'type' | 'sourceType' | 'itemName' | 'custom' | 'photo' | 'faces' | 'tiles' | 'retail' | 'title' | 'owner' | 'avatar' | 'habs' | 'cities' | 'universities' | 'purpose' | 'freq' | 'social' | 'color' | 'variantModel' | 'variantSize' | 'source' | 'verified' | 'socialLinks' | 'slots' | 'pricesIncludeMarkup' | 'postedAt' | 'unsoldTimeoutDays' | 'termMonths' | 'checkinFrequency' | 'brandingMode' | 'status' | 'mtv', unknown>>;
 }
 
 export type CampaignPresentation = { [key: string]: unknown };
@@ -233,7 +231,6 @@ export const UploadUrlRequestContentType = {
   'image/jpeg': 'image/jpeg',
   'image/webp': 'image/webp',
   'image/gif': 'image/gif',
-  'image/svg+xml': 'image/svg+xml',
 } as const;
 
 export interface UploadUrlRequest {

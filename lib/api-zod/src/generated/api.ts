@@ -123,7 +123,7 @@ export const requestUploadUrlBodySizeMax = 10000000;
 export const RequestUploadUrlBody = zod.object({
   "name": zod.string().min(1).max(requestUploadUrlBodyNameMax),
   "size": zod.int().min(1).max(requestUploadUrlBodySizeMax),
-  "contentType": zod.enum(['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/svg+xml'])
+  "contentType": zod.enum(['image/png', 'image/jpeg', 'image/webp', 'image/gif'])
 })
 
 export const requestUploadUrlResponseMetadataNameMax = 255;
@@ -138,7 +138,7 @@ export const RequestUploadUrlResponse = zod.object({
   "metadata": zod.object({
   "name": zod.string().min(1).max(requestUploadUrlResponseMetadataNameMax),
   "size": zod.int().min(1).max(requestUploadUrlResponseMetadataSizeMax),
-  "contentType": zod.enum(['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/svg+xml'])
+  "contentType": zod.enum(['image/png', 'image/jpeg', 'image/webp', 'image/gif'])
 }).optional()
 })
 
