@@ -176,6 +176,8 @@ test('dashboard keeps compact tracker cards without a duplicate left category bo
   assert.doesNotMatch(builderHtml, /Total fee before tax &amp; shipping/);
   assert.doesNotMatch(builderHtml, /id="buildTaxOut"/);
   assert.match(builderHtml, /Choose your character/);
+  assert.match(html, /var AVATAR_COUNT=14;/);
+  assert.doesNotMatch(html, /avatars\/avatar-1[5-8]\.png/);
   assert.match(builderHtml, /<label class="label" for="pAddress">Shipping address<\/label>/);
   assert.match(builderHtml, /<input class="input" id="pAddress" type="text" autocomplete="street-address" placeholder="Street address, city, state, ZIP">/);
   assert.doesNotMatch(builderHtml, /<textarea[^>]*id="pAddress"/);
