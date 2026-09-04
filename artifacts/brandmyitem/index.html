@@ -511,6 +511,7 @@ details.faq .fa b{color:var(--fg);font-weight:600}
 .lcard .chipg{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;background:var(--wash);border-radius:999px;padding:3px 7px 3px 4px;line-height:1.2;font-variant-numeric:tabular-nums;white-space:nowrap}
 .lcard .chipg.sold-count{padding:3px 7px}
 .lcard .countdown-badge{position:absolute;top:10px;left:10px;z-index:3}
+.lcard .countdown-badge.funded{background:#E8F5EC;color:#1F7A44}
 .lcard .sponsor-price{position:relative;display:flex;flex-direction:column;align-items:flex-end;min-width:0}
 .lcard .sponsor-price .sponsor-stack{position:absolute;right:0;bottom:calc(100% + 3px);padding-left:0}
 .lcard .sponsor-stack{display:inline-flex;align-items:center;padding-left:2px}
@@ -522,6 +523,7 @@ details.faq .fa b{color:var(--fg);font-weight:600}
 .lcard .chipb{display:inline-flex;align-items:center;font-size:11px;font-weight:500;background:#1D1D1F;color:#fff;border-radius:999px;padding:3px 7px;line-height:1.2;font-variant-numeric:tabular-nums;white-space:nowrap;flex-shrink:0}
 .pbar{height:5px;border-radius:99px;background:#EEF1F5;overflow:hidden;margin:8px 0 0}
 .pbar i{display:block;height:100%;border-radius:99px;background:#1D1D1F;transition:width .5s}
+.pbar.funded i{background:#1F7A44}
 .empty{border:1px solid rgba(60,60,67,.20);border-radius:var(--r-lg);padding:46px 20px;text-align:center;color:var(--mfg);font-size:14px;grid-column:1/-1}
 .empty b{display:block;font-size:16px;color:var(--fg);margin-bottom:6px}
 
@@ -7215,7 +7217,6 @@ function listingContextHtml(l){
   if(l.closed)parts.push('<span style="color:#B23327">Closed, refunded</span>');
   else if(l.nonCompliant)parts.push('<span style="color:#B23327">Check-in overdue, posting restricted</span>');
   else if(l.shippedAt)parts.push('<span style="color:#1F7A44">Shipped, check-ins active</span>');
-  else if(pctOf(l)>=100)parts.push('<span style="color:#1F7A44">Funded, preparing shipment</span>');
   var locations=[];
   (l.cities||[]).slice(0,2).forEach(function(v){if(v&&!locations.includes(v))locations.push(v)});
   (l.universities||[]).slice(0,1).forEach(function(v){if(v&&!locations.includes(v))locations.push(v)});
@@ -8108,6 +8109,8 @@ function renderHomeLiveFeed(){renderLiveFeed('homeLiveFeed')}
 function renderDashboardLiveFeed(){renderLiveFeed('dashLiveFeed')}
 var cardCountdownTimer=null;
 function listingCountdownLabel(l){
+  if(l.closed)return 'Closed';
+  if(pctOf(l)>=100)return 'Funded';
   var ms=Math.max(0,endOf(l)-Date.now());
   if(!ms)return 'Closed';
   return Math.floor(ms/86400000)+'d '+pad(Math.floor(ms%86400000/3600000))+'h';
@@ -8144,13 +8147,13 @@ function renderHomeCampaigns(){
       listingContextHtml(l)+'<div class="iname">'+it.label+'</div>'+
        '<div class="moneyrow"><span class="amts">'+money(raisedOf(l))+'<span>/'+money(goalOf(l))+'</span></span>'+
        '<span class="chips"><span class="chipg sold-count">'+sold+'/'+l.slots+' sold</span><span class="sponsor-price">'+sponsorLogoStack(l)+'<span class="chipb">from '+money(listingSpotPrice(l))+'</span></span></span></div>'+
-      '<div class="pbar"><i style="width:'+pct+'%"></i></div>'+
+       '<div class="pbar'+(pct>=100?' funded':'')+'"><i style="width:'+Math.min(100,pct)+'%"></i></div>'+
       '</div>';
     card.onclick=function(){location.hash='item/'+l.id};
     host.appendChild(card);
     renderFinal(document.getElementById('home-th-'+l.id),l);
     var countdown=document.createElement('span');
-    countdown.className='chipg sold-count countdown-badge';
+     countdown.className='chipg sold-count countdown-badge'+(pct>=100?' funded':'');
     countdown.setAttribute('data-countdown-listing',l.id);
     countdown.textContent=listingCountdownLabel(l);
     document.getElementById('home-th-'+l.id).appendChild(countdown);
@@ -8563,7 +8566,7 @@ function renderDash(){
       listingContextHtml(l)+'<div class="iname">'+it.label+'</div>'+
       '<div class="moneyrow"><span class="amts">'+money(raisedOf(l))+'<span>/'+money(goalOf(l))+'</span></span>'+
       '<span class="chips"><span class="chipg sold-count">'+sold+'/'+l.slots+' sold</span><span class="sponsor-price">'+sponsorLogoStack(l)+'<span class="chipb">from '+money(listingSpotPrice(l))+'</span></span></span></div>'+
-      '<div class="pbar"><i style="width:'+pct+'%"></i></div>'+
+       '<div class="pbar'+(pct>=100?' funded':'')+'"><i style="width:'+Math.min(100,pct)+'%"></i></div>'+
       '</div>';
     card.onclick=function(){openCampaignDetails(l)};
     g.appendChild(card);
@@ -8571,7 +8574,7 @@ function renderDash(){
     renderFinal(th,l);
     th.onmousemove=null;th.onmouseleave=null;
     var countdown=document.createElement('span');
-    countdown.className='chipg sold-count countdown-badge';
+     countdown.className='chipg sold-count countdown-badge'+(pct>=100?' funded':'');
     countdown.setAttribute('data-countdown-listing',l.id);
     countdown.textContent=listingCountdownLabel(l);
     th.appendChild(countdown);

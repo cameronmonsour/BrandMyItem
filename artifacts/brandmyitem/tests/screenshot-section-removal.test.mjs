@@ -95,6 +95,15 @@ test('funded AirPods example uses a clean second sponsor logo', () => {
   assert.match(html, /prices:\[300,249\]/);
 });
 
+test('funded campaign cards show a green funded state', () => {
+  assert.match(html, /\.lcard \.countdown-badge\.funded\{background:#E8F5EC;color:#1F7A44\}/);
+  assert.match(html, /\.pbar\.funded i\{background:#1F7A44\}/);
+  assert.match(html, /if\(pctOf\(l\)>=100\)return 'Funded'/);
+  assert.doesNotMatch(html, /Funded, preparing shipment/);
+  assert.match(html, /className='chipg sold-count countdown-badge'\+\(pct>=100\?' funded':''\)/);
+  assert.match(html, /class="pbar'\+\(pct>=100\?' funded':''\)\"><i style="width:'\+Math\.min\(100,pct\)+'%"><\/i>/);
+});
+
 test('dashboard keeps compact tracker cards without a duplicate left category box', () => {
   assert.doesNotMatch(html, /id="railCats"/);
   assert.doesNotMatch(html, /<h5>Category<\/h5>/);
