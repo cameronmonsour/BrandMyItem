@@ -76,6 +76,11 @@ test('launch homepage keeps AirPods, MacBook, and iPhone examples locked', () =>
   assert.doesNotMatch(block, /openSlots\(l\)>0/);
 });
 
+test('funded AirPods example uses a clean second sponsor logo', () => {
+  assert.match(html, /listing\.claims\[1\]=\{\s*brand:'Figma',\s*link:'https:\/\/www\.figma\.com',\s*logo:'logos\/figma\.svg',\s*amt:249/);
+  assert.match(html, /prices:\[300,249\]/);
+});
+
 test('dashboard keeps compact tracker cards without a duplicate left category box', () => {
   assert.doesNotMatch(html, /id="railCats"/);
   assert.doesNotMatch(html, /<h5>Category<\/h5>/);

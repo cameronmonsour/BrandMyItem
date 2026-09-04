@@ -6775,7 +6775,7 @@ if(!DB){
     {id:'demo5',type:'iphone',owner:'Sofia',mail:'',habs:['Campus','Gym'],slots:5,
       prices:[167,233,233,233,233],claims:[{brand:'Loopwear',link:'',logo:null,amt:167},null,null,null,null],created:now-1000*60*60*2},
     {id:'demo6',type:'headphones',owner:'Ken',mail:'',habs:['Commute','Office'],slots:2,
-      prices:[300,249],claims:[{brand:'Driftly',link:'',logo:null,amt:300},null],created:now-1000*60*60*5},
+      prices:[300,249],claims:[{brand:'Driftly',link:'',logo:null,amt:300},{brand:'Figma',link:'https://www.figma.com',logo:'logos/figma.svg',amt:249,subId:'BMI-DEMO02'}],created:now-1000*60*60*5},
     {id:'demo7',type:'paddle',owner:'Priya',mail:'',habs:['Courts','Events'],slots:2,
       prices:[80,70],claims:[{brand:'Rallyhouse',link:'',logo:null,amt:80},{brand:'NetGain',link:'',logo:null,amt:70}],created:now-1000*60*60*30},
     {id:'demo8',type:'golfbag',owner:'Marcus',mail:'',habs:['Club','Events'],slots:5,
@@ -6836,6 +6836,19 @@ var DEMO_CONTEXT={
     });
     store.set('bmi_db4',DB);
   }
+})();
+(function replaceAirPodsSecondDemoLogo(){
+  var listing=(DB.listings||[]).find(function(l){return l.id==='demo6'});
+  if(!listing)return;
+  if(!listing.claims)listing.claims=[];
+  listing.claims[1]={
+    brand:'Figma',
+    link:'https://www.figma.com',
+    logo:'logos/figma.svg',
+    amt:249,
+    subId:'BMI-DEMO02'
+  };
+  store.set('bmi_db4',DB);
 })();
 (function upgradeDemoContext(){
   var changed=false;
