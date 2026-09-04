@@ -148,7 +148,7 @@ test('dashboard keeps compact tracker cards without a duplicate left category bo
   assert.match(html, /\.lcard \.who\{[^}]*height:24px;min-width:0;margin-bottom:5px/);
   assert.match(html, /\.lcard \.who \.oname\{[^}]*overflow:hidden;text-overflow:ellipsis;white-space:nowrap/);
   assert.match(html, /\.lcard \.who \.catic\{[^}]*margin-left:auto;[^}]*width:24px;height:24px/);
-  assert.match(html, /\.lcard \.iname\{[^}]*width:100%;height:19px;line-height:19px;[^}]*margin:7px 0 2px/);
+  assert.match(html, /\.lcard \.iname\{[^}]*width:100%;height:19px;line-height:19px;[^}]*margin:7px 0;/);
   assert.match(html, /\.lcard \.card-context\{[^}]*width:100%;height:15px;[^}]*margin:0 0 3px/);
   assert.match(html, /\.lcard \.card-context-value\{[^}]*overflow:hidden;text-overflow:ellipsis;white-space:nowrap/);
   assert.match(html, /\.lcard \.moneyrow\{[^}]*width:100%;min-width:0;min-height:21px/);
@@ -224,7 +224,7 @@ test('every catalog item has an item-specific branding method', () => {
 });
 
 test('sold and price pills keep the same compact height', () => {
-  assert.match(html, /\.lcard \.iname\{display:block;box-sizing:border-box;width:100%;height:19px;line-height:19px;[^}]*margin:7px 0 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis\}/);
+  assert.match(html, /\.lcard \.iname\{display:block;box-sizing:border-box;width:100%;height:19px;line-height:19px;[^}]*margin:7px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis\}/);
   assert.match(html, /\.lcard \.moneyrow\{display:grid;grid-template-columns:minmax\(0,1fr\) auto;align-items:end;/);
   assert.match(html, /\.lcard \.moneyrow\{[^}]*min-height:21px/);
   assert.match(html, /\.lcard \.moneyrow \.amts\{display:inline-flex;align-items:center;height:21px;line-height:1\.2;/);
