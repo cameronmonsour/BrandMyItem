@@ -1,0 +1,69 @@
+# BrandMyItem — Audit fixes, round 2 (Replit prompt)
+
+Failures found by driving the live app. Fix every item; this document wins over earlier prompts where they conflict. Run every acceptance check in a real browser or with real HTTP calls and report results with evidence.
+
+---
+
+## 1. Owner posting flow
+
+1.1 **Spot pricing is owner-editable — wrong model.** Remove the "Price each brand spot" step and the `cuSpotPrice*` inputs. Prices are computed, never typed: each spot's price = (its sized area ÷ total sized area) × campaign total, rounded to whole dollars, with the rounding remainder added to the largest spot so the sum equals the campaign total exactly. Show the computed prices read-only on the sizing preview ("Spot 1 · $241"). Remove the validation messages "Complete sizing and price every sponsor spot before posting" and "Every spot needs a price and the spot total must match the full purchase goal"; replace with a single "Complete sizing before posting" if no spots are sized.
+
+1.2 **Validation feedback is invisible.** Clicking "Post my item live" currently scrolls the page to the top and shows a toast at the bottom, off-screen. Do not scroll to top. Show each validation error inline, directly under the field it concerns, in red ink, and scroll *that field* into view. Keep the toast only as a secondary notice. Applies to: character not selected, missing name/email/address, address format, assent unchecked, purpose > 500 chars, social required, W-9 required.
+
+1.3 **$2,000 gate — complete it.** For any listing with campaign total ≥ $2,000:
+- Show a visible block above the assent checkbox titled "Required for listings of $2,000 or more" containing (a) a W-9 upload (PDF) and (b) at least one linked social handle. The block appears the moment the campaign total crosses $2,000, not on submit.
+- Both are required before "Post my item live" is enabled. Inline errors per 1.2 if attempted without them.
+- Copy: "Add at least one public social handle for a listing of $2,000 or more." (not "campaign").
+
+1.4 **Social linking uses `window.prompt()`.** Replace with an inline text field that appears under the button when clicked ("@handle"), validates the handle format per network, and shows the linked handle as a removable chip. No native dialogs anywhere in the app.
+
+1.5 **Structured shipping address.** Replace the single `pAddress` line with fields: street, unit (optional), city, state (select, two-letter), ZIP (5 digits). Reject PO boxes (`/\bP\.?\s*O\.?\s*BOX\b/i`) with "We can't ship to PO boxes." Remove the regex-on-one-line validation and its message.
+
+1.6 **Scroll/paint glitch.** After the scroll jump the sticky nav rendered mid-viewport with a blank block above it. Remove the programmatic scroll-to-top on submit (1.2) and verify the nav stays pinned at top at 603px, 1440px, and 390px.
+
+## 2. Copy and content
+
+2.1 Footer credit reads literally "Avatars by pack author, CC BY 4.0". Replace `pack author` with the actual author name I will supply: `AVATAR_AUTHOR_NAME`. If the value is still the placeholder at build time, fail the build with an error.
+
+2.2 Avatar images all have `alt="BrandMyItem"`. Set `alt="Character 1"` … `"Character 14"`.
+
+2.3 Footer link "The 60-day refund" → **"Not funded? Never charged"** linking to the home bento tile anchor.
+
+2.4 Every remaining instance of "campaign" in user-facing text (toasts, labels, page titles, email templates) → "listing", except the fixed phrase "campaign total".
+
+## 3. Catalog
+
+3.1 Remove **Louis Vuitton Keepall Bandoulière ($2,800)** and **Tom Ford O'Connor Tuxedo ($7,490)** from the catalog. Campaign totals above $6,250 cannot be pursued in California small claims by an LLC, which breaks the breach remedy. Keep the remaining items. Add a config guard: any item whose campaign total would exceed $6,250 is rejected at catalog load with a logged error.
+
+## 4. Reservation flow (carried from round 3)
+
+4.1 Magic link must match the requesting email against **both** listing owners and spot reservations. Test: request for the email on reservation BMI-73E690 must send.
+4.2 Email templates: use the item display name ("iPhone 17 · 512GB"), never the internal title ("Custom item").
+4.3 Every email: `Reply-To: support@brandmyitem.com`.
+4.4 Confirmation modal: "SUBMISSION ID" → "RESERVATION ID".
+4.5 After Stripe returns, land on `#item/{id}` (preserving `?demo=1` if present), not `#dashboard`.
+4.6 Location line: "Newport Beach, CA · UCLA" (middle dot). Remove "LOCATIONS: Not provided" when the header already shows a location.
+4.7 Status filter "Fully branded" → "Funded".
+4.8 Swap `campaign/product-iphone.webp` for the new iPhone 17 render (vertical capsule camera) when the file `product-iphone-17.png` is present in uploads; convert to WebP at ≤1600px. If absent, log "iPhone render not supplied" and continue.
+
+## 5. Email domain (after DNS verifies)
+
+5.1 `RESEND_FROM` will be `BrandMyItem <hello@mail.brandmyitem.com>`. Nothing in code should reference `onboarding@resend.dev`; the sender comes only from env.
+5.2 Send a test reservation confirmation to cameronmonsour@gmail.com and report the Resend message ID and the `From` header.
+
+---
+
+## 6. Acceptance checks (execute, attach evidence)
+
+- [ ] Sizing a MacBook lid into 2 spots of unequal area shows two read-only computed prices that sum to $2,239; no price inputs exist in the DOM (`querySelectorAll('[id^=cuSpotPrice]').length === 0`).
+- [ ] Submit with no character selected: inline error appears under the character row, page does not scroll to top (`scrollY` unchanged ±20px).
+- [ ] A $2,239 listing shows the "Required for listings of $2,000 or more" block with W-9 upload and social field before submit; button disabled until both are provided. A $1,161 listing shows no such block.
+- [ ] Clicking "Link X" shows an inline field, not a browser dialog (`window.prompt` is never called — stub it to throw and confirm no error).
+- [ ] Address form: "PO Box 12" rejected; "12 Main St" + Newport Beach + CA + 92660 accepted.
+- [ ] Footer contains "Avatars by <real name>, CC BY 4.0" and does not contain "pack author"; footer contains "Not funded? Never charged" and not "60-day refund".
+- [ ] Picker shows no Louis Vuitton or Tom Ford item; `/api/catalog` (or equivalent) has no item over $6,250 campaign total.
+- [ ] Grep user-facing strings for "campaign" — only "campaign total" remains.
+- [ ] Magic link for the brand email on BMI-73E690 sends; report message ID.
+- [ ] Reservation email body contains "iPhone 17 · 512GB", Reply-To is support@brandmyitem.com.
+- [ ] After Stripe test checkout, URL is `#item/djr99kx` with modal showing "RESERVATION ID".
+- [ ] Screenshots at 1440 and 390: sizing preview with computed prices, $2k gate block, inline validation error, social inline field, structured address form, listing page after Stripe return.
