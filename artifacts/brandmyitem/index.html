@@ -8311,7 +8311,7 @@ function renderCampaignDetails(l){
     '</div>'+
     '<div class="campaign-grid">'+
       '<section class="campaign-panel campaign-purpose">'+
-        '<div class="campaign-label">Campaign brief</div><p>'+safeCardText(purpose)+'</p>'+
+        '<div class="campaign-label">Purpose</div><p>'+safeCardText(purpose)+'</p>'+
         '<div class="campaign-facts">'+
           '<div class="campaign-fact"><span>Item ships</span><b>'+safeCardText(l.closed?'Closed — claims refunded':(l.shippedAt?'Shipped to owner':(pct>=100?'Funded — preparing shipment':'New at 100% funded')))+'</b></div>'+
           '<div class="campaign-fact"><span>Owner check-in</span><b>'+safeCardText(checkinCadenceText(l))+'</b></div>'+
@@ -8323,7 +8323,6 @@ function renderCampaignDetails(l){
         '<div class="campaign-label">Audience & reach</div>'+
         '<div class="campaign-reach">'+
           '<div class="campaign-reach-stat"><span>Social following</span><b>'+safeCardText(l.social?l.social+' followers':'Not provided')+'</b></div>'+
-          '<div class="campaign-reach-stat"><span>Seen how often</span><b>'+safeCardText(l.freq||'Not provided')+'</b></div>'+
           '<div class="campaign-reach-stat"><span>Most visited cities</span><b>'+safeCardText(campaignValues(l.cities))+'</b></div>'+
           '<div class="campaign-reach-stat"><span>Universities</span><b>'+safeCardText(campaignValues(l.universities))+'</b></div>'+
           '<div class="campaign-reach-stat"><span>Everyday settings</span><b>'+safeCardText(campaignValues(l.habs))+'</b></div>'+
