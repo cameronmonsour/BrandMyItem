@@ -87,7 +87,7 @@ test('launch homepage keeps AirPods, MacBook, and iPhone examples locked', () =>
 test('homepage examples cannot drift into or out of shared campaign data', () => {
   assert.match(html, /function saveDB\(\)\{lockLaunchExamples\(\);store\.set\('bmi_db4',DB\);cloudPush\(\)\}/);
   assert.match(html, /DB\.listings\.filter\(function\(l\)\{return LOCKED_LAUNCH_EXAMPLE_IDS\.indexOf\(l\.id\)<0\}\)\.forEach/);
-  assert.match(html, /remote\.listings\.filter\(isLaunchLiveCampaign\)\.forEach/);
+  assert.match(html, /remote\.listings\.filter\(function\(r\)\{return !isDeletedCampaign\(r\)&&isLaunchLiveCampaign\(r\)\}\)\.forEach/);
   assert.match(html, /demo6:\{[\s\S]*?status:'funded'/);
 });
 
