@@ -56,7 +56,8 @@ test('lead suitcase uses four rounded silver-shell boxes that avoid the halo and
   assert.match(html, /<rect class="fb-spotline" x="94\.5" y="184\.5" width="77\.5" height="90\.5" rx="6"\/>/);
   assert.match(html, /\.fb-spotline\{fill:none;stroke:#000;stroke-width:1;vector-effect:non-scaling-stroke;visibility:visible\}/);
   assert.match(html, /class="fb-lead-price"><text[^>]*>\$543<\/text><text[^>]*>\$543<\/text><text[^>]*>\$542<\/text><text[^>]*>\$542<\/text>/);
-  assert.match(html, /class="fb-lead-logo"(?:[\s\S]*?<use href="#fbLidMark"){4}/);
+   assert.match(html, /class="fb-lead-logo"(?:[\s\S]*?<image href="logos\/fake\/(?:northloop|flint|meridian|quarry)\.svg")[\s\S]*?{4}/);
+   assert.match(html, /class="fb-spot-logo"><image href="'\+FAKE_SPONSOR_LOGOS\[i%FAKE_SPONSOR_LOGOS\.length\]\+'/);
   assert.doesNotMatch(html, /class="fb-lead-(?:price|logo)"><rect/);
 });
 

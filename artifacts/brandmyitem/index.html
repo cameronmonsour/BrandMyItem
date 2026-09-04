@@ -1832,7 +1832,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
               <rect class="fb-spotline" x="15" y="184.5" width="77.5" height="90.5" rx="6"/>
               <rect class="fb-spotline" x="94.5" y="184.5" width="77.5" height="90.5" rx="6"/>
               <g class="fb-lead-price"><text x="53.75" y="137.25">$543</text><text x="133.25" y="137.25">$543</text><text x="53.75" y="229.75">$542</text><text x="133.25" y="229.75">$542</text></g>
-              <g class="fb-lead-logo"><use href="#fbLidMark" x="41.75" y="125.25" width="24" height="24"/><use href="#fbLidMark" x="121.25" y="125.25" width="24" height="24"/><use href="#fbLidMark" x="41.75" y="217.75" width="24" height="24"/><use href="#fbLidMark" x="121.25" y="217.75" width="24" height="24"/></g>
+              <g class="fb-lead-logo"><image href="logos/fake/northloop.svg" x="41.75" y="125.25" width="24" height="24" preserveAspectRatio="xMidYMid meet"/><image href="logos/fake/flint.svg" x="121.25" y="125.25" width="24" height="24" preserveAspectRatio="xMidYMid meet"/><image href="logos/fake/meridian.svg" x="41.75" y="217.75" width="24" height="24" preserveAspectRatio="xMidYMid meet"/><image href="logos/fake/quarry.svg" x="121.25" y="217.75" width="24" height="24" preserveAspectRatio="xMidYMid meet"/></g>
             </svg>
           </div>
         </article>
@@ -11145,7 +11145,7 @@ function initHomeFeatureBento(){
       var fontSize=badgeH*.46,logoSize=badgeH*.72;
       var amount=prices&&prices[i]!=null?prices[i]:'';
       unitsSvg += '<g class="fb-spot-price"><text x="'+cx+'" y="'+cy+'" font-size="'+fontSize+'">$'+amount+'</text></g>';
-      unitsSvg += '<g class="fb-spot-logo"><use href="#fbLidMark" x="'+(cx-logoSize/2)+'" y="'+(cy-logoSize/2)+'" width="'+logoSize+'" height="'+logoSize+'"/></g>';
+      unitsSvg += '<g class="fb-spot-logo"><image href="'+FAKE_SPONSOR_LOGOS[i%FAKE_SPONSOR_LOGOS.length]+'" x="'+(cx-logoSize/2)+'" y="'+(cy-logoSize/2)+'" width="'+logoSize+'" height="'+logoSize+'" preserveAspectRatio="xMidYMid meet"/></g>';
       unitsSvg += '</g>';
     });
     var boundarySvg=boundarySegments.length?'<path class="'+spotClass+'" d="'+boundarySegments.join('')+'"/>':'';
