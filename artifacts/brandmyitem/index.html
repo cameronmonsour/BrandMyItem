@@ -497,10 +497,9 @@ details.faq .fa b{color:var(--fg);font-weight:600}
 .lcard .who .avatarc img{width:100%;height:100%;object-fit:cover}
 .lcard .who .oname{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13.5px;font-weight:500}
 .lcard .who .when{flex:0 0 auto;white-space:nowrap;font-size:12.5px;color:var(--mfg)}
-.lcard .title-row{display:flex;align-items:center;gap:8px;width:100%;height:24px;min-width:0;margin:0 0 2px}
-.lcard .title-row .catic{flex:0 0 24px;margin-left:auto;width:24px;height:24px;border-radius:50%;background:#fff;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden}
-.lcard .title-row .catic img{width:80%;height:80%;object-fit:contain}
-.lcard .iname{display:block;flex:1 1 auto;min-width:0;height:19px;line-height:19px;font-size:16px;font-weight:600;letter-spacing:-.012em;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lcard .who .catic{flex:0 0 24px;margin-left:auto;width:24px;height:24px;border-radius:50%;background:#fff;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.lcard .who .catic img{width:80%;height:80%;object-fit:contain}
+.lcard .iname{display:block;width:100%;height:19px;line-height:19px;font-size:16px;font-weight:600;letter-spacing:-.012em;margin:0 0 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .lcard .card-context{display:flex;align-items:center;width:100%;height:15px;min-width:0;margin:0 0 3px;font-size:11.5px;line-height:15px;color:var(--mfg)}
 .lcard .card-context-value{display:block;width:100%;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .lcard .card-context-em{color:var(--fg);font-weight:600}
@@ -8047,8 +8046,8 @@ function renderHomeCampaigns(){
     var card=document.createElement('button');card.type='button';card.className='lcard home-campaign-card';
     card.innerHTML='<div class="thumb" id="home-th-'+l.id+'"></div>'+
       '<div class="body">'+
-      '<div class="who">'+ownerAvatarHtml(l)+'<span class="oname">'+l.owner+'</span><span class="when">'+ago(l.created)+'</span></div>'+
-      '<div class="title-row"><div class="iname">'+it.label+'</div><span class="catic"><img src="'+PHO(l)+'" alt=""></span></div>'+listingContextHtml(l)+
+      '<div class="who">'+ownerAvatarHtml(l)+'<span class="oname">'+l.owner+'</span><span class="when">'+ago(l.created)+'</span><span class="catic"><img src="'+PHO(l)+'" alt=""></span></div>'+
+      listingContextHtml(l)+'<div class="iname">'+it.label+'</div>'+
        '<div class="moneyrow"><span class="amts">'+money(raisedOf(l))+'<span>/'+money(goalOf(l))+'</span></span>'+
        '<span class="chips"><span class="chipg sold-count">'+sold+'/'+l.slots+' sold</span><span class="sponsor-price">'+sponsorLogoStack(l)+'<span class="chipb">from '+money(minOpenPrice(l)===Infinity?Math.min.apply(null,l.prices):minOpenPrice(l))+'</span></span></span></div>'+
       '<div class="pbar"><i style="width:'+pct+'%"></i></div>'+
@@ -8457,8 +8456,8 @@ function renderDash(){
     card.setAttribute('aria-label','Preview campaign for '+it.label+' by '+(l.owner||'this owner'));
     card.innerHTML='<div class="thumb" id="th-'+l.id+'"></div>'+
       '<div class="body">'+
-      '<div class="who">'+ownerAvatarHtml(l)+'<span class="oname">'+l.owner+'</span><span class="when">'+ago(l.created)+'</span></div>'+
-      '<div class="title-row"><div class="iname">'+it.label+'</div><span class="catic"><img src="'+PHO(l)+'" alt=""></span></div>'+listingContextHtml(l)+
+      '<div class="who">'+ownerAvatarHtml(l)+'<span class="oname">'+l.owner+'</span><span class="when">'+ago(l.created)+'</span><span class="catic"><img src="'+PHO(l)+'" alt=""></span></div>'+
+      listingContextHtml(l)+'<div class="iname">'+it.label+'</div>'+
       '<div class="moneyrow"><span class="amts">'+money(raisedOf(l))+'<span>/'+money(goalOf(l))+'</span></span>'+
       '<span class="chips"><span class="chipg sold-count">'+sold+'/'+l.slots+' sold</span><span class="sponsor-price">'+sponsorLogoStack(l)+'<span class="chipb">from '+money(listingSpotPrice(l))+'</span></span></span></div>'+
       '<div class="pbar"><i style="width:'+pct+'%"></i></div>'+
