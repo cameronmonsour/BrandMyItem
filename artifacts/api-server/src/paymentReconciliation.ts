@@ -1,8 +1,8 @@
-import { logger } from "./lib/logger";
+import { logger } from "./lib/logger.ts";
 import {
   expireUnfundedCampaigns,
   reconcileReservationPayments,
-} from "./paymentFunding";
+} from "./paymentFunding.ts";
 
 const DEFAULT_INTERVAL_MS = 5 * 60 * 1000;
 

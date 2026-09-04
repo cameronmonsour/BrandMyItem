@@ -17,4 +17,5 @@
 //   export type InsertPost = z.infer<typeof insertPostSchema>;
 //   export type Post = typeof postsTable.$inferSelect;
 
-export * from "./campaigns";
+// @ts-expect-error TS5097: source-level Node tests need the extension.
+export * from "./campaigns.ts";

@@ -1,7 +1,7 @@
 import { Router, type IRouter } from "express";
-import healthRouter from "./health";
-import commerceRouter from "./commerce";
-import storageRouter from "./storage";
+import healthRouter from "./health.ts";
+import commerceRouter from "./commerce.ts";
+import storageRouter from "./storage.ts";
 
 const router: IRouter = Router();
 

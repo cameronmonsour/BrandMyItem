@@ -1,7 +1,7 @@
 import express, { type Express } from "express";
 import pinoHttp from "pino-http";
-import router from "./routes";
-import { logger } from "./lib/logger";
+import router from "./routes/index.ts";
+import { logger } from "./lib/logger.ts";
 
 const app: Express = express();
 

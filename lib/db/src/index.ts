@@ -1,6 +1,7 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
-import * as schema from "./schema";
+// @ts-expect-error TS5097: source-level Node tests need the extension.
+import * as schema from "./schema/index.ts";
 
 const { Pool } = pg;
 
@@ -13,4 +14,5 @@ if (!process.env.DATABASE_URL) {
 export const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 export const db = drizzle(pool, { schema });
 
-export * from "./schema";
+// @ts-expect-error TS5097: source-level Node tests need the extension.
+export * from "./schema/index.ts";

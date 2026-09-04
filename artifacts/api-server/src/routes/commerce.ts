@@ -30,7 +30,7 @@ import {
   sql,
 } from "drizzle-orm";
 import { Router, type IRouter } from "express";
-import { stripeRequest } from "../stripeClient";
+import { stripeRequest } from "../stripeClient.ts";
 import {
   accessTokenHashesForScope,
   accessTokenMatches,
@@ -38,19 +38,19 @@ import {
   hashAccessToken,
   readAccessToken,
   setAccessCookie,
-} from "../lib/accessControl";
+} from "../lib/accessControl.ts";
 import {
   checkoutIdempotencyKey,
-} from "../paymentTransitions";
-import { verifyImageObject } from "../lib/objectStorage";
+} from "../paymentTransitions.ts";
+import { verifyImageObject } from "../lib/objectStorage.ts";
 import {
   attemptCampaignFunding,
   relistCampaign,
-} from "../paymentFunding";
-import { isSafeCampaignPresentation } from "../lib/campaignPresentation";
-import { sendTransactionalEmail } from "../emailDelivery";
-import { trackingMagicLinkEmail } from "../emailTemplates";
-import { logger } from "../lib/logger";
+} from "../paymentFunding.ts";
+import { isSafeCampaignPresentation } from "../lib/campaignPresentation.ts";
+import { sendTransactionalEmail } from "../emailDelivery.ts";
+import { trackingMagicLinkEmail } from "../emailTemplates.ts";
+import { logger } from "../lib/logger.ts";
 
 const router: IRouter = Router();
 const TRACKING_LINK_TTL_MS = 15 * 60 * 1000;

@@ -1,12 +1,12 @@
 import { campaignsTable, db, placementOrdersTable } from "@workspace/db";
 import { and, eq, inArray } from "drizzle-orm";
-import { logger } from "./lib/logger";
-import { stripeRequest } from "./stripeClient";
+import { logger } from "./lib/logger.ts";
+import { stripeRequest } from "./stripeClient.ts";
 import {
   fundingChargeIdempotencyKey,
   paymentFailureExpiresAt,
   paymentRetryAt,
-} from "./paymentTransitions";
+} from "./paymentTransitions.ts";
 
 const FUNDING_STATUSES = ["reserved", "funding", "payment_failed"] as const;
 const SIXTY_DAYS_MS = 60 * 24 * 60 * 60 * 1000;

@@ -1,7 +1,7 @@
-import app from "./app";
-import { ensureCommerceSchema } from "./commerceSchema";
-import { logger } from "./lib/logger";
-import { startPaymentReconciliation } from "./paymentReconciliation";
+import app from "./app.ts";
+import { ensureCommerceSchema } from "./commerceSchema.ts";
+import { logger } from "./lib/logger.ts";
+import { startPaymentReconciliation } from "./paymentReconciliation.ts";
 
 const rawPort = process.env["PORT"];
 

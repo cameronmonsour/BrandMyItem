@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { Readable } from "node:stream";
 import { Storage, type File } from "@google-cloud/storage";
-import { imageResponsePolicy } from "./imageSecurity";
+import { imageResponsePolicy } from "./imageSecurity.ts";
 
 const SIDECAR = "http://127.0.0.1:1106";
 const storage = new Storage({

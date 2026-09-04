@@ -1,5 +1,5 @@
 import { ReplitConnectors } from "@replit/connectors-sdk";
-import type { TransactionalEmail } from "./emailTemplates";
+import type { TransactionalEmail } from "./emailTemplates.ts";
 import { logger } from "./lib/logger.ts";
 
 const connectors = new ReplitConnectors();

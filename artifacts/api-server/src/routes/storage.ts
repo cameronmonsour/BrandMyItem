@@ -8,7 +8,7 @@ import {
   getImageFile,
   objectPathFromUploadUrl,
   pipeImage,
-} from "../lib/objectStorage";
+} from "../lib/objectStorage.ts";
 
 const router: IRouter = Router();
 
