@@ -70,10 +70,24 @@ test('dashboard activity uses the same live ticker as the homepage', () => {
 
 test('launch homepage keeps AirPods, MacBook, and iPhone examples locked', () => {
   const block = html.match(/function renderHomeCampaigns\(\)\{([\s\S]*?)\n\}/)?.[1] || '';
-  assert.match(block, /var launchCampaignIds=\['demo6','demo1','demo5'\]/);
-  assert.match(block, /launchCampaignIds\.map\(function\(id\)/);
+  assert.match(html, /var LOCKED_LAUNCH_EXAMPLE_IDS=\['demo6','demo1','demo5'\]/);
+  assert.match(block, /LOCKED_LAUNCH_EXAMPLE_IDS\.map\(function\(id\)/);
   assert.doesNotMatch(block, /sort\(function\(a,b\)/);
   assert.doesNotMatch(block, /openSlots\(l\)>0/);
+});
+
+test('homepage examples cannot drift into or out of shared campaign data', () => {
+  assert.match(html, /function saveDB\(\)\{lockLaunchExamples\(\);store\.set\('bmi_db4',DB\);cloudPush\(\)\}/);
+  assert.match(html, /DB\.listings\.filter\(function\(l\)\{return LOCKED_LAUNCH_EXAMPLE_IDS\.indexOf\(l\.id\)<0\}\)\.forEach/);
+  assert.match(html, /remote\.listings\.filter\(isLaunchLiveCampaign\)\.forEach/);
+  assert.match(html, /demo6:\{[\s\S]*?status:'funded'/);
+});
+
+test('Live Items removes prelaunch tests and starts with the three locked examples', () => {
+  assert.match(html, /var LIVE_CAMPAIGN_CUTOFF=Date\.UTC\(2026,8,4,0,0,0\)/);
+  assert.match(html, /function removePrelaunchTestCampaigns\(\)/);
+  assert.match(html, /var all=LOCKED_LAUNCH_EXAMPLE_IDS\.map\(function\(id\)/);
+  assert.match(html, /\.concat\(DB\.listings\.filter\(isLaunchLiveCampaign\)\)/);
 });
 
 test('funded AirPods example uses a clean second sponsor logo', () => {
@@ -189,7 +203,7 @@ test('campaign cards keep sponsor logos and 1.25px placement outlines on product
 });
 
 test('launch marketplace hides seeded demos while preserving the homepage tracker', () => {
-  assert.match(html, /var all=DB\.listings\.filter\(function\(l\)\{return !isDemoListing\(l\)\}\)/);
+  assert.match(html, /function isLaunchLiveCampaign\(l\)/);
   assert.match(html, /function showHomeTracker\(\)/);
   assert.match(html, /renderHomeTrackerRows\(demoTrackMatches\(\),'demo@brandmyitem\.com'\)/);
 });

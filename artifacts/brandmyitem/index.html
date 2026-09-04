@@ -6862,13 +6862,82 @@ var DEMO_CONTEXT={
   });
   if(changed)store.set('bmi_db4',DB);
 })();
-function saveDB(){store.set('bmi_db4',DB);cloudPush()}
+var LOCKED_LAUNCH_EXAMPLE_IDS=['demo6','demo1','demo5'];
+var LIVE_CAMPAIGN_CUTOFF=Date.UTC(2026,8,4,0,0,0);
+function canonicalDemoClaim(brand,logo,link,amt,subId){
+  return {brand:brand,logo:logo,link:link,amt:amt,subId:subId};
+}
+function lockLaunchExamples(){
+  var now=Date.now(),states={
+    demo6:{
+      created:now-1000*60*60*5,
+      prices:[300,249],
+      claims:[
+        canonicalDemoClaim('Reddit','logos/reddit.svg','https://www.reddit.com',300,'BMI-DEMO01'),
+        canonicalDemoClaim('Figma','logos/figma.svg','https://www.figma.com',249,'BMI-DEMO02')
+      ],
+      status:'funded'
+    },
+    demo1:{
+      created:now-1000*60*47,
+      prices:[250,250,165,500,165,225,225,225,219,219],
+      claims:[
+        canonicalDemoClaim('Nike','logos/nike.svg','https://www.nike.com',250,'BMI-DEMO11'),
+        canonicalDemoClaim('Adidas','logos/adidas.svg','https://www.adidas.com',250,'BMI-DEMO12'),
+        canonicalDemoClaim('Spotify','logos/spotify.svg','https://www.spotify.com',165,'BMI-DEMO13'),
+        null,null,
+        canonicalDemoClaim('GitHub','logos/github.svg','https://github.com',225,'BMI-DEMO16'),
+        canonicalDemoClaim('Figma','logos/figma.svg','https://www.figma.com',225,'BMI-DEMO17'),
+        null,
+        canonicalDemoClaim('Strava','logos/strava.svg','https://www.strava.com',219,'BMI-DEMO19'),
+        null
+      ],
+      status:'live'
+    },
+    demo5:{
+      created:now-1000*60*60*2,
+      prices:[167,233,233,233,233],
+      claims:[canonicalDemoClaim('Uber','logos/uber.svg','https://www.uber.com',167,'BMI-DEMO51'),null,null,null,null],
+      status:'live'
+    }
+  };
+  LOCKED_LAUNCH_EXAMPLE_IDS.forEach(function(id){
+    var listing=(DB.listings||[]).find(function(item){return item.id===id}),state=states[id];
+    if(!listing||!state)return;
+    listing.created=state.created;
+    listing.postedAt=state.created;
+    listing.prices=state.prices.slice();
+    listing.claims=state.claims.map(function(claim){return claim?Object.assign({},claim):null});
+    listing.status=state.status;
+    listing.closed=false;
+    listing.unsoldTimeoutDays=60;
+    listing.refundedAt=null;
+    listing.shippedAt=null;
+    listing.fundedAt=state.status==='funded'?state.created+1000*60*60:null;
+    listing.promisedDeliveryAt=listing.fundedAt?listing.fundedAt+60*86400000:null;
+  });
+}
+lockLaunchExamples();
+function isLaunchLiveCampaign(l){
+  return !!(l&&!isDemoListing(l)&&(Number(l.created)||0)>=LIVE_CAMPAIGN_CUTOFF);
+}
+function removePrelaunchTestCampaigns(){
+  DB.listings=(DB.listings||[]).filter(function(l){
+    return LOCKED_LAUNCH_EXAMPLE_IDS.indexOf(l.id)>=0||isLaunchLiveCampaign(l);
+  });
+  var kept={};
+  DB.listings.forEach(function(l){kept[l.id]=true});
+  DB.activity=(DB.activity||[]).filter(function(a){return !a.listingId||kept[a.listingId]});
+  store.set('bmi_db4',DB);
+}
+removePrelaunchTestCampaigns();
+function saveDB(){lockLaunchExamples();store.set('bmi_db4',DB);cloudPush()}
 /* --- SHARED DATABASE (artifact storage) --- */
 var CLOUD={on:false,busy:false,dirty:false,last:0};
 function slimDB(){
   /* strip catalog photos before upload; restore by reference on download */
   var out={listings:[],activity:(DB.activity||[]).slice(0,20)};
-  DB.listings.forEach(function(l){
+  DB.listings.filter(function(l){return LOCKED_LAUNCH_EXAMPLE_IDS.indexOf(l.id)<0}).forEach(function(l){
     var c={};Object.keys(l).forEach(function(k){c[k]=l[k]});
     if(c.photo&&typeof ITEM_PHOTOS!=='undefined'&&ITEM_PHOTOS[c.type]===c.photo){c.photo=null;c.photoRef=c.type}
     if(c.faces)c.faces=c.faces.map(function(f){
@@ -6891,7 +6960,7 @@ function mergeDB(remote){
   if(!remote||!remote.listings)return false;
   var changed=false;
   var byId={};DB.listings.forEach(function(l){byId[l.id]=l});
-  remote.listings.forEach(function(r){
+  remote.listings.filter(isLaunchLiveCampaign).forEach(function(r){
     var mine=byId[r.id];
     if(!mine){DB.listings.push(r);changed=true;return}
     for(var i=0;i<r.claims.length;i++){
@@ -6905,6 +6974,7 @@ function mergeDB(remote){
   var merged=[];acts.forEach(function(a){var k=(a.ts||0)+(a.txt||'');if(!seen[k]){seen[k]=1;merged.push(a)}});
   if(merged.length!==(DB.activity||[]).length)changed=true;
   DB.activity=merged.slice(0,20);
+  lockLaunchExamples();
   if(changed){DB.listings.sort(function(a,b){return b.created-a.created});store.set('bmi_db4',DB)}
   return changed;
 }
@@ -8054,8 +8124,7 @@ function renderHomeCampaigns(){
   var host=document.getElementById('homeCampaignGrid');
   if(!host)return;
   /* Launch examples stay fixed so the homepage always teaches the same three item shapes. */
-  var launchCampaignIds=['demo6','demo1','demo5'];
-  var list=launchCampaignIds.map(function(id){
+  var list=LOCKED_LAUNCH_EXAMPLE_IDS.map(function(id){
     return DB.listings.find(function(l){return l.id===id});
   }).filter(Boolean);
   host.innerHTML='';
@@ -8432,7 +8501,9 @@ function syncDashboardFilterState(){
 }
 function renderDash(){
   syncDashboardFilterState();
-  var all=DB.listings.filter(function(l){return !isDemoListing(l)});
+  var all=LOCKED_LAUNCH_EXAMPLE_IDS.map(function(id){
+    return DB.listings.find(function(l){return l.id===id});
+  }).filter(Boolean).concat(DB.listings.filter(isLaunchLiveCampaign));
   renderDashboardLiveFeed();
   var q=F.q.toLowerCase();
   var list=all.filter(function(l){
