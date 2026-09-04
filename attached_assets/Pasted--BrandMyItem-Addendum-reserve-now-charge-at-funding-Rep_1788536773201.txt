@@ -1,0 +1,114 @@
+# BrandMyItem — Addendum: reserve now, charge at funding (Replit prompt)
+
+Paste this whole document into Replit Agent after the pre-ship change set. Where this addendum conflicts with the earlier prompt, this addendum wins. Do everything below. Run the acceptance checks at the end before reporting done.
+
+---
+
+## 0. The rule (locked)
+
+Brands are **never charged at checkout**. A brand reserves a spot by saving a card. Cards are charged **only when the listing fully funds**, all at once. If the listing does not fund by day 60, reservations release and no charge is ever made. There are no refunds for unfunded listings because no money was taken.
+
+Stripe mechanics: SetupIntent at checkout (saves the payment method and runs Stripe's $0 card verification). Off-session PaymentIntent per reserved spot at funding. Never use manual-capture authorization holds for the reservation (they expire in 7 days).
+
+---
+
+## 1. Spot and listing states
+
+**Spot states:** `open` → `reserved` → `funded` (charged) → `applied`. Failure branches: `reserved` → `open` (brand cancels before funding, listing expires, or card declines and is not fixed in 48h).
+
+**Listing states:** `live` → `funded` → `purchased` → `branded` → `shipped` → `active` (check-in term running) → `complete`. Failure branch: `live` → `expired` (day 60, not funded). Owner may `relist` once (see §4).
+
+Store on every reservation: brand id, spot id, Stripe customer id, Stripe payment method id, SetupIntent id, reserved_at, assent timestamp/IP/document versions. Store on every charge: PaymentIntent id, charged_at, amount, status, decline reason if any.
+
+---
+
+## 2. Brand checkout flow
+
+1. Brand picks a spot, uploads logo, sees **Campaign total $X · N spots** and the single line "Includes the item, tax, branding application, delivery, and check-in verification."
+2. Assent checkbox (required): "I agree to the Terms of Use and Refund Policy."
+3. Card entry via Stripe Elements → create SetupIntent → confirm. On success: spot becomes `reserved`, brand gets Reservation ID `BMI-XXXXXX` (reuse the existing Submission ID format).
+4. Confirmation screen and email: "Your spot is reserved. Your card has not been charged. You'll be charged $X only when this listing fully funds. If it doesn't fund by [date], your reservation releases and nothing is charged."
+5. Brand can cancel a reservation any time before the listing funds (link in the confirmation email and on the Track page). Cancellation sets the spot back to `open` immediately and detaches nothing (keep the Stripe customer for future use).
+
+Button label: **"Reserve this spot"** (not "Pay", not "Buy").
+
+---
+
+## 3. Funding event
+
+When the last open spot becomes `reserved`:
+
+1. Lock the listing (`funding` transient state — no new reservations, no cancellations).
+2. Charge every reserved spot's saved payment method off-session, in one job, idempotency key = reservation id.
+3. **All succeed** → listing `funded`, every spot `funded`, owner and all brands emailed, IRLi purchase task created.
+4. **Any decline** → that spot enters `payment_failed` with a 48-hour clock. Brand emailed with an update-card link (Stripe Elements, new SetupIntent, retry charge on submit). Successful charges on other spots stand. The listing shows "Funding — 1 spot pending payment."
+   - Fixed within 48h → retry charge → if success, continue to step 3.
+   - Not fixed within 48h → that spot returns to `open`, listing returns to `live`, countdown resumes from where it was, other brands' charges remain (they are funded spots on a live listing). Owner and remaining brands emailed.
+5. Retry policy for declines: one automatic retry after 6 hours (soft declines only), then the 48h brand-fix window.
+
+If the 60-day window expires while a spot is in `payment_failed`, the window extends until that 48h clock ends, then resolves.
+
+---
+
+## 4. Listing window (locked)
+
+- 60 days from publish for every listing. Not owner-selectable.
+- Day 60, not funded → listing `expired`, all reservations release (`open`), brands emailed "Your reservation on [item] has been released. Your card was never charged."
+- **One relist:** if ≥50% of spots were reserved at expiry, the owner may relist once for 30 more days. Existing reservations carry over (brands emailed "The listing was extended 30 days; your reservation is still in place. Cancel any time before it funds."). Below 50% → no relist; owner may post a new listing from scratch.
+- Countdown UI ("59d 22h") stays exactly as is.
+
+---
+
+## 5. Copy swaps (these override the earlier prompt where they overlap)
+
+- Bento tile headline "Not funded? Refunded." → **"Not funded? Never charged."**
+  Body → **"Your card is saved at checkout, not charged. When the listing funds, everyone is charged at once. If it doesn't, nobody is."**
+- Bento spot pills "$233 charged at checkout" → **"$233 reserved"**
+- Bento caption "3 of 5 spots purchased" → **"3 of 5 spots reserved"**
+- How-it-works step 2 "Brands claim a spot, upload their logo, and pay in full upfront." → **"Brands reserve a spot, upload their logo, and are charged only when the listing funds."**
+- Checkout button → **"Reserve this spot"**
+- Live card "0/6 funded" → **"0/6 reserved"** while `live`; **"Funded"** badge once funded.
+- Live-items filter "Open spots" stays; Status options → All items · Open spots · Funded.
+- Details row "Listing window — 60 days, until funded or withdrawn" → **"60 days, until funded or expired"**
+- Any remaining "held", "held and fully refundable", "refunded automatically", "charged at checkout", "pay in full" → remove.
+- Footer disclaimer paragraph 1: replace the sentences "Every spot is charged in full at checkout. If a listing is not fully funded within its 60-day funding window, every purchase on it is refunded automatically to the original payment method, with refunds initiated within 5 business days; no request is required." with **"Spots are reserved with a saved card and charged only when the listing fully funds. If a listing does not fully fund within its 60-day window, reservations are released and no charge is made."**
+- Vocabulary: add **reserved** (spot state before funding). "Funded" remains the listing state.
+
+---
+
+## 6. FAQ rewrites (For brands)
+
+- **How does payment work?** → "You reserve a spot with a card. Nothing is charged. When the last spot on the listing is reserved, every brand is charged at the same time and BrandMyItem buys the item. You can cancel your reservation any time before that moment."
+- **What happens if a listing doesn't fully fund?** → "It expires at day 60, every reservation is released, and no card is charged. If the listing was at least half reserved, the owner can extend it once for 30 days; your reservation carries over and you can still cancel."
+- Add: **When am I charged?** → "Only at the moment the listing fully funds — one charge, for the amount shown when you reserved."
+- Add: **What if my card declines at funding?** → "You get 48 hours and a link to update your card. If it isn't fixed, your spot reopens and the listing continues."
+
+---
+
+## 7. Legal documents
+
+- **Refund Policy** — rewrite around: no charge before funding, therefore no refund for unfunded or expired listings; brand may cancel a reservation free before funding; after funding, refunds only if (a) IRLi cannot source the item at the quoted campaign total, (b) a placement is declined under Content Standards, or (c) IRLi fails to deliver within 60 days of funding. State that Stripe processing fees are not recoverable on post-funding refunds and are absorbed by IRLi.
+- **Terms of Use** — payment section: card saved via Stripe, charge only on funding, off-session authorization language ("You authorize IRLi LLC to charge your saved payment method for the reserved amount when the listing fully funds"), 48h cure period, reservation release on expiry, relist rule. Keep the purchasing-agent paragraph from the earlier prompt.
+- **Privacy Policy** — add Stripe as processor for saved payment methods; IRLi never stores card numbers.
+- Grep all five documents for "charged at checkout", "refund within", "5 business days", "held" → remove or rewrite.
+
+---
+
+## 8. Emails (transactional)
+
+Create templates: reservation confirmed · reservation cancelled · listing funded (brand) · listing funded (owner) · card declined / update card · spot released after 48h · listing expired / reservation released · listing relisted · item purchased · item shipped · check-in reminder · missed check-in. Plain text + minimal HTML, ink/wash palette, no images required.
+
+---
+
+## 9. Acceptance checks (run all, report results)
+
+- [ ] Reserve a spot in test mode: Stripe shows a SetupIntent, **no** PaymentIntent, no charge.
+- [ ] Reserve every spot on a test listing: exactly N PaymentIntents fire, all succeed, listing state `funded`, both emails sent.
+- [ ] Use Stripe test card `4000000000000341` (attach succeeds, charge fails) on one spot: listing enters `funding` with that spot `payment_failed`, brand email with update link sent, other charges succeed, 48h clock visible on the listing.
+- [ ] Simulate 48h expiry: spot returns to `open`, listing `live`, countdown resumes, emails sent.
+- [ ] Simulate day 60 at 3/6 reserved: listing `expired`, reservations released, owner sees "Relist for 30 days" button; at 2/6 reserved the button does not appear.
+- [ ] Brand cancels a reservation before funding: spot `open` immediately, no Stripe charge or refund created.
+- [ ] Grep codebase, copy, FAQ, and all five legal docs for: `charged at checkout`, `refunded automatically`, `5 business days`, `pay in full`, `held`, `escrow`, `purchased` (as a spot state). Zero hits except where §5–7 allow.
+- [ ] Spot pills read "$X reserved"; bento headline reads "Not funded? Never charged."
+- [ ] Checkout button reads "Reserve this spot"; assent checkbox blocks it until checked.
+- [ ] Screenshots: checkout, confirmation, funded listing, payment_failed listing, expired listing with relist button.
