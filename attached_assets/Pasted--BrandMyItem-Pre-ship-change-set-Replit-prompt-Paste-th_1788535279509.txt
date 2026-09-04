@@ -1,0 +1,182 @@
+# BrandMyItem — Pre-ship change set (Replit prompt)
+
+Paste this whole document into Replit Agent. Do every item. Do not redesign anything not listed. Do not change locked headline/subheadline copy except where a specific swap is given below. Run the acceptance checks at the end before reporting done.
+
+---
+
+## 0. Global rules (apply everywhere)
+
+**Vocabulary — locked.** Use exactly these words, site-wide, in UI and copy:
+- **funded** — never "sold", "claimed", "purchased" for spots or listings
+- **listing** — never "campaign" for an owner's item (the brand-facing dollar figure is still called "campaign total")
+- **term** — never "commitment"
+- **owner** — never "user"
+- **spot** — never "placement" or "ad space" in UI labels (prose in the bento can keep "ad space" where it's already locked)
+
+**Catalog phone — locked.** The phone is the **iPhone 17**, not the 17 Pro. Two tiers: 256GB and 512GB. Unlocked prices $829 / $1,029. Campaign total = retail × 1.4 → $1,161 / $1,441. Specs: A19 chip, 6.3" Super Retina XDR, 48MP Fusion main + 48MP Fusion Ultra Wide, 256GB–512GB. Source line: "Official Apple product page". Replace every "iPhone 17 Pro" string and every Pro-derived number ($1,099, $1,539, $2,099, $1,499, 1TB) across hero, picker, live card, bento, ticker, spec panel, and any JSON/config.
+
+**Catalog data — single source of truth.** Move all item names, brand names, storage/size/finish options, base prices, price deltas, and spec rows into one config object/file. Hero, picker, live card, bento demo, ticker, and spec panel all read from it. No hardcoded prices in templates.
+
+**Brand-facing money.** Brands see ONE number per listing: **Campaign total $X · N spots**, with the single line: *"Includes the item, tax, branding application, delivery, and check-in verification."* No itemized breakdown anywhere. "Retail $X" appears only in the owner configurator spec panel.
+
+**Apple marks.** No Apple logo in any render. Product names (MacBook Pro, iPhone 17, AirPods Max, RIMOWA, YETI, Stanley) appear only as item identifiers in the catalog/picker/card — never in headlines or marketing copy. Never use the word "Memoji" anywhere in the UI.
+
+**Dev artifacts.** Remove the floating page-minimap thumbnail (bottom-right) and the small blue dot in the nav bar (top-right). Remove any other dev/debug overlays.
+
+---
+
+## 1. Legal / trust
+
+1.1 **Activity ticker.** Replace the fake ticker. Either wire it to real purchase events, or (until real data exists) prefix the strip with a static label "Example activity", remove all timestamps ("2h ago"), and format each item as `Your Brand Here · $167 spot · iPhone 17`. Add 48px gradient masks on both ends of the strip so text fades instead of hard-clipping.
+
+1.2 **Demo listing.** Remove the "Cam · 1h ago" demo listing from Live items before launch (keep it available behind a `?demo=1` flag for screenshots). Live items must show only real listings.
+
+1.3 **Track my item → magic link.** Entering an email must NOT show any data. Flow: email → "Check your inbox — we sent a one-time link" → link opens the tracking view. Links expire in 15 minutes and are single-use. Placeholder text: `you@email.com`. Intro line: "Use the email on your listing or your spot purchase."
+
+1.4 **Assent before posting.** Directly above "Post my item live": a required checkbox — *"I'm 18 or older and I agree to the Terms of Use, Content Standards, and Check-in Policy."* (each document linked, opens in new tab). Button disabled until checked. Store timestamp + IP + document versions with the listing.
+
+1.5 **Assent before brand checkout.** Directly above the pay button: required checkbox — *"I agree to the Terms of Use and Refund Policy."* Same storage.
+
+1.6 **Escrow.** Search the entire codebase and all five legal documents for "escrow". The only permitted occurrence is the footer negation ("it is not a bank, money transmitter, payment processor, escrow service…"). Replace any other use (especially the brand checkout explainer) with: *"Your payment is held and fully refundable until the item funds."*
+
+1.7 **W-9 at $2,000.** At first funded spot on any listing whose campaign total ≥ $2,000, owner flow shows a W-9 step (name, address, TIN) before the listing can proceed to purchase. Store securely; show only last 4 of TIN afterwards. Add to the owner posting flow, under the shipping address: *"Items are taxable compensation. If the value is $2,000 or more, a Form 1099 is issued."*
+
+1.8 **Purchasing-agent language.** Add to Terms of Use (item purchase section): *"IRLi LLC purchases the item as the Owner's purchasing agent. Title passes from the retailer directly to the Owner. Sales tax is charged at the Owner's shipping address and is included in the campaign total."* Keep the Details line "Branding application, item sales tax, shipping, and handling are included."
+
+1.9 **Share modal disclosure.** Every auto-generated social post body must begin with: `Paid placement by [Brand] via BrandMyItem.` — in the post text, not as a hashtag. If multiple brands, list them.
+
+1.10 **Term lock timing — locked at publish.** The term and check-in cadence lock when the listing is published. Audit all five legal documents (Terms, Privacy, Refund, Content Standards, Check-in Policy) and the FAQ for any "first sale" wording; change to "when the listing is published".
+
+1.11 **Content Standards — methods.** Add: *"Patch, embroidery, and engraving simplify artwork: no gradients, minimum stroke weight applies, limited colors. The brand approves a production proof before any placement is applied."*
+
+1.12 **Avatar credit.** Add to the footer Company column or The story page: `Avatars by [pack author], CC BY 4.0` (author name to be supplied with the asset drop).
+
+1.13 **Endorsement line.** Add to the footer disclaimer block: *"Placements are paid advertising, not endorsements by the owner."*
+
+---
+
+## 2. Naming / copy
+
+2.1 Hero: the Your/My/Any word cycle stays. But the DOM `<h1>` must contain static text "BrandMyItem" (visually hidden, `sr-only`), with the animated word marked `aria-hidden="true"`. `<title>` and `og:title` = "BrandMyItem".
+
+2.2 "I'm a user" → **"I'm an owner"**.
+
+2.3 "View all campaigns" → **"View all live items"**.
+
+2.4 "0/7 sold" → **"0/6 funded"** (and the pattern `X/N funded` everywhere).
+
+2.5 "Goal when fully claimed" → **"Campaign total"**.
+
+2.6 "Item ships — new, at 100% claimed" → **"new, when fully funded"**.
+
+2.7 "3 of 5 spots purchased" (bento) → **"3 of 5 spots funded"**.
+
+2.8 Configurator: "Lock the shapes, then set the price for every spot." → **"Lock the shapes — every spot is priced by its surface share."**
+
+2.9 Details row "Branded material — Adhesive sticker/decal applied by BrandMyItem" → **"Method — set by surface: sticker, patch, embroidery, or engraving. Applied by BrandMyItem."** Method is assigned per item in the catalog config, not chosen by the owner: hard shells (laptop, phone, cooler, carry-on, paddle, skis/snowboard) = sticker; soft goods (backpack, weekender, golf bag, suit, stroller) = patch/embroidery; metal (tumbler) = engraving.
+
+2.10 Bento "Sticker, patch, embroidery, or engraving. Applied to a real item, carried in public for the whole term." — **keep as is** (all four methods launch).
+
+2.11 "Why brands should brand this item" → **"Why brands want this item"**.
+
+2.12 "Everyday settings" → **"Where it's carried"**.
+
+2.13 "Email for purchases and shipping" → **"Email for updates and shipping"**.
+
+2.14 "Listing window — 60 days, until completed or deleted" → **"60 days, until funded or withdrawn"**.
+
+2.15 "Your name" placeholder "Cam" → **"Your name"**.
+
+2.16 Track page placeholder "you@brand.com" → **"you@email.com"**.
+
+2.17 Live card title includes storage/size: **"iPhone 17 · 512GB"**, **"MacBook Pro · 14""**.
+
+2.18 Bento "Real items, not points." caption → **"iPhone 17 — $829 retail, 6 spots"**. "Priced by surface" tile → 6 spots, **"$1,161 campaign total"** (drop "combined all-in spot total").
+
+2.19 Footer bottom bar: **Terms of Use · Privacy Policy · Refund Policy · Contact**. Remove the duplicate "Legal" link.
+
+2.20 Move "Cam on X" out of the footer Company column; put a founder line on The story page instead. Company column: The story · FAQ · Contact.
+
+2.21 Live card location line: format as **"City, ST · University"** (one city, one university, no state name spelled out, no duplicate). Example: "Newport Beach, CA · UCLA".
+
+---
+
+## 3. Categories / nav
+
+3.1 **One taxonomy**, defined once in the catalog config and used by Live-items tabs, footer Items column, and the filter sidebar: Laptops · Phones · Audio · Luggage · Bags · Golf · Coolers & bottles · Sports · Style. Remove "Event", "Carry", "Hydration", "Tech", "Travel".
+
+3.2 Live-items tabs use the Apple product-chip pattern: white card, product icon above label, horizontal scroll, one selected state (ink fill, white text). Icons come from the catalog render assets.
+
+3.3 Nav: add one filled button at far right — **"Sponsor an item"** — linking to Live items (brand entry). Order: How it works · Live items · FAQ · Build your item · Track my item · [Sponsor an item].
+
+3.4 Nav focus ring: `outline: 2px solid #1D1D1F; outline-offset: 4px; border-radius: 8px`. Apply the same ring to all interactive elements.
+
+---
+
+## 4. Catalog
+
+4.1 Stanley Quencher H2.0 tumbler stays at $45. Its picker name is **"Quencher H2.0 40oz"** (one line). Method = engraving.
+
+4.2 All picker names must fit one line; clamp with ellipsis if needed; fixed card height so every price sits on the same baseline.
+
+4.3 Storage step for iPhone 17: **256GB — Included · 512GB — +$200**. Same component as the MacBook Size step.
+
+---
+
+## 5. Layout / UI fixes
+
+5.1 Live listing card image: `object-fit: contain` with 24px inner padding. The full item and every spot box must be visible (currently the phone is cropped top and bottom).
+
+5.2 Configurator toolbar: one row. Order: Rect · Ellipse · Add point · Trace · Copy box · Undo · Reset · Delete. Every icon gets a `title` tooltip and `aria-label`. Remove the unlabeled black dot, or label it "Spot outline color" if it's functional.
+
+5.3 Term picker (6/12/18) and cadence picker (Weekly/Biweekly/Monthly): use the same chip component as "Where it's carried" and "Social following" — not full-width 70px cards.
+
+5.4 "Add city" / "Add university" buttons: fixed width 160px, inputs fill the remaining width, so both rows align.
+
+5.5 Filter sidebar: remove the duplicate "Open spots" under Item & inventory (keep under Status). Rename "Exact item price" → "Item price", "Method" → "Branding method", "Commitment" → "Term". Chevron on every expandable row. "Clear filters" in ink (#1D1D1F), not red.
+
+5.6 Bento "Proof, on a schedule" tile: the hand/phone image must either fully bleed (image extends ≥40px past the tile edge and the tile clips it cleanly) or be fully contained. Not half-cut.
+
+5.7 Track page: below the email card, add a muted preview of the tracking view — a 4-step status line: Funded → Branded → Shipped → Check-ins.
+
+5.8 Contrast: every gray text on #F5F5F7 or white must be ≥ 4.5:1. Use #6E6E73 as the lightest body gray. Footer disclaimer text uses it.
+
+5.9 Alt text on every product image (item name + finish). Every form input has a bound `<label>`.
+
+---
+
+## 6. Assets (swap when supplied — do not generate)
+
+6.1 iPhone render → iPhone 17 (vertical pill camera). Replace in hero, picker, card, bento, ticker icon when the new PNG is provided.
+
+6.2 Headphones render → new front-on render when provided.
+
+6.3 How-it-works step illustrations → five die-cut sticker renders when provided.
+
+6.4 Avatars → 16 monochrome die-cut PNGs when provided; row label stays "Choose your character".
+
+---
+
+## 7. Build / performance
+
+7.1 Stop base64-inlining assets. Serve images as separate files: AVIF with WebP fallback, explicit `width`/`height` on every `<img>`, `fetchpriority="high"` on the hero images, `loading="lazy"` below the fold.
+
+7.2 Fonts: `font-display: swap`, preload Inter and Cormorant Garamond.
+
+7.3 Targets: LCP ≤ 2.5s, INP ≤ 200ms, CLS ≤ 0.1 on mobile.
+
+---
+
+## 8. Acceptance checks (run all, report results)
+
+- [ ] Grep the codebase for: `17 Pro`, `1,099`, `1,539`, `2,099`, `1,499`, `1TB`, `sold`, `claimed`, `purchased`, `campaign` (outside "campaign total"), `commitment`, `I'm a user`, `escrow`, `Memoji`, `first sale`, `deleted`, `you@brand.com`. Each must return zero hits except where this document allows.
+- [ ] Every price on the site resolves from the catalog config; changing iPhone 17 256GB to $839 in one place updates hero, picker, card, bento, ticker, spec panel.
+- [ ] Track my item with any email shows no data; magic link works end-to-end.
+- [ ] "Post my item live" and the brand pay button are disabled until the assent checkbox is checked; timestamp/IP/version stored.
+- [ ] No minimap thumbnail, no blue dot, no console errors on any page.
+- [ ] Live card shows the whole item with all spot boxes visible at 390px, 768px, 1440px.
+- [ ] Picker prices sit on one baseline at 1440px.
+- [ ] All text/background pairs ≥ 4.5:1 (run an automated contrast check and list any failures).
+- [ ] `<h1>` contains "BrandMyItem"; `<title>` and `og:title` are "BrandMyItem".
+- [ ] Lighthouse mobile: Performance ≥ 90, Accessibility ≥ 95.
+- [ ] Screenshot every page at 390px and 1440px and attach.
