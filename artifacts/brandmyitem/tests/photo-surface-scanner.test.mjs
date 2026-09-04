@@ -116,6 +116,20 @@ test('cooler builder keeps the original image as Front and provides Back, Top, a
   );
 });
 
+test('backpack builder keeps the original image as Front and maps the supplied views Left, Right, and Back', () => {
+  assert.match(
+    html,
+    /backpack:\[\s*\['Front','campaign\/product-backpack\.png\?v=tumi-search-147053'\],\s*\['Left','campaign\/product-backpack-left\.png'\],\s*\['Right','campaign\/product-backpack-right\.png'\],\s*\['Back','campaign\/product-backpack-back\.png'\]\s*\]/,
+  );
+});
+
+test('pickleball paddle builder keeps the original image as Front and adds the supplied Back view', () => {
+  assert.match(
+    html,
+    /paddle:\[\s*\['Front','campaign\/product-paddle\.png'\],\s*\['Back','campaign\/product-paddle-back\.png'\]\s*\]/,
+  );
+});
+
 test('polygon points and catalog identity survive template and detail rendering', () => {
   assert.match(html, /if\(tt\.pts\)out\.pts=tt\.pts\.map/);
   assert.match(html, /sourceType:CU\.template\|\|null/);
