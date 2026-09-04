@@ -153,6 +153,7 @@ test('dashboard keeps compact tracker cards without a duplicate left category bo
   assert.match(html, /<div class="campaign-label">Purpose<\/div><p>'\+safeCardText\(purpose\)\+'<\/p>/);
   assert.doesNotMatch(html, /<div class="campaign-label">Campaign brief<\/div>/);
   assert.doesNotMatch(html, /<span>Seen how often<\/span>/);
+  assert.match(html, /return out\.length\?out\.join\(', '\)/);
   assert.doesNotMatch(html, /function listingBrandFitHtml\(l\)/);
   assert.doesNotMatch(html, /class="listing-why"/);
   assert.match(html, /id="fSocial"/);

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BrandMyItem — Your item. Their brand. Their money.</title>
+<title>BrandMyItem. Your item. Their brand. Their money.</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta name="description" content="Post the item you want as live ad inventory. Brands buy the spots at exact prices, the bar fills, your item ships new with their mark on it.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1427,7 +1427,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 .ap-owner-who .avatarc img { width: 100%; height: 100%; object-fit: cover; }
 .ap-owner-location { display:none; font-size:14px; color:#86868B; white-space:nowrap; }
 .ap-owner-location.has-value { display:inline-flex; align-items:center; }
-.ap-owner-location.has-value::before { content:"—"; color:#C7C7CC; margin-right:14px; }
+.ap-owner-location.has-value::before { content:","; color:#C7C7CC; margin-right:14px; }
 .ap-owner-socials { display:none; align-items:center; gap:8px; }
 .ap-owner-socials.has-links { display:flex; }
 .ap-owner-socials a { display:inline-flex; align-items:center; gap:5px; color:#1D1D1F; font-size:12px; font-weight:600; text-decoration:none; }
@@ -2161,7 +2161,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           <div class="build-product-layout">
             <div class="build-product-visual">
               <input type="file" id="cuPhoto" accept="image/*" style="display:none">
-              <div class="upl" id="cuUpl" style="display:none">Upload a photo of your item — draw each custom placement shape</div>
+              <div class="upl" id="cuUpl" style="display:none">Upload a photo of your item, then draw each custom placement shape</div>
                <div id="cuWrap" style="display:none">
                  <div class="cu-viewport" id="cuViewport"><canvas id="cuCanvas" width="1" height="1" tabindex="0" aria-label="Item photo tracing canvas"></canvas></div>
                  <div class="cu-zoom" role="toolbar" aria-label="Photo zoom controls">
@@ -2399,13 +2399,13 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           <h3>The item</h3>
           <p>One real item, selected by the owner and purchased new when the campaign funds.</p>
           <div class="ap-item-meta">
-            <div><span>Brand</span><b id="iItemBrand">—</b></div>
-            <div><span>Color</span><b id="iItemColor">—</b></div>
-            <div><span>Category</span><b id="iItemCategory">—</b></div>
+            <div><span>Brand</span><b id="iItemBrand">Not provided</b></div>
+            <div><span>Color</span><b id="iItemColor">Not provided</b></div>
+            <div><span>Category</span><b id="iItemCategory">Not provided</b></div>
           </div>
           <table class="ap-table">
             <tbody>
-              <tr><td>Retail reference</td><td id="iItemRetail">—</td></tr>
+              <tr><td>Retail reference</td><td id="iItemRetail">Not provided</td></tr>
               <tr><td>Delivery state</td><td id="iShips">new, at 100% claimed</td></tr>
               <tr><td>Branding material</td><td id="iMaterial">Item-specific branding</td></tr>
             </tbody>
@@ -2420,7 +2420,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
               <tr><td>Check-in cadence</td><td id="iCad"></td></tr>
               <tr><td>Visibility term</td><td id="iTerm">12 months</td></tr>
               <tr><td>Fulfillment</td><td id="iFulfillment">BrandMyItem applies branding</td></tr>
-              <tr><td>Purchase total</td><td id="iPurchaseTotalCopy">All-in spot price — includes branding application, item sales tax, shipping &amp; handling</td></tr>
+              <tr><td>Purchase total</td><td id="iPurchaseTotalCopy">All-in spot price, including branding application, item sales tax, shipping &amp; handling</td></tr>
             </tbody>
           </table>
         </article>
@@ -2429,8 +2429,8 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           <h3>Proof &amp; protection</h3>
           <p>BrandMyItem keeps the campaign legible from the first logo upload through recurring owner check-ins.</p>
           <div class="ap-fit-grid">
-            <div class="ap-fit-box"><span>Branding &amp; delivery</span><b id="iBrandingWindow">—</b></div>
-            <div class="ap-fit-box"><span>Proof cadence</span><b id="iProofCadence">—</b></div>
+            <div class="ap-fit-box"><span>Branding &amp; delivery</span><b id="iBrandingWindow">Not provided</b></div>
+            <div class="ap-fit-box"><span>Proof cadence</span><b id="iProofCadence">Not provided</b></div>
             <div class="ap-fit-box ap-col-span-2"><span>Buyer protection</span><b>Automatic refund if the campaign does not fund in 60 days. Delivery delays include a wait-or-refund choice.</b></div>
           </div>
         </article>
@@ -2557,7 +2557,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
   <div class="modal">
     <div id="mStep1">
       <p class="modal-estimate" id="mTitle">All ad placements are estimates. Pictures and sizing are estimated.</p>
-      <div class="upl" id="uplBox">Upload your logo — required (PNG, transparent works best)</div>
+      <div class="upl" id="uplBox">Upload your logo, required (PNG, transparent works best)</div>
       <input type="file" id="uplInput" accept="image/*" style="display:none">
       <div class="field"><label class="label" for="mBrand">Brand name</label><input class="input" id="mBrand" placeholder="Acme"></div>
       <div class="field"><label class="label" for="mMail">Work email</label><input class="input" id="mMail" type="email" placeholder="you@brand.com"></div>
@@ -2570,7 +2570,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
       <p class="finetext">Your logo is the handoff: once the item fully funds, the owner downloads it and produces the approved branding from your exact file. No back and forth needed.</p>
     </div>
     <div id="mStep3" style="display:none">
-      <h3>You&rsquo;re in — save this ID</h3>
+      <h3>You&rsquo;re in. Save this ID.</h3>
       <p class="mp">We sent a copy to <b id="mSubMail"></b>. Use this ID with that email any time to track your spot.</p>
       <div class="subid-box">
         <div class="subid-label">Submission ID</div>
@@ -2603,7 +2603,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
         <input class="input" id="requestLink" type="url" autocomplete="url" placeholder="https://brand.com/product">
       </div>
       <div class="field">
-        <label class="label" for="requestNote">Anything else <span style="font-weight:400;color:#8e8e93">&mdash; brand, model, color, why you want it (optional)</span></label>
+        <label class="label" for="requestNote">Anything else <span style="font-weight:400;color:#8e8e93">, brand, model, color, why you want it (optional)</span></label>
         <textarea class="input" id="requestNote" rows="3" placeholder="Brand, model, color, or why you want it"></textarea>
       </div>
       <div class="field">
@@ -2646,7 +2646,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
         Copy for Instagram
       </button>
     </div>
-    <p class="finetext" id="igHint" style="display:none">Caption copied — Instagram doesn't allow posting from the web, so paste it into the app along with the photo above.</p>
+    <p class="finetext" id="igHint" style="display:none">Caption copied. Instagram doesn't allow posting from the web, so paste it into the app along with the photo above.</p>
     <div class="mrow" style="margin-top:14px">
       <button class="btn btn-primary btn-full" id="shareDone">Done</button>
     </div>
@@ -8258,7 +8258,7 @@ var campaignListing=null,campaignReturnFocus=null,campaignBodyOverflow='';
 function campaignValues(values,fallback){
   var out=[];
   (values||[]).forEach(function(v){if(v&&out.indexOf(v)<0)out.push(v)});
-  return out.length?out.join(' — '):(fallback||'Not provided');
+  return out.length?out.join(', '):(fallback||'Not provided');
 }
 function campaignSpotMeta(l,i){
   if(ITEMS[l.type])return slotMeta(l.type,l.slots,i);
@@ -10744,12 +10744,12 @@ function refreshItemCards(){
   }
   document.getElementById('iHab').textContent=[CUR.freq,CUR.social&&(CUR.social+' followers')].filter(Boolean).join(' \u00b7 ');
   var locEl=document.getElementById('iBrandLocations'),purposeEl=document.getElementById('iPurpose'),socialEl=document.getElementById('iSocial'),linksEl=document.getElementById('iSocialLinks');
-  if(locEl)locEl.textContent=(CUR.habs&&CUR.habs.length?CUR.habs.join(' — '):'Not provided');
+  if(locEl)locEl.textContent=(CUR.habs&&CUR.habs.length?CUR.habs.join(', '):'Not provided');
   if(purposeEl)purposeEl.textContent=CUR.purpose||'The owner has not added a purpose statement yet.';
   if(socialEl)socialEl.textContent=CUR.social?CUR.social+' followers':'Not provided';
   var citiesEl=document.getElementById('iCities'),universitiesEl=document.getElementById('iUniversities');
-  if(citiesEl)citiesEl.textContent=CUR.cities&&CUR.cities.length?CUR.cities.join(' — '):'Not provided';
-  if(universitiesEl)universitiesEl.textContent=CUR.universities&&CUR.universities.length?CUR.universities.join(' — '):'Not provided';
+  if(citiesEl)citiesEl.textContent=CUR.cities&&CUR.cities.length?CUR.cities.join(', '):'Not provided';
+  if(universitiesEl)universitiesEl.textContent=CUR.universities&&CUR.universities.length?CUR.universities.join(', '):'Not provided';
   if(linksEl){
     var linked=SOCIAL_PLATFORMS.filter(function(p){return CUR.socialLinks&&CUR.socialLinks[p.key]});
     linksEl.innerHTML=linked.length?'<span class="finetext" style="align-self:center">Verify the owner on</span>'+linked.map(function(p){
