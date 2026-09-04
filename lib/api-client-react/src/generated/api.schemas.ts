@@ -54,6 +54,31 @@ export interface CampaignInput {
 
 export type CampaignPresentation = { [key: string]: unknown };
 
+export type CampaignLifecycleStatus = typeof CampaignLifecycleStatus[keyof typeof CampaignLifecycleStatus];
+
+
+export const CampaignLifecycleStatus = {
+  live: 'live',
+  funding: 'funding',
+  funded: 'funded',
+  purchased: 'purchased',
+  branded: 'branded',
+  shipped: 'shipped',
+  active: 'active',
+  complete: 'complete',
+  expired: 'expired',
+} as const;
+
+export type PublicClaimStatus = typeof PublicClaimStatus[keyof typeof PublicClaimStatus];
+
+
+export const PublicClaimStatus = {
+  reserved: 'reserved',
+  funding: 'funding',
+  payment_failed: 'payment_failed',
+  funded: 'funded',
+} as const;
+
 export interface PublicClaim {
   orderId: string;
   spotIndex: number;
@@ -63,7 +88,8 @@ export interface PublicClaim {
   /** @nullable */
   logoObjectPath?: string | null;
   amountCents: number;
-  purchasedAt: string;
+  reservedAt: string;
+  status: PublicClaimStatus;
 }
 
 export interface Campaign {
@@ -75,6 +101,13 @@ export interface Campaign {
   presentation: CampaignPresentation;
   claims: (PublicClaim | null)[];
   active: boolean;
+  lifecycleStatus: CampaignLifecycleStatus;
+  /** @nullable */
+  expiresAt?: string | null;
+  /** @nullable */
+  fundedAt?: string | null;
+  relistCount: number;
+  relistEligible: boolean;
   createdAt: string;
 }
 
@@ -129,10 +162,13 @@ export type PlacementOrderStatus = typeof PlacementOrderStatus[keyof typeof Plac
 
 export const PlacementOrderStatus = {
   pending: 'pending',
-  paid: 'paid',
+  reserved: 'reserved',
+  funding: 'funding',
+  payment_failed: 'payment_failed',
+  funded: 'funded',
+  cancelled: 'cancelled',
+  released: 'released',
   expired: 'expired',
-  refunding: 'refunding',
-  refunded: 'refunded',
 } as const;
 
 export interface PlacementOrder {
@@ -148,10 +184,13 @@ export type TrackingOrderStatus = typeof TrackingOrderStatus[keyof typeof Tracki
 
 export const TrackingOrderStatus = {
   pending: 'pending',
-  paid: 'paid',
+  reserved: 'reserved',
+  funding: 'funding',
+  payment_failed: 'payment_failed',
+  funded: 'funded',
+  cancelled: 'cancelled',
+  released: 'released',
   expired: 'expired',
-  refunding: 'refunding',
-  refunded: 'refunded',
 } as const;
 
 export interface TrackingOrder {

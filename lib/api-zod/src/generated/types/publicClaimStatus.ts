@@ -6,16 +6,12 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type PlacementOrderStatus = typeof PlacementOrderStatus[keyof typeof PlacementOrderStatus];
+export type PublicClaimStatus = typeof PublicClaimStatus[keyof typeof PublicClaimStatus];
 
 
-export const PlacementOrderStatus = {
-  pending: 'pending',
+export const PublicClaimStatus = {
   reserved: 'reserved',
   funding: 'funding',
   payment_failed: 'payment_failed',
   funded: 'funded',
-  cancelled: 'cancelled',
-  released: 'released',
-  expired: 'expired',
 } as const;

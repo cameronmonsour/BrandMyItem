@@ -11,8 +11,11 @@ export type TrackingOrderStatus = typeof TrackingOrderStatus[keyof typeof Tracki
 
 export const TrackingOrderStatus = {
   pending: 'pending',
-  paid: 'paid',
+  reserved: 'reserved',
+  funding: 'funding',
+  payment_failed: 'payment_failed',
+  funded: 'funded',
+  cancelled: 'cancelled',
+  released: 'released',
   expired: 'expired',
-  refunding: 'refunding',
-  refunded: 'refunded',
 } as const;

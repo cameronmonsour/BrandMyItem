@@ -5,6 +5,7 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { PublicClaimStatus } from './publicClaimStatus';
 
 export interface PublicClaim {
   orderId: string;
@@ -15,5 +16,6 @@ export interface PublicClaim {
   /** @nullable */
   logoObjectPath?: string | null;
   amountCents: number;
-  purchasedAt: Date;
+  reservedAt: Date;
+  status: PublicClaimStatus;
 }

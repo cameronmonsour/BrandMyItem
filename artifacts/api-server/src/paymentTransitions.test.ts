@@ -120,17 +120,13 @@ test("only succeeded refunds are final and failed refunds are retryable", () => 
   assert.equal(isRefundRetryable("pending"), false);
 });
 
-test("checkout status responses can expose a refund in progress", () => {
+test("checkout status responses expose reservation payment failure", () => {
   const result = GetPlacementCheckoutResponse.safeParse({
     id: "order-1",
     campaignId: "campaign-1",
     spotIndex: 0,
     amountCents: 1000,
-    brandName: "Example",
-    email: "buyer@example.com",
-    destinationUrl: null,
-    status: "refunding",
-    stripeCheckoutSessionId: "cs_123",
+    status: "payment_failed",
   });
   assert.equal(result.success, true);
 });

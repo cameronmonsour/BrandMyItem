@@ -13,7 +13,7 @@ tags:
   - name: campaigns
     description: Public campaign operations
   - name: checkout
-    description: Stripe placement checkout operations
+    description: Stripe placement reservation and funding operations
   - name: tracking
     description: One-time magic-link campaign and placement tracking
   - name: storage
@@ -110,7 +110,7 @@ paths:
     post:
       operationId: createPlacementCheckout
       tags: [checkout]
-      summary: Create a Stripe Checkout session for one campaign placement
+      summary: Create a Stripe SetupIntent reservation session for one campaign placement
       requestBody:
         required: true
         content:
@@ -129,12 +129,12 @@ paths:
         "404":
           description: Campaign not found
         "409":
-          description: Placement already purchased
+          description: Placement already reserved
   /checkout/sessions/{sessionId}:
     get:
       operationId: getPlacementCheckout
       tags: [checkout]
-      summary: Verify an authorized Stripe Checkout session
+      summary: Verify an authorized Stripe reservation session
       description: Requires the HttpOnly checkout capability cookie issued when the checkout reservation is created. The session ID alone is not authorization.
       parameters:
         - in: path
@@ -152,6 +152,64 @@ paths:
                 $ref: "#/components/schemas/PlacementOrder"
         "404":
           description: Checkout session not found or not authorized
+  /checkout/reservations/{orderId}/cancel:
+    post:
+      operationId: cancelPlacementReservation
+      tags: [checkout]
+      summary: Cancel a placement reservation before funding
+      parameters:
+        - in: path
+          name: orderId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Reservation cancelled
+        "404":
+          description: Reservation not found or not authorized
+        "409":
+          description: Reservation is already funding or funded
+  /checkout/reservations/{orderId}/update-card:
+    post:
+      operationId: updateReservationCard
+      tags: [checkout]
+      summary: Open a SetupIntent session to replace a declined funding card
+      parameters:
+        - in: path
+          name: orderId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Card update session created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlacementCheckoutSession"
+        "404":
+          description: Reservation not found or not authorized
+        "409":
+          description: Card update window is closed
+  /campaigns/{campaignId}/relist:
+    post:
+      operationId: relistCampaign
+      tags: [campaigns]
+      summary: Relist an eligible expired campaign once
+      parameters:
+        - in: path
+          name: campaignId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Campaign relisted for 30 days
+        "404":
+          description: Campaign not found or not authorized
+        "409":
+          description: Campaign is not eligible for relisting
   /tracking:
     get:
       operationId: getTracking
@@ -244,7 +302,7 @@ components:
           additionalProperties: true
     Campaign:
       type: object
-      required: [id, itemType, title, ownerName, pricesCents, presentation, claims, active, createdAt]
+      required: [id, itemType, title, ownerName, pricesCents, presentation, claims, active, lifecycleStatus, relistCount, relistEligible, createdAt]
       properties:
         id:
           type: string
@@ -268,6 +326,19 @@ components:
               - $ref: "#/components/schemas/PublicClaim"
               - type: "null"
         active:
+          type: boolean
+        lifecycleStatus:
+          type: string
+          enum: [live, funding, funded, purchased, branded, shipped, active, complete, expired]
+        expiresAt:
+          type: ["string", "null"]
+          format: date-time
+        fundedAt:
+          type: ["string", "null"]
+          format: date-time
+        relistCount:
+          type: integer
+        relistEligible:
           type: boolean
         createdAt:
           type: string
@@ -363,7 +434,7 @@ components:
           type: integer
         status:
           type: string
-          enum: [pending, paid, expired, refunding, refunded]
+          enum: [pending, reserved, funding, payment_failed, funded, cancelled, released, expired]
     TrackingOrder:
       type: object
       required: [id, campaignId, spotIndex, amountCents, brandName, email, status, createdAt]
@@ -386,7 +457,7 @@ components:
           type: ["string", "null"]
         status:
           type: string
-          enum: [pending, paid, expired, refunding, refunded]
+          enum: [pending, reserved, funding, payment_failed, funded, cancelled, released, expired]
         createdAt:
           type: string
           format: date-time
@@ -429,7 +500,7 @@ components:
             $ref: "#/components/schemas/TrackingCampaign"
     PublicClaim:
       type: object
-      required: [orderId, spotIndex, brandName, amountCents, purchasedAt]
+      required: [orderId, spotIndex, brandName, amountCents, reservedAt, status]
       properties:
         orderId:
           type: string
@@ -443,9 +514,12 @@ components:
           type: ["string", "null"]
         amountCents:
           type: integer
-        purchasedAt:
+        reservedAt:
           type: string
           format: date-time
+        status:
+          type: string
+          enum: [reserved, funding, payment_failed, funded]
     UploadUrlRequest:
       type: object
       required: [name, size, contentType]

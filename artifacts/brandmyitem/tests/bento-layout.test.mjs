@@ -134,8 +134,8 @@ test('every bento claim matches the actual marketplace rules', () => {
   assert.doesNotMatch(html, /One photo a month|That's it|A real MacBook, bought|Refunded automatically, never held|3 of 5 spots claimed|September verified/);
   assert.match(html, /<h3>Your logo, actually on something\.<\/h3>/);
   assert.match(html, /Sticker, patch, embroidery, or engraving\. Applied to a real item, carried in public for the whole term\./);
-  assert.match(html, /<h3>Not funded\? Refunded\.<\/h3>/);
-  assert.match(html, /Not fully funded by day 60, every buyer is refunded automatically\./);
+  assert.match(html, /<h3>Not funded\? Never charged\.<\/h3>/);
+  assert.match(html, /If the listing is not fully funded by day 60, reservations are released and no charge is made\./);
   assert.match(html, /<h3>Real items, not points\.<\/h3>/);
   assert.match(html, /When the last spot funds, BrandMyItem buys the item new at retail and ships it straight to the owner\./);
   assert.match(html, /<h3>Proof, on a schedule\.<\/h3>/);
@@ -153,7 +153,7 @@ test('every bento claim matches the actual marketplace rules', () => {
   assert.match(html, /\.feature-bento \.fb-term-status\{[^}]*background:var\(--fg\);color:#fff;[^}]*border-radius:999px/);
   assert.doesNotMatch(html, /[·・]|&middot;/);
   assert.match(html, /dayUnit\.textContent=day===1\?'day':'days'/);
-  assert.match(html, /Not funded by day 60\. Refunds initiated\./);
+  assert.match(html, /Not funded by day 60\. Never charged\./);
 });
 
 test('FAQ and footer use the supplied complete structure without legacy duplicates', () => {
@@ -162,7 +162,7 @@ test('FAQ and footer use the supplied complete structure without legacy duplicat
   assert.doesNotMatch(html, /class="faq-grid legacy-faq-grid"/);
   assert.match(html, /The term, 6, 12, or 18 months, defines how long you document them\./);
   assert.match(html, /Term and cadence are chosen when you post and are locked from the moment the listing is published\./);
-  assert.match(html, /refunds initiated within 5 business days; no request is required\./);
+  assert.match(html, /reservations are released and no card is charged\./);
   assert.match(html, /binding individual arbitration agreement and class action waiver, with a 30-day opt-out\./);
   assert.match(html, /Legal notices: legal@brandmyitem\.com\. Privacy requests: privacy@brandmyitem\.com\./);
 });

@@ -47,7 +47,7 @@ test('customer-facing campaign surfaces use photo-aligned placement outlines and
   assert.match(html, /drawPricePlacement\(g,t,frame,price,c\?logoImages\[i\]:null,c&&c\.brand,placementStroke\)/);
   assert.match(html, /renderCustomStage\(host,\{type:CUR\.type,sourceType:CUR\.sourceType,slots:CUR\.slots,photo:faces\[fi\]\.photo,tiles:faces\[fi\]\.tiles,[\s\S]*?claims:CUR\.claims\.slice\(faces\[fi\]\.off\),prices:CUR\.prices\.slice\(faces\[fi\]\.off\)\},[\s\S]*?function\(si\)\{openBid\(faces\[fi\]\.off\+si\)\}\)/);
   assert.match(html, /renderCustomStage\(el,\{type:CUR\.type,sourceType:CUR\.sourceType,slots:CUR\.slots,photo:faces2\[0\]\.photo,tiles:faces2\[0\]\.tiles,[\s\S]*?claims:CUR\.claims,prices:CUR\.prices\},null\)/);
-  assert.match(html, /Choose an open spot from the list to buy it for your brand/);
+  assert.match(html, /Choose an open spot from the list to reserve it for your brand/);
 });
 
 test('headphones always use two full-width polygon placements', () => {

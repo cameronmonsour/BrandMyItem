@@ -154,7 +154,13 @@ export const registerCampaign = async (campaignInput: CampaignInput, options?: P
 
     const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
     if (!h) return {};
-    if (h instanceof Headers) { const entries: [string, string][] = []; h.forEach((value, key) => entries.push([key, value])); return Object.fromEntries(entries); }
+    if (h instanceof Headers) {
+      const values: Record<string, string> = {};
+      h.forEach((value, key) => {
+        values[key] = value;
+      });
+      return values;
+    }
     if (Array.isArray(h)) return Object.fromEntries(h);
     return h;
   };
@@ -311,7 +317,13 @@ export const requestUploadUrl = async (uploadUrlRequest: UploadUrlRequest, optio
 
     const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
     if (!h) return {};
-    if (h instanceof Headers) { const entries: [string, string][] = []; h.forEach((value, key) => entries.push([key, value])); return Object.fromEntries(entries); }
+    if (h instanceof Headers) {
+      const values: Record<string, string> = {};
+      h.forEach((value, key) => {
+        values[key] = value;
+      });
+      return values;
+    }
     if (Array.isArray(h)) return Object.fromEntries(h);
     return h;
   };
@@ -462,13 +474,19 @@ export const getCreatePlacementCheckoutUrl = () => {
 }
 
 /**
- * @summary Create a Stripe Checkout session for one campaign placement
+ * @summary Create a Stripe SetupIntent reservation session for one campaign placement
  */
 export const createPlacementCheckout = async (placementCheckoutInput: PlacementCheckoutInput, options?: Parameters<typeof customFetch>[1]): Promise<PlacementCheckoutSession> => {
 
     const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
     if (!h) return {};
-    if (h instanceof Headers) { const entries: [string, string][] = []; h.forEach((value, key) => entries.push([key, value])); return Object.fromEntries(entries); }
+    if (h instanceof Headers) {
+      const values: Record<string, string> = {};
+      h.forEach((value, key) => {
+        values[key] = value;
+      });
+      return values;
+    }
     if (Array.isArray(h)) return Object.fromEntries(h);
     return h;
   };
@@ -520,7 +538,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type CreatePlacementCheckoutMutationVariables = {data: BodyType<PlacementCheckoutInput>}
 
     /**
- * @summary Create a Stripe Checkout session for one campaign placement
+ * @summary Create a Stripe SetupIntent reservation session for one campaign placement
  */
 export const useCreatePlacementCheckout = <TError = ErrorType<void>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPlacementCheckout>>, TError,CreatePlacementCheckoutMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
@@ -543,7 +561,7 @@ export const getGetPlacementCheckoutUrl = (sessionId: string,) => {
 
 /**
  * Requires the HttpOnly checkout capability cookie issued when the checkout reservation is created. The session ID alone is not authorization.
- * @summary Verify an authorized Stripe Checkout session
+ * @summary Verify an authorized Stripe reservation session
  */
 export const getPlacementCheckout = async (sessionId: string, options?: Parameters<typeof customFetch>[1]): Promise<PlacementOrder> => {
 
@@ -590,7 +608,7 @@ export type GetPlacementCheckoutQueryError = ErrorType<void>
 
 
 /**
- * @summary Verify an authorized Stripe Checkout session
+ * @summary Verify an authorized Stripe reservation session
  */
 
 export function useGetPlacementCheckout<TData = Awaited<ReturnType<typeof getPlacementCheckout>>, TError = ErrorType<void>>(
@@ -610,6 +628,228 @@ export function useGetPlacementCheckout<TData = Awaited<ReturnType<typeof getPla
 
 
 
+
+export const getCancelPlacementReservationUrl = (orderId: string,) => {
+
+
+
+
+  return `/api/checkout/reservations/${orderId}/cancel`
+}
+
+/**
+ * @summary Cancel a placement reservation before funding
+ */
+export const cancelPlacementReservation = async (orderId: string, options?: Parameters<typeof customFetch>[1]): Promise<void> => {
+
+  return customFetch<void>(getCancelPlacementReservationUrl(orderId),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getCancelPlacementReservationMutationKey = () => ['cancelPlacementReservation'] as const;
+
+export const getCancelPlacementReservationMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof cancelPlacementReservation>>, TError,CancelPlacementReservationMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof cancelPlacementReservation>>, TError,CancelPlacementReservationMutationVariables, TContext> => {
+
+const mutationKey = getCancelPlacementReservationMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof cancelPlacementReservation>>, CancelPlacementReservationMutationVariables> = (props) => {
+          const {orderId} = props ?? {};
+
+          return  cancelPlacementReservation(orderId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CancelPlacementReservationMutationResult = NonNullable<Awaited<ReturnType<typeof cancelPlacementReservation>>>
+
+    export type CancelPlacementReservationMutationError = ErrorType<void>
+    export type CancelPlacementReservationMutationVariables = {orderId: string}
+
+    /**
+ * @summary Cancel a placement reservation before funding
+ */
+export const useCancelPlacementReservation = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof cancelPlacementReservation>>, TError,CancelPlacementReservationMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof cancelPlacementReservation>>,
+        TError,
+        CancelPlacementReservationMutationVariables,
+        TContext
+      > => {
+      return useMutation(getCancelPlacementReservationMutationOptions(options));
+    }
+
+export const getUpdateReservationCardUrl = (orderId: string,) => {
+
+
+
+
+  return `/api/checkout/reservations/${orderId}/update-card`
+}
+
+/**
+ * @summary Open a SetupIntent session to replace a declined funding card
+ */
+export const updateReservationCard = async (orderId: string, options?: Parameters<typeof customFetch>[1]): Promise<PlacementCheckoutSession> => {
+
+  return customFetch<PlacementCheckoutSession>(getUpdateReservationCardUrl(orderId),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getUpdateReservationCardMutationKey = () => ['updateReservationCard'] as const;
+
+export const getUpdateReservationCardMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateReservationCard>>, TError,UpdateReservationCardMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateReservationCard>>, TError,UpdateReservationCardMutationVariables, TContext> => {
+
+const mutationKey = getUpdateReservationCardMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateReservationCard>>, UpdateReservationCardMutationVariables> = (props) => {
+          const {orderId} = props ?? {};
+
+          return  updateReservationCard(orderId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateReservationCardMutationResult = NonNullable<Awaited<ReturnType<typeof updateReservationCard>>>
+
+    export type UpdateReservationCardMutationError = ErrorType<void>
+    export type UpdateReservationCardMutationVariables = {orderId: string}
+
+    /**
+ * @summary Open a SetupIntent session to replace a declined funding card
+ */
+export const useUpdateReservationCard = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateReservationCard>>, TError,UpdateReservationCardMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateReservationCard>>,
+        TError,
+        UpdateReservationCardMutationVariables,
+        TContext
+      > => {
+      return useMutation(getUpdateReservationCardMutationOptions(options));
+    }
+
+export const getRelistCampaignUrl = (campaignId: string,) => {
+
+
+
+
+  return `/api/campaigns/${campaignId}/relist`
+}
+
+/**
+ * @summary Relist an eligible expired campaign once
+ */
+export const relistCampaign = async (campaignId: string, options?: Parameters<typeof customFetch>[1]): Promise<void> => {
+
+  return customFetch<void>(getRelistCampaignUrl(campaignId),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getRelistCampaignMutationKey = () => ['relistCampaign'] as const;
+
+export const getRelistCampaignMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof relistCampaign>>, TError,RelistCampaignMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof relistCampaign>>, TError,RelistCampaignMutationVariables, TContext> => {
+
+const mutationKey = getRelistCampaignMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof relistCampaign>>, RelistCampaignMutationVariables> = (props) => {
+          const {campaignId} = props ?? {};
+
+          return  relistCampaign(campaignId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RelistCampaignMutationResult = NonNullable<Awaited<ReturnType<typeof relistCampaign>>>
+
+    export type RelistCampaignMutationError = ErrorType<void>
+    export type RelistCampaignMutationVariables = {campaignId: string}
+
+    /**
+ * @summary Relist an eligible expired campaign once
+ */
+export const useRelistCampaign = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof relistCampaign>>, TError,RelistCampaignMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof relistCampaign>>,
+        TError,
+        RelistCampaignMutationVariables,
+        TContext
+      > => {
+      return useMutation(getRelistCampaignMutationOptions(options));
+    }
 
 export const getGetTrackingUrl = (params: GetTrackingParams,) => {
   const normalizedParams = new URLSearchParams();
@@ -712,7 +952,13 @@ export const requestTrackingMagicLink = async (trackingMagicLinkInput: TrackingM
 
     const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
     if (!h) return {};
-    if (h instanceof Headers) { const entries: [string, string][] = []; h.forEach((value, key) => entries.push([key, value])); return Object.fromEntries(entries); }
+    if (h instanceof Headers) {
+      const values: Record<string, string> = {};
+      h.forEach((value, key) => {
+        values[key] = value;
+      });
+      return values;
+    }
     if (Array.isArray(h)) return Object.fromEntries(h);
     return h;
   };

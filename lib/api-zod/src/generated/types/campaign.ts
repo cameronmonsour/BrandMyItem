@@ -5,6 +5,7 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { CampaignLifecycleStatus } from './campaignLifecycleStatus';
 import type { CampaignPresentation } from './campaignPresentation';
 import type { PublicClaim } from './publicClaim';
 
@@ -17,5 +18,12 @@ export interface Campaign {
   presentation: CampaignPresentation;
   claims: (PublicClaim | null)[];
   active: boolean;
+  lifecycleStatus: CampaignLifecycleStatus;
+  /** @nullable */
+  expiresAt?: Date | null;
+  /** @nullable */
+  fundedAt?: Date | null;
+  relistCount: number;
+  relistEligible: boolean;
   createdAt: Date;
 }

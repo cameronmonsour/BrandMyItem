@@ -143,7 +143,7 @@ test.describe('item-specific branding methods', () => {
       await expect(row).toBeEnabled();
       await expect(row).toHaveAttribute(
         'aria-label',
-        `Buy Spot ${expected.index + 1} for ${expected.price}`,
+        `Reserve Spot ${expected.index + 1} for ${expected.price}`,
       );
       await row.click();
 
@@ -297,12 +297,12 @@ test.describe('item-specific branding methods', () => {
       await expect(trackCard.locator('.track-order-meta')).toHaveText(
         `${brand} · ${submissionId}`,
       );
-      await expect(trackCard).toContainText('Spot purchased');
+      await expect(trackCard).toContainText('Spot reserved');
 
       await trackCard.locator('.track-order-summary').click();
       await trackCard.getByText('Advanced details', { exact: true }).click();
       await expect(trackCard).toContainText(`Spot price ${listing.price}`);
-      await expect(trackCard).toContainText(`Total charged ${listing.total}`);
+      await expect(trackCard).toContainText('Charge timing Never charged yet');
       await expect(trackCard).toContainText(`Submission ID ${submissionId}`);
     };
 

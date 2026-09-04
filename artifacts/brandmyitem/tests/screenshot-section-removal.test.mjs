@@ -27,7 +27,7 @@ test('removes the screenshot-only homepage and page headers', () => {
   assert.match(html, /\.home-flow\{position:relative;margin:0;padding:0\}/);
   assert.match(html, /\.home-flow-step:nth-child\(2\),\.home-flow-step:nth-child\(3\),\.home-flow-step:nth-child\(4\)\{transform:none\}/);
   assert.match(html, /Choose the item, ad spots, term, and check-in frequency\./);
-  assert.match(html, /Brands claim a spot, upload their logo, and pay in full upfront\./);
+  assert.match(html, /Brands reserve a spot, upload their logo, and save a card securely\./);
   assert.match(html, /how-it-works-apply-brand-outline\.png/);
   assert.match(html, /home-flow-icon photo apply/);
   assert.match(html, /<span class="home-flow-index">3<\/span><h3>We apply every brand<\/h3><p>BrandMyItem applies every approved sponsor mark before shipping\./);
@@ -281,15 +281,16 @@ test('launch marketplace hides seeded demos while preserving the homepage tracke
   assert.match(html, /renderHomeTrackerRows\(demoTrackMatches\(\),'demo@brandmyitem\.com'\)/);
 });
 
-test('placement purchases use Stripe and only finalize after paid verification', () => {
+test('placement reservations use Stripe Setup mode and only finalize after reservation verification', () => {
   assert.match(html, /fetch\('\/api\/checkout\/sessions'/);
   assert.match(html, /window\.open\('about:blank','_blank'\)/);
   assert.match(html, /checkoutWindow\.location\.replace\(result\.url\)/);
   assert.match(html, /window\.top\.location\.assign\(result\.url\)/);
   assert.match(html, /contentType\.toLowerCase\(\)\.includes\('application\/json'\)/);
   assert.match(html, /fetch\('\/api\/checkout\/sessions\/'\+encodeURIComponent\(sessionId\)\)/);
-  assert.match(html, /if\(!response\.ok\|\|order\.status!=='paid'\)/);
-  assert.match(html, /finalizePaidPurchase\(order,pending\)/);
+  assert.match(html, /if\(!response\.ok\|\|!\['reserved','funded','payment_failed'\]\.includes\(order\.status\)\)/);
+  assert.match(html, /finalizeReservation\(order,pending\)/);
+  assert.match(html, /Your spot is reserved\. Your saved card has not been charged/);
   assert.doesNotMatch(html, /Your spot was charged immediately in this demo/);
 });
 
@@ -316,7 +317,7 @@ test('builder and campaign goals include the complete 40% purchase amount', () =
   assert.match(html, /Branding application, item sales tax, shipping, and handling are included\./);
   assert.match(html, /function goalOf\(l\)\{return l\.prices\.reduce\(function\(s,p\)\{return s\+spotPurchaseTotal\(l,p\)\},0\)\}/);
   assert.match(html, /function raisedOf\(l\)\{return \(l\.claims\|\|\[\]\)\.reduce/);
-  assert.match(html, /<span>Total today<\/span>/);
+  assert.match(html, /<span>Reserved spot total<\/span>/);
   assert.match(html, /pricesIncludeMarkup:true/g);
   assert.match(html, /var price=CUR\.prices\[i\],total=spotPurchaseTotal\(CUR,price\)/);
 });

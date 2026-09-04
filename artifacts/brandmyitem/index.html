@@ -1801,7 +1801,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           </li>
           <li class="home-flow-step">
             <span class="home-flow-icon photo phone" aria-hidden="true"><img src="how-it-works-brands-buy-spots.png" alt=""></span>
-            <span class="home-flow-index">2</span><h3>Brands buy spots</h3><p>Brands claim a spot, upload their logo, and pay in full upfront.</p>
+            <span class="home-flow-index">2</span><h3>Brands reserve spots</h3><p>Brands reserve a spot, upload their logo, and save a card securely.</p>
           </li>
           <li class="home-flow-step">
             <span class="home-flow-icon photo apply" aria-hidden="true"><img src="how-it-works-apply-brand-outline.png" alt=""></span>
@@ -1851,14 +1851,14 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
         </article>
 
         <article class="fb-tile fb-days" data-phase="0" data-loop="12000" style="--i:1">
-          <h3>Not funded? Refunded.</h3>
-          <p>Every spot is charged at checkout. Not fully funded by day 60, every buyer is refunded automatically.</p>
+          <h3>Not funded? Never charged.</h3>
+          <p>Your card is saved at reservation. If the listing is not fully funded by day 60, reservations are released and no charge is made.</p>
           <div class="fb-num"><span id="fbDayNum">1</span><small id="fbDayUnit">day</small></div>
           <div class="fb-ruler" id="fbRuler" aria-hidden="true"></div>
           <div class="fb-rows">
-            <div class="fb-row fb-r1"><b>Spot 1</b><span class="fb-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg><span class="fb-charged">$233 charged at checkout</span><span class="fb-refunded">Refund initiated</span></span></div>
-            <div class="fb-row fb-r2"><b>Spot 2</b><span class="fb-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg><span class="fb-charged">$233 charged at checkout</span><span class="fb-refunded">Refund initiated</span></span></div>
-            <div class="fb-row fb-r3"><b>Spot 3</b><span class="fb-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg><span class="fb-charged">$233 charged at checkout</span><span class="fb-refunded">Refund initiated</span></span></div>
+            <div class="fb-row fb-r1"><b>Spot 1</b><span class="fb-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg><span class="fb-charged">$233 reserved</span><span class="fb-refunded">Never charged</span></span></div>
+            <div class="fb-row fb-r2"><b>Spot 2</b><span class="fb-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg><span class="fb-charged">$233 reserved</span><span class="fb-refunded">Never charged</span></span></div>
+            <div class="fb-row fb-r3"><b>Spot 3</b><span class="fb-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg><span class="fb-charged">$233 reserved</span><span class="fb-refunded">Never charged</span></span></div>
           </div>
           <div class="fb-note" id="fbDayNote">3 of 5 spots funded</div>
         </article>
@@ -1936,8 +1936,8 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
         <div class="faq-grid">
           <details class="faq"><summary>What does a brand receive?<span class="x"></span></summary><div class="fa">A permanent physical placement of your mark, applied as a sticker, patch, embroidery, or engraving, on a real item carried in public, plus a documented proof term: the purchase receipt, shipment confirmation, and every one of the owner's check-in photos for the term of the listing.</div></details>
           <details class="faq"><summary>How are spots priced?<span class="x"></span></summary><div class="fa">Every spot is priced by surface area: its share of the item's usable surface, applied to the listing's campaign total. Spot prices always sum to the campaign total exactly. The campaign total is the item's retail price plus a flat 40% service charge, which covers material production, professional application, fulfillment, and administration of the listing. The price shown on each spot is all-in, with no additional fees at checkout.</div></details>
-          <details class="faq"><summary>How does payment work?<span class="x"></span></summary><div class="fa">The full spot price is charged at checkout by card and processed by our payment provider. Your payment is held and fully refundable until the item funds. At checkout you also submit your production-ready logo file, brand name, work email, and destination link, which travel with the order through application.</div></details>
-          <details class="faq"><summary>What happens if a listing doesn't fully fund?<span class="x"></span></summary><div class="fa">Every listing has a 60-day funding window. If any spot remains open at day 60, every purchase on that listing is refunded in full to the original payment method, automatically, with refunds initiated within 5 business days. No request is required.</div></details>
+          <details class="faq"><summary>How does payment work?<span class="x"></span></summary><div class="fa">At reservation, Stripe securely saves your card through a SetupIntent. You are never charged at reservation. If every spot is reserved and the listing fully funds, BrandMyItem charges the saved card off-session for the exact all-in spot price. A decline opens a 48-hour update-card window.</div></details>
+          <details class="faq"><summary>What happens if a listing doesn't fully fund?<span class="x"></span></summary><div class="fa">Every listing has a 60-day funding window. If any spot remains open at day 60, reservations are released and no card is charged. A listing with at least half its spots reserved may be relisted once for 30 more days.</div></details>
           <details class="faq"><summary>What are the content requirements?<span class="x"></span></summary><div class="fa">You must hold the rights to any mark you submit, and files must be production-ready. We decline placements that are unlawful, adult, hateful, or in restricted categories such as tobacco and vaping, and any declined purchase is refunded in full. The complete standards are published in our Content Standards.</div></details>
         </div>
       </div>
@@ -2433,7 +2433,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           <div class="ap-fit-grid">
             <div class="ap-fit-box"><span>Branding &amp; delivery</span><b id="iBrandingWindow">Not provided</b></div>
             <div class="ap-fit-box"><span>Proof cadence</span><b id="iProofCadence">Not provided</b></div>
-            <div class="ap-fit-box ap-col-span-2"><span>Buyer protection</span><b>Automatic refund if the campaign does not fund in 60 days. Delivery delays include a wait-or-refund choice.</b></div>
+           <div class="ap-fit-box ap-col-span-2"><span>Brand protection</span><b>No charge unless the campaign fully funds. Declined funding attempts get a 48-hour card-update window.</b></div>
           </div>
         </article>
       </div>
@@ -2469,9 +2469,9 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 <footer class="site-footer">
   <div class="fwrap">
     <div class="fine">
-      <p>* Advertising spots are priced by surface share and always sum exactly to the listing's stated campaign total. Every spot is charged in full at checkout. If a listing is not fully funded within its 60-day funding window, every purchase on it is refunded automatically to the original payment method, with refunds initiated within 5 business days; no request is required. Once a listing is fully funded, BrandMyItem purchases the item new at retail, produces and professionally applies every placement, and delivers the finished item to the owner within 60 days of funding. Owners never receive, hold, or handle money, and never source or apply placement materials. Placements are permanent once applied. The owner selects the proof term (6, 12, or 18 months of check-ins) and check-in cadence (weekly, biweekly, or monthly) when posting; both are locked when the listing is published and cannot be changed. The owner's first check-in is due within 7 days of delivery. Missed check-ins result in a public flag and, if continued, restriction from posting new listings; there are no financial penalties. Items are purchased new and carry the manufacturer's warranty. Spot availability is first come, first served, while spots last. Placements are paid advertising, not endorsements by the owner.</p>
-      <p>Owners who post about their item on social media must clearly and conspicuously disclose their material connection to sponsoring brands in accordance with the FTC Endorsement Guides. Brands represent that they hold all rights to any mark they submit and grant IRLi LLC a limited license to reproduce it on the purchased spot and to display the owner's check-in photos publicly; no other use is licensed. Placements that are unlawful, infringing, or within restricted categories are declined and refunded in full. Receiving an item may constitute taxable income; each party is responsible for its own taxes, and required tax forms are issued where the law requires. Product and manufacturer names shown in listings identify the item only; BrandMyItem and its listings are not sponsored by, endorsed by, or affiliated with any item manufacturer, and all third-party marks belong to their respective owners. Use of the Service is governed by the Terms of Use, which include a binding individual arbitration agreement and class action waiver, with a 30-day opt-out.</p>
-      <p>BrandMyItem is operated by IRLi LLC, a California limited liability company, Newport Beach, California. BrandMyItem is a marketplace for physical advertising placements; it is not a bank, money transmitter, payment processor, escrow service, crowdfunding platform, lender, or investment of any kind. Avatars by pack author, CC BY 4.0. Legal notices: legal@brandmyitem.com. Privacy requests: privacy@brandmyitem.com.</p>
+      <p>* Advertising spots are priced by surface share and always sum exactly to the listing's stated campaign total. A brand reserves a spot by saving a card, and no charge is made at reservation. If a listing is not fully funded within its 60-day funding window, reservations are released with no charge. Once a listing is fully funded, BrandMyItem buys the item new at retail, produces and professionally applies every placement, and delivers the finished item to the owner within 60 days of funding. Owners never receive or handle money, and never source or apply placement materials. Placements are permanent once applied. The owner selects the proof term (6, 12, or 18 months of check-ins) and check-in cadence (weekly, biweekly, or monthly) when posting; both are locked when the listing is published and cannot be changed. The owner's first check-in is due within 7 days of delivery. Missed check-ins result in a public flag and, if continued, restriction from posting new listings; there are no financial penalties. Items are new and carry the manufacturer's warranty. Spot availability is first come, first served, while spots last. Placements are paid advertising, not endorsements by the owner.</p>
+      <p>Owners who post about their item on social media must clearly and conspicuously disclose their material connection to sponsoring brands in accordance with the FTC Endorsement Guides. Brands represent that they have rights to any mark they submit and grant IRLi LLC a limited license to reproduce it on the reserved spot and to display the owner's check-in photos publicly; no other use is licensed. Placements that are unlawful, infringing, or within restricted categories are declined. Before funding, the reservation is released with no charge. Receiving an item may constitute taxable income; each party is responsible for its own taxes, and required tax forms are issued where the law requires. Product and manufacturer names shown in listings identify the item only; BrandMyItem and its listings are not sponsored by, endorsed by, or affiliated with any item manufacturer, and all third-party marks belong to their respective owners. Use of the Service is governed by the Terms of Use, which include a binding individual arbitration agreement and class action waiver, with a 30-day opt-out.</p>
+      <p>BrandMyItem is operated by IRLi LLC, a California limited liability company, Newport Beach, California. BrandMyItem is a marketplace for physical advertising placements; it is not a bank, money transmitter, payment processor, crowdfunding platform, lender, or investment of any kind. Avatars by pack author, CC BY 4.0. Legal notices: legal@brandmyitem.com. Privacy requests: privacy@brandmyitem.com.</p>
     </div>
 
     <hr>
@@ -2573,11 +2573,11 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
       <div class="field"><label class="label" for="mBrand">Brand name</label><input class="input" id="mBrand" placeholder="Acme"></div>
       <div class="field"><label class="label" for="mMail">Work email</label><input class="input" id="mMail" type="email" placeholder="you@brand.com"></div>
       <div class="field"><label class="label" for="mLink">Link, optional</label><input class="input" id="mLink" placeholder="https://"></div>
-       <div class="card" style="border-radius:14px;margin-bottom:2px"><div class="card-c" style="padding:12px 14px"><div class="fact"><span>Total today</span><b id="mTotal"></b></div><p class="finetext" style="margin-top:8px">All-in purchase total, including branding application, item sales tax, shipping, and handling.</p></div></div>
-       <label class="assent-row"><input type="checkbox" id="brandAssent"><span>I agree to the <a href="legal.html#terms" target="_blank" rel="noopener">Terms of Use</a> and <a href="legal.html#content" target="_blank" rel="noopener">Content Standards</a>. I confirm I own or control the rights to this mark.</span></label>
+       <div class="card" style="border-radius:14px;margin-bottom:2px"><div class="card-c" style="padding:12px 14px"><div class="fact"><span>Reserved spot total</span><b id="mTotal"></b></div><p class="finetext" style="margin-top:8px">Your card is saved securely, but no charge is made unless this listing fully funds.</p></div></div>
+       <label class="assent-row"><input type="checkbox" id="brandAssent"><span>I agree to the <a href="legal.html#terms" target="_blank" rel="noopener">Terms of Use</a> and <a href="legal.html#content" target="_blank" rel="noopener">Content Standards</a>. I authorize a future off-session charge if this listing fully funds, and confirm I own or control the rights to this mark.</span></label>
       <div class="mrow">
         <button class="btn btn-outline" id="mCancel">Cancel</button>
-         <button class="btn btn-primary" id="mNext" disabled>Continue to secure checkout</button>
+         <button class="btn btn-primary" id="mNext" disabled>Reserve this spot</button>
       </div>
       <p class="finetext">Your logo is the handoff: once the item fully funds, the owner downloads it and produces the approved branding from your exact file. No back and forth needed.</p>
     </div>
@@ -2590,9 +2590,10 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
       </div>
       <div class="mrow">
         <button class="btn btn-outline" id="mCopyId">Copy ID</button>
+         <button class="btn btn-outline" id="mCancelReservation" type="button">Cancel reservation</button>
         <button class="btn btn-primary" id="mDone">Done</button>
       </div>
-       <p class="finetext">Your payment was confirmed by Stripe. Track fulfillment and check-ins any time from <b>Track order</b>.</p>
+       <p class="finetext">Your spot is reserved. Your card has not been charged. Track funding and fulfillment any time from <b>Track order</b>.</p>
     </div>
   </div>
 </div>
@@ -6974,13 +6975,18 @@ function campaignFromApi(campaign){
     owner:presentation.owner||campaign.ownerName,mail:campaign.ownerEmail||'',
     prices:(campaign.pricesCents||[]).map(function(cents){return cents/100}),pricesIncludeMarkup:true,
     slots:(campaign.pricesCents||[]).length,created:created,postedAt:presentation.postedAt||created,
-    status:campaign.active?(presentation.status||'live'):'closed'
+     status:campaign.active?(campaign.lifecycleStatus||presentation.status||'live'):'expired',
+     lifecycleStatus:campaign.lifecycleStatus||'live',
+     expiresAt:campaign.expiresAt?new Date(campaign.expiresAt).getTime():endOf({created:created,postedAt:created,unsoldTimeoutDays:60}),
+     fundedAt:campaign.fundedAt?new Date(campaign.fundedAt).getTime():null,
+     serverCampaign:true,relistCount:campaign.relistCount||0,relistEligible:!!campaign.relistEligible
   });
   listing.claims=(campaign.claims||[]).map(function(claim){
     if(!claim)return null;
     return {
       brand:claim.brandName,link:claim.destinationUrl||'',logo:storedAssetUrl(claim.logoObjectPath),
-      amt:claim.amountCents/100,fee:0,purchasedAt:new Date(claim.purchasedAt).getTime(),
+       amt:claim.amountCents/100,fee:0,purchasedAt:new Date(claim.reservedAt).getTime(),
+       orderStatus:claim.status,
       subId:'BMI-'+String(claim.orderId).toUpperCase().slice(0,6),stripeOrderId:claim.orderId,
       itemId:campaign.id,ts:new Date(claim.purchasedAt).getTime()
     };
@@ -7118,7 +7124,7 @@ function claimIsRefunded(c){return !!(c&&c.refunded)}
 function raisedOf(l){return (l.claims||[]).reduce(function(s,c){return s+(c&&!claimIsRefunded(c)?claimPurchaseTotal(l,c):0)},0)}
 function goalOf(l){return l.prices.reduce(function(s,p){return s+spotPurchaseTotal(l,p)},0)}
 function pctOf(l){var g=goalOf(l);return g?Math.min(100,raisedOf(l)/g*100):0}
-function openSlots(l){return l.closed?0:(l.claims||[]).filter(function(c){return!c}).length}
+function openSlots(l){return l.closed||l.lifecycleStatus==='expired'?0:(l.claims||[]).filter(function(c){return!c}).length}
 function termOf(l){var n=parseInt(l&&l.termMonths,10);return n===6||n===18?n:12}
 function feeRateOf(){return 0.40}
 function feeFor(l,price){return Math.round(price*feeRateOf(l))}
@@ -7166,7 +7172,7 @@ function normalizeModelState(){
       if(c.fee!==currentFee){c.fee=currentFee;changed=true}
       if(c.escrow){delete c.escrow;changed=true}
     });
-    if(pctOf(l)>=100&&!l.fundedAt){l.fundedAt=Date.now();changed=true}
+     if(pctOf(l)>=100&&!l.fundedAt&&!l.serverCampaign){l.fundedAt=Date.now();l.status='funded';changed=true}
     if(pctOf(l)>=100&&l.fundedAt&&!l.promisedDeliveryAt){
       l.promisedDeliveryAt=l.fundedAt+deliveryDaysOf(l)*86400000;changed=true;
     }
@@ -7177,24 +7183,22 @@ function normalizeModelState(){
 function processListingLifecycle(){
   var changed=false,now=Date.now();
   (DB.listings||[]).forEach(function(l){
-    if(l.closed){refreshCheckinStatus(l);return}
-    if(pctOf(l)>=100&&!l.fundedAt){
+     if(l.closed||l.lifecycleStatus==='expired'){refreshCheckinStatus(l);return}
+     if(pctOf(l)>=100&&!l.fundedAt&&!l.serverCampaign){
       l.fundedAt=now;l.promisedDeliveryAt=now+deliveryDaysOf(l)*86400000;l.status='funded';changed=true;
     }
-    if(pctOf(l)<100&&now>=endOf(l)){
-      l.closed=true;l.status='closed';l.closedAt=now;l.refundReason='unsold_timeout';
-      (l.claims||[]).forEach(function(c){if(c&&!c.refunded){c.refunded=true;c.refundedAt=now;c.refundReason='Listing did not sell out within 60 days';}});
-      DB.activity.unshift({txt:'<b>'+safeCardText(l.owner||'Owner')+'</b>&rsquo;s <b>'+safeCardText(LBLL(l))+'</b> expired after 60 days — all sponsors refunded',ts:now});
+     if(pctOf(l)<100&&now>=endOf(l)){
+       l.closed=true;l.lifecycleStatus='expired';l.status='expired';l.closedAt=now;
+       DB.activity.unshift({txt:'<b>'+safeCardText(l.owner||'Owner')+'</b>&rsquo;s <b>'+safeCardText(LBLL(l))+'</b> expired after 60 days — reservations released with no charge',ts:now});
       changed=true;
     }else if(pctOf(l)>=100&&!l.shippedAt&&l.promisedDeliveryAt&&now>=l.promisedDeliveryAt){
       if(!l.delayNotice){
         l.delayNotice={sentAt:now,proposedAt:now+30*86400000,automatic:true,requiresResponse:true};
-        DB.activity.unshift({txt:'<b>Delivery delay</b> reported for '+safeCardText(LBLL(l))+' — sponsors can wait or refund',ts:now});
+         DB.activity.unshift({txt:'<b>Delivery delay</b> reported for '+safeCardText(LBLL(l))+' — brands can wait or contact support',ts:now});
         changed=true;
       }else if(now>=l.delayNotice.proposedAt){
-        l.closed=true;l.status='closed';l.closedAt=now;l.refundReason='Non-delivery after delay window';
-        (l.claims||[]).forEach(function(c){if(c&&!c.refunded){c.refunded=true;c.refundedAt=now;c.refundReason='Non-delivery after the delivery delay window';}});
-        DB.activity.unshift({txt:'<b>'+safeCardText(LBLL(l))+'</b> closed after non-delivery — all sponsors refunded',ts:now});
+         l.closed=true;l.status='closed';l.closedAt=now;
+         DB.activity.unshift({txt:'<b>'+safeCardText(LBLL(l))+'</b> closed after non-delivery — support will coordinate next steps',ts:now});
         changed=true;
       }
     }
@@ -8486,7 +8490,7 @@ function renderCampaignDetails(l){
       '<section class="campaign-panel campaign-panel-wide campaign-funding-panel">'+
         '<div class="campaign-funding-head"><div><div class="campaign-label">Funding progress</div><div class="campaign-funding-amount">'+money(raised)+' <span>of '+money(goal)+'</span></div></div><div class="campaign-percent">'+pct+'% funded</div></div>'+
         '<div class="campaign-progress"><i style="width:'+pct+'%"></i></div>'+
-        '<div class="campaign-funding-meta"><span>'+claimed+' of '+(l.slots||0)+' spots sold</span><span>'+open+' open '+(open===1?'spot':'spots')+'</span></div>'+
+        '<div class="campaign-funding-meta"><span>'+claimed+' of '+(l.slots||0)+' spots reserved</span><span>'+open+' open '+(open===1?'spot':'spots')+'</span></div>'+
       '</section>'+
       '<div class="campaign-lower-grid">'+
       '<section class="campaign-panel campaign-spot-panel">'+
@@ -10571,8 +10575,10 @@ function serverTrackingMatches(payload,mail){
         created:new Date(campaign.createdAt).getTime(),postedAt:new Date(campaign.createdAt).getTime(),
         status:campaign.active?'live':'closed',termMonths:12,checkins:[],serverFundedPercent:0};
     }
-    var paidCount=(campaign.orders||[]).filter(function(order){return order.status==='paid'}).length;
-    l.serverFundedPercent=l.slots?Math.min(100,paidCount/l.slots*100):0;
+     var reservedCount=(campaign.orders||[]).filter(function(order){return ['reserved','funding','payment_failed','funded'].includes(order.status)}).length;
+     var fundedCount=(campaign.orders||[]).filter(function(order){return order.status==='funded'}).length;
+     l.serverFundedPercent=l.slots?Math.min(100,reservedCount/l.slots*100):0;
+     l.serverFundedCount=fundedCount;
     if(campaign.ownerMatch){
       matches.push({l:l,c:{ownerView:true,remoteOnly:!DB.listings.some(function(item){return item.id===campaign.id}),brand:'Campaign owner',mail:mail,
         amt:0,fee:0,purchasedAt:new Date(campaign.createdAt).getTime(),subId:'CAM-'+String(campaign.id).toUpperCase().slice(0,8)}});
@@ -10581,7 +10587,7 @@ function serverTrackingMatches(payload,mail){
       var existing=(l.claims||[])[order.spotIndex];
       var c=existing&&existing.stripeOrderId===order.id?Object.assign({},existing):{
         brand:order.brandName,mail:order.email,link:order.destinationUrl||'',logo:storedAssetUrl(order.logoObjectPath),amt:order.amountCents/100,fee:0,
-        purchasedAt:new Date(order.createdAt).getTime(),subId:'BMI-'+String(order.id).toUpperCase().slice(0,6),stripeOrderId:order.id
+         purchasedAt:new Date(order.reservedAt||order.createdAt).getTime(),subId:'BMI-'+String(order.id).toUpperCase().slice(0,6),stripeOrderId:order.id
       };
       c.spotIndex=order.spotIndex;c.orderStatus=order.status;c.ownerOrder=campaign.ownerMatch;
       matches.push({l:l,c:c});
@@ -10765,14 +10771,25 @@ function delayActionHtml(l,c){
   if(c.delayResponse)return '<div class="track-submit-copy" style="margin-top:12px">Delay response: <b>'+safeCardText(c.delayResponse==='wait'?'Waiting for the new delivery date':'Full refund recorded')+'</b>.</div>';
   return '<div class="track-submit" style="margin-top:12px"><div class="track-submit-title">Delivery delay notice</div><p class="track-submit-copy">IRLi has proposed delivery by <b>'+new Date(l.delayNotice.proposedAt).toLocaleDateString()+'</b>. Choose to wait, or receive a full refund now.</p><div class="mrow"><button class="btn btn-outline" type="button" onclick="respondDelay(\''+l.id+'\',\''+c.subId+'\',\'refund\')">Refund my spot</button><button class="btn btn-primary" type="button" onclick="respondDelay(\''+l.id+'\',\''+c.subId+'\',\'wait\')">I&rsquo;ll wait</button></div></div>';
 }
+async function retryFailedReservation(orderId,campaignId,spotIndex,brand,mail,link){
+  try{
+    var response=await fetch('/api/checkout/reservations/'+encodeURIComponent(orderId)+'/update-card',{method:'POST'});
+    var result=await response.json();
+    if(!response.ok||!result.url)throw new Error(result.error||'Card update is unavailable');
+     sessionStorage.setItem('bmi_pending_checkout',JSON.stringify({campaignId:campaignId,spotIndex:spotIndex,brand:brand,mail:mail,link:link||'',orderId:orderId}));
+    var updateWindow=window.open('about:blank','_blank');
+    if(updateWindow){updateWindow.opener=null;updateWindow.location.replace(result.url)}
+    else window.top.location.assign(result.url);
+  }catch(error){toast(error&&error.message?error.message:'Could not open card update')}
+}
 function trackCardHtml(l,c){
   var photo=listingPhoto(l);
   var steps=[];
-  var orderStatus=c.orderStatus||'paid';
+   var orderStatus=c.orderStatus||'reserved';
   if(c.ownerView)steps.push({done:true,label:'Listing launch ready',sub:new Date(c.purchasedAt).toLocaleDateString()+' \u00b7 linked to your posting email'});
-  else steps.push({done:orderStatus!=='pending',active:orderStatus==='pending',label:orderStatus==='pending'?'Checkout started':(orderStatus==='refunded'?'Spot refunded':'Spot funded'),sub:new Date(c.purchasedAt).toLocaleDateString()+' \u00b7 '+money(c.amt+c.fee)+(orderStatus==='pending'?' pending':' charged')});
+   else steps.push({done:!['pending','payment_failed'].includes(orderStatus),active:orderStatus==='pending',label:orderStatus==='pending'?'Reservation started':(orderStatus==='payment_failed'?'Payment needs an update':(orderStatus==='funded'?'Spot funded':'Spot reserved')),sub:new Date(c.purchasedAt).toLocaleDateString()+' \u00b7 '+money(c.amt+c.fee)+(orderStatus==='funded'?' charged at funding':' no charge yet')});
   var pct=l.serverFundedPercent!=null?l.serverFundedPercent:pctOf(l);
-  var funded=pct>=100;
+   var funded=l.serverFundedCount!=null?l.serverFundedCount>=l.slots:pct>=100;
   steps.push({done:!!l.shippedAt,active:funded&&!l.shippedAt,label:'Item fully funded and shipped',sub:l.shippedAt?'All spots funded, item purchased and shipped to the owner':(funded?'All spots funded, shipment is being prepared':Math.round(pct)+'% funded so far')});
   var checkins=l.checkins||[],checkState=checkinStatus(l);
   for(var i=0;i<termOf(l);i++){
@@ -10780,7 +10797,7 @@ function trackCardHtml(l,c){
     var dueCopy=i===0&&checkState.firstDueAt?((checkState.firstOverdue?'Overdue since ':'Due by ')+new Date(checkState.firstDueAt).toLocaleDateString()):'Not yet submitted';
     steps.push({done:!!ci,active:!ci&&funded&&i===checkins.length,label:'Month '+(i+1)+' check-in',sub:ci?('Photo received '+new Date(ci.date).toLocaleDateString()):dueCopy});
   }
-  var badge=c.ownerView?(funded?'Funded':'Launch ready'):(orderStatus==='pending'?'Pending':(c.refunded||orderStatus==='refunded'?'Refunded':(checkState.nonCompliant?'Non-compliant':(checkState.overdue?(checkState.firstOverdue?'First check-in overdue':'Check-in overdue'):(l.shippedAt?'Shipped':'Purchased')))));
+   var badge=c.ownerView?(funded?'Funded':'Launch ready'):(orderStatus==='pending'?'Pending':(orderStatus==='payment_failed'?'Payment failed':(orderStatus==='cancelled'||orderStatus==='released'?'Released':(orderStatus==='funded'?'Funded':(checkState.nonCompliant?'Non-compliant':(checkState.overdue?(checkState.firstOverdue?'First check-in overdue':'Check-in overdue'):(l.shippedAt?'Shipped':'Reserved')))))));
   return '<details class="card track-order">'+
       '<summary class="track-order-summary">'+
         (photo?'<img src="'+photo+'" style="width:56px;height:56px;object-fit:contain;background:#fff;border:1px solid var(--border);border-radius:12px;flex-shrink:0" alt="">':'')+
@@ -10792,11 +10809,11 @@ function trackCardHtml(l,c){
       '<div class="track-timeline">'+steps.map(function(s){
         return '<div class="track-step '+(s.done?'done':(s.active?'active':''))+'"><div class="track-dot"></div><div class="track-line"></div><div class="track-body"><b>'+s.label+'</b><span>'+s.sub+'</span></div></div>';
       }).join('')+'</div>'+
-       trackSubmitHtml(l,c)+(c.ownerView?'':delayActionHtml(l,c))+
+       trackSubmitHtml(l,c)+(c.ownerView?'':(orderStatus==='payment_failed'?'<div class="track-submit" style="margin-top:12px"><div class="track-submit-title">Payment failed</div><p class="track-submit-copy">No new charge was made. Update your card within 48 hours to keep this reservation.</p><button class="btn btn-primary" type="button" onclick="retryFailedReservation(\''+c.stripeOrderId+'\',\''+l.id+'\','+(c.spotIndex||0)+',\''+String(c.brand||'').replace(/'/g,"&#39;")+'\',\''+String(c.mail||'').replace(/'/g,"&#39;")+'\',\''+String(c.link||'').replace(/'/g,"&#39;")+'\')">Update card</button></div>':delayActionHtml(l,c)))+
       '<details style="margin-top:4px"><summary style="cursor:pointer;font-size:13px;font-weight:600;color:#6e6e73">Advanced details</summary>'+
         '<div style="margin-top:10px;font-size:13px;color:#3a3a3c;line-height:2">'+
           '<div>'+(c.ownerView?'Campaign ID':'Submission ID')+' <b style="float:right">'+c.subId+'</b></div>'+
-          (c.ownerView?'':'<div>Spot number <b style="float:right">'+((c.spotIndex||0)+1)+'</b></div><div>Spot price <b style="float:right">'+money(c.amt)+'</b></div><div>Total charged <b style="float:right">'+money(c.amt+c.fee)+'</b></div>')+
+           (c.ownerView?'':'<div>Spot number <b style="float:right">'+((c.spotIndex||0)+1)+'</b></div><div>Spot price <b style="float:right">'+money(c.amt)+'</b></div><div>Charge timing <b style="float:right">'+(orderStatus==='funded'?'At funding':'Never charged yet')+'</b></div>')+
           '<div>Fulfillment status <b style="float:right">'+badge+'</b></div>'+
           '<div>Check-ins on file <b style="float:right">'+checkins.length+' of '+termOf(l)+'</b></div>'+
         '</div>'+
@@ -10862,7 +10879,7 @@ function drawItemMap(){
     }
     renderFinal(el,CUR,{onTap:function(i){openBid(i)},showOpen:true,h:560});
     var itemCap=document.getElementById('itemCap');
-    if(itemCap)itemCap.textContent='Choose an open spot from the list to buy it for your brand. The '+brandingMethod(CUR.type)+' is made from your logo.';
+   if(itemCap)itemCap.textContent='Choose an open spot from the list to reserve it for your brand. The '+brandingMethod(CUR.type)+' is made from your logo.';
   }else{
     if(CUR.custom){
       var faces2=CUR.faces&&CUR.faces.length?CUR.faces:[{photo:CUR.photo,tiles:CUR.tiles,off:0}];
@@ -10882,14 +10899,14 @@ function renderItemSpotList(){
   host.innerHTML='';
   (CUR.prices||[]).forEach(function(price,i){
     var claim=CUR.claims&&CUR.claims[i],meta=slotMeta(CUR.type,CUR.slots,i);
-     var stateLabel=claim?'Funded':(CUR.closed?'Closed':'Sponsor');
+     var stateLabel=claim?(claim.orderStatus==='funded'?'Funded':'Reserved'):(CUR.closed?'Expired':'Reserve');
     var button=document.createElement('button');
     button.type='button';
     button.className='ap-spot-option '+(claim?'claimed':'open');
     button.disabled=!!claim||!!CUR.closed;
      button.setAttribute('aria-label',claim?
-       ('Spot '+(i+1)+' funded by '+(claim.brand||'a sponsor')):
-       ('Sponsor Spot '+(i+1)+' for '+money(price)));
+        ('Spot '+(i+1)+' reserved by '+(claim.brand||'a brand')):
+        ('Reserve Spot '+(i+1)+' for '+money(price)));
     var brand=(claim&&claim.brand||'Sponsor').trim();
     var mark=claim?
       (claim.logo?'<img src="'+claim.logo+'" alt="'+safeCardText(brand)+' logo">':'<span>'+safeCardText(brand.slice(0,2).toUpperCase())+'</span>'):
@@ -10951,8 +10968,9 @@ function refreshItemCards(){
     }).join(''):'<p class="finetext">No public profiles linked yet.</p>';
   }
   document.getElementById('iCad').textContent=checkinCadenceText(CUR);
-  var shipEl=document.getElementById('iShips');if(shipEl)shipEl.textContent=CUR.closed?'closed — refunds issued':(CUR.shippedAt?'shipped to owner':(pct>=100?'funded — preparing shipment':'new, when fully funded'));
-  var feeCopy=document.getElementById('iFeeCopy');if(feeCopy)feeCopy.textContent='Exact all-in prices, first come, first served. Every purchase total covers BrandMyItem-applied branding, item sales tax, shipping, and handling.';
+   var listingFunded=CUR.lifecycleStatus==='funded'||CUR.lifecycleStatus==='purchased'||CUR.lifecycleStatus==='branded'||CUR.lifecycleStatus==='shipped'||CUR.lifecycleStatus==='active'||CUR.lifecycleStatus==='complete'||(!CUR.serverCampaign&&pct>=100);
+   var shipEl=document.getElementById('iShips');if(shipEl)shipEl.textContent=CUR.closed?'expired, reservations released':(CUR.shippedAt?'shipped to owner':(listingFunded?'funded, preparing shipment':'new, when fully reserved'));
+  var feeCopy=document.getElementById('iFeeCopy');if(feeCopy)feeCopy.textContent='Exact all-in prices, first come, first served. Your card is saved at reservation, then charged only if every spot is reserved and the listing funds.';
   var fulfillmentEl=document.getElementById('iFulfillment');if(fulfillmentEl)fulfillmentEl.textContent='BrandMyItem applies branding';
   var materialEl=document.getElementById('iMaterial');if(materialEl)materialEl.textContent=brandingMaterial(CUR.type);
   var termEl=document.getElementById('iTerm');if(termEl)termEl.textContent=termOf(CUR)+' months'+(CUR.termLocked?' — locked':'');
@@ -10962,8 +10980,8 @@ function refreshItemCards(){
   var claimed=CUR.slots-openSlots(CUR);
   var spotSummary=document.getElementById('spotSummary');
   if(spotSummary)spotSummary.innerHTML=
-     claimed+' of '+CUR.slots+' spots funded. Spots from '+money(Math.min.apply(null,CUR.prices))+' — larger surfaces carry a premium. Every sponsor submits their logo at checkout; the '+safeCardText(brandingMethod(CUR.type))+' is produced from that file.'+
-    (pct>=100?' <a href="#" id="logoPackBtn" style="font-weight:600;text-decoration:underline">Download the logo pack</a> and have the '+safeCardText(brandingMethod(CUR.type))+' made.':'');
+      claimed+' of '+CUR.slots+' spots reserved. Spots from '+money(Math.min.apply(null,CUR.prices))+' — larger surfaces carry a premium. Every brand submits their logo at reservation; the '+safeCardText(brandingMethod(CUR.type))+' is produced from that file.'+
+     (listingFunded?' <a href="#" id="logoPackBtn" style="font-weight:600;text-decoration:underline">Download the logo pack</a> and have the '+safeCardText(brandingMethod(CUR.type))+' made.':'');
   renderItemSpotList();
   var lp=document.getElementById('logoPackBtn');
   if(lp)lp.onclick=function(e){e.preventDefault();downloadLogoPack()};
@@ -10988,12 +11006,25 @@ function renderOwnerTools(){
     CUR.shipping={name:document.getElementById('shipName').value.trim(),postal:document.getElementById('shipPostal').value.trim(),address:document.getElementById('shipAddress').value.trim(),city:document.getElementById('shipCity').value.trim(),country:document.getElementById('shipCountry').value.trim()};
     saveDB();document.getElementById('shippingStatus').textContent='Shipping details saved';document.getElementById('shippingStatus').style.display='block';
   };
-  var pct=pctOf(CUR),term=termOf(CUR),checkins=CUR.checkins||[],status=checkinStatus(CUR);
+   var pct=pctOf(CUR),term=termOf(CUR),checkins=CUR.checkins||[],status=checkinStatus(CUR);
+   var listingFunded=CUR.lifecycleStatus==='funded'||CUR.lifecycleStatus==='purchased'||CUR.lifecycleStatus==='branded'||CUR.lifecycleStatus==='shipped'||CUR.lifecycleStatus==='active'||CUR.lifecycleStatus==='complete'||(!CUR.serverCampaign&&pct>=100);
   if(CUR.closed){
-     cb.innerHTML='<div class="fact"><span>Listing status</span><b style="color:#B23327">Closed — all sponsors refunded</b></div><p class="finetext" style="margin:8px 0 0">This listing did not fully fund within 60 days. No item will be purchased or shipped.</p>';
+     cb.innerHTML='<div class="fact"><span>Listing status</span><b style="color:#B23327">Expired, reservations released</b></div><p class="finetext" style="margin:8px 0 0">This listing did not fully fund within 60 days. No card was charged, and no item will be purchased or shipped.</p>'+
+       (CUR.relistEligible?'<button class="btn btn-primary btn-full" id="relistBtn" type="button" style="margin-top:12px">Relist for 30 days</button>':'')+
+       '<p class="finetext" style="margin:8px 0 0">'+(CUR.relistEligible?'At least half the spots were reserved, so this listing can be relisted once.':'This listing is not eligible for a relist because fewer than half the spots were reserved.')+'</p>';
+     var relistBtn=document.getElementById('relistBtn');
+     if(relistBtn)relistBtn.onclick=async function(){
+       try{
+         var response=await fetch('/api/campaigns/'+encodeURIComponent(CUR.id)+'/relist',{method:'POST'});
+         var result=await response.json();
+         if(!response.ok)throw new Error(result.error||'Relist is unavailable');
+         CUR.closed=false;CUR.lifecycleStatus='live';CUR.status='live';CUR.relistEligible=false;
+         saveDB();refreshItemCards();toast('Listing relisted for 30 days');
+       }catch(error){toast(error&&error.message?error.message:'Could not relist this listing')}
+     };
     return;
   }
-  if(pct<100){
+   if(!listingFunded){
      cb.innerHTML='<p class="finetext" style="margin:0;color:#8e8e93">Check-ins begin after all spots fund and the item ships. '+Math.round(pct)+'% funded so far.</p>';
     return;
   }
@@ -11066,9 +11097,20 @@ function closeBuyModal(){
   var heading=document.getElementById('iHeroTitle');
   if(heading)heading.focus();
 }
+async function cancelReservation(orderId){
+  try{
+    var response=await fetch('/api/checkout/reservations/'+encodeURIComponent(orderId)+'/cancel',{method:'POST'});
+    var result=await response.json();
+    if(!response.ok)throw new Error(result.error||'Reservation cannot be cancelled');
+    toast('Reservation cancelled. You were never charged.');
+    closeBuyModal();
+    await hydratePublicCampaigns();
+    if(CUR){CUR=DB.listings.filter(function(l){return l.id===CUR.id})[0];drawItemMap();refreshItemCards()}
+  }catch(error){toast(error&&error.message?error.message:'Could not cancel reservation')}
+}
 function openBid(i,trigger){
   var c=CUR.claims[i];
-  if(c||CUR.closed){toast(c?'That spot is sold':'This listing is closed');return}
+  if(c||CUR.closed){toast(c?'That spot is already reserved':'This listing is closed');return}
   buyReturnFocus=trigger||document.activeElement;
   claimSlot=i;logoData=null;logoFile=null;
   var meta=slotMeta(CUR.type,CUR.slots,i);
@@ -11118,7 +11160,7 @@ async function beginStripeCheckout(){
     checkoutWindow.opener=null;
     checkoutWindow.document.title='Opening secure checkout…';
   }
-  button.disabled=true;button.textContent='Opening Stripe…';
+   button.disabled=true;button.textContent='Opening secure reservation…';
   var pending={campaignId:CUR.id,spotIndex:claimSlot,brand:brand,mail:mail,link:link};
   try{
     var logoObjectPath=await uploadImageAsset(logoData,logoFile&&logoFile.name||'sponsor-logo');
@@ -11132,39 +11174,48 @@ async function beginStripeCheckout(){
     var result={};
     var contentType=response.headers.get('content-type')||'';
     if(contentType.toLowerCase().includes('application/json'))result=await response.json();
-    if(!response.ok||!result.url)throw new Error(result.error||'Checkout could not be started');
+     if(!response.ok||!result.url)throw new Error(result.error||'Reservation could not be started');
+     pending.orderId=result.orderId;
+     sessionStorage.setItem('bmi_pending_checkout',JSON.stringify(pending));
     if(checkoutWindow&&!checkoutWindow.closed)checkoutWindow.location.replace(result.url);
     else window.top.location.assign(result.url);
   }catch(error){
     if(checkoutWindow&&!checkoutWindow.closed)checkoutWindow.close();
-    button.disabled=false;button.textContent='Continue to secure checkout';
-    toast(error&&error.message?error.message:'Could not open secure checkout');
+     button.disabled=false;button.textContent='Reserve this spot';
+     toast(error&&error.message?error.message:'Could not open secure reservation');
   }
 }
-async function finalizePaidPurchase(order,pending){
+async function finalizeReservation(order,pending){
   await hydratePublicCampaigns();
   var listing=DB.listings.find(function(entry){return entry.id===order.campaignId});
   if(!listing)return;
-  var now=Date.now(),price=order.amountCents/100,subId='BMI-'+String(order.id).toUpperCase().slice(0,6);
+   var now=Date.now(),price=order.amountCents/100,subId='BMI-'+String(order.id).toUpperCase().slice(0,6);
   CUR=listing;
   claimSlot=order.spotIndex;
-  if(!listing.termLocked){listing.termLocked=true;listing.termLockedAt=now}
-  if(pctOf(listing)>=100&&!listing.fundedAt){listing.fundedAt=now;listing.status='funded';listing.promisedDeliveryAt=now+deliveryDaysOf(listing)*86400000}
-  logAct('<b>'+pending.brand+'</b> bought a spot on '+listing.owner+'&rsquo;s <b>'+LBLL(listing)+'</b> — '+money(price)+' charged today');
+   listing.claims[order.spotIndex]=Object.assign(listing.claims[order.spotIndex]||{},{
+     brand:pending.brand,mail:pending.mail,link:pending.link||'',amt:price,fee:0,
+     purchasedAt:now,orderStatus:order.status,subId:subId,stripeOrderId:order.id,
+     itemId:listing.id,ts:now
+   });
+   if(order.status==='funded'&&!listing.fundedAt){listing.fundedAt=now;listing.status='funded';listing.promisedDeliveryAt=now+deliveryDaysOf(listing)*86400000}
+   logAct('<b>'+pending.brand+'</b> reserved a spot on '+listing.owner+'&rsquo;s <b>'+LBLL(listing)+'</b> — no charge until the listing fully funds');
   store.set('bmi_db4',DB);
-  trackEvent('spot_purchase_completed',spotAnalyticsData(order.spotIndex,price));
+   trackEvent('spot_reserved',spotAnalyticsData(order.spotIndex,price));
   drawItemMap();refreshItemCards();
   document.getElementById('modalBg').classList.add('on');
   document.getElementById('mStep1').style.display='none';
   document.getElementById('mStep3').style.display='';
-  document.getElementById('mSubId').textContent=subId;
+   document.getElementById('mSubId').textContent=subId;
+   document.getElementById('mSubId').dataset.orderId=order.id;
   document.getElementById('mSubMail').textContent=pending.mail;
+   var confirmation=document.querySelector('#mStep3 .finetext');
+   if(confirmation)confirmation.textContent=order.status==='funded'?'The listing fully funded and your saved card was charged. Track fulfillment and check-ins any time from Track order.':'Your spot is reserved. Your saved card has not been charged. Track funding and fulfillment any time from Track order.';
 }
 async function resumeStripeCheckout(){
   var params=new URLSearchParams(location.search);
   if(params.get('checkout')==='cancelled'){
     history.replaceState(null,'',location.pathname+location.hash);
-    toast('Checkout cancelled. Your card was not charged.');
+     toast('Reservation cancelled. Your card was not charged.');
     return;
   }
   var sessionId=params.get('session_id');
@@ -11174,12 +11225,12 @@ async function resumeStripeCheckout(){
     if(!pending)throw new Error('Checkout details are no longer available');
     var response=await fetch('/api/checkout/sessions/'+encodeURIComponent(sessionId));
     var order=await response.json();
-    if(!response.ok||order.status!=='paid')throw new Error('Payment is still being confirmed');
+     if(!response.ok||!['reserved','funded','payment_failed'].includes(order.status))throw new Error('Your reservation is still being confirmed');
     sessionStorage.removeItem('bmi_pending_checkout');
     history.replaceState(null,'',location.pathname+location.hash);
-    await finalizePaidPurchase(order,pending);
+     await finalizeReservation(order,pending);
   }catch(error){
-    toast(error&&error.message?error.message:'Could not confirm payment');
+     toast(error&&error.message?error.message:'Could not confirm reservation');
   }
 }
 document.getElementById('mCopyId').onclick=function(){
@@ -11189,6 +11240,11 @@ document.getElementById('mCopyId').onclick=function(){
   else done();
 };
 document.getElementById('mDone').onclick=closeBuyModal;
+document.getElementById('mCancelReservation').onclick=function(){
+  var id=document.getElementById('mSubId').dataset.orderId;
+  if(id)cancelReservation(id);
+  else toast('Open this reservation from the same browser to cancel it');
+};
 var SITE_URL='brandmyitem.com';
 function openShare(photo,checkinId){
   var caption='I got my '+LBLL(CUR)+' paid for by brands on '+SITE_URL+' \ud83c\udf89 #ad';
@@ -11317,7 +11373,7 @@ function initHomeFeatureBento(){
     if(dayNum)dayNum.textContent=String(day);
     if(dayUnit)dayUnit.textContent=day===1?'day':'days';
     ticks.forEach(function(tick,index){tick.classList.toggle('on',phase>=2&&phase<4&&index<day)});
-    if(dayNote)dayNote.textContent=phase===3?'Not funded by day 60. Refunds initiated.':(phase===4?'':(phase>=1?'3 of 5 spots purchased':''));
+    if(dayNote)dayNote.textContent=phase===3?'Not funded by day 60. Never charged.':(phase===4?'':(phase>=1?'3 of 5 spots reserved':''));
   });
   var items=[
     {name:'MacBook Pro 14\"',price:1599,parts:[224,224,224,224,224,224,224,224,224,223],img:'bento/cutout-macbook.png',n:10,type:'macbook'},

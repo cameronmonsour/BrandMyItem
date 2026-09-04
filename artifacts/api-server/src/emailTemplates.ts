@@ -1,0 +1,77 @@
+export type TransactionalEmail = {
+  to: string;
+  subject: string;
+  text: string;
+  html: string;
+};
+
+function wrap(title: string, body: string): string {
+  return `<div style="font-family:Arial,sans-serif;line-height:1.5;color:#1d1d1f"><h1>${title}</h1><p>${body}</p><p>BrandMyItem</p></div>`;
+}
+
+export function reservationConfirmationEmail(input: {
+  email: string;
+  reservationId: string;
+  campaignTitle: string;
+  amountCents: number;
+}): TransactionalEmail {
+  const amount = `$${(input.amountCents / 100).toFixed(2)}`;
+  return {
+    to: input.email,
+    subject: `Your BrandMyItem reservation is confirmed`,
+    text: `Your spot on ${input.campaignTitle} is reserved. Reservation ID: ${input.reservationId}. Your card has not been charged. If every spot is reserved and the listing funds, your saved card will be charged ${amount} off-session.`,
+    html: wrap(
+      "Reservation confirmed",
+      `Your spot on ${input.campaignTitle} is reserved. Your card has not been charged. If the listing fully funds, the saved card will be charged ${amount} off-session. Reservation ID: ${input.reservationId}.`,
+    ),
+  };
+}
+
+export function paymentDeclinedEmail(input: {
+  email: string;
+  reservationId: string;
+  updateCardUrl: string;
+}): TransactionalEmail {
+  return {
+    to: input.email,
+    subject: `Action needed for your BrandMyItem reservation`,
+    text: `We could not charge the saved card for reservation ${input.reservationId}. No new charge was made. Update your card within 48 hours: ${input.updateCardUrl}`,
+    html: wrap(
+      "Card update needed",
+      `We could not charge the saved card for reservation ${input.reservationId}. No new charge was made. Update your card within 48 hours: <a href="${input.updateCardUrl}">Update card</a>.`,
+    ),
+  };
+}
+
+export function reservationReleaseEmail(input: {
+  email: string;
+  reservationId: string;
+  campaignTitle: string;
+}): TransactionalEmail {
+  return {
+    to: input.email,
+    subject: `Your BrandMyItem reservation was released`,
+    text: `The ${input.campaignTitle} listing did not fully fund within 60 days. Reservation ${input.reservationId} was released. Your card was never charged.`,
+    html: wrap(
+      "Reservation released",
+      `The ${input.campaignTitle} listing did not fully fund within 60 days. Your reservation was released and your card was never charged.`,
+    ),
+  };
+}
+
+export function fundingConfirmationEmail(input: {
+  email: string;
+  reservationId: string;
+  campaignTitle: string;
+  amountCents: number;
+}): TransactionalEmail {
+  return {
+    to: input.email,
+    subject: `Your BrandMyItem reservation funded`,
+    text: `The ${input.campaignTitle} listing fully funded. Your saved card was charged $${(input.amountCents / 100).toFixed(2)} for reservation ${input.reservationId}.`,
+    html: wrap(
+      "Listing funded",
+      `The ${input.campaignTitle} listing fully funded. Your saved card was charged $${(input.amountCents / 100).toFixed(2)} for reservation ${input.reservationId}.`,
+    ),
+  };
+}

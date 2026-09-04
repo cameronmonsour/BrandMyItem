@@ -67,9 +67,15 @@ export const RegisterCampaignResponse = zod.object({
   "destinationUrl": zod.string().nullish(),
   "logoObjectPath": zod.string().nullish(),
   "amountCents": zod.int(),
-  "purchasedAt": zod.coerce.date()
+  "reservedAt": zod.coerce.date(),
+  "status": zod.enum(['reserved', 'funding', 'payment_failed', 'funded'])
 }),zod.null()])),
   "active": zod.boolean(),
+  "lifecycleStatus": zod.enum(['live', 'funding', 'funded', 'purchased', 'branded', 'shipped', 'active', 'complete', 'expired']),
+  "expiresAt": zod.coerce.date().nullish(),
+  "fundedAt": zod.coerce.date().nullish(),
+  "relistCount": zod.int(),
+  "relistEligible": zod.boolean(),
   "createdAt": zod.coerce.date()
 })
 
@@ -91,9 +97,15 @@ export const ListCampaignsResponseItem = zod.object({
   "destinationUrl": zod.string().nullish(),
   "logoObjectPath": zod.string().nullish(),
   "amountCents": zod.int(),
-  "purchasedAt": zod.coerce.date()
+  "reservedAt": zod.coerce.date(),
+  "status": zod.enum(['reserved', 'funding', 'payment_failed', 'funded'])
 }),zod.null()])),
   "active": zod.boolean(),
+  "lifecycleStatus": zod.enum(['live', 'funding', 'funded', 'purchased', 'branded', 'shipped', 'active', 'complete', 'expired']),
+  "expiresAt": zod.coerce.date().nullish(),
+  "fundedAt": zod.coerce.date().nullish(),
+  "relistCount": zod.int(),
+  "relistEligible": zod.boolean(),
   "createdAt": zod.coerce.date()
 })
 export const ListCampaignsResponse = zod.array(ListCampaignsResponseItem)
@@ -142,7 +154,7 @@ export const GetStorageObjectResponse = zod.unknown()
 
 
 /**
- * @summary Create a Stripe Checkout session for one campaign placement
+ * @summary Create a Stripe SetupIntent reservation session for one campaign placement
  */
 export const createPlacementCheckoutBodyCampaignIdMax = 100;
 
@@ -181,7 +193,7 @@ export const CreatePlacementCheckoutResponse = zod.object({
 
 /**
  * Requires the HttpOnly checkout capability cookie issued when the checkout reservation is created. The session ID alone is not authorization.
- * @summary Verify an authorized Stripe Checkout session
+ * @summary Verify an authorized Stripe reservation session
  */
 
 
@@ -195,8 +207,42 @@ export const GetPlacementCheckoutResponse = zod.object({
   "campaignId": zod.string(),
   "spotIndex": zod.int(),
   "amountCents": zod.int(),
-  "status": zod.enum(['pending', 'paid', 'expired', 'refunding', 'refunded'])
+  "status": zod.enum(['pending', 'reserved', 'funding', 'payment_failed', 'funded', 'cancelled', 'released', 'expired'])
 })
+
+
+/**
+ * @summary Cancel a placement reservation before funding
+ */
+export const CancelPlacementReservationParams = zod.object({
+  "orderId": zod.coerce.string()
+})
+
+export const CancelPlacementReservationResponse = zod.unknown()
+
+
+/**
+ * @summary Open a SetupIntent session to replace a declined funding card
+ */
+export const UpdateReservationCardParams = zod.object({
+  "orderId": zod.coerce.string()
+})
+
+export const UpdateReservationCardResponse = zod.object({
+  "url": zod.url(),
+  "orderId": zod.string(),
+  "sessionId": zod.string()
+})
+
+
+/**
+ * @summary Relist an eligible expired campaign once
+ */
+export const RelistCampaignParams = zod.object({
+  "campaignId": zod.coerce.string()
+})
+
+export const RelistCampaignResponse = zod.unknown()
 
 
 /**
@@ -227,7 +273,7 @@ export const GetTrackingResponse = zod.object({
   "email": zod.string(),
   "destinationUrl": zod.string().nullish(),
   "logoObjectPath": zod.string().nullish(),
-  "status": zod.enum(['pending', 'paid', 'expired', 'refunding', 'refunded']),
+  "status": zod.enum(['pending', 'reserved', 'funding', 'payment_failed', 'funded', 'cancelled', 'released', 'expired']),
   "createdAt": zod.coerce.date()
 }))
 }))

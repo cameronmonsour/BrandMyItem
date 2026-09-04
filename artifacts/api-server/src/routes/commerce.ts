@@ -25,11 +25,12 @@ import {
 } from "../lib/accessControl";
 import {
   checkoutIdempotencyKey,
-  checkoutTransition,
-  isMissingCheckoutSessionError,
-  type CheckoutSnapshot,
 } from "../paymentTransitions";
 import { verifyImageObject } from "../lib/objectStorage";
+import {
+  attemptCampaignFunding,
+  relistCampaign,
+} from "../paymentFunding";
 
 const router: IRouter = Router();
 const TRACKING_LINK_TTL_MS = 15 * 60 * 1000;
@@ -46,7 +47,8 @@ function publicClaim(order: typeof placementOrdersTable.$inferSelect) {
     destinationUrl: order.destinationUrl,
     logoObjectPath: order.logoObjectPath,
     amountCents: order.amountCents,
-    purchasedAt: order.updatedAt,
+    reservedAt: order.reservedAt ?? order.updatedAt,
+    status: order.status,
   };
 }
 
@@ -61,7 +63,7 @@ async function publicCampaigns(
         .where(
           and(
             inArray(placementOrdersTable.campaignId, ids),
-            eq(placementOrdersTable.status, "paid"),
+            inArray(placementOrdersTable.status, ["reserved", "funding", "payment_failed", "funded"]),
           ),
         )
     : [];
@@ -84,7 +86,16 @@ async function publicCampaigns(
       ownerAccessTokenHash: _ownerAccessTokenHash,
       ...publicCampaign
     } = campaign;
-    return { ...publicCampaign, claims };
+    const reservedCount = claims.filter(Boolean).length;
+    return {
+      ...publicCampaign,
+      claims,
+      relistCount: campaign.relistCount,
+      relistEligible:
+        campaign.lifecycleStatus === "expired" &&
+        campaign.relistCount < 1 &&
+        reservedCount >= Math.ceil(campaign.pricesCents.length / 2),
+    };
   });
 }
 
@@ -133,6 +144,7 @@ router.post("/campaigns", async (req, res): Promise<void> => {
         ownerTermsVersion: input.ownerAssent.termsVersion,
         ownerContentVersion: input.ownerAssent.contentVersion,
         ownerCheckinVersion: input.ownerAssent.checkinVersion,
+        expiresAt: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
         w9Required: input.pricesCents.reduce((sum, cents) => sum + cents, 0) >= 200000,
         w9Status:
           input.pricesCents.reduce((sum, cents) => sum + cents, 0) >= 200000
@@ -310,11 +322,61 @@ router.get("/tracking", async (req, res): Promise<void> => {
   );
 });
 
+type SetupSessionSnapshot = {
+  id: string;
+  status: string;
+  url?: string | null;
+  customer?: string | null;
+  setup_intent?: string | null;
+};
+
+type SetupIntentSnapshot = {
+  id: string;
+  status: string;
+  customer?: string | null;
+  payment_method?: string | null;
+};
+
+async function reserveFromSetupSession(
+  order: typeof placementOrdersTable.$inferSelect,
+  session: SetupSessionSnapshot,
+): Promise<typeof placementOrdersTable.$inferSelect> {
+  if (session.status !== "complete" || !session.setup_intent) return order;
+  const setupIntent = await stripeRequest<SetupIntentSnapshot>(
+    `/v1/setup_intents/${encodeURIComponent(session.setup_intent)}`,
+  );
+  if (setupIntent.status !== "succeeded" || !setupIntent.payment_method) {
+    return order;
+  }
+  const [reserved] = await db
+    .update(placementOrdersTable)
+    .set({
+      status: "reserved",
+      stripeSetupIntentId: setupIntent.id,
+      stripeCustomerId: session.customer ?? setupIntent.customer ?? null,
+      stripePaymentMethodId: setupIntent.payment_method,
+      reservedAt: new Date(),
+      updatedAt: new Date(),
+    })
+    .where(
+      and(
+        eq(placementOrdersTable.id, order.id),
+        inArray(placementOrdersTable.status, ["pending", "payment_failed"]),
+      ),
+    )
+    .returning();
+  const result = reserved ?? order;
+  if (result.status === "reserved") {
+    await attemptCampaignFunding(result.campaignId);
+  }
+  return result;
+}
+
 router.post("/checkout/sessions", async (req, res): Promise<void> => {
   res.setHeader("Cache-Control", "no-store");
   const parsed = CreatePlacementCheckoutBody.safeParse(req.body);
   if (!parsed.success) {
-    res.status(400).json({ error: "Invalid checkout details" });
+    res.status(400).json({ error: "Invalid reservation details" });
     return;
   }
   const input = parsed.data;
@@ -325,24 +387,17 @@ router.post("/checkout/sessions", async (req, res): Promise<void> => {
   const [campaign] = await db
     .select()
     .from(campaignsTable)
-    .where(
-      and(
-        eq(campaignsTable.id, input.campaignId),
-        eq(campaignsTable.active, true),
-      ),
-    )
+    .where(and(eq(campaignsTable.id, input.campaignId), eq(campaignsTable.active, true)))
     .limit(1);
-  if (!campaign) {
+  if (!campaign || campaign.lifecycleStatus === "expired") {
     res.status(404).json({ error: "Campaign is not available" });
     return;
   }
-
   const amountCents = campaign.pricesCents[input.spotIndex];
   if (!Number.isInteger(amountCents) || amountCents < 100) {
     res.status(400).json({ error: "Placement is not available" });
     return;
   }
-
   const [existing] = await db
     .select()
     .from(placementOrdersTable)
@@ -353,97 +408,18 @@ router.post("/checkout/sessions", async (req, res): Promise<void> => {
       ),
     )
     .limit(1);
-  if (["paid", "refunding", "refunded"].includes(existing?.status ?? "")) {
-    res.status(409).json({ error: "Placement has already been purchased" });
+  if (
+    existing &&
+    ["reserved", "funding", "funded", "payment_failed"].includes(existing.status)
+  ) {
+    res.status(409).json({ error: "Placement is already reserved" });
     return;
   }
-
   const orderId = existing?.id ?? randomUUID();
-  let checkoutAccessTokenHash: string;
-  if (existing?.status === "pending") {
-    const checkoutAccessToken = readAccessToken(req, "checkout", existing.id);
-    if (
-      !accessTokenMatches(
-        existing.checkoutAccessTokenHash,
-        checkoutAccessToken,
-      ) ||
-      existing.email.trim().toLowerCase() !== input.email.trim().toLowerCase()
-    ) {
-      res.status(409).json({ error: "Checkout is already in progress" });
-      return;
-    }
-    checkoutAccessTokenHash = existing.checkoutAccessTokenHash as string;
-    setAccessCookie(res, "checkout", existing.id, checkoutAccessToken as string);
-  } else {
-    const checkoutAccessToken = createAccessToken();
-    checkoutAccessTokenHash = hashAccessToken(checkoutAccessToken);
-    setAccessCookie(res, "checkout", orderId, checkoutAccessToken);
-  }
-  let previousExpiredSessionId =
-    existing?.status === "expired"
-      ? existing.stripeCheckoutSessionId
-      : null;
-  if (existing?.status === "pending" && existing.stripeCheckoutSessionId) {
-    let previousSession:
-      | (CheckoutSnapshot & { id: string; url: string | null })
-      | null = null;
-    try {
-      previousSession = await stripeRequest<
-        CheckoutSnapshot & { id: string; url: string | null }
-      >(
-        `/v1/checkout/sessions/${encodeURIComponent(existing.stripeCheckoutSessionId)}`,
-      );
-    } catch (error) {
-      if (!isMissingCheckoutSessionError(error)) throw error;
-      previousExpiredSessionId = existing.stripeCheckoutSessionId;
-    }
-    if (previousSession) {
-      const transition = checkoutTransition(existing.status, previousSession);
-      if (transition?.status === "paid") {
-        await db
-          .update(placementOrdersTable)
-          .set({
-            status: "paid",
-            stripePaymentIntentId: transition.paymentIntentId,
-            updatedAt: new Date(),
-          })
-          .where(
-            and(
-              eq(placementOrdersTable.id, existing.id),
-              eq(placementOrdersTable.status, "pending"),
-            ),
-          );
-        res.status(409).json({ error: "Placement has already been purchased" });
-        return;
-      }
-      if (transition?.status !== "expired") {
-        if (previousSession.url) {
-          res.status(200).json(
-            CreatePlacementCheckoutResponse.parse({
-              url: previousSession.url,
-              orderId,
-              sessionId: previousSession.id,
-            }),
-          );
-        } else {
-          res.status(409).json({
-            error: "Checkout payment is still processing",
-            orderId,
-            sessionId: previousSession.id,
-          });
-        }
-        return;
-      }
-    }
-  }
-
-  const idempotencyKey =
-    existing?.status === "pending" && !existing.stripeCheckoutSessionId
-      ? existing.stripeCheckoutIdempotencyKey
-      : checkoutIdempotencyKey(orderId, previousExpiredSessionId);
-  if (!idempotencyKey) {
-    throw new Error("Pending checkout is missing its idempotency key");
-  }
+  const checkoutAccessToken = createAccessToken();
+  const checkoutAccessTokenHash = hashAccessToken(checkoutAccessToken);
+  const idempotencyKey = checkoutIdempotencyKey(orderId);
+  setAccessCookie(res, "checkout", orderId, checkoutAccessToken);
   const reservationValues = {
     campaignId: campaign.id,
     spotIndex: input.spotIndex,
@@ -463,21 +439,19 @@ router.post("/checkout/sessions", async (req, res): Promise<void> => {
     updatedAt: new Date(),
   };
   if (existing) {
-    if (existing.status !== "pending" || existing.stripeCheckoutSessionId) {
-      const claimed = await db
-        .update(placementOrdersTable)
-        .set(reservationValues)
-        .where(
-          and(
-            eq(placementOrdersTable.id, orderId),
-            eq(placementOrdersTable.status, existing.status),
-          ),
-        )
-        .returning({ id: placementOrdersTable.id });
-      if (claimed.length === 0) {
-        res.status(409).json({ error: "Checkout is already in progress" });
-        return;
-      }
+    const claimed = await db
+      .update(placementOrdersTable)
+      .set(reservationValues)
+      .where(
+        and(
+          eq(placementOrdersTable.id, orderId),
+          inArray(placementOrdersTable.status, ["cancelled", "released", "expired"]),
+        ),
+      )
+      .returning({ id: placementOrdersTable.id });
+    if (!claimed.length) {
+      res.status(409).json({ error: "Placement is already reserved" });
+      return;
     }
   } else {
     const inserted = await db
@@ -485,39 +459,29 @@ router.post("/checkout/sessions", async (req, res): Promise<void> => {
       .values({ id: orderId, ...reservationValues })
       .onConflictDoNothing()
       .returning({ id: placementOrdersTable.id });
-    if (inserted.length === 0) {
-      res.status(409).json({ error: "Checkout is already in progress" });
+    if (!inserted.length) {
+      res.status(409).json({ error: "Placement is already reserved" });
       return;
     }
   }
-
   const forwardedProto = req.get("x-forwarded-proto")?.split(",")[0];
   const origin = `${forwardedProto ?? req.protocol}://${req.get("host")}`;
   const form = new URLSearchParams({
-    mode: "payment",
-    customer_email: input.email,
-    "line_items[0][quantity]": "1",
-    "line_items[0][price_data][currency]": "usd",
-    "line_items[0][price_data][unit_amount]": String(amountCents),
-    "line_items[0][price_data][product_data][name]": `${campaign.title} — Placement ${input.spotIndex + 1}`,
-    "line_items[0][price_data][product_data][description]":
-      "BrandMyItem sponsored placement service",
-    "metadata[orderId]": orderId,
+    mode: "setup",
+    customer_creation: "always",
+    "payment_method_types[0]": "card",
+    "metadata[reservationId]": orderId,
     "metadata[campaignId]": campaign.id,
     "metadata[spotIndex]": String(input.spotIndex),
-    "payment_intent_data[metadata][orderId]": orderId,
-    "payment_intent_data[metadata][campaignId]": campaign.id,
-    "payment_intent_data[metadata][spotIndex]": String(input.spotIndex),
+    "setup_intent_data[metadata][reservationId]": orderId,
     success_url: `${origin}/?checkout=success&session_id={CHECKOUT_SESSION_ID}#item/${encodeURIComponent(campaign.id)}`,
     cancel_url: `${origin}/?checkout=cancelled#item/${encodeURIComponent(campaign.id)}`,
-    expires_at: String(Math.floor(Date.now() / 1000) + 30 * 60),
   });
   const session = await stripeRequest<{ id: string; url: string | null }>(
     "/v1/checkout/sessions",
     { method: "POST", body: form, idempotencyKey },
   );
-  if (!session.url) throw new Error("Stripe did not return a checkout URL");
-
+  if (!session.url) throw new Error("Stripe did not return a reservation URL");
   await db
     .update(placementOrdersTable)
     .set({ stripeCheckoutSessionId: session.id, updatedAt: new Date() })
@@ -528,7 +492,6 @@ router.post("/checkout/sessions", async (req, res): Promise<void> => {
         eq(placementOrdersTable.stripeCheckoutIdempotencyKey, idempotencyKey),
       ),
     );
-
   res.status(201).json(
     CreatePlacementCheckoutResponse.parse({
       url: session.url,
@@ -542,57 +505,128 @@ router.get("/checkout/sessions/:sessionId", async (req, res): Promise<void> => {
   res.setHeader("Cache-Control", "no-store");
   const params = GetPlacementCheckoutParams.safeParse(req.params);
   if (!params.success) {
-    res.status(400).json({ error: "Invalid checkout session" });
+    res.status(400).json({ error: "Invalid reservation session" });
     return;
   }
   const [order] = await db
     .select()
     .from(placementOrdersTable)
-    .where(
-      eq(placementOrdersTable.stripeCheckoutSessionId, params.data.sessionId),
-    )
+    .where(eq(placementOrdersTable.stripeCheckoutSessionId, params.data.sessionId))
     .limit(1);
   if (!order) {
-    res.status(404).json({ error: "Checkout session not found" });
+    res.status(404).json({ error: "Reservation session not found" });
     return;
   }
   const checkoutAccessToken = readAccessToken(req, "checkout", order.id);
   if (!accessTokenMatches(order.checkoutAccessTokenHash, checkoutAccessToken)) {
-    res.status(404).json({ error: "Checkout session not found" });
+    res.status(404).json({ error: "Reservation session not found" });
     return;
   }
-  const session = await stripeRequest<CheckoutSnapshot>(
+  const session = await stripeRequest<SetupSessionSnapshot>(
     `/v1/checkout/sessions/${encodeURIComponent(params.data.sessionId)}`,
   );
-  const transition = checkoutTransition(order.status, session);
-  if (transition) {
-    order.status = transition.status;
-    if (transition.status === "paid") {
-      order.stripePaymentIntentId = transition.paymentIntentId;
-    }
-    await db
-      .update(placementOrdersTable)
-      .set({
-        status: transition.status,
-        stripePaymentIntentId: order.stripePaymentIntentId,
-        updatedAt: new Date(),
-      })
-      .where(
-        and(
-          eq(placementOrdersTable.id, order.id),
-          eq(placementOrdersTable.status, "pending"),
-        ),
-      );
-  }
+  const reserved = await reserveFromSetupSession(order, session);
   res.json(
     GetPlacementCheckoutResponse.parse({
-      id: order.id,
-      campaignId: order.campaignId,
-      spotIndex: order.spotIndex,
-      amountCents: order.amountCents,
-      status: order.status,
+      id: reserved.id,
+      campaignId: reserved.campaignId,
+      spotIndex: reserved.spotIndex,
+      amountCents: reserved.amountCents,
+      status: reserved.status,
     }),
   );
+});
+
+router.post("/checkout/reservations/:orderId/update-card", async (req, res): Promise<void> => {
+  const orderId = String(req.params.orderId);
+  const [order] = await db
+    .select()
+    .from(placementOrdersTable)
+    .where(eq(placementOrdersTable.id, orderId))
+    .limit(1);
+  const token = readAccessToken(req, "checkout", orderId);
+  if (!order || !accessTokenMatches(order.checkoutAccessTokenHash, token)) {
+    res.status(404).json({ error: "Reservation not found" });
+    return;
+  }
+  if (
+    order.status !== "payment_failed" ||
+    !order.paymentFailureExpiresAt ||
+    order.paymentFailureExpiresAt <= new Date()
+  ) {
+    res.status(409).json({ error: "This reservation does not need a card update." });
+    return;
+  }
+  const forwardedProto = req.get("x-forwarded-proto")?.split(",")[0];
+  const origin = `${forwardedProto ?? req.protocol}://${req.get("host")}`;
+  const idempotencyKey = `brandmyitem-reservation-${order.id}-card-update-${order.paymentAttempt}`;
+  const form = new URLSearchParams({
+    mode: "setup",
+    customer: order.stripeCustomerId || "",
+    "payment_method_types[0]": "card",
+    "metadata[reservationId]": order.id,
+    "setup_intent_data[metadata][reservationId]": order.id,
+    success_url: `${origin}/?checkout=success&session_id={CHECKOUT_SESSION_ID}#item/${encodeURIComponent(order.campaignId)}`,
+    cancel_url: `${origin}/?checkout=cancelled#item/${encodeURIComponent(order.campaignId)}`,
+  });
+  const session = await stripeRequest<{ id: string; url: string | null }>(
+    "/v1/checkout/sessions",
+    { method: "POST", body: form, idempotencyKey },
+  );
+  if (!session.url) throw new Error("Stripe did not return a card update URL");
+  await db
+    .update(placementOrdersTable)
+    .set({ stripeCheckoutSessionId: session.id, updatedAt: new Date() })
+    .where(eq(placementOrdersTable.id, order.id));
+  res.json({ url: session.url, orderId: order.id, sessionId: session.id });
+});
+
+router.post("/checkout/reservations/:orderId/cancel", async (req, res): Promise<void> => {
+  const orderId = String(req.params.orderId);
+  const [order] = await db
+    .select()
+    .from(placementOrdersTable)
+    .where(eq(placementOrdersTable.id, orderId))
+    .limit(1);
+  const token = readAccessToken(req, "checkout", orderId);
+  if (!order || !accessTokenMatches(order.checkoutAccessTokenHash, token)) {
+    res.status(404).json({ error: "Reservation not found" });
+    return;
+  }
+  if (["funded", "funding"].includes(order.status)) {
+    res.status(409).json({ error: "Funded reservations cannot be cancelled here" });
+    return;
+  }
+  await db
+    .update(placementOrdersTable)
+    .set({ status: "cancelled", updatedAt: new Date() })
+    .where(
+      and(
+        eq(placementOrdersTable.id, orderId),
+        inArray(placementOrdersTable.status, ["pending", "reserved", "payment_failed"]),
+      ),
+    );
+  res.json({ id: orderId, status: "cancelled", message: "Reservation cancelled. You were never charged." });
+});
+
+router.post("/campaigns/:campaignId/relist", async (req, res): Promise<void> => {
+  const campaignId = String(req.params.campaignId);
+  const token = readAccessToken(req, "campaign", campaignId);
+  const [campaign] = await db
+    .select()
+    .from(campaignsTable)
+    .where(eq(campaignsTable.id, campaignId))
+    .limit(1);
+  if (!campaign || !accessTokenMatches(campaign.ownerAccessTokenHash, token)) {
+    res.status(404).json({ error: "Campaign not found" });
+    return;
+  }
+  const relisted = await relistCampaign(campaignId);
+  if (!relisted) {
+    res.status(409).json({ error: "This campaign is not eligible for its one relist." });
+    return;
+  }
+  res.json({ campaignId, status: "live", relistDays: 30 });
 });
 
 export default router;

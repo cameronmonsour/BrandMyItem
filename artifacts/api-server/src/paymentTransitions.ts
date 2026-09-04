@@ -5,7 +5,29 @@ export type CheckoutSnapshot = {
 };
 
 export type PlacementStatus =
-  "pending" | "paid" | "expired" | "refunding" | "refunded";
+  | "pending"
+  | "reserved"
+  | "funding"
+  | "payment_failed"
+  | "funded"
+  | "cancelled"
+  | "released"
+  | "expired";
+
+export function fundingChargeIdempotencyKey(
+  reservationId: string,
+  attempt = 0,
+): string {
+  return `brandmyitem-reservation-${reservationId}-charge-${attempt}`;
+}
+
+export function paymentFailureExpiresAt(now: Date): Date {
+  return new Date(now.getTime() + 48 * 60 * 60 * 1000);
+}
+
+export function paymentRetryAt(now: Date): Date {
+  return new Date(now.getTime() + 6 * 60 * 60 * 1000);
+}
 
 export function checkoutTransition(
   currentStatus: string,
