@@ -32,6 +32,9 @@ import {
   relistCampaign,
 } from "../paymentFunding";
 import { isSafeCampaignPresentation } from "../lib/campaignPresentation";
+import { sendTransactionalEmail } from "../emailDelivery";
+import { trackingMagicLinkEmail } from "../emailTemplates";
+import { logger } from "../lib/logger";
 
 const router: IRouter = Router();
 const TRACKING_LINK_TTL_MS = 15 * 60 * 1000;
@@ -183,13 +186,33 @@ router.post("/tracking/magic-link", async (req, res): Promise<void> => {
     if (link.used || link.expiresAt <= Date.now()) trackingMagicLinks.delete(hash);
   }
   const token = createAccessToken();
-  trackingMagicLinks.set(hashAccessToken(token), {
+  const tokenHash = hashAccessToken(token);
+  trackingMagicLinks.set(tokenHash, {
     email,
     expiresAt: Date.now() + TRACKING_LINK_TTL_MS,
     used: false,
   });
-  // Email delivery belongs behind this boundary. Never return tracking data
-  // or reveal whether the address is present in the marketplace.
+
+  try {
+    const publicAppUrl =
+      process.env.BRANDMYITEM_PUBLIC_URL ??
+      `${req.get("x-forwarded-proto")?.split(",")[0].trim() || req.protocol}://${req.get("host")}`;
+    const trackingUrl = new URL("/", publicAppUrl);
+    trackingUrl.searchParams.set("tracking_token", token);
+
+    await sendTransactionalEmail(
+      trackingMagicLinkEmail({
+        email,
+        trackingUrl: trackingUrl.toString(),
+      }),
+    );
+  } catch (error) {
+    trackingMagicLinks.delete(tokenHash);
+    logger.warn({ err: error }, "Tracking magic link delivery failed");
+  }
+
+  // Always return the same response. Do not reveal whether the address is
+  // present in the marketplace or whether delivery succeeded.
   res.status(202).json({
     message:
       "If that email is linked to an item, a one-time tracking link is on its way.",

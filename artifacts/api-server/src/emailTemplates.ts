@@ -75,3 +75,18 @@ export function fundingConfirmationEmail(input: {
     ),
   };
 }
+
+export function trackingMagicLinkEmail(input: {
+  email: string;
+  trackingUrl: string;
+}): TransactionalEmail {
+  return {
+    to: input.email,
+    subject: "Your BrandMyItem tracking link",
+    text: `Use this one-time link to view your BrandMyItem tracking details. It expires in 15 minutes: ${input.trackingUrl}`,
+    html: wrap(
+      "Your tracking link",
+      `Use this one-time link to view your BrandMyItem tracking details. It expires in 15 minutes: <a href="${input.trackingUrl}">View tracking</a>.`,
+    ),
+  };
+}

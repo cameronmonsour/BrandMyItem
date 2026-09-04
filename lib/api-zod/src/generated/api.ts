@@ -281,7 +281,7 @@ export const GetTrackingResponse = zod.object({
 
 
 /**
- * Always returns the same generic response so email addresses cannot be enumerated.
+ * Sends a 15-minute, one-time link through the configured transactional email provider. Always returns the same generic response so email addresses and provider delivery failures cannot be enumerated.
  * @summary Email a one-time tracking link
  */
 export const requestTrackingMagicLinkBodyEmailMax = 320;

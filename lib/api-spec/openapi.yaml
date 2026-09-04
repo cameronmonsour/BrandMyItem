@@ -238,7 +238,7 @@ paths:
       operationId: requestTrackingMagicLink
       tags: [tracking]
       summary: Email a one-time tracking link
-      description: Always returns the same generic response so email addresses cannot be enumerated.
+      description: Sends a 15-minute, one-time link through the configured transactional email provider. Always returns the same generic response so email addresses and provider delivery failures cannot be enumerated.
       requestBody:
         required: true
         content:

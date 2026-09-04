@@ -7,12 +7,13 @@
     "dev": "export NODE_ENV=development && pnpm run build && pnpm run start",
     "build": "node ./build.mjs",
     "start": "node --enable-source-maps ./dist/index.mjs",
-    "test": "node --test --experimental-strip-types src/paymentTransitions.test.ts src/lib/accessControl.test.ts src/lib/imageSecurity.test.ts src/routes/commerce.test.ts",
+    "test": "node --test --experimental-strip-types src/paymentTransitions.test.ts src/lib/accessControl.test.ts src/lib/imageSecurity.test.ts src/routes/commerce.test.ts src/emailTemplates.test.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
     "@workspace/api-zod": "workspace:*",
     "@workspace/db": "workspace:*",
+    "@replit/connectors-sdk": "^0.4.1",
     "@google-cloud/storage": "^7.18.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
