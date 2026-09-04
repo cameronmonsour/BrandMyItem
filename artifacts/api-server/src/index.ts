@@ -2,6 +2,7 @@ import app from "./app.ts";
 import { ensureCommerceSchema } from "./commerceSchema.ts";
 import { logger } from "./lib/logger.ts";
 import { startPaymentReconciliation } from "./paymentReconciliation.ts";
+import { getConfiguredStripeMode } from "./stripeClient.ts";
 
 const rawPort = process.env["PORT"];
 
@@ -18,6 +19,7 @@ if (Number.isNaN(port) || port <= 0) {
 }
 
 async function start(): Promise<void> {
+  logger.info(`Stripe mode: ${getConfiguredStripeMode()}`);
   await ensureCommerceSchema();
   app.listen(port, (err) => {
     if (err) {
