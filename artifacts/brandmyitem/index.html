@@ -10992,6 +10992,11 @@ async function beginStripeCheckout(){
   if(CUR.claims[claimSlot]){toast('That spot just sold');closeBuyModal();return}
   if(isDemoListing(CUR)){toast('This is an example campaign and is not accepting payments.');return}
   var button=document.getElementById('mNext'),link=document.getElementById('mLink').value.trim();
+  var checkoutWindow=window.open('about:blank','_blank');
+  if(checkoutWindow){
+    checkoutWindow.opener=null;
+    checkoutWindow.document.title='Opening secure checkout…';
+  }
   button.disabled=true;button.textContent='Opening Stripe…';
   var pending={campaignId:CUR.id,spotIndex:claimSlot,brand:brand,mail:mail,link:link};
   try{
@@ -11005,8 +11010,10 @@ async function beginStripeCheckout(){
     });
     var result=await response.json();
     if(!response.ok||!result.url)throw new Error(result.error||'Checkout could not be started');
-    location.assign(result.url);
+    if(checkoutWindow&&!checkoutWindow.closed)checkoutWindow.location.replace(result.url);
+    else window.top.location.assign(result.url);
   }catch(error){
+    if(checkoutWindow&&!checkoutWindow.closed)checkoutWindow.close();
     button.disabled=false;button.textContent='Continue to secure checkout';
     toast(error&&error.message?error.message:'Could not open secure checkout');
   }

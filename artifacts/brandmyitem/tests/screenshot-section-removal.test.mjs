@@ -274,7 +274,9 @@ test('launch marketplace hides seeded demos while preserving the homepage tracke
 
 test('placement purchases use Stripe and only finalize after paid verification', () => {
   assert.match(html, /fetch\('\/api\/checkout\/sessions'/);
-  assert.match(html, /location\.assign\(result\.url\)/);
+  assert.match(html, /window\.open\('about:blank','_blank'\)/);
+  assert.match(html, /checkoutWindow\.location\.replace\(result\.url\)/);
+  assert.match(html, /window\.top\.location\.assign\(result\.url\)/);
   assert.match(html, /fetch\('\/api\/checkout\/sessions\/'\+encodeURIComponent\(sessionId\)\)/);
   assert.match(html, /if\(!response\.ok\|\|order\.status!=='paid'\)/);
   assert.match(html, /finalizePaidPurchase\(order,pending\)/);
