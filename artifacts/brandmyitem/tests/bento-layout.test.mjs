@@ -122,6 +122,7 @@ test('the Next proof uses the supplied phone photo and the same flight animation
   assert.match(html, /<figure><img class="fb-photo-frame" src="bento\/checkin-cycle-4\.webp" alt=""><figcaption>Next<\/figcaption><\/figure>/);
   assert.match(html, /\.fb-proof figure:nth-child\(-n\+4\)>img\{opacity:0;transition:opacity \.12s linear\}/);
   assert.match(html, /\.fb-checkin\[data-phase="3"\] \.fb-proof figure:nth-child\(4\)>img,[^{]*\{opacity:1;transition-delay:2\.36s\}/);
+  assert.match(html, /\.fb-proof-flight\{position:absolute;left:var\(--flight-x,0px\);top:var\(--flight-y,0px\);width:var\(--flight-w,72px\);height:calc\(var\(--flight-w,72px\) \* \.75\);aspect-ratio:4\/3/);
   assert.match(html, /\.fb-checkin\[data-phase="3"\] \.fb-proof-flight:nth-child\(4\)\{animation:fbProofFly \.72s var\(--fb-ease\) 1\.74s both\}/);
   assert.match(html, /proofTargets=qa\('\.fb-proof figure:nth-child\(-n\+4\)>img'\)/);
   assert.match(html, /runTile\('\.fb-checkin',\[\[0,0\],\[\.04,1\],\[\.30,2\],\[\.34,3\],\[\.74,4\],\[\.96,0\]\]\)/);
