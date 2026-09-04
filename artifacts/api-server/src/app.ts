@@ -41,7 +41,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/tracking", rateLimit("tracking", 30, 15 * 60 * 1000));
 app.use("/api/tracking/magic-link", rateLimit("tracking-link", 5, 15 * 60 * 1000));
 app.use("/api/campaign-drafts", rateLimit("campaign-drafts", 10, 15 * 60 * 1000));
-app.use("/api/sponsor-reservation-drafts", rateLimit("sponsor-reservation-drafts", 10, 15 * 60 * 1000));
+// Count only new reservation attempts. Capability-protected upload, finalize,
+// and release calls are part of one attempt and must not consume the budget.
+app.post("/api/sponsor-reservation-drafts", rateLimit("sponsor-reservation-drafts", 10, 15 * 60 * 1000));
 app.use("/api/operator/campaigns/:campaignId/placement-orders/:placementOrderId/proofs", rateLimit("operator-proof-uploads", 30, 15 * 60 * 1000));
 app.use("/api/operator/campaigns/:campaignId/proofs", rateLimit("operator-proof-submissions", 30, 15 * 60 * 1000));
 app.use("/api/campaigns/:campaignId/checkins/photo", rateLimit("campaign-checkin-uploads", 30, 15 * 60 * 1000));

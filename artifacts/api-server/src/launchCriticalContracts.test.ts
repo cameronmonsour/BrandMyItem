@@ -50,6 +50,19 @@ test("anonymous endpoint limiter is deterministic per caller and does not share 
   assert.equal(runLimiter(limiter, "198.51.100.11").calledNext, true);
 });
 
+test("reservation rate limiting counts draft creation, not capability-protected steps", async () => {
+  const app = await source("./app.ts");
+
+  assert.match(
+    app,
+    /app\.post\("\/api\/sponsor-reservation-drafts", rateLimit\("sponsor-reservation-drafts", 10,/,
+  );
+  assert.doesNotMatch(
+    app,
+    /app\.use\("\/api\/sponsor-reservation-drafts", rateLimit/,
+  );
+});
+
 test("campaign publication keeps the $2,000 W-9 and social-context gate", async () => {
   const commerce = await source("./routes/commerce.ts");
 

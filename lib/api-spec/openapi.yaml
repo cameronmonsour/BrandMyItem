@@ -20,6 +20,8 @@ tags:
     description: Durable image upload and serving
   - name: fulfillment
     description: Private fulfillment, proof, shipment, and check-in operations
+  - name: contact
+    description: Customer support contact operations
 paths:
   /healthz:
     get:
@@ -34,6 +36,37 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /contact:
+    post:
+      operationId: sendContactMessage
+      tags: [contact]
+      summary: Send a customer support message to BrandMyItem support
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ContactMessageInput" }
+      responses:
+        "202":
+          description: Message accepted for delivery
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ContactMessageReceipt" }
+        "400": { description: Invalid contact message }
+        "502": { description: Support email delivery unavailable }
+  /health:
+    get:
+      operationId: getHealth
+      tags: [health]
+      summary: Public integration health
+      description: Returns service status and configured integration modes without exposing credentials.
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IntegrationHealth"
   /campaigns:
     post:
       operationId: registerCampaign
@@ -177,14 +210,27 @@ paths:
           application/json:
             schema: { $ref: "#/components/schemas/SponsorLogoUploadRequest" }
       responses:
-        "201":
+        "200":
           description: Single-use logo upload intent and signed URL
           content:
             application/json:
               schema: { $ref: "#/components/schemas/SponsorLogoUploadIntent" }
-        "400": { description: Upload metadata is not allowed }
+        "400": { description: Logo must be an SVG or PDF no larger than 20 MB }
         "404": { description: Draft not found or not authorized }
         "409": { description: Draft expired or unavailable }
+  /sponsor-reservation-drafts/{draftId}:
+    delete:
+      operationId: deleteSponsorReservationDraft
+      tags: [checkout]
+      summary: Release an authorized unconsumed placement reservation draft
+      parameters: [{ $ref: "#/components/parameters/ReservationDraftId" }]
+      responses:
+        "204":
+          description: Reservation draft deleted and spot released
+        "404":
+          description: Draft not found or not authorized
+        "409":
+          description: Draft has already been consumed
   /sponsor-reservation-drafts/{draftId}/logo/{intentId}/finalize:
     post:
       operationId: finalizeSponsorReservationDraftLogoUpload
@@ -606,6 +652,29 @@ components:
           type: string
       required:
         - status
+    ContactMessageInput:
+      type: object
+      additionalProperties: false
+      required: [name, email, subject, message]
+      properties:
+        name: { type: string, minLength: 1, maxLength: 120 }
+        email: { type: string, format: email, maxLength: 320 }
+        subject: { type: string, minLength: 1, maxLength: 160 }
+        message: { type: string, minLength: 1, maxLength: 5000 }
+    ContactMessageReceipt:
+      type: object
+      additionalProperties: false
+      required: [accepted]
+      properties:
+        accepted: { type: boolean, const: true }
+    IntegrationHealth:
+      type: object
+      additionalProperties: false
+      required: [ok, stripeMode, resend]
+      properties:
+        ok: { type: boolean, const: true }
+        stripeMode: { type: string, enum: [test, live] }
+        resend: { type: boolean }
     CampaignInput:
       type: object
       required: [id, itemType, title, ownerName, ownerEmail, pricesCents, ownerAssent, presentation]

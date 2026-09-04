@@ -16,6 +16,7 @@
 - [Fee disclosure placement](fee-disclosure-placement.md) — disclose the 40% amount only in FAQ answers; elsewhere use neutral all-in purchase-total language.
 - [Scanner coordinate source](scanner-coordinate-source.md) — locked surfaces must use campaign-image dimensions; bento cutout coordinates do not transfer.
 - [Stripe connector boundary](stripe-connector-boundary.md) — use the connector proxy; this connection does not expose raw Stripe or webhook secrets.
+- [Stripe mode verification](stripe-mode-verification.md) — infer test/live from a safe connector response, never from missing environment keys.
 - [Campaign financial immutability](campaign-financial-immutability.md) — public campaign updates must never rewrite spot prices or identity after creation.
 - [Surface-based campaign pricing](surface-based-campaign-pricing.md) — placements with the same visible area must share the same whole-dollar price tier.
 - [Example campaign labeling](example-campaign-labeling.md) — locked demo cards use a neutral Example badge at top right, separate from status.

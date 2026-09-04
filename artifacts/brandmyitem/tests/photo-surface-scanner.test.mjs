@@ -27,7 +27,7 @@ test('photo placement migration includes the surface scanner geometry', () => {
 test('iPhone placements fill the usable back panel below the camera', () => {
   assert.match(
     html,
-    /iphone:\{size:\[952,1275\],surface:\[230,400,492,720\],cols:2,source:'campaign\/product-iphone\.png'\}/,
+    /iphone:\{size:\[952,1275\],surface:\[230,400,492,720\],cols:2,source:'campaign\/product-iphone\.webp'\}/,
   );
   assert.match(html, /iphone:\{x0:0\.242,x1:0\.758,y0:0\.314,y1:0\.878,cols:2\}/);
   assert.doesNotMatch(html, /iphone:\{size:\[952,1275\],surface:\[381,625,190,421\]/);
@@ -64,7 +64,7 @@ test('headphones always use two full-width polygon placements', () => {
 });
 
 test('headphone builder includes right and left product faces', () => {
-  assert.match(html, /var PRODUCT_ANGLE_PHOTOS=\{\s*headphones:\[\s*\['Right','campaign\/product-headphones\.png'\],\s*\['Left','campaign\/product-headphones-left\.png'\]/);
+  assert.match(html, /var PRODUCT_ANGLE_PHOTOS=\{\s*headphones:\[\s*\['Right','campaign\/product-headphones\.webp'\],\s*\['Left','campaign\/product-headphones-left\.webp'\]/);
   assert.match(html, /CU\.angles=\(PRODUCT_ANGLE_PHOTOS\[t\]\|\|\[\['Front',ITEM_PHOTOS\[t\]\]\]\)/);
   assert.match(html, /CU\.img=CU\.angleImgs\[i\]/);
   assert.match(html, /sideButton\.onclick=function\(\)\{cuShowAngle\(i\)\}/);
@@ -83,7 +83,7 @@ test('headphone builder includes right and left product faces', () => {
 test('golf bag builder includes back, left, and right product faces', () => {
   assert.match(
     html,
-    /golfbag:\[\s*\['Front','campaign\/product-golfbag\.png'\],\s*\['Back','campaign\/product-golfbag-back\.png'\],\s*\['Left','campaign\/product-golfbag-left\.png'\],\s*\['Right','campaign\/product-golfbag-right\.png'\]\s*\]/,
+    /golfbag:\[\s*\['Front','campaign\/product-golfbag\.webp'\],\s*\['Back','campaign\/product-golfbag-back\.webp'\],\s*\['Left','campaign\/product-golfbag-left\.webp'\],\s*\['Right','campaign\/product-golfbag-right\.webp'\]\s*\]/,
   );
   assert.match(html, /id="cuSideTools" role="group" aria-label="Edit item side"/);
 });
@@ -91,49 +91,49 @@ test('golf bag builder includes back, left, and right product faces', () => {
 test('Stanley builder keeps the original image as Front and adds the supplied Back view', () => {
   assert.match(
     html,
-    /bottle:\[\s*\['Front','campaign\/product-bottle\.png'\],\s*\['Back','campaign\/product-bottle-back\.png'\]\s*\]/,
+    /bottle:\[\s*\['Front','campaign\/product-bottle\.webp'\],\s*\['Back','campaign\/product-bottle-back\.webp'\]\s*\]/,
   );
 });
 
 test('Rimowa builder keeps the original image as Front and adds Back, Left, and Right views', () => {
   assert.match(
     html,
-    /case:\[\s*\['Front','campaign\/product-case\.png'\],\s*\['Back','campaign\/product-case-back\.png'\],\s*\['Left','campaign\/product-case-left\.png'\],\s*\['Right','campaign\/product-case-right\.png'\]\s*\]/,
+    /case:\[\s*\['Front','campaign\/product-case\.webp'\],\s*\['Back','campaign\/product-case-back\.webp'\],\s*\['Left','campaign\/product-case-left\.webp'\],\s*\['Right','campaign\/product-case-right\.webp'\]\s*\]/,
   );
 });
 
 test('suit builder keeps the original image as Front and adds Back, Left, and Right views', () => {
   assert.match(
     html,
-    /suit:\[\s*\['Front','campaign\/product-suit\.png\?v=locked-tuxedo-20260904'\],\s*\['Back','campaign\/product-suit-right\.png'\],\s*\['Left','campaign\/product-suit-back\.png'\],\s*\['Right','campaign\/product-suit-left\.png'\]\s*\]/,
+    /suit:\[\s*\['Front','campaign\/product-suit\.webp\?v=locked-tuxedo-20260904'\],\s*\['Back','campaign\/product-suit-right\.webp'\],\s*\['Left','campaign\/product-suit-back\.webp'\],\s*\['Right','campaign\/product-suit-left\.webp'\]\s*\]/,
   );
 });
 
 test('cooler builder keeps the original image as Front and provides Back, Top, and duplicated side views', () => {
   assert.match(
     html,
-    /cooler:\[\s*\['Front','campaign\/product-cooler\.png'\],\s*\['Back','campaign\/product-cooler-back\.png'\],\s*\['Top','campaign\/product-cooler-top\.png'\],\s*\['Left','campaign\/product-cooler-side\.png'\],\s*\['Right','campaign\/product-cooler-side\.png'\]\s*\]/,
+    /cooler:\[\s*\['Front','campaign\/product-cooler\.webp'\],\s*\['Back','campaign\/product-cooler-back\.webp'\],\s*\['Top','campaign\/product-cooler-top\.webp'\],\s*\['Left','campaign\/product-cooler-side\.webp'\],\s*\['Right','campaign\/product-cooler-side\.webp'\]\s*\]/,
   );
 });
 
 test('backpack builder keeps the original image as Front and maps the supplied views Left, Right, and Back', () => {
   assert.match(
     html,
-    /backpack:\[\s*\['Front','campaign\/product-backpack\.png\?v=tumi-search-147053'\],\s*\['Left','campaign\/product-backpack-left\.png'\],\s*\['Right','campaign\/product-backpack-right\.png'\],\s*\['Back','campaign\/product-backpack-back\.png'\]\s*\]/,
+    /backpack:\[\s*\['Front','campaign\/product-backpack\.webp\?v=tumi-search-147053'\],\s*\['Left','campaign\/product-backpack-left\.webp'\],\s*\['Right','campaign\/product-backpack-right\.webp'\],\s*\['Back','campaign\/product-backpack-back\.webp'\]\s*\]/,
   );
 });
 
 test('pickleball paddle builder keeps the original image as Front and adds the supplied Back view', () => {
   assert.match(
     html,
-    /paddle:\[\s*\['Front','campaign\/product-paddle\.png'\],\s*\['Back','campaign\/product-paddle-back\.png'\]\s*\]/,
+    /paddle:\[\s*\['Front','campaign\/product-paddle\.webp'\],\s*\['Back','campaign\/product-paddle-back\.webp'\]\s*\]/,
   );
 });
 
 test('Louis Vuitton bag builder keeps the original image as Front, reuses the narrow side view for Left and Right, and uses the wide view for Back', () => {
   assert.match(
     html,
-    /weekender:\[\s*\['Front','campaign\/product-weekender\.png'\],\s*\['Left','campaign\/product-weekender-side\.png'\],\s*\['Right','campaign\/product-weekender-side\.png'\],\s*\['Back','campaign\/product-weekender-back\.png'\]\s*\]/,
+    /weekender:\[\s*\['Front','campaign\/product-weekender\.webp'\],\s*\['Left','campaign\/product-weekender-side\.webp'\],\s*\['Right','campaign\/product-weekender-side\.webp'\],\s*\['Back','campaign\/product-weekender-back\.webp'\]\s*\]/,
   );
 });
 

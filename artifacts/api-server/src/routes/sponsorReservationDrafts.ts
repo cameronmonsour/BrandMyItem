@@ -2,13 +2,16 @@ import { randomUUID } from "node:crypto";
 import { campaignsTable, db, placementOrdersTable, sponsorReservationDraftsTable, uploadIntentsTable } from "@workspace/db";
 import {
   CreateSponsorReservationDraftBody, CreateSponsorReservationDraftResponse,
+  DeleteSponsorReservationDraftParams,
   FinalizeSponsorReservationDraftLogoUploadParams, FinalizeSponsorReservationDraftLogoUploadResponse,
   RequestSponsorReservationDraftLogoUploadBody, RequestSponsorReservationDraftLogoUploadParams,
   RequestSponsorReservationDraftLogoUploadResponse,
 } from "@workspace/api-zod";
 import { and, eq, gt, lte } from "drizzle-orm";
 import { Router, type IRouter, type Request } from "express";
-import { accessTokenMatches, createAccessToken, hashAccessToken, readAccessToken, setAccessCookie } from "../lib/accessControl.ts";
+import {
+  accessCookieName, accessTokenMatches, createAccessToken, hashAccessToken, readAccessToken, setAccessCookie,
+} from "../lib/accessControl.ts";
 import { createImageUploadURL, objectPathFromUploadUrl, verifyUploadIntentObject } from "../lib/objectStorage.ts";
 import { hashUploadCapability, toPublicUploadIntent, uploadCapabilityMatches } from "../lib/uploadIntents.ts";
 
@@ -68,11 +71,52 @@ router.post("/sponsor-reservation-drafts", async (req, res): Promise<void> => {
   }));
 });
 
+router.delete("/sponsor-reservation-drafts/:draftId", async (req, res): Promise<void> => {
+  const params = DeleteSponsorReservationDraftParams.safeParse(req.params);
+  if (!params.success) { res.status(400).json({ error: "Invalid reservation draft" }); return; }
+  const authorized = await authorizedDraft(req, params.data.draftId);
+  if (!authorized) { res.status(404).json({ error: "Reservation draft not found" }); return; }
+
+  const { draft } = authorized;
+  if (draft.status !== "issued") {
+    res.status(409).json({ error: "Reservation draft has already been consumed" });
+    return;
+  }
+  const deleted = await db.transaction(async (tx) => {
+    const released = await tx.delete(sponsorReservationDraftsTable).where(and(
+      eq(sponsorReservationDraftsTable.id, draft.id),
+      eq(sponsorReservationDraftsTable.status, "issued"),
+      eq(sponsorReservationDraftsTable.statusVersion, draft.statusVersion),
+      eq(sponsorReservationDraftsTable.capabilityDigest, draft.capabilityDigest),
+    )).returning({ id: sponsorReservationDraftsTable.id });
+    if (!released.length) return released;
+    await tx.delete(uploadIntentsTable).where(and(
+      eq(uploadIntentsTable.resourceType, "sponsor_reservation_draft"),
+      eq(uploadIntentsTable.resourceId, draft.id),
+      eq(uploadIntentsTable.status, "issued"),
+    ));
+    return released;
+  });
+  if (!deleted.length) {
+    res.status(409).json({ error: "Reservation draft has already been consumed" });
+    return;
+  }
+  res.clearCookie(accessCookieName("sponsor_reservation", draft.id), { path: "/api" });
+  res.sendStatus(204);
+});
+
 router.post("/sponsor-reservation-drafts/:draftId/logo/request-url", async (req, res): Promise<void> => {
   const params = RequestSponsorReservationDraftLogoUploadParams.safeParse(req.params);
   const body = RequestSponsorReservationDraftLogoUploadBody.safeParse(req.body);
-  if (!params.success || !body.success || !LOGO_TYPES.has(body.data.contentType) || body.data.size > LOGO_MAX_BYTES) {
-    res.status(400).json({ error: "Logo metadata is not permitted" }); return;
+  if (!params.success) { res.status(400).json({ error: "Invalid reservation draft" }); return; }
+  if (!LOGO_TYPES.has(req.body?.contentType)) {
+    res.status(400).json({ error: "Please upload your logo as an SVG or PDF." }); return;
+  }
+  if (typeof req.body?.size === "number" && req.body.size > LOGO_MAX_BYTES) {
+    res.status(400).json({ error: "Logo must be 20 MB or smaller." }); return;
+  }
+  if (!body.success) {
+    res.status(400).json({ error: "Invalid logo upload metadata" }); return;
   }
   const authorized = await authorizedDraft(req, params.data.draftId);
   const now = new Date();
@@ -90,7 +134,7 @@ router.post("/sponsor-reservation-drafts/:draftId/logo/request-url", async (req,
     expectedFileName: body.data.name, expiresAt: draft.expiresAt,
   }).returning();
   res.setHeader("Cache-Control", "no-store");
-  res.status(201).json(RequestSponsorReservationDraftLogoUploadResponse.parse({
+  res.status(200).json(RequestSponsorReservationDraftLogoUploadResponse.parse({
     ...toPublicUploadIntent(intent as Parameters<typeof toPublicUploadIntent>[0]), uploadURL,
   }));
 });

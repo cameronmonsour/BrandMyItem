@@ -28,9 +28,12 @@ import type {
   CheckinPhotoUploadIntent,
   CheckinPhotoUploadRequest,
   CheckinSubmissionInput,
+  ContactMessageInput,
+  ContactMessageReceipt,
   Delivery,
   GetTrackingParams,
   HealthStatus,
+  IntegrationHealth,
   MakeGoodInput,
   PlacementCheckoutInput,
   PlacementCheckoutSession,
@@ -148,6 +151,164 @@ export function useHealthCheck<TData = Awaited<ReturnType<typeof healthCheck>>, 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getHealthCheckQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getSendContactMessageUrl = () => {
+
+
+
+
+  return `/api/contact`
+}
+
+/**
+ * @summary Send a customer support message to BrandMyItem support
+ */
+export const sendContactMessage = async (contactMessageInput: ContactMessageInput, options?: Parameters<typeof customFetch>[1]): Promise<ContactMessageReceipt> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Array.isArray(h)) return Object.fromEntries(h);
+    return h;
+  };
+return customFetch<ContactMessageReceipt>(getSendContactMessageUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(contactMessageInput)
+  }
+);}
+
+
+
+
+
+export const getSendContactMessageMutationKey = () => ['sendContactMessage'] as const;
+
+export const getSendContactMessageMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof sendContactMessage>>, TError,SendContactMessageMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof sendContactMessage>>, TError,SendContactMessageMutationVariables, TContext> => {
+
+const mutationKey = getSendContactMessageMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof sendContactMessage>>, SendContactMessageMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  sendContactMessage(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SendContactMessageMutationResult = NonNullable<Awaited<ReturnType<typeof sendContactMessage>>>
+    export type SendContactMessageMutationBody = BodyType<ContactMessageInput>
+    export type SendContactMessageMutationError = ErrorType<void>
+    export type SendContactMessageMutationVariables = {data: BodyType<ContactMessageInput>}
+
+    /**
+ * @summary Send a customer support message to BrandMyItem support
+ */
+export const useSendContactMessage = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof sendContactMessage>>, TError,SendContactMessageMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof sendContactMessage>>,
+        TError,
+        SendContactMessageMutationVariables,
+        TContext
+      > => {
+      return useMutation(getSendContactMessageMutationOptions(options));
+    }
+
+export const getGetHealthUrl = () => {
+
+
+
+
+  return `/api/health`
+}
+
+/**
+ * Returns service status and configured integration modes without exposing credentials.
+ * @summary Public integration health
+ */
+export const getHealth = async ( options?: Parameters<typeof customFetch>[1]): Promise<IntegrationHealth> => {
+
+  return customFetch<IntegrationHealth>(getGetHealthUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetHealthQueryKey = () => {
+    return [
+    `/api/health`
+    ] as const;
+    }
+
+
+export const getGetHealthQueryOptions = <TData = Awaited<ReturnType<typeof getHealth>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getHealth>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetHealthQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getHealth>>> = ({ signal }) => getHealth({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getHealth>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetHealthQueryResult = NonNullable<Awaited<ReturnType<typeof getHealth>>>
+export type GetHealthQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Public integration health
+ */
+
+export function useGetHealth<TData = Awaited<ReturnType<typeof getHealth>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getHealth>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetHealthQueryOptions(options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
@@ -794,6 +955,80 @@ export const useRequestSponsorReservationDraftLogoUpload = <TError = ErrorType<v
         TContext
       > => {
       return useMutation(getRequestSponsorReservationDraftLogoUploadMutationOptions(options));
+    }
+
+export const getDeleteSponsorReservationDraftUrl = (draftId: string,) => {
+
+
+
+
+  return `/api/sponsor-reservation-drafts/${draftId}`
+}
+
+/**
+ * @summary Release an authorized unconsumed placement reservation draft
+ */
+export const deleteSponsorReservationDraft = async (draftId: string, options?: Parameters<typeof customFetch>[1]): Promise<void> => {
+
+  return customFetch<void>(getDeleteSponsorReservationDraftUrl(draftId),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+
+export const getDeleteSponsorReservationDraftMutationKey = () => ['deleteSponsorReservationDraft'] as const;
+
+export const getDeleteSponsorReservationDraftMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteSponsorReservationDraft>>, TError,DeleteSponsorReservationDraftMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteSponsorReservationDraft>>, TError,DeleteSponsorReservationDraftMutationVariables, TContext> => {
+
+const mutationKey = getDeleteSponsorReservationDraftMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteSponsorReservationDraft>>, DeleteSponsorReservationDraftMutationVariables> = (props) => {
+          const {draftId} = props ?? {};
+
+          return  deleteSponsorReservationDraft(draftId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteSponsorReservationDraftMutationResult = NonNullable<Awaited<ReturnType<typeof deleteSponsorReservationDraft>>>
+
+    export type DeleteSponsorReservationDraftMutationError = ErrorType<void>
+    export type DeleteSponsorReservationDraftMutationVariables = {draftId: string}
+
+    /**
+ * @summary Release an authorized unconsumed placement reservation draft
+ */
+export const useDeleteSponsorReservationDraft = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteSponsorReservationDraft>>, TError,DeleteSponsorReservationDraftMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteSponsorReservationDraft>>,
+        TError,
+        DeleteSponsorReservationDraftMutationVariables,
+        TContext
+      > => {
+      return useMutation(getDeleteSponsorReservationDraftMutationOptions(options));
     }
 
 export const getFinalizeSponsorReservationDraftLogoUploadUrl = (draftId: string,

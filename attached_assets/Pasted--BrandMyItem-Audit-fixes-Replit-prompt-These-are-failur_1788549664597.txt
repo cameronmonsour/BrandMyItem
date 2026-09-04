@@ -1,0 +1,120 @@
+# BrandMyItem — Audit fixes (Replit prompt)
+
+These are failures found by driving the running app in a real browser. Fix every item. Where a fix conflicts with earlier prompts, this document wins. Run the acceptance checks at the end with real HTTP calls and real browser screenshots — do not report an item as done from reading code.
+
+---
+
+## 1. Reservation flow (site cannot take a reservation)
+
+1.1 **Logo upload gate is broken.** `POST /api/sponsor-reservation-drafts/{id}/logo/request-url` returns `400 {"error":"Logo metadata is not permitted"}` for a clean, metadata-free PNG. The request body is only `{name, size, contentType}`. Find the check that produces this error and fix it so a valid file passes. Per Part D, the uploader should accept **SVG or PDF only** (max 20 MB); reject other types with the message "Please upload your logo as an SVG or PDF." Do not reject on metadata. If you strip metadata server-side, strip it silently.
+
+1.2 **Failures are silent.** When any step of the reserve flow fails (draft, logo, checkout session), show the server's error text inside the modal under the button, in red ink, and re-enable the button. Never leave the modal open with no feedback.
+
+1.3 **Draft lock has no exit.** A failed attempt leaves the spot locked ("Placement is already being reserved", 409) for ~10 minutes. On any failure after draft creation, delete the draft (`DELETE /api/sponsor-reservation-drafts/{id}`) so the spot reopens immediately. Also release the draft when the modal is cancelled or closed.
+
+1.4 **Modal survives navigation.** The reserve modal stayed open after changing routes (`#item/…` → `#home`). Close and release the draft on any hash change.
+
+1.5 **Stripe must be reachable and in test mode.** After 1.1, a complete reservation must create a Stripe Checkout Session in `mode: "setup"` (no charge) and redirect to it. Confirm the publishable/secret keys in Replit Secrets are `pk_test_` / `sk_test_` for this environment. Expose `GET /api/health` returning `{ok:true, stripeMode:"test"|"live", resend:true|false}` (no keys).
+
+---
+
+## 2. Reserve modal copy
+
+2.1 Remove the paragraph "Your logo is the handoff: once the item fully funds, the owner downloads it and produces the approved branding from your exact file. No back and forth needed." Owners never apply branding. Replace with: **"Once the listing funds, BrandMyItem produces and applies your placement before the item ships."**
+
+2.2 Fix the broken line "Branding method: custom branding method - Spot 1, Placement placement". Render as **"Spot 1 · Sticker"** (method from the catalog config for that item/surface).
+
+2.3 Assent checkbox text → **"I agree to the Terms of Use and Refund Policy. I authorize a future off-session charge of the reserved amount if this listing fully funds, and confirm I hold the rights to this mark."** Link both documents.
+
+2.4 Remove "All ad placements are estimates. Pictures and sizing are estimated." Replace with one line under the preview: **"Preview is approximate; final placement follows the sized spot."**
+
+---
+
+## 3. Locked copy that was changed
+
+3.1 Hero subhead: restore **"Brands buy sponsored ad space on the items you want."** (This is locked copy; it was altered without instruction.)
+
+---
+
+## 4. Demo listing data (stored, not config)
+
+4.1 Delete or rewrite the seeded listing `djr99kx`. If kept for screenshots, it must read: **iPhone 17 · 512GB**, campaign total **$1,441**, **6 spots**, spot prices summing exactly to $1,441, progress "0/6 reserved", "from $X" computed from the spot list. Use the new iPhone 17 render (vertical capsule camera) as `campaign/product-iphone.png`. Behind a `?demo=1` flag only; not shown on the public Live items page.
+
+4.2 Listing detail page title: "Campaign details" → **"Listing | BrandMyItem"**.
+
+4.3 Location line: one city, one university: **"Newport Beach, CA · UCLA"**. Fix the concatenation that produces "Newport Beach · California, Los Angeles, CA · United States, San Diego · California."
+
+---
+
+## 5. Owner posting flow
+
+5.1 Add the three-line acknowledgment block directly above the assent checkbox (Part C §1):
+- "The item is yours when it arrives."
+- "During your term, don't sell it, and don't remove or cover the placements. If you do, you owe the campaign total."
+- "Stolen or lost? File a police report and you're done — no penalty."
+
+5.2 Details row "Listing window — 60 days, until funded or withdrawn" → **"60 days, until funded or expired"**.
+
+5.3 Details row "Method — Adhesive sticker/decal applied by BrandMyItem" → **"Method — set by surface: sticker, patch, embroidery, or engraving. Applied by BrandMyItem."**
+
+5.4 Picker name "Quencher H2.0 FlowState Tumbler" → **"Quencher H2.0 40oz"**; clamp all picker names to one line; fixed card height so prices share a baseline.
+
+---
+
+## 6. Legal documents (`legal.html`)
+
+Add to **Terms of Use**:
+- Breach clause: "If you sell, gift, trade, or transfer the item, or intentionally remove, cover, deface, or alter any placement during the term, you owe IRLi LLC the listing's campaign total plus reasonable costs of collection. IRLi may pursue this by demand letter, small claims court, or a collection agency." (Do not use "liquidated damages.")
+- Visibility: "Placements must remain visible whenever the item is in use. A case, skin, cover, or sleeve that hides a placement while the item is in use is treated as covering it."
+- Wear: "Normal wear is not a breach. Report it through check-in and IRLi will replace or reapply at no cost."
+- Theft/loss: "If the item is stolen or lost, file a police report and upload it. The term ends and you owe nothing."
+- $2,000 gate: "Listings with a campaign total of $2,000 or more require a completed W-9 and one linked social account before publishing."
+- Brand make-good: "If a placement fails during the term for reasons attributable to the owner, IRLi will place you on a comparable item for the remaining term at no charge. If no comparable spot is available within 30 days, IRLi refunds the unserved portion of the term. This make-good is your exclusive remedy, and you agree not to initiate a chargeback for any placement covered by it."
+
+Add to **Refund Policy**: the make-good section (comparable spot first, prorated refund after 30 days, formula: spot price × months remaining ÷ term months).
+
+Add to **Check-in Policy**: what a photo must show (item in use, all placements visible), the "Report wear" option, the "Report theft or loss" option and its effect.
+
+Add to **Privacy Policy**: W-9 data (including TIN) collected for listings ≥ $2,000, stored encrypted, used only for tax reporting; police reports retained for the term plus 3 years; Stripe as processor for saved payment methods.
+
+---
+
+## 7. Pages
+
+7.1 **404 page.** Unknown paths currently return the home page with HTTP 200. Serve a real 404 (status 404) with the wordmark, "That page isn't here.", and links to Home and Live items, using the site nav and footer. Keep hash routes working.
+
+7.2 **Accessibility** (`accessibility.html`): add the statement — commitment to WCAG 2.1 AA, "Report a barrier: support@brandmyitem.com", last reviewed date.
+
+7.3 **Contact** (`contact.html`): show support@brandmyitem.com, legal@, privacy@; the form must send to support@ via Resend.
+
+---
+
+## 8. Assets and performance
+
+8.1 Add `alt` to every product image: item name plus finish (e.g., "MacBook Pro, Silver"). 66 of 70 images currently have none.
+
+8.2 Convert product PNGs to **WebP** (AVIF where the toolchain allows) at a max of **1600px** on the long side; 12 images are over 2000px. Keep PNG only where transparency at sticker edges visibly degrades.
+
+8.3 `loading="lazy"` on every image below the fold; `fetchpriority="high"` on the hero item images; explicit `width` and `height` on every `<img>`.
+
+8.4 three.js (r128) loads on every page. Load it only on the route that uses it, or remove it if the 5 canvases can be CSS.
+
+8.5 `og:image` currently points to `https://brandmyitem.com/og-default.svg`. Generate a **1200×630 PNG**, serve it from the current origin (relative URL resolved by the server), and set `og:image`, `twitter:image`, `twitter:card=summary_large_image`. SVG is not accepted by X, LinkedIn, or iMessage.
+
+---
+
+## 9. Acceptance checks (all must be executed, not inferred)
+
+- [ ] `POST /api/sponsor-reservation-drafts` then logo `request-url` with a 10 KB SVG returns 200; with a PNG returns 400 "Please upload your logo as an SVG or PDF."
+- [ ] Full reserve in the browser with Stripe test mode: modal → SVG upload → assent → "Reserve this spot" → redirect to a Stripe Checkout page in setup mode; complete with card `4242 4242 4242 4242`; return to the site with the spot showing "Reserved"; Stripe dashboard shows a SetupIntent and **no** PaymentIntent.
+- [ ] Cancel the modal mid-flow → the spot is immediately reservable again (no 409).
+- [ ] Force a server error on the logo step → red error text appears under the button; button re-enabled; draft deleted.
+- [ ] `GET /api/health` returns `stripeMode:"test"` in this environment.
+- [ ] `curl -I /any-unknown-path` returns 404.
+- [ ] `legal.html` contains all of: "small claims", "exclusive remedy", "chargeback", "police report", "visible whenever", "W-9", "make-good" (or "make good"), and zero of: "escrow" (outside the footer negation), "first sale", "liquidated", "charged at checkout".
+- [ ] Home page text contains "Brands buy sponsored ad space on the items you want." and does not contain "reserve visible spots".
+- [ ] Owner posting section contains the three acknowledgment lines above the assent checkbox.
+- [ ] No image on the home page lacks `alt`; none exceeds 1600px; every below-fold image has `loading="lazy"`.
+- [ ] `og:image` resolves to a 1200×630 PNG on the current origin (`curl -I` returns 200, `image/png`).
+- [ ] Demo listing (if kept) shows iPhone 17 · 512GB, $1,441, 6 spots, "0/6 reserved", new render; not listed on public Live items without `?demo=1`.
+- [ ] Screenshots attached at 1440 and 390: reserve modal (error state and success state), Stripe Checkout page, listing detail, owner post section with acknowledgment block, 404 page, legal page section with the new clauses.

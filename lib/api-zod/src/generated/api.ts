@@ -18,6 +18,42 @@ export const HealthCheckResponse = zod.object({
 
 
 /**
+ * @summary Send a customer support message to BrandMyItem support
+ */
+export const sendContactMessageBodyNameMax = 120;
+
+export const sendContactMessageBodyEmailMax = 320;
+
+export const sendContactMessageBodySubjectMax = 160;
+
+export const sendContactMessageBodyMessageMax = 5000;
+
+
+
+export const SendContactMessageBody = zod.object({
+  "name": zod.string().min(1).max(sendContactMessageBodyNameMax),
+  "email": zod.email().max(sendContactMessageBodyEmailMax),
+  "subject": zod.string().min(1).max(sendContactMessageBodySubjectMax),
+  "message": zod.string().min(1).max(sendContactMessageBodyMessageMax)
+})
+
+export const SendContactMessageResponse = zod.object({
+  "accepted": zod.literal(true)
+})
+
+
+/**
+ * Returns service status and configured integration modes without exposing credentials.
+ * @summary Public integration health
+ */
+export const GetHealthResponse = zod.object({
+  "ok": zod.literal(true),
+  "stripeMode": zod.enum(['test', 'live']),
+  "resend": zod.boolean()
+})
+
+
+/**
  * @summary Register a campaign and its authoritative spot prices
  */
 export const registerCampaignBodyIdMax = 100;
@@ -331,6 +367,20 @@ export const RequestSponsorReservationDraftLogoUploadResponse = zod.object({
   "expiresAt": zod.coerce.date(),
   "uploadURL": zod.url().optional()
 })
+
+
+/**
+ * @summary Release an authorized unconsumed placement reservation draft
+ */
+export const deleteSponsorReservationDraftPathDraftIdMax = 100;
+
+
+
+export const DeleteSponsorReservationDraftParams = zod.object({
+  "draftId": zod.coerce.string().min(1).max(deleteSponsorReservationDraftPathDraftIdMax)
+})
+
+export const DeleteSponsorReservationDraftResponse = zod.void()
 
 
 /**

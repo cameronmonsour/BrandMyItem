@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import path from 'path';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
@@ -27,9 +28,67 @@ if (!basePath) {
   );
 }
 
+const publicRoot = path.resolve(import.meta.dirname, 'public');
+
+function realNotFoundPage() {
+  return {
+    name: 'brandmyitem-real-404',
+    configureServer(server: {
+      middlewares: {
+        use: (
+          handler: (
+            req: { method?: string; url?: string },
+            res: {
+              statusCode: number;
+              setHeader: (name: string, value: string) => void;
+              end: (body?: string) => void;
+            },
+            next: () => void,
+          ) => void,
+        ) => void;
+      };
+    }) {
+      server.middlewares.use((req, res, next) => {
+        if (!['GET', 'HEAD'].includes(req.method || 'GET')) return next();
+        const pathname = decodeURIComponent(
+          new URL(req.url || '/', 'http://localhost').pathname,
+        );
+        if (
+          pathname === '/' ||
+          pathname === '/index.html' ||
+          pathname.startsWith('/api/') ||
+          pathname.startsWith('/@') ||
+          pathname.startsWith('/src/') ||
+          pathname.startsWith('/node_modules/') ||
+          pathname.startsWith('/__vite')
+        ) {
+          return next();
+        }
+        const candidate = path.resolve(publicRoot, `.${pathname}`);
+        if (
+          candidate.startsWith(`${publicRoot}${path.sep}`) &&
+          fs.existsSync(candidate) &&
+          fs.statSync(candidate).isFile()
+        ) {
+          return next();
+        }
+        res.statusCode = 404;
+        res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        res.setHeader('Cache-Control', 'no-store');
+        res.end(
+          req.method === 'HEAD'
+            ? undefined
+            : fs.readFileSync(path.join(publicRoot, '404.html'), 'utf8'),
+        );
+      });
+    },
+  };
+}
+
 export default defineConfig({
   base: basePath,
   plugins: [
+    realNotFoundPage(),
     react(),
     tailwindcss(),
     runtimeErrorOverlay(),

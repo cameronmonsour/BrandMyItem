@@ -5,8 +5,39 @@ export type TransactionalEmail = {
   html: string;
 };
 
+function escapeHtml(value: string): string {
+  return value.replace(/[&<>"']/g, (character) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
+  })[character] ?? character);
+}
+
 function wrap(title: string, body: string): string {
   return `<div style="font-family:Arial,sans-serif;line-height:1.5;color:#1d1d1f"><h1>${title}</h1><p>${body}</p><p>BrandMyItem</p></div>`;
+}
+
+export function contactSupportEmail(input: {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}): TransactionalEmail {
+  const name = input.name.trim();
+  const email = input.email.trim();
+  const subject = input.subject.trim();
+  const message = input.message.trim();
+  return {
+    to: "support@brandmyitem.com",
+    subject: `Contact form: ${subject}`,
+    text: `From: ${name} <${email}>\n\n${message}`,
+    html: wrap(
+      `Contact form: ${escapeHtml(subject)}`,
+      `From: ${escapeHtml(name)} &lt;${escapeHtml(email)}&gt;</p><p>${escapeHtml(message).replace(/\n/g, "<br>")}`,
+    ),
+  };
 }
 
 export function reservationConfirmationEmail(input: {

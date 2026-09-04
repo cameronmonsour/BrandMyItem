@@ -9,6 +9,45 @@ export interface HealthStatus {
   status: string;
 }
 
+export interface ContactMessageInput {
+  /**
+     * @minLength 1
+     * @maxLength 120
+     */
+  name: string;
+  /** @maxLength 320 */
+  email: string;
+  /**
+     * @minLength 1
+     * @maxLength 160
+     */
+  subject: string;
+  /**
+     * @minLength 1
+     * @maxLength 5000
+     */
+  message: string;
+}
+
+export const ContactMessageReceiptValue = {
+  accepted: true,
+} as const;
+export type ContactMessageReceipt = typeof ContactMessageReceiptValue;
+
+export type IntegrationHealthStripeMode = typeof IntegrationHealthStripeMode[keyof typeof IntegrationHealthStripeMode];
+
+
+export const IntegrationHealthStripeMode = {
+  test: 'test',
+  live: 'live',
+} as const;
+
+export interface IntegrationHealth {
+  ok: true;
+  stripeMode: IntegrationHealthStripeMode;
+  resend: boolean;
+}
+
 export interface OwnerAssent {
   accepted: true;
   termsVersion: string;

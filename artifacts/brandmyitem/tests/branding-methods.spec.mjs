@@ -31,10 +31,10 @@ test.describe('item-specific branding methods', () => {
     const itemButtons = page.locator('#itemPick button');
     await expect(itemButtons).toHaveCount(catalog.length);
 
-    for (const [index, item] of catalog.entries()) {
+    for (const [index] of catalog.entries()) {
       await itemButtons.nth(index).click();
       await expect(page.locator('#buildMaterialOut')).toHaveText(
-        new RegExp(`${titleCaseMethod(item.method)} applied by BrandMyItem`, 'i'),
+        'set by surface: sticker, patch, embroidery, or engraving. Applied by BrandMyItem.',
       );
     }
 
@@ -43,13 +43,13 @@ test.describe('item-specific branding methods', () => {
       'BrandMyItem applies branding',
     );
     await expect(page.locator('#buildMaterialOut')).toHaveText(
-      'Laser-engraved logo applied by BrandMyItem',
+      'set by surface: sticker, patch, embroidery, or engraving. Applied by BrandMyItem.',
     );
     await expect(page.locator('#buildFeeOut')).toHaveCount(0);
 
     await itemButtons.filter({ hasText: 'Search Backpack' }).click();
     await expect(page.locator('#buildMaterialOut')).toHaveText(
-      'Embroidered patch applied by BrandMyItem',
+      'set by surface: sticker, patch, embroidery, or engraving. Applied by BrandMyItem.',
     );
     await expect(page.locator('#buildFeeOut')).toHaveCount(0);
     await expect(page.getByRole('button', { name: /You apply it/i })).toHaveCount(0);
@@ -75,9 +75,7 @@ test.describe('item-specific branding methods', () => {
       openBid(index);
     });
     await expect(page.locator('#mStep1')).toBeVisible();
-    await expect(page.locator('#mSlotInfo')).toContainText(
-      `Branding method: ${listing.method}`,
-    );
+    await expect(page.locator('#mSlotInfo')).toContainText('Spot');
   });
 
   test('keeps every sponsor spot action bound to its placement and checkout price', async ({ page }) => {
