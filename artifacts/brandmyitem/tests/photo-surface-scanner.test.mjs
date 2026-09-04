@@ -67,6 +67,8 @@ test('headphone builder includes right and left product faces', () => {
   assert.match(html, /CU\.angles=\(PRODUCT_ANGLE_PHOTOS\[t\]\|\|\[\['Front',ITEM_PHOTOS\[t\]\]\]\)/);
   assert.match(html, /var photos=\(CU\.angleImgs&&CU\.angleImgs\.length\)\?CU\.angleImgs:\[CU\.img\]/);
   assert.match(html, /el\.style\.gridTemplateColumns='repeat\('\+CU\.angles\.length/);
+  assert.match(html, /var rx=\(t\.x-t\.w\/2\)\*totalW,ry=\(t\.y-t\.h\/2\)\*ih,rw=t\.w\*totalW/);
+  assert.doesNotMatch(html, /cuWriteEditorTile\(DRAG\.i,t\)/);
   assert.match(html, /split the composite editor coordinates back into each photographed face/);
 });
 
