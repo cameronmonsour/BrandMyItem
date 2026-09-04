@@ -13,7 +13,7 @@ export const CampaignLifecycleStatus = {
   live: 'live',
   funding: 'funding',
   funded: 'funded',
-  purchased: 'purchased',
+  ordered: 'ordered',
   branded: 'branded',
   shipped: 'shipped',
   active: 'active',

@@ -70,11 +70,13 @@ export async function getImageFile(objectPath: string): Promise<File | null> {
   return exists ? file : null;
 }
 
-export async function verifyImageObject(objectPath: string): Promise<boolean> {
+export async function verifyImageObject(objectPath: string, purpose?: "sponsor_logo" | "checkin_photo" | "proof" | "w9"): Promise<boolean> {
   const file = await getImageFile(objectPath);
   if (!file) return false;
   const [metadata] = await file.getMetadata();
-  const allowed = new Set([
+  const allowed = purpose === "sponsor_logo" ? new Set([
+    "image/svg+xml", "application/pdf",
+  ]) : purpose === "w9" ? new Set(["application/pdf"]) : new Set([
     "image/png",
     "image/jpeg",
     "image/webp",
@@ -83,7 +85,22 @@ export async function verifyImageObject(objectPath: string): Promise<boolean> {
   return (
     allowed.has(String(metadata.contentType || "").toLowerCase()) &&
     Number(metadata.size || 0) > 0 &&
-    Number(metadata.size || 0) <= 10_000_000
+    Number(metadata.size || 0) <= (purpose === "checkin_photo" ? 25_000_000 : purpose === "sponsor_logo" ? 20_000_000 : 10_000_000)
+  );
+}
+
+/** Verify the immutable metadata that an upload intent was issued for. */
+export async function verifyUploadIntentObject(
+  objectPath: string,
+  expectedMimeType: string,
+  expectedSizeBytes: number,
+): Promise<boolean> {
+  const file = await getImageFile(objectPath);
+  if (!file) return false;
+  const [metadata] = await file.getMetadata();
+  return (
+    String(metadata.contentType || "").toLowerCase() === expectedMimeType.toLowerCase() &&
+    Number(metadata.size || 0) === expectedSizeBytes
   );
 }
 

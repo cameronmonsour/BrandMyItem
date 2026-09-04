@@ -18,6 +18,8 @@ tags:
     description: One-time magic-link campaign and placement tracking
   - name: storage
     description: Durable image upload and serving
+  - name: fulfillment
+    description: Private fulfillment, proof, shipment, and check-in operations
 paths:
   /healthz:
     get:
@@ -65,26 +67,144 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Campaign"
-  /storage/uploads/request-url:
+  /campaign-drafts:
     post:
-      operationId: requestUploadUrl
-      tags: [storage]
-      summary: Request a direct image upload URL
+      operationId: createCampaignDraft
+      tags: [campaigns]
+      summary: Create an unpublished, expiring campaign draft
       requestBody:
         required: true
         content:
           application/json:
-            schema:
-              $ref: "#/components/schemas/UploadUrlRequest"
+            schema: { $ref: "#/components/schemas/CampaignDraftInput" }
       responses:
-        "200":
-          description: Upload URL created
+        "201":
+          description: Draft created and owner capability cookie issued
           content:
             application/json:
-              schema:
-                $ref: "#/components/schemas/UploadUrlResponse"
-        "400":
-          description: Invalid image metadata
+              schema: { $ref: "#/components/schemas/CampaignDraft" }
+        "400": { description: Invalid draft }
+        "409": { description: Campaign ID already exists }
+        "429": { description: Too many requests }
+  /campaign-drafts/{campaignId}/w9/request-url:
+    post:
+      operationId: requestCampaignDraftW9Upload
+      tags: [campaigns, storage]
+      summary: Issue a W-9 upload intent for an authorized high-value draft
+      parameters: [{ $ref: "#/components/parameters/CampaignId" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/W9UploadRequest" }
+      responses:
+        "201":
+          description: Single-use W-9 upload intent and signed URL
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/W9UploadIntent" }
+        "400": { description: Invalid W-9 metadata or ineligible draft }
+        "404": { description: Draft not found or not authorized }
+        "429": { description: Too many requests }
+  /campaign-drafts/{campaignId}/w9/{intentId}/finalize:
+    post:
+      operationId: finalizeCampaignDraftW9Upload
+      tags: [campaigns, storage]
+      summary: Verify and finalize a W-9 upload intent once
+      parameters:
+        - $ref: "#/components/parameters/CampaignId"
+        - name: intentId
+          in: path
+          required: true
+          schema: { type: string, minLength: 1 }
+      responses:
+        "200":
+          description: W-9 finalized
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/W9UploadIntent" }
+        "400": { description: Uploaded W-9 is missing or does not match intent metadata }
+        "404": { description: Draft or intent not found or not authorized }
+        "409": { description: "Intent already finalized, consumed, or expired" }
+  /campaign-drafts/{campaignId}/publish:
+    post:
+      operationId: publishCampaignDraft
+      tags: [campaigns]
+      summary: Publish an authorized campaign draft
+      parameters: [{ $ref: "#/components/parameters/CampaignId" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PublishCampaignDraftInput" }
+      responses:
+        "200":
+          description: Published campaign
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Campaign" }
+        "400": { description: W-9 or social context is required }
+        "404": { description: Draft not found or not authorized }
+        "409": { description: "Draft expired, already published, or W-9 intent reused" }
+  /sponsor-reservation-drafts:
+    post:
+      operationId: createSponsorReservationDraft
+      tags: [checkout]
+      summary: Claim one currently open placement briefly and issue a capability cookie
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/SponsorReservationDraftInput" }
+      responses:
+        "201":
+          description: Expiring reservation draft created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SponsorReservationDraft" }
+        "404": { description: Campaign or spot is unavailable }
+        "409": { description: Spot is already being reserved }
+        "429": { description: Too many requests }
+  /sponsor-reservation-drafts/{draftId}/logo/request-url:
+    post:
+      operationId: requestSponsorReservationDraftLogoUpload
+      tags: [checkout, storage]
+      summary: Issue a capability-bound sponsor logo upload intent
+      parameters: [{ $ref: "#/components/parameters/ReservationDraftId" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/SponsorLogoUploadRequest" }
+      responses:
+        "201":
+          description: Single-use logo upload intent and signed URL
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SponsorLogoUploadIntent" }
+        "400": { description: Upload metadata is not allowed }
+        "404": { description: Draft not found or not authorized }
+        "409": { description: Draft expired or unavailable }
+  /sponsor-reservation-drafts/{draftId}/logo/{intentId}/finalize:
+    post:
+      operationId: finalizeSponsorReservationDraftLogoUpload
+      tags: [checkout, storage]
+      summary: Verify and finalize a sponsor logo upload intent once
+      parameters:
+        - $ref: "#/components/parameters/ReservationDraftId"
+        - name: intentId
+          in: path
+          required: true
+          schema: { type: string, minLength: 1 }
+      responses:
+        "200":
+          description: Logo intent finalized
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SponsorLogoUploadIntent" }
+        "400": { description: Object metadata does not match the intent }
+        "404": { description: Draft or intent not found or not authorized }
+        "409": { description: Draft or intent is expired or already used }
   /storage/objects/{objectPath}:
     get:
       operationId: getStorageObject
@@ -254,7 +374,230 @@ paths:
                 $ref: "#/components/schemas/TrackingMagicLinkResponse"
         "400":
           description: Invalid email
+        "429":
+          description: Too many requests
+  /campaigns/{campaignId}/shipping-address:
+    put:
+      operationId: saveShippingAddress
+      tags: [fulfillment]
+      summary: Save the owner's private validated US shipping address
+      parameters:
+        - $ref: "#/components/parameters/CampaignId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ShippingAddressInput"
+      responses:
+        "200":
+          description: Address saved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ShippingAddress"
+        "400": { description: Invalid or unsupported address }
+        "404": { description: Campaign not found or not authorized }
+  /campaigns/{campaignId}/proofs:
+    post:
+      operationId: submitCampaignProof
+      tags: [fulfillment]
+      summary: Approve one submitted operator proof revision
+      parameters:
+        - $ref: "#/components/parameters/CampaignId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProofApprovalInput"
+      responses:
+        "201":
+          description: Proof submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Proof"
+        "404": { description: Campaign not found or not authorized }
+        "409": { description: Submitted proof revision is no longer available }
+  /operator/campaigns/{campaignId}/placement-orders/{placementOrderId}/proofs/request-url:
+    post:
+      operationId: requestOperatorProductionProofUpload
+      tags: [fulfillment, storage]
+      summary: Issue an operator-bound production proof upload intent
+      security: [{ operatorBearer: [] }]
+      parameters:
+        - $ref: "#/components/parameters/CampaignId"
+        - $ref: "#/components/parameters/PlacementOrderId"
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/ProofUploadRequest" } } }
+      responses:
+        "201": { description: Upload intent issued, content: { application/json: { schema: { $ref: "#/components/schemas/ProofUploadIntent" } } } }
+        "401": { description: Operator authentication required }
+        "409": { description: Placement is not funded }
+  /operator/campaigns/{campaignId}/placement-orders/{placementOrderId}/proofs/{intentId}/finalize:
+    post:
+      operationId: finalizeOperatorProductionProofUpload
+      tags: [fulfillment, storage]
+      summary: Verify and finalize an operator proof upload once
+      security: [{ operatorBearer: [] }]
+      parameters:
+        - $ref: "#/components/parameters/CampaignId"
+        - $ref: "#/components/parameters/PlacementOrderId"
+        - $ref: "#/components/parameters/UploadIntentId"
+      responses:
+        "200": { description: Upload intent finalized, content: { application/json: { schema: { $ref: "#/components/schemas/ProofUploadIntent" } } } }
+        "401": { description: Operator authentication required }
+        "409": { description: Intent expired or already finalized }
+  /operator/campaigns/{campaignId}/proofs:
+    post:
+      operationId: submitOperatorCampaignProof
+      tags: [fulfillment]
+      summary: Submit a finalized proof revision for one funded placement
+      security: [{ operatorBearer: [] }]
+      parameters: [{ $ref: "#/components/parameters/CampaignId" }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/ProofSubmissionInput" } } }
+      responses:
+        "201": { description: Proof revision submitted, content: { application/json: { schema: { $ref: "#/components/schemas/Proof" } } } }
+        "401": { description: Operator authentication required }
+        "409": { description: Intent or proof revision is no longer available }
+  /campaigns/{campaignId}/checkins:
+    post:
+      operationId: submitCampaignCheckin
+      tags: [fulfillment]
+      summary: Submit an owner check-in
+      parameters:
+        - $ref: "#/components/parameters/CampaignId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CheckinSubmissionInput"
+      responses:
+        "201":
+          description: Check-in submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Checkin"
+        "409": { description: Check-in is not currently due }
+  /campaigns/{campaignId}/checkins/photo/request-url:
+    post:
+      operationId: requestCampaignCheckinPhotoUpload
+      tags: [fulfillment, storage]
+      summary: Issue an owner-bound photo upload intent for the current check-in cycle
+      parameters: [{ $ref: "#/components/parameters/CampaignId" }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/CheckinPhotoUploadRequest" } } }
+      responses:
+        "201": { description: Upload intent issued, content: { application/json: { schema: { $ref: "#/components/schemas/CheckinPhotoUploadIntent" } } } }
+        "409": { description: Check-in is not currently due }
+  /campaigns/{campaignId}/checkins/photo/{intentId}/finalize:
+    post:
+      operationId: finalizeCampaignCheckinPhotoUpload
+      tags: [fulfillment, storage]
+      summary: Verify and finalize an owner check-in photo upload once
+      parameters:
+        - $ref: "#/components/parameters/CampaignId"
+        - $ref: "#/components/parameters/UploadIntentId"
+      responses:
+        "200": { description: Upload intent finalized, content: { application/json: { schema: { $ref: "#/components/schemas/CheckinPhotoUploadIntent" } } } }
+        "409": { description: Intent expired or already finalized }
+  /campaigns/{campaignId}/make-good:
+    post:
+      operationId: selectCampaignMakeGood
+      tags: [fulfillment]
+      summary: Select a make-good after a missed check-in
+      parameters:
+        - $ref: "#/components/parameters/CampaignId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MakeGoodInput"
+      responses:
+        "200": { description: Make-good selected }
+        "409": { description: A check-in has not been missed }
+  /operator/campaigns/{campaignId}/proofs/approve:
+    post:
+      operationId: approveCampaignProof
+      tags: [fulfillment]
+      summary: Approve the current proof revision
+      security: [{ operatorBearer: [] }]
+      parameters:
+        - $ref: "#/components/parameters/CampaignId"
+      responses:
+        "200": { description: Proof approved }
+        "401": { description: Operator authentication required }
+        "409": { description: No submitted proof }
+  /operator/campaigns/{campaignId}/shipment:
+    post:
+      operationId: recordCampaignShipment
+      tags: [fulfillment]
+      summary: Record shipment after proof approval
+      security: [{ operatorBearer: [] }]
+      parameters:
+        - $ref: "#/components/parameters/CampaignId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ShipmentInput"
+      responses:
+        "200": { description: Shipment recorded }
+        "401": { description: Operator authentication required }
+        "409": { description: Proof approval or shipping address required }
+  /operator/campaigns/{campaignId}/delivery:
+    post:
+      operationId: recordCampaignDelivery
+      tags: [fulfillment]
+      summary: Record delivery and start the first owner check-in cycle
+      security: [{ operatorBearer: [] }]
+      parameters:
+        - $ref: "#/components/parameters/CampaignId"
+      responses:
+        "200":
+          description: Delivery recorded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Delivery"
+        "401": { description: Operator authentication required }
+        "409": { description: Campaign is not awaiting delivery }
 components:
+  securitySchemes:
+    operatorBearer:
+      type: http
+      scheme: bearer
+      bearerFormat: API token
+  parameters:
+    CampaignId:
+      in: path
+      name: campaignId
+      required: true
+      schema: { type: string, minLength: 1, maxLength: 100 }
+    ReservationDraftId:
+      in: path
+      name: draftId
+      required: true
+      schema: { type: string, minLength: 1, maxLength: 100 }
+    PlacementOrderId:
+      in: path
+      name: placementOrderId
+      required: true
+      schema: { type: string, minLength: 1, maxLength: 100 }
+    UploadIntentId:
+      in: path
+      name: intentId
+      required: true
+      schema: { type: string, minLength: 1 }
   schemas:
     HealthStatus:
       type: object
@@ -297,6 +640,9 @@ components:
             maximum: 10000000
         ownerAssent:
           $ref: "#/components/schemas/OwnerAssent"
+        w9ObjectPath:
+          type: string
+          pattern: "^/objects/uploads/[A-Za-z0-9-]+$"
         presentation:
           type: object
           maxProperties: 32
@@ -335,6 +681,56 @@ components:
               - status
               - mtv
           additionalProperties: true
+    CampaignDraftInput:
+      type: object
+      required: [id, itemType, title, ownerName, ownerEmail, pricesCents, ownerAssent, presentation]
+      properties:
+        id: { type: string, minLength: 1, maxLength: 100 }
+        itemType: { type: string, minLength: 1, maxLength: 50 }
+        title: { type: string, minLength: 1, maxLength: 200 }
+        ownerName: { type: string, minLength: 1, maxLength: 120 }
+        ownerEmail: { type: string, format: email, maxLength: 320 }
+        pricesCents:
+          type: array
+          minItems: 1
+          maxItems: 20
+          items: { type: integer, minimum: 100, maximum: 10000000 }
+        ownerAssent: { $ref: "#/components/schemas/OwnerAssent" }
+        presentation: { type: object, maxProperties: 32, additionalProperties: true }
+    CampaignDraft:
+      type: object
+      required: [id, status, expiresAt, w9Required]
+      properties:
+        id: { type: string }
+        status: { type: string, enum: [draft] }
+        expiresAt: { type: string, format: date-time }
+        w9Required: { type: boolean }
+    W9UploadRequest:
+      type: object
+      additionalProperties: false
+      required: [name, size, contentType]
+      properties:
+        name: { type: string, minLength: 1, maxLength: 255 }
+        size: { type: integer, minimum: 1, maximum: 10000000 }
+        contentType: { type: string, const: application/pdf }
+    W9UploadIntent:
+      type: object
+      required: [id, purpose, objectPath, expectedMimeType, expectedSizeBytes, expectedFileName, status, expiresAt]
+      properties:
+        id: { type: string }
+        purpose: { type: string, const: campaign_draft_w9 }
+        objectPath: { type: string, pattern: "^/objects/uploads/[A-Za-z0-9-]+$" }
+        expectedMimeType: { type: string, const: application/pdf }
+        expectedSizeBytes: { type: integer }
+        expectedFileName: { type: string }
+        status: { type: string, enum: [issued, finalized, consumed, revoked] }
+        expiresAt: { type: string, format: date-time }
+        uploadURL: { type: string, format: uri }
+    PublishCampaignDraftInput:
+      type: object
+      additionalProperties: false
+      properties:
+        w9IntentId: { type: string, minLength: 1 }
     Campaign:
       type: object
       required: [id, itemType, title, ownerName, pricesCents, presentation, claims, active, lifecycleStatus, relistCount, relistEligible, createdAt]
@@ -365,7 +761,7 @@ components:
           type: boolean
         lifecycleStatus:
           type: string
-          enum: [live, funding, funded, purchased, branded, shipped, active, complete, expired]
+          enum: [live, funding, funded, ordered, branded, shipped, active, complete, expired]
         expiresAt:
           type: ["string", "null"]
           format: date-time
@@ -381,7 +777,7 @@ components:
           format: date-time
     PlacementCheckoutInput:
       type: object
-      required: [campaignId, spotIndex, brandName, email, logoObjectPath, brandAssent]
+      required: [campaignId, spotIndex, reservationDraftId, logoIntentId, brandName, email, brandAssent]
       properties:
         campaignId:
           type: string
@@ -391,6 +787,8 @@ components:
           type: integer
           minimum: 0
           maximum: 19
+        reservationDraftId: { type: string, minLength: 1 }
+        logoIntentId: { type: string, minLength: 1 }
         brandName:
           type: string
           minLength: 1
@@ -402,11 +800,45 @@ components:
         destinationUrl:
           type: string
           maxLength: 2048
-        logoObjectPath:
-          type: string
-          pattern: "^/objects/uploads/[A-Za-z0-9-]+$"
         brandAssent:
           $ref: "#/components/schemas/BrandAssent"
+    SponsorReservationDraftInput:
+      type: object
+      additionalProperties: false
+      required: [campaignId, spotIndex]
+      properties:
+        campaignId: { type: string, minLength: 1, maxLength: 100 }
+        spotIndex: { type: integer, minimum: 0, maximum: 19 }
+    SponsorReservationDraft:
+      type: object
+      required: [id, campaignId, spotIndex, status, expiresAt]
+      properties:
+        id: { type: string }
+        campaignId: { type: string }
+        spotIndex: { type: integer }
+        status: { type: string, enum: [issued] }
+        expiresAt: { type: string, format: date-time }
+    SponsorLogoUploadRequest:
+      type: object
+      additionalProperties: false
+      required: [name, size, contentType]
+      properties:
+        name: { type: string, minLength: 1, maxLength: 255 }
+        size: { type: integer, minimum: 1, maximum: 20000000 }
+        contentType: { type: string, enum: [image/svg+xml, application/pdf] }
+    SponsorLogoUploadIntent:
+      type: object
+      required: [id, purpose, objectPath, expectedMimeType, expectedSizeBytes, expectedFileName, status, expiresAt]
+      properties:
+        id: { type: string }
+        purpose: { type: string, const: sponsor_reservation_draft_logo }
+        objectPath: { type: string, pattern: "^/objects/uploads/[A-Za-z0-9-]+$" }
+        expectedMimeType: { type: string, enum: [image/svg+xml, application/pdf] }
+        expectedSizeBytes: { type: integer }
+        expectedFileName: { type: string }
+        status: { type: string, enum: [issued, finalized, consumed, revoked] }
+        expiresAt: { type: string, format: date-time }
+        uploadURL: { type: string, format: uri }
     OwnerAssent:
       type: object
       required: [accepted, termsVersion, contentVersion, checkinVersion]
@@ -558,7 +990,7 @@ components:
           enum: [reserved, funding, payment_failed, funded]
     UploadUrlRequest:
       type: object
-      required: [name, size, contentType]
+      required: [name, size, contentType, purpose]
       properties:
         name:
           type: string
@@ -570,7 +1002,10 @@ components:
           maximum: 10000000
         contentType:
           type: string
-          enum: [image/png, image/jpeg, image/webp, image/gif]
+          enum: [image/png, image/jpeg, image/webp, image/gif, image/svg+xml, application/pdf]
+        purpose:
+          type: string
+          enum: [sponsor_logo, checkin_photo, proof, w9]
     UploadUrlResponse:
       type: object
       required: [uploadURL, objectPath]
@@ -582,3 +1017,126 @@ components:
           type: string
         metadata:
           $ref: "#/components/schemas/UploadUrlRequest"
+    ShippingAddressInput:
+      type: object
+      additionalProperties: false
+      required: [recipientName, line1, city, state, postalCode, country]
+      properties:
+        recipientName: { type: string, minLength: 1, maxLength: 120 }
+        line1: { type: string, minLength: 3, maxLength: 120 }
+        line2: { type: string, maxLength: 120 }
+        city: { type: string, minLength: 1, maxLength: 80 }
+        state: { type: string, pattern: "^[A-Z]{2}$" }
+        postalCode: { type: string, pattern: "^[0-9]{5}(-[0-9]{4})?$" }
+        country: { type: string, const: US }
+    ShippingAddress:
+      allOf:
+        - $ref: "#/components/schemas/ShippingAddressInput"
+        - type: object
+          required: [validatedAt]
+          properties:
+            validatedAt: { type: string, format: date-time }
+    ProofSubmissionInput:
+      type: object
+      additionalProperties: false
+      required: [placementOrderId, intentId]
+      properties:
+        placementOrderId: { type: string, minLength: 1 }
+        intentId: { type: string, minLength: 1 }
+    ProofApprovalInput:
+      type: object
+      additionalProperties: false
+      required: [placementOrderId, revision]
+      properties:
+        placementOrderId: { type: string, minLength: 1 }
+        revision: { type: integer, minimum: 1 }
+    ProofUploadRequest:
+      type: object
+      additionalProperties: false
+      required: [name, size, contentType]
+      properties:
+        name: { type: string, minLength: 1, maxLength: 255 }
+        size: { type: integer, minimum: 1, maximum: 10000000 }
+        contentType: { type: string, enum: [image/png, image/jpeg, image/webp] }
+    ProofUploadIntent:
+      type: object
+      required: [id, purpose, objectPath, expectedMimeType, expectedSizeBytes, expectedFileName, status, expiresAt]
+      properties:
+        id: { type: string }
+        purpose: { type: string, const: operator_production_proof }
+        objectPath: { type: string, pattern: "^/objects/uploads/[A-Za-z0-9-]+$" }
+        expectedMimeType: { type: string, enum: [image/png, image/jpeg, image/webp] }
+        expectedSizeBytes: { type: integer }
+        expectedFileName: { type: string }
+        status: { type: string, enum: [issued, finalized, consumed, revoked] }
+        expiresAt: { type: string, format: date-time }
+        uploadURL: { type: string, format: uri }
+    Proof:
+      type: object
+      required: [revision, objectPath, status, submittedAt]
+      properties:
+        revision: { type: integer, minimum: 1 }
+        objectPath: { type: string }
+        status: { type: string, enum: [submitted, approved, rejected] }
+        submittedAt: { type: string, format: date-time }
+        approvedAt: { type: [string, "null"], format: date-time }
+    ShipmentInput:
+      type: object
+      additionalProperties: false
+      required: [carrier, trackingNumber]
+      properties:
+        carrier: { type: string, minLength: 2, maxLength: 80 }
+        trackingNumber: { type: string, minLength: 4, maxLength: 100, pattern: "^[A-Za-z0-9 ._-]+$" }
+    Delivery:
+      type: object
+      required: [campaignId, shipmentStatus, lifecycleStatus, deliveredAt, checkinStatus, checkinDueAt]
+      properties:
+        campaignId: { type: string }
+        shipmentStatus: { type: string, enum: [delivered] }
+        lifecycleStatus: { type: string, enum: [active] }
+        deliveredAt: { type: string, format: date-time }
+        checkinStatus: { type: string, enum: [due] }
+        checkinDueAt: { type: string, format: date-time }
+    CheckinSubmissionInput:
+      type: object
+      additionalProperties: false
+      required: [note]
+      properties:
+        note: { type: string, minLength: 1, maxLength: 2000 }
+        photoIntentId: { type: string, minLength: 1 }
+    CheckinPhotoUploadRequest:
+      type: object
+      additionalProperties: false
+      required: [name, size, contentType]
+      properties:
+        name: { type: string, minLength: 1, maxLength: 255 }
+        size: { type: integer, minimum: 1, maximum: 25000000 }
+        contentType: { type: string, enum: [image/png, image/jpeg, image/webp] }
+    CheckinPhotoUploadIntent:
+      type: object
+      required: [id, purpose, objectPath, expectedMimeType, expectedSizeBytes, expectedFileName, status, expiresAt]
+      properties:
+        id: { type: string }
+        purpose: { type: string, const: owner_checkin }
+        objectPath: { type: string, pattern: "^/objects/uploads/[A-Za-z0-9-]+$" }
+        expectedMimeType: { type: string, enum: [image/png, image/jpeg, image/webp] }
+        expectedSizeBytes: { type: integer }
+        expectedFileName: { type: string }
+        status: { type: string, enum: [issued, finalized, consumed, revoked] }
+        expiresAt: { type: string, format: date-time }
+        uploadURL: { type: string, format: uri }
+    Checkin:
+      type: object
+      required: [id, campaignId, note, submittedAt]
+      properties:
+        id: { type: string }
+        campaignId: { type: string }
+        note: { type: string }
+        photoObjectPath: { type: [string, "null"] }
+        submittedAt: { type: string, format: date-time }
+    MakeGoodInput:
+      type: object
+      additionalProperties: false
+      required: [selection]
+      properties:
+        selection: { type: string, enum: [extension, credit, cancellation] }

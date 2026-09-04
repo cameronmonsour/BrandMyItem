@@ -79,7 +79,7 @@ test('dashboard activity uses the same live ticker as the homepage', () => {
   assert.match(html, /var rows=\[\],seen=\{\};/);
   assert.match(html, /if\(row&&!seen\[row\.l\.id\]&&rows\.length<8\)/);
   assert.match(html, /var brand='Your Brand Here',photo=PHO\(row\.l\),label=LBLL\(row\.l\)/);
-  assert.match(html, /var brandMark='<img src="'\+row\.c\.logo\+'" alt="Your Brand Here logo">';/);
+  assert.match(html, /var brandMark=safeImageAttr\(row\.c\.logo\)\?'<img src="'\+safeImageAttr\(row\.c\.logo\)\+'" alt="Your Brand Here logo">':'';/);
   assert.doesNotMatch(html, /var brand=\(row\.c&&row\.c\.brand\|\|'A brand'\)\.trim\(\)/);
   assert.match(html, /<span class="home-activity-static">Example activity<\/span>/);
   assert.doesNotMatch(html, /home-activity-time">/);
@@ -107,7 +107,7 @@ test('homepage examples cannot drift into or out of shared campaign data', () =>
 test('Live Items removes prelaunch tests and starts with the three locked examples', () => {
   assert.match(html, /var LIVE_CAMPAIGN_CUTOFF=Date\.UTC\(2026,8,4,0,0,0\)/);
   assert.match(html, /function removePrelaunchTestCampaigns\(\)/);
-  assert.match(html, /var all=DB\.listings\.filter\(isLaunchLiveCampaign\)/);
+  assert.match(html, /return LOCKED_LAUNCH_EXAMPLE_IDS\.indexOf\(l\.id\)>=0\|\|isLaunchLiveCampaign\(l\);/);
 });
 
 test('launch examples rotate through supplied fake sponsor logos', () => {
@@ -179,7 +179,7 @@ test('dashboard keeps compact tracker cards without a duplicate left category bo
   assert.match(html, /var AVATAR_COUNT=14;/);
   assert.doesNotMatch(html, /avatars\/avatar-1[5-8]\.png/);
   assert.match(builderHtml, /<label class="label" for="pAddress">Shipping address<\/label>/);
-  assert.match(builderHtml, /<input class="input" id="pAddress" type="text" autocomplete="street-address" placeholder="Street address, city, state, ZIP">/);
+  assert.match(builderHtml, /<input class="input" id="pAddress" type="text" autocomplete="street-address" placeholder="Street address, city, state, ZIP" aria-describedby="pAddressError">/);
   assert.doesNotMatch(builderHtml, /<textarea[^>]*id="pAddress"/);
   assert.doesNotMatch(builderHtml, /avatarPickStatus/);
   assert.doesNotMatch(builderHtml, /Memoji selected/);
@@ -243,8 +243,8 @@ test('dashboard keeps compact tracker cards without a duplicate left category bo
 });
 
 test('every homepage and Live Items campaign card keeps the locked compact hierarchy', () => {
-  const ownerRows = html.match(/<div class="who">'\+ownerAvatarHtml\(l\)\+'<span class="oname">'\+l\.owner\+'<\/span><span class="when">'\+ago\(l\.created\)\+'<\/span><span class="catic"><img src="'\+PHO\(l\)\+'" alt=""><\/span><\/div>'\+/g) || [];
-  const detailRows = html.match(/listingContextHtml\(l\)\+'<div class="iname">'\+it\.label\+'<\/div>'\+/g) || [];
+  const ownerRows = html.match(/<div class="who">'\+ownerAvatarHtml\(l\)\+'<span class="oname">'\+safeCardText\(l\.owner\)\+'<\/span><span class="when">'\+safeCardText\(ago\(l\.created\)\)\+'<\/span><span class="catic"><img src="'\+safeImageAttr\(PHO\(l\)\)\+'" alt=""><\/span><\/div>'\+/g) || [];
+  const detailRows = html.match(/listingContextHtml\(l\)\+'<div class="iname">'\+safeCardText\(it\.label\)\+'<\/div>'\+/g) || [];
 
   assert.equal(ownerRows.length, 2, 'homepage and Live Items must both keep the item icon in the owner row');
   assert.equal(detailRows.length, 2, 'homepage and Live Items must both keep context above the product title');
@@ -361,7 +361,7 @@ test('deleted campaign records stay removed from cached campaign state', () => {
   assert.match(html, /var DELETED_CAMPAIGN_IDS=\['p9ot6i4'\]/);
   assert.match(html, /remote\.listings\.filter\(function\(r\)\{return !isDeletedCampaign\(r\)&&isLaunchLiveCampaign\(r\)\}\)/);
   assert.match(html, /campaigns\.filter\(function\(campaign\)\{return !isDeletedCampaign\(campaign\)\}\)/);
-  assert.match(html, /return !isDeletedCampaign\(listing\)&&isLaunchLiveCampaign\(listing\)/);
+  assert.match(html, /async function backfillLocalCampaigns\(\)\{\s*return \[\];/);
 });
 
 test('posting requires and saves the owner shipping address', () => {

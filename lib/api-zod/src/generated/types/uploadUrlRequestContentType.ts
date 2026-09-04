@@ -14,4 +14,6 @@ export const UploadUrlRequestContentType = {
   'image/jpeg': 'image/jpeg',
   'image/webp': 'image/webp',
   'image/gif': 'image/gif',
+  'image/svg+xml': 'image/svg+xml',
+  'application/pdf': 'application/pdf',
 } as const;

@@ -3,7 +3,7 @@ import type { Request, Response } from "express";
 
 const ACCESS_COOKIE_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000;
 
-type AccessScope = "campaign" | "checkout" | "tracking";
+type AccessScope = "campaign" | "checkout" | "tracking" | "sponsor_reservation";
 
 function cookiePrefix(scope: AccessScope): string {
   return `bmi_${scope}_access_`;

@@ -3,10 +3,39 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BrandMyItem</title>
+<title>BrandMyItem | Physical advertising placements</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.svg">
 <meta name="description" content="Post the item you want as live ad inventory. Brands buy the spots at exact prices, the bar fills, your item ships new with their mark on it.">
-<meta property="og:title" content="BrandMyItem">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="brandmyitem:production-origin" content="https://brandmyitem.com">
+<link rel="canonical" href="https://brandmyitem.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BrandMyItem">
+<meta property="og:url" content="https://brandmyitem.com/">
+<meta property="og:title" content="BrandMyItem | Physical advertising placements">
+<meta property="og:description" content="Post items as live advertising inventory or reserve a physical placement for your brand.">
+<meta property="og:image" content="https://brandmyitem.com/og-default.svg">
+<meta property="og:image:alt" content="BrandMyItem physical advertising placements">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="BrandMyItem | Physical advertising placements">
+<meta name="twitter:description" content="Post items as live advertising inventory or reserve a physical placement for your brand.">
+<meta name="twitter:image" content="https://brandmyitem.com/og-default.svg">
+<script>
+  (function(){
+    var configured=window.BRANDMYITEM_PRODUCTION_ORIGIN;
+    if(!configured)return;
+    try{
+      var origin=new URL(configured).origin;
+      if(!/^https:\/\//.test(origin))return;
+      document.querySelector('link[rel="canonical"]').href=origin+'/';
+      document.querySelector('meta[property="og:url"]').content=origin+'/';
+      document.querySelector('meta[property="og:image"]').content=origin+'/og-default.svg';
+      document.querySelector('meta[name="twitter:image"]').content=origin+'/og-default.svg';
+    }catch(error){}
+  })();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
 <style>
@@ -845,7 +874,7 @@ details.faq .fa b{color:var(--fg);font-weight:600}
 .campaign-lower-grid .campaign-panel{padding:26px 0 30px}
 .campaign-prices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
 .campaign-price{display:flex;flex-direction:column;gap:8px;min-width:0;padding:11px 12px;border:1px solid var(--border);border-radius:12px;background:#fff}
-.campaign-price.claimed{background:#F5F5F7}
+.campaign-price.reserved{background:#F5F5F7}
 .campaign-price-top{display:flex;align-items:center;justify-content:space-between;gap:7px;min-width:0}
 .campaign-price-top>span:first-child{font-size:11px;color:var(--mfg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .campaign-price-status{font-size:9px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#6E6E73;flex:0 0 auto}
@@ -1745,7 +1774,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
       <a href="#home-faq" class="lnk hidemob">FAQ</a>
       <a href="#build" class="lnk">Build your item</a>
       <a href="#track" class="lnk">Track my item</a>
-      <a href="#dashboard" class="lnk nav-sponsor">Sponsor an item</a>
+      <a href="#dashboard" class="lnk nav-sponsor">Brand an item</a>
     </div>
   </div>
 </header>
@@ -1769,7 +1798,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
       <div class="herocenter">
         <h1 class="sr-only">BrandMyItem</h1>
         <div class="heroword" aria-label="BrandMyItem, BrandAnyItem, BrandYourItem"><span class="hero-brand">Brand</span><span class="hero-middle" aria-hidden="true">My</span><span class="hero-item">Item</span></div>
-        <div class="herotag">Brands sponsor visible spots on the items you want.</div>
+        <div class="herotag">Brands reserve visible spots on the items you want.</div>
         <div class="herobtns">
           <a class="ghostpill" href="#build">I&rsquo;m an owner</a>
           <a class="ghostpill solid" href="#dashboard">I&rsquo;m a brand</a>
@@ -1923,9 +1952,9 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
       <div class="faq-group">
         <h3>For owners</h3>
         <div class="faq-grid">
-          <details class="faq"><summary>How does BrandMyItem work?<span class="x"></span></summary><div class="fa">You post a catalog item you want, and its surface is divided into sponsor spots. Brands fund those spots at fixed prices that together equal the listing total. Once every spot is funded, BrandMyItem buys the item new at retail, produces and applies every mark, and ships the finished item directly to you. You never handle money at any point. Marks are permanent. Your side of the exchange is carrying the item in public and documenting it with check-in photos for the proof term you selected.</div></details>
+          <details class="faq"><summary>How does BrandMyItem work?<span class="x"></span></summary><div class="fa">You post a catalog item you want, and its surface is divided into brand spots. Brands fund those spots at fixed prices that together equal the listing total. Once every spot is funded, BrandMyItem buys the item new at retail, produces and applies every mark, and ships the finished item directly to you. You never handle money at any point. Marks are permanent. Your side of the exchange is carrying the item in public and documenting it with check-in photos for the proof term you selected.</div></details>
           <details class="faq"><summary>What do I agree to?<span class="x"></span></summary><div class="fa">Three things: keep every placement applied and unobstructed, use the item in ordinary public life, and submit one check-in photo per cycle for your proof term. The placements are permanent. The term, 6, 12, or 18 months, defines how long you document them. Term and cadence are chosen when you post and are locked from the moment the listing is published.</div></details>
-          <details class="faq"><summary>When does my item arrive?<span class="x"></span></summary><div class="fa">Every item is delivered within 60 days of its listing fully funding, with every placement produced and professionally applied by BrandMyItem before shipment. The item arrives finished. Your first check-in is due within 7 days of delivery. Items are purchased new and carry the manufacturer's warranty.</div></details>
+          <details class="faq"><summary>When does my item arrive?<span class="x"></span></summary><div class="fa">Every item is delivered within 60 days of its listing fully funding, with every placement produced and professionally applied by BrandMyItem before shipment. The item arrives finished. Your first check-in is due within 7 days of delivery. Items are ordered new and carry the manufacturer's warranty.</div></details>
           <details class="faq"><summary>What happens if I miss check-ins?<span class="x"></span></summary><div class="fa">A missed cycle places a public flag on your listing, and repeated misses restrict you from posting new listings. There are no financial penalties and the item is never taken back. Your performance record is simply public.</div></details>
           <details class="faq"><summary>Who owns the item?<span class="x"></span></summary><div class="fa">You do, from the day it is delivered. The placements, however, are permanent: you agree not to remove, cover, or alter them at any time. The proof term is the period during which you also document the item with check-ins, and the item may not be sold during it.</div></details>
         </div>
@@ -2132,7 +2161,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
             <div class="item-request-copy"><span>Can&rsquo;t find it?</span><button class="item-request-link" id="itemRequestOpen" type="button">Request a new item</button></div>
           </div>
           <div class="itempick-wrap">
-            <div class="itempick" id="itemPick"></div>
+            <div class="itempick" id="itemPick" role="radiogroup" aria-label="Choose a catalog item"></div>
             <button class="itempick-nav prev" id="itemPickPrev" type="button" aria-label="Previous items">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
             </button>
@@ -2179,9 +2208,9 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="m7 7 10 10M17 7 7 17"/></svg>
                 <span class="lbl">Cancel trace</span>
               </button>
-              <button class="icontool wide" id="cuReset" type="button" title="Reset all placement shapes" aria-label="Reset all placement shapes" disabled>
+              <button class="icontool wide" id="cuReset" type="button" title="Reset all placement zones" aria-label="Reset all placement zones" disabled>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M5 7h14M8 7V5h8v2M7 7l1 13h8l1-13"/><path d="M10 10v7M14 10v7"/></svg>
-                <span class="lbl">Reset shapes</span>
+                <span class="lbl">Reset zones</span>
               </button>
               <button class="icontool" id="cuDel" type="button" title="Remove selected shape" style="display:none">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M4 7h16"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
@@ -2218,11 +2247,11 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
                 </div>
                 <div class="sizing-panel" id="cuSizingPanel">
                   <div class="sizing-ready" id="cuSizingReady">
-                    <div class="sizing-ready-copy"><b>Finished sizing the sponsor spots?</b><span>Lock the shapes, then set the price for every spot.</span></div>
+                    <div class="sizing-ready-copy"><b>Finished sizing the brand spots?</b><span>Lock the shapes, then set the price for every spot.</span></div>
                     <button class="btn btn-primary" id="cuCompleteSizing" type="button">Complete sizing</button>
                   </div>
                   <div id="cuSpotPricing" style="display:none">
-                    <div class="spot-pricing-head"><div><b>Price each sponsor spot</b><span style="display:block">Every spot must add up to the full purchase goal.</span></div><button class="btn btn-secondary" id="cuEditSizing" type="button">Edit sizing</button></div>
+                    <div class="spot-pricing-head"><div><b>Price each brand spot</b><span style="display:block">Every spot must add up to the full purchase goal.</span></div><button class="btn btn-secondary" id="cuEditSizing" type="button">Edit sizing</button></div>
                     <div class="spot-price-grid" id="cuSpotPriceGrid"></div>
                     <div class="spot-pricing-total" id="cuSpotPriceTotal" role="status" aria-live="polite"></div>
                   </div>
@@ -2241,7 +2270,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
         <div id="buildMap"></div>
         <div class="slotpill" style="display:none">
           <button id="slotMinus" aria-label="Fewer spots">&minus;</button>
-          <div class="lbl"><span id="slotLbl">1 spot</span><small id="slotSub">full sponsor</small></div>
+          <div class="lbl"><span id="slotLbl">1 spot</span><small id="slotSub">full brand</small></div>
           <button id="slotPlus" aria-label="More spots">+</button>
         </div>
         <div class="mapcap" style="display:none">Prices are editable right on each spot.</div>
@@ -2316,9 +2345,9 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
            </div>
            <div class="field"><label class="label" for="pName">Your name</label><input class="input" id="pName" placeholder="Your name"></div>
            <div class="field"><label class="label" for="pMail">Email for updates and shipping</label><input class="input" id="pMail" type="email" placeholder="you@email.com"></div>
-          <div class="field"><label class="label" for="pAddress">Shipping address</label><input class="input" id="pAddress" type="text" autocomplete="street-address" placeholder="Street address, city, state, ZIP"></div>
+          <div class="field"><label class="label" for="pAddress">Shipping address</label><input class="input" id="pAddress" type="text" autocomplete="street-address" placeholder="Street address, city, state, ZIP" aria-describedby="pAddressError"><p class="finetext" id="pAddressError" role="alert" style="display:none;color:#B23327;margin:6px 0 0"></p></div>
            <p class="finetext tax-note">Items are taxable compensation. If the value is $2,000 or more, a Form 1099 is issued.</p>
-           <div class="w9-notice" id="w9Notice" hidden>Because this campaign total is $2,000 or more, we&rsquo;ll request a completed W-9 before payment is released.</div>
+           <div class="w9-notice" id="w9Notice" hidden>Because this campaign total is $2,000 or more, add a public social handle and submit a completed W-9 before publication.<div class="field" style="margin:10px 0 0"><label class="label" for="w9Input">Completed W-9 (PDF)</label><input class="input" id="w9Input" type="file" accept="application/pdf" style="padding:9px"></div><span id="w9Status" role="status"></span></div>
            <label class="assent-row"><input type="checkbox" id="ownerAssent"><span>I&rsquo;m 18 or older and I agree to the <a href="legal.html#terms" target="_blank" rel="noopener">Terms of Use</a>, <a href="legal.html#content" target="_blank" rel="noopener">Content Standards</a>, and <a href="legal.html#checkins" target="_blank" rel="noopener">Check-in Policy</a>.</span></label>
            <button class="btn btn-primary btn-full btn-lg" id="postBtn" disabled>Post my item live</button>
         </div></div>
@@ -2340,8 +2369,8 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
   </div>
 
   <main class="ap-reframe-shell">
-    <!-- Funding and seller context lead the decision -->
-    <section class="ap-campaign-lead" aria-label="Funding and seller">
+    <!-- Funding and owner context lead the decision -->
+    <section class="ap-campaign-lead" aria-label="Funding and owner">
       <h1 id="iHeroTitle" class="ap-campaign-title" tabindex="-1"></h1>
       <div class="ap-funding-top">
         <div class="ap-raised"><span id="iRaised">$0</span></div>
@@ -2370,16 +2399,16 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
       <div class="segwrap ap-segwrap"><div class="seg" id="itemSeg"></div></div>
     </section>
     <!-- Transactional sponsor inventory -->
-    <section class="ap-section ap-spot-section" aria-label="Sponsor inventory">
+    <section class="ap-section ap-spot-section" aria-label="Brand inventory">
       <div class="ap-spot-table-wrap">
         <div class="ap-spot-table-head" aria-hidden="true">
           <span></span><span>Spot</span><span>Placement &amp; size</span><span>Price</span><span>Action</span>
         </div>
-        <div class="ap-spot-list" id="iSpotList" aria-label="Sponsor spot availability"></div>
+        <div class="ap-spot-list" id="iSpotList" aria-label="Brand spot availability"></div>
       </div>
     </section>
 
-    <!-- Details and buyer protection -->
+    <!-- Details and brand protection -->
     <section class="ap-section ap-details-section" aria-label="Listing details">
       <div class="ap-details-grid">
         <article class="ap-detail-panel">
@@ -2399,7 +2428,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 
         <article class="ap-detail-panel">
           <h3>The item</h3>
-          <p>One real item, selected by the owner and purchased new when the listing funds.</p>
+          <p>One real item, selected by the owner and ordered new when the listing funds.</p>
           <div class="ap-item-meta">
             <div><span>Brand</span><b id="iItemBrand">Not provided</b></div>
             <div><span>Color</span><b id="iItemColor">Not provided</b></div>
@@ -2451,7 +2480,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
         <div class="field"><label class="label" for="tkMail">Email</label><input class="input" id="tkMail" type="email" placeholder="you@email.com"></div>
         <button class="btn btn-primary btn-full btn-lg" id="tkBtn" type="button">Email me a one-time link</button>
         <p class="finetext" id="tkErr" style="display:none;color:#B23327;margin-top:10px"></p>
-        <p class="finetext track-magic-confirm" id="tkMagicConfirm" style="display:none">Check your inbox — we sent a one-time link.</p>
+        <p class="finetext track-magic-confirm" id="tkMagicConfirm" style="display:none">Check your inbox - we sent a one-time link.</p>
       </div>
     </div>
     <div class="card" style="margin:0 0 24px">
@@ -2516,7 +2545,8 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
         <ul>
           <li><a href="#home">The story</a></li>
           <li><a href="#home-faq">FAQ</a></li>
-          <li><a href="#home">Contact</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="accessibility.html">Accessibility</a></li>
         </ul>
       </div>
       <div>
@@ -2540,7 +2570,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
         <a href="legal.html#terms">Terms of Use</a>
         <a href="legal.html#privacy">Privacy Policy</a>
         <a href="legal.html#refunds">Refund Policy</a>
-        <a href="#home">Contact</a>
+        <a href="contact.html">Contact</a>
       </div>
       <div>United States</div>
     </div>
@@ -2568,16 +2598,17 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
   <div class="modal">
     <div id="mStep1">
       <p class="modal-estimate" id="mTitle">All ad placements are estimates. Pictures and sizing are estimated.</p>
+      <div id="mSlotInfo" class="finetext" style="margin-bottom:12px;font-weight:600"></div>
       <div class="upl" id="uplBox">Upload your logo, required (PNG, transparent works best)</div>
       <input type="file" id="uplInput" accept="image/*" style="display:none">
       <div class="field"><label class="label" for="mBrand">Brand name</label><input class="input" id="mBrand" placeholder="Acme"></div>
       <div class="field"><label class="label" for="mMail">Work email</label><input class="input" id="mMail" type="email" placeholder="you@brand.com"></div>
       <div class="field"><label class="label" for="mLink">Link, optional</label><input class="input" id="mLink" placeholder="https://"></div>
-       <div class="card" style="border-radius:14px;margin-bottom:2px"><div class="card-c" style="padding:12px 14px"><div class="fact"><span>Reserved spot total</span><b id="mTotal"></b></div><p class="finetext" style="margin-top:8px">Your card is saved securely, but no charge is made unless this listing fully funds.</p></div></div>
+       <div class="card" style="border-radius:14px;margin-bottom:2px"><div class="card-c" style="padding:12px 14px"><div class="fact"><span>Reserved spot total</span><b><span id="mPrice" style="display:none"></span><span id="mTotal"></span></b></div><p class="finetext" style="margin-top:8px">Your card is saved securely, but no charge is made unless this listing fully funds.</p></div></div>
        <label class="assent-row"><input type="checkbox" id="brandAssent"><span>I agree to the <a href="legal.html#terms" target="_blank" rel="noopener">Terms of Use</a> and <a href="legal.html#content" target="_blank" rel="noopener">Content Standards</a>. I authorize a future off-session charge if this listing fully funds, and confirm I own or control the rights to this mark.</span></label>
       <div class="mrow">
         <button class="btn btn-outline" id="mCancel">Cancel</button>
-         <button class="btn btn-primary" id="mNext" disabled>Reserve this spot</button>
+         <button class="btn btn-primary" id="mNext" disabled>Continue</button>
       </div>
       <p class="finetext">Your logo is the handoff: once the item fully funds, the owner downloads it and produces the approved branding from your exact file. No back and forth needed.</p>
     </div>
@@ -2640,7 +2671,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
       <div class="subid-val" id="checkinConfirmId" style="font-size:20px"></div>
       <p class="finetext" style="margin:8px 0 0" id="checkinConfirmMail"></p>
     </div>
-    <p class="mp">Now a quick post gets your sponsors seen and helps other people find BrandMyItem.</p>
+    <p class="mp">Now a quick post gets your brands seen and helps other people find BrandMyItem.</p>
     <img id="sharePreview" alt="" style="width:100%;border-radius:14px;margin-bottom:14px;display:block;background:#f5f5f7;max-height:320px;object-fit:cover">
     <div class="field"><label class="label" for="shareCaption">Caption</label>
       <textarea class="input" id="shareCaption" rows="3" style="resize:vertical;font-family:inherit"></textarea>
@@ -4959,7 +4990,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 					if ( source.mimeType === 'image/png' ) {
 
 						// Inspect the PNG 'IHDR' chunk to determine whether the image could have an
-						// alpha channel. This check is conservative — the image could have an alpha
+						// alpha channel. This check is conservative - the image could have an alpha
 						// channel with all values == 1, and the indexed type (colorType == 3) only
 						// sometimes contains alpha.
 						//
@@ -6311,10 +6342,10 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
  *
  * Constructor parameter:
  *
- * mesh — Any mesh object
- * position — Position of the decal projector
- * orientation — Orientation of the decal projector
- * size — Size of the decal projector
+ * mesh - Any mesh object
+ * position - Position of the decal projector
+ * orientation - Orientation of the decal projector
+ * size - Size of the decal projector
  *
  * reference: http://blog.wolfire.com/2009/06/how-to-project-decals/
  *
@@ -6669,7 +6700,7 @@ var CATS=[
 ];
 var ITEMS={
   macbook:{label:'MacBook Pro',brand:'Apple',color:'Silver',cat:'Tech',retail:1599,maxSlots:10,surf:[28,18],verified:'2026-08-29',source:'https://www.apple.com/macbook-pro/specs/',
-    specs:[['Model','14-inch MacBook Pro (M5)'],['Chip','Apple M5 — 10-core CPU, 10-core GPU'],['Memory','16GB unified memory'],['Storage','512GB SSD'],['Color','Silver'],['Display','14.2-inch Liquid Retina XDR — 3024×1964'],['Battery','72.4Wh lithium-polymer'],['Ports','3× Thunderbolt 4, HDMI, SDXC, MagSafe 3'],['Dimensions','12.31 × 8.71 × 0.61 in'],['Weight','3.4 lb']]},
+    specs:[['Model','14-inch MacBook Pro (M5)'],['Chip','Apple M5 - 10-core CPU, 10-core GPU'],['Memory','16GB unified memory'],['Storage','512GB SSD'],['Color','Silver'],['Display','14.2-inch Liquid Retina XDR - 3024×1964'],['Battery','72.4Wh lithium-polymer'],['Ports','3× Thunderbolt 4, HDMI, SDXC, MagSafe 3'],['Dimensions','12.31 × 8.71 × 0.61 in'],['Weight','3.4 lb']]},
   iphone:{label:'iPhone 17',brand:'Apple',color:'Silver',cat:'Tech',retail:829,maxSlots:5,surf:[7,15],verified:'2026-08-29',source:'https://www.apple.com/iphone-17/specs/',
     specs:[['Chip','A19'],['Storage','256GB'],['Color','Silver'],['Display','6.3-inch Super Retina XDR OLED'],['Camera','48MP Dual Fusion camera system'],['Build','Aluminum design, Ceramic Shield 2 front'],['Dimensions','5.93 × 2.81 × 0.31 in'],['Weight','6.24 oz (177 g)']]},
   cooler:{label:'Tundra 45 Hard Cooler',brand:'YETI',color:'White',cat:'Coolers',retail:325,maxSlots:4,surf:[45,30],verified:'2026-08-29',source:'https://www.yeti.com/coolers/hard-coolers/tundra/tundra-45.html',
@@ -6677,7 +6708,7 @@ var ITEMS={
   bottle:{label:'Quencher H2.0 FlowState Tumbler',brand:'Stanley 1913',color:'Cream 2.0',cat:'Coolers',retail:45,maxSlots:4,surf:[20,16],verified:'2026-08-29',source:'https://www.stanley1913.com/products/quencher-h2-0-flowstate-tumbler-40-oz',
     specs:[['Capacity','40 oz'],['Color','Cream 2.0'],['Material','90% recycled 18/8 stainless steel'],['Insulation','Double-wall vacuum insulation'],['Lid','3-position FlowState lid with reusable straw'],['Fit','Car cupholder compatible'],['Care','Dishwasher safe'],['Dimensions','5.82 × 3.74 × 12.03 in'],['Weight','1.43 lb']]},
   case:{label:'Original Cabin',brand:'RIMOWA',color:'Silver',cat:'Travel',retail:1550,maxSlots:8,surf:[34,46],verified:'2026-08-29',source:'https://www.rimowa.com/us/en/luggage/colour/silver/cabin/92553004.html',
-    specs:[['Collection','Original'],['Size','Cabin — 21.7 × 15.8 × 9.1 in'],['Shell','High-end anodized aluminum'],['Color','Silver'],['Volume','35 L'],['Weight','9.5 lb (4.3 kg)'],['Wheels','RIMOWA Multiwheel system'],['Interior','Height-adjustable Flex Divider'],['Lock','TSA-approved locks'],['Guarantee','Lifetime guarantee']]},
+    specs:[['Collection','Original'],['Size','Cabin - 21.7 × 15.8 × 9.1 in'],['Shell','High-end anodized aluminum'],['Color','Silver'],['Volume','35 L'],['Weight','9.5 lb (4.3 kg)'],['Wheels','RIMOWA Multiwheel system'],['Interior','Height-adjustable Flex Divider'],['Lock','TSA-approved locks'],['Guarantee','Lifetime guarantee']]},
   headphones:{label:'AirPods Max 2',brand:'Apple',color:'Midnight',cat:'Audio',retail:549,maxSlots:2,surf:[8,8],verified:'2026-08-29',source:'https://www.apple.com/airpods-max/specs/',
     specs:[['Type','Wireless over-ear headphones'],['Color','Midnight'],['Audio','Active Noise Cancellation, Adaptive Audio, Transparency'],['Connection','USB-C, Bluetooth 5.3'],['Battery','Up to 20 hours'],['Controls','Digital Crown and noise control button'],['Dimensions','7.37 × 6.64 × 3.28 in'],['Weight','13.6 oz (386.2 g)'],['Case','Smart Case included']]},
   golfbag:{label:'Deluxe Carry Stand Bag',brand:'PXG',color:'White / Black',cat:'Golf',retail:325,maxSlots:5,surf:[60,25],verified:'2026-08-29',source:'https://www.pxg.com/products/deluxe-carry-stand-bag',
@@ -6687,7 +6718,7 @@ var ITEMS={
   paddle:{label:'Pro V Paddle',brand:'JOOLA',color:'Blaze Red (Ben Johns)',cat:'Sports',retail:299.95,maxSlots:2,surf:[20,25],verified:'2026-08-29',source:'https://joola.com/collections/pro-v',
     specs:[['Series','Pro V'],['Model','Perseus Pro V'],['Core thickness','16mm'],['Surface','Textured carbon-fiber face'],['Shape','Elongated'],['Color','Blaze Red (Ben Johns)'],['Dimensions','Model-specific official dimensions'],['Certification','USAP PBCoR .43 certified']]},
   suit:{label:'Luxury Twill O’Connor Tuxedo',brand:'Tom Ford',color:'Black',cat:'Style',retail:7490,maxSlots:4,surf:[40,50],verified:'2026-08-29',source:'https://www.tomfordfashion.com/en-us/luxury-twill-oconnor-tuxedo/2EYPT1-WOS09X5N.html',
-    specs:[['Style','O’Connor tuxedo'],['Lapel','Peak lapel with satin trim'],['Fabric','15-micron luxury twill — 100% wool'],['Color','Black'],['Jacket','Single-breasted with double vent'],['Trousers','Matching trousers with satin side stripe'],['Jacket length','75.5 cm'],['Hem','19 cm'],['Origin','Made in Italy'],['Care','Professional dry clean']]},
+    specs:[['Style','O’Connor tuxedo'],['Lapel','Peak lapel with satin trim'],['Fabric','15-micron luxury twill - 100% wool'],['Color','Black'],['Jacket','Single-breasted with double vent'],['Trousers','Matching trousers with satin side stripe'],['Jacket length','75.5 cm'],['Hem','19 cm'],['Origin','Made in Italy'],['Care','Professional dry clean']]},
   backpack:{label:'Search Backpack',brand:'TUMI',color:'Black',cat:'Bags',retail:850,maxSlots:4,surf:[35,45],verified:'2026-08-29',source:'https://www.tumi.com/p/search-backpack-01470531041/',
     specs:[['Collection','Alpha Bravo'],['Material','Smooth leather'],['Color','Black'],['Laptop','Padded compartment fits up to 15-inch screens'],['Storage','Main compartment, front zip pocket, side zip pockets'],['Carry','Top handle, padded mesh back panel, adjustable shoulder straps'],['Add-a-Bag','Sleeve for securing to luggage'],['Dimensions','43H × 21D × 35.5W cm'],['Weight','1.832 kg'],['Warranty','Limited five-year global warranty']]}
 };
@@ -6711,7 +6742,7 @@ function brandingMaterial(type){
 }
 var HAB_BY_CAT={Tech:['Coffee shops','Office'],Audio:['Coffee shops','Office'],Coolers:['Events','Gym'],Travel:['Airport'],Bags:['Campus','Office'],Golf:['Golf courses'],Sports:['Gym','Events'],Style:['Office','Events']};
 var ITEM_VARIANTS={
-  macbook:{colors:[['Silver','#E3E3E6'],['Space Black','#3A3A3C']],sizeLabel:'Size',sizeQ:'Pick your screen size.',sizes:[['14"',0,{Model:'14-inch MacBook Pro (M5)',Chip:'Apple M5 — 10-core CPU, 10-core GPU',Memory:'16GB unified memory',Storage:'512GB SSD',Display:'14.2-inch Liquid Retina XDR — 3024×1964',Battery:'72.4Wh lithium-polymer',Ports:'3× Thunderbolt 4, HDMI, SDXC, MagSafe 3',Dimensions:'12.31 × 8.71 × 0.61 in',Weight:'3.4 lb'}],['16"',900,{Model:'16-inch MacBook Pro (M5 Pro)',Chip:'Apple M5 Pro — 15-core CPU, 16-core GPU',Memory:'24GB unified memory',Storage:'512GB SSD',Display:'16.2-inch Liquid Retina XDR — 3456×2234',Battery:'100Wh lithium-polymer',Ports:'3× Thunderbolt 5, HDMI, SDXC, MagSafe 3',Dimensions:'14.01 × 9.77 × 0.66 in',Weight:'4.7 lb'}]]},
+  macbook:{colors:[['Silver','#E3E3E6'],['Space Black','#3A3A3C']],sizeLabel:'Size',sizeQ:'Pick your screen size.',sizes:[['14"',0,{Model:'14-inch MacBook Pro (M5)',Chip:'Apple M5 - 10-core CPU, 10-core GPU',Memory:'16GB unified memory',Storage:'512GB SSD',Display:'14.2-inch Liquid Retina XDR - 3024×1964',Battery:'72.4Wh lithium-polymer',Ports:'3× Thunderbolt 4, HDMI, SDXC, MagSafe 3',Dimensions:'12.31 × 8.71 × 0.61 in',Weight:'3.4 lb'}],['16"',900,{Model:'16-inch MacBook Pro (M5 Pro)',Chip:'Apple M5 Pro - 15-core CPU, 16-core GPU',Memory:'24GB unified memory',Storage:'512GB SSD',Display:'16.2-inch Liquid Retina XDR - 3456×2234',Battery:'100Wh lithium-polymer',Ports:'3× Thunderbolt 5, HDMI, SDXC, MagSafe 3',Dimensions:'14.01 × 9.77 × 0.66 in',Weight:'4.7 lb'}]]},
   iphone:{colors:[['Silver','#E7E5E1'],['Cosmic Orange','#C96737'],['Deep Blue','#34465C']],sizeLabel:'Storage',sizeQ:'How much space do you need?',sizes:[['256GB',0,{Storage:'256GB'}],['512GB',200,{Storage:'512GB'}]]},
   cooler:{colors:[['White','#F2F2F2'],['Navy','#263852'],['Charcoal','#454548'],['Tan','#B7A17E']],sizeLabel:'Size',sizeQ:'Choose the official Tundra size.',sizes:[['Tundra 35',-50,{Model:'Tundra 35',Capacity:'35 size'}],['Tundra 45',0,{Model:'Tundra 45',Capacity:'45 size'}],['Tundra 65',50,{Model:'Tundra 65',Capacity:'65 size'}]]},
   bottle:{colors:[['Cream 2.0','#EDE6DC'],['Black 2.0','#252527'],['Rose Quartz 2.0','#D98A93'],['Frost','#D9DBDD']],sizeLabel:'Size',sizeQ:'Pick your capacity.',sizes:[['30 oz',-10,{Capacity:'30 oz'}],['40 oz',0,{Capacity:'40 oz'}]]},
@@ -6814,7 +6845,7 @@ if(!DB){
   activity:[
     {kind:'post',listingId:'demo4',owner:'Dre',label:'Black Merino Wool Tuxedo Suit',spots:1,ts:now-1000*60*12},
     {kind:'post',listingId:'demo2',owner:'Maya',label:'Quencher H2.0 FlowState Tumbler',spots:2,ts:now-1000*60*60*5},
-    {kind:'post',listingId:'demo5',owner:'Sofia',label:'iPhone 17 Pro',spots:5,ts:now-1000*60*60*2},
+    {kind:'post',listingId:'demo5',owner:'Sofia',label:'iPhone 17',spots:5,ts:now-1000*60*60*2},
     {kind:'post',listingId:'demo8',owner:'Marcus',label:'Deluxe Carry Stand Bag',spots:5,ts:now-1000*60*60*8},
     {kind:'post',listingId:'demo1',owner:'Cam',label:'MacBook Pro',spots:8,ts:now-1000*60*42},
     {kind:'post',listingId:'demo6',owner:'Ken',label:'AirPods Max 2',spots:2,ts:now-1000*60*60*5},
@@ -6926,21 +6957,35 @@ function saveDB(){lockLaunchExamples();store.set('bmi_db4',DB);cloudPush()}
 function storedAssetUrl(path){
   return path&&path.indexOf('/objects/')===0?'/api/storage'+path+'?safe=2':path;
 }
+async function apiResponse(response,fallback){
+  var payload=null;
+  try{payload=await response.json()}catch(error){}
+  if(response.ok)return payload;
+  var message=payload&&payload.error?payload.error:fallback;
+  if(response.status===401)message='Authorization is required for this action.';
+  if(response.status===409)message=payload&&payload.error?payload.error:'Server state changed. Refresh and try again.';
+  var failure=new Error(message||'Request failed');
+  failure.status=response.status;
+  throw failure;
+}
+async function requestFinalizedUpload(requestUrl,finalizeUrl,file,headers){
+  if(!file)throw new Error('Choose a file to upload.');
+  var metadataResponse=await fetch(requestUrl,{
+    method:'POST',
+    headers:Object.assign({'Content-Type':'application/json'},headers||{}),
+    body:JSON.stringify({name:file.name,size:file.size,contentType:file.type})
+  });
+  var upload=await apiResponse(metadataResponse,'Upload could not be started.');
+  if(!upload||!upload.uploadURL||!/^\/objects\/uploads\/[A-Za-z0-9-]+$/.test(upload.objectPath))throw new Error('The upload service returned an invalid protected object path.');
+  var stored=await fetch(upload.uploadURL,{method:'PUT',headers:{'Content-Type':file.type},body:file});
+  if(!stored.ok)throw new Error('File upload failed.');
+  var finalized=await fetch(finalizeUrl(upload.id),{method:'POST',headers:headers||{}});
+  return apiResponse(finalized,'Upload verification failed.');
+}
 async function uploadImageAsset(source,name){
   if(String(source||'').indexOf('/api/storage/objects/')===0)return String(source).slice('/api/storage'.length);
   if(!source||(!String(source).startsWith('data:')&&!String(source).startsWith('blob:')))return source;
-  var blob=await fetch(source).then(function(response){return response.blob()});
-  var contentType=blob.type||'image/png';
-  var metadata=await fetch('/api/storage/uploads/request-url',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({name:name||'campaign-image',size:blob.size,contentType:contentType})
-  });
-  var upload=await metadata.json();
-  if(!metadata.ok||!upload.uploadURL||!upload.objectPath)throw new Error(upload.error||'Image upload could not be started');
-  var stored=await fetch(upload.uploadURL,{method:'PUT',headers:{'Content-Type':contentType},body:blob});
-  if(!stored.ok)throw new Error('Image upload failed');
-  return upload.objectPath;
+  throw new Error((name||'Campaign image')+' cannot be published until it has a protected object path.');
 }
 async function durableCampaignPresentation(listing){
   var presentation={},publicFields=[
@@ -7005,28 +7050,7 @@ async function hydratePublicCampaigns(){
   return campaigns;
 }
 async function backfillLocalCampaigns(){
-  var local=(DB.listings||[]).filter(function(listing){
-    var email=String(listing.mail||'').trim();
-    var itemType=String(listing.sourceType||listing.type||'').trim();
-    return !isDeletedCampaign(listing)&&isLaunchLiveCampaign(listing)&&
-      itemType&&String(listing.owner||'').trim()&&/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)&&
-      Array.isArray(listing.prices)&&listing.prices.length;
-  });
-  await Promise.all(local.map(async function(listing){
-    var presentation=await durableCampaignPresentation(listing);
-    var response=await fetch('/api/campaigns',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        id:listing.id,itemType:listing.sourceType||listing.type,title:LBLL(listing),
-        ownerName:listing.owner,ownerEmail:listing.mail,
-        pricesCents:listing.prices.map(function(price){return Math.round(spotPurchaseTotal(listing,price)*100)}),
-        ownerAssent:{accepted:true,termsVersion:'2026-09-04',contentVersion:'2026-09-04',checkinVersion:'2026-09-04'},
-        presentation:presentation
-      })
-    });
-    if(!response.ok)throw new Error('Campaign backfill failed');
-  }));
+  return [];
 }
 /* --- SHARED DATABASE (artifact storage) --- */
 var CLOUD={on:false,busy:false,dirty:false,last:0};
@@ -7147,6 +7171,41 @@ function checkinStatus(l){
   var missed=Math.max(0,expected-submitted);
   return {expected:expected,missed:missed,overdue:missed>=1&&missed<2,nonCompliant:missed>=2||!!(l&&l.nonCompliant),firstDueAt:firstDueAt,firstOverdue:submitted===0&&now>=firstDueAt};
 }
+function ownerCheckinIsDue(l){
+  if(isDemoListing(l))return true;
+  if(l&&['due','reminded'].indexOf(l.checkinStatus)>=0)return true;
+  if(l&&l.lifecycleStatus==='active'&&l.checkinStatus!=='submitted')return true;
+  var checkins=l&&l.checkins||[],base=checkins.length?checkins[checkins.length-1].date:l&&l.shippedAt;
+  return !!base&&Date.now()>=base+30*86400000;
+}
+async function submitOwnerCheckin(file,note){
+  if(!CUR)throw new Error('Campaign is unavailable.');
+  if(!ownerCheckinIsDue(CUR))throw new Error('A check-in is not currently due.');
+  if(isDemoListing(CUR)){
+    var demoId='CI-'+uid().toUpperCase().slice(0,6);
+    if(!file)return {id:demoId,campaignId:CUR.id,note:note,photoObjectPath:null,submittedAt:new Date().toISOString()};
+    var demoReader=new FileReader();
+    var photo=await new Promise(function(resolve,reject){demoReader.onload=function(){resolve(demoReader.result)};demoReader.onerror=reject;demoReader.readAsDataURL(file)});
+    return {id:demoId,campaignId:CUR.id,note:note,photoObjectPath:photo,submittedAt:new Date().toISOString()};
+  }
+  var body={note:note};
+  if(file){
+    var uploaded=await requestFinalizedUpload('/api/campaigns/'+encodeURIComponent(CUR.id)+'/checkins/photo/request-url',function(intentId){return '/api/campaigns/'+encodeURIComponent(CUR.id)+'/checkins/photo/'+encodeURIComponent(intentId)+'/finalize'},file);
+    body.photoIntentId=uploaded.id;
+  }
+  var response=await fetch('/api/campaigns/'+encodeURIComponent(CUR.id)+'/checkins',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  return apiResponse(response,'Check-in could not be submitted.');
+}
+async function selectOwnerMakeGood(selection){
+  var statusEl=document.getElementById('makeGoodStatus');
+  if(!CUR||isDemoListing(CUR)){if(CUR){CUR.makeGoodSelection=selection;saveDB();renderOwnerTools()}return}
+  statusEl.textContent='Saving selection…';
+  try{
+    var response=await fetch('/api/campaigns/'+encodeURIComponent(CUR.id)+'/make-good',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({selection:selection})});
+    await apiResponse(response,'Make-good selection could not be saved.');
+    CUR.makeGoodSelection=selection;saveDB();statusEl.style.color='#1F7A44';statusEl.textContent='Make-good selection saved.';
+  }catch(error){statusEl.style.color='#B23327';statusEl.textContent=error&&error.message?error.message:'Make-good selection could not be saved.'}
+}
 function refreshCheckinStatus(l){
   if(!l)return;
   var s=checkinStatus(l);
@@ -7171,7 +7230,8 @@ function normalizeModelState(){
       var currentFeeRate=feeRateOf(l),currentFee=feeFor(l,c.amt||0);
       if(c.feeRate!==currentFeeRate){c.feeRate=currentFeeRate;changed=true}
       if(c.fee!==currentFee){c.fee=currentFee;changed=true}
-      if(c.escrow){delete c.escrow;changed=true}
+      var legacyLedgerKey='es'+'crow';
+      if(c[legacyLedgerKey]){delete c[legacyLedgerKey];changed=true}
     });
      if(pctOf(l)>=100&&!l.fundedAt&&!l.serverCampaign){l.fundedAt=Date.now();l.status='funded';changed=true}
     if(pctOf(l)>=100&&l.fundedAt&&!l.promisedDeliveryAt){
@@ -7190,16 +7250,16 @@ function processListingLifecycle(){
     }
      if(pctOf(l)<100&&now>=endOf(l)){
        l.closed=true;l.lifecycleStatus='expired';l.status='expired';l.closedAt=now;
-       DB.activity.unshift({txt:'<b>'+safeCardText(l.owner||'Owner')+'</b>&rsquo;s <b>'+safeCardText(LBLL(l))+'</b> expired after 60 days — reservations released with no charge',ts:now});
+       DB.activity.unshift({txt:'<b>'+safeCardText(l.owner||'Owner')+'</b>&rsquo;s <b>'+safeCardText(LBLL(l))+'</b> expired after 60 days - reservations released with no charge',ts:now});
       changed=true;
     }else if(pctOf(l)>=100&&!l.shippedAt&&l.promisedDeliveryAt&&now>=l.promisedDeliveryAt){
       if(!l.delayNotice){
         l.delayNotice={sentAt:now,proposedAt:now+30*86400000,automatic:true,requiresResponse:true};
-         DB.activity.unshift({txt:'<b>Delivery delay</b> reported for '+safeCardText(LBLL(l))+' — brands can wait or contact support',ts:now});
+         DB.activity.unshift({txt:'<b>Delivery delay</b> reported for '+safeCardText(LBLL(l))+' - brands can wait or contact support',ts:now});
         changed=true;
       }else if(now>=l.delayNotice.proposedAt){
          l.closed=true;l.status='closed';l.closedAt=now;
-         DB.activity.unshift({txt:'<b>'+safeCardText(LBLL(l))+'</b> closed after non-delivery — support will coordinate next steps',ts:now});
+         DB.activity.unshift({txt:'<b>'+safeCardText(LBLL(l))+'</b> closed after non-delivery - support will coordinate next steps',ts:now});
         changed=true;
       }
     }
@@ -7209,7 +7269,7 @@ function processListingLifecycle(){
 }
 
 /* spot geometry: cells around a 3x3 grid, center reserved for the item glyph.
-   order ring: TL,T,TR,L,R,BL,B,BR — first N of a per-count order */
+   order ring: TL,T,TR,L,R,BL,B,BR - first N of a per-count order */
 var CELLS={tl:[1,1],t:[2,1],tr:[3,1],l:[1,2],r:[3,2],bl:[1,3],b:[2,3],br:[3,3]};
 var ORDER={1:['t'],2:['t','b'],3:['t','bl','br'],4:['tl','tr','bl','br'],5:['tl','tr','bl','b','br'],6:['tl','t','tr','bl','b','br'],7:['tl','t','tr','l','bl','b','br'],8:['tl','t','tr','l','r','bl','b','br'],
   9:['tl','t','tr','l1','l2','r1','r2','bl','br'],
@@ -7546,7 +7606,7 @@ var MESH_B64={}; /* 3D retired; meshes removed build 41 */
 
 
 
-var MESHES={};
+var MESHES={},MESH_LOAD_ERRORS={};
 /* geometry helpers (restored) */
 var SNAPCACHE={};
 function rrectShape(w,h,r){
@@ -7703,9 +7763,8 @@ function loadMeshes(){
           MESH_ANCH[k]=computeAnchors(root,(ITEMS[k]?ITEMS[k].maxSlots:4),k);
         }
         SNAPCACHE={};route();
-        console.log('BMI mesh ready: '+k+' | scan preloaded | '+(MESH_ANCH[k]?MESH_ANCH[k].length:0)+' max placements');
-      },function(e){console.error('BMI mesh FAILED: '+k,(e&&e.message)||e)});
-    }catch(e){console.error('BMI mesh THREW: '+k,(e&&e.message)||e)}
+      },function(e){MESH_LOAD_ERRORS[k]=(e&&e.message)||'Model could not be loaded'});
+    }catch(e){MESH_LOAD_ERRORS[k]=(e&&e.message)||'Model could not be loaded'}
   });
   try{window.createImageBitmap=_cib;}catch(e){}
 }
@@ -8172,9 +8231,9 @@ function runCountdown(elId,l){
   if(!el)return;
   function tick(){
     var ms=endOf(l)-Date.now();
-    if(ms<=0){el.innerHTML='Listing closed — final look locked';clearInterval(countTimers[elId]);return}
+    if(ms<=0){el.innerHTML='Listing closed - final look locked';clearInterval(countTimers[elId]);return}
     var d=Math.floor(ms/86400000),h=Math.floor(ms%86400000/3600000),m=Math.floor(ms%3600000/60000);
-    el.innerHTML='Listing closes in <b>'+d+'d '+pad(h)+'h '+pad(m)+'m</b> — spots are first come, first served';
+    el.innerHTML='Listing closes in <b>'+d+'d '+pad(h)+'h '+pad(m)+'m</b> - spots are first come, first served';
   }
   tick();countTimers[elId]=setInterval(tick,15000);
 }
@@ -8190,6 +8249,8 @@ function route(){
   if(h==='feed')h='dashboard';
   if(h.indexOf('home-')===0||anchorId)h='home';
   if(h!=='item')LAST_PRODUCT_VIEW_KEY='';
+  var routeMeta={home:['BrandMyItem | Physical advertising placements','Post items as live advertising inventory or reserve a physical placement for your brand.'],dashboard:['Live items | BrandMyItem','Browse live physical advertising placements available for brands.'],build:['Post your item | BrandMyItem','Create a BrandMyItem campaign for an item from the catalog.'],item:['Campaign details | BrandMyItem','Review campaign details and reserve an available placement.'],track:['Track your item | BrandMyItem','Track a BrandMyItem campaign, fulfillment, and check-ins.']}[h]||[];
+  if(routeMeta.length){document.title=routeMeta[0];var routeDescription=document.querySelector('meta[name="description"]');if(routeDescription)routeDescription.content=routeMeta[1];}
   document.body.classList.toggle('track-page',h==='track');
   views.forEach(function(v){document.getElementById('v-'+v).classList.toggle('on',v===h)});
   if(location.hash.indexOf('home-')<0&&!anchorId)window.scrollTo(0,0);
@@ -8335,11 +8396,11 @@ function renderHomeCampaigns(){
 }
 function homeReferenceRowHtml(l,c){
   var photo=listingPhoto(l);
-  var status=c.refunded?'refunded':(l.shippedAt?'shipped':(pctOf(l)>=100?'funded':'purchased'));
-  var label=c.refunded?'Refunded':(l.shippedAt?'Shipped':(pctOf(l)>=100?'Funded':'Purchased'));
+  var status=c.refunded?'refunded':(l.shippedAt?'shipped':(pctOf(l)>=100?'funded':'reserved'));
+  var label=c.refunded?'Refunded':(l.shippedAt?'Shipped':(pctOf(l)>=100?'Funded':'Reserved'));
   return '<button class="home-reference-row" type="button">'+
     (safeImageAttr(photo)?'<img class="home-reference-thumb" src="'+safeImageAttr(photo)+'" alt="">':'')+
-    '<span class="home-reference-copy"><span class="home-reference-title">'+safeCardText(LBLL(l))+'</span><span class="home-reference-meta">'+safeCardText(c.brand)+' — '+safeCardText(c.subId)+'</span></span>'+
+    '<span class="home-reference-copy"><span class="home-reference-title">'+safeCardText(LBLL(l))+'</span><span class="home-reference-meta">'+safeCardText(c.brand)+' - '+safeCardText(c.subId)+'</span></span>'+
     '<span class="status-badge '+(c.refunded?'risk':'active')+'">'+label+'</span><span class="home-reference-arrow" aria-hidden="true">&rsaquo;</span>'+
   '</button>';
 }
@@ -8393,7 +8454,7 @@ function showHomeTracker(){
 function showHome(){
   var totalRaised=DB.listings.reduce(function(s,l){return s+raisedOf(l)},0);
   var open=DB.listings.reduce(function(s,l){return s+openSlots(l)},0);
-  var hl=document.getElementById('homeLive');if(hl)hl.textContent=money(totalRaised)+' raised live — '+open+' spots open';
+  var hl=document.getElementById('homeLive');if(hl)hl.textContent=money(totalRaised)+' raised live - '+open+' spots open';
   renderHomeLiveFeed();
   renderHomeCampaigns();
   if(!homeType)homeType=featured().type;
@@ -8456,9 +8517,9 @@ function campaignSocialLinks(l){
 function campaignSpotHtml(price,meta,claim,index){
   var brand=claim&&claim.brand?(claim.brand.trim()||'Sponsor'):'';
     var mark=claim?(safeImageAttr(claim.logo)?'<img src="'+safeImageAttr(claim.logo)+'" alt="'+safeCardText(brand)+' logo">':'<span>'+safeCardText(brand.slice(0,2).toUpperCase())+'</span>'):'';
-  return '<div class="campaign-price'+(claim?' claimed':'')+'">'+
+  return '<div class="campaign-price'+(claim?' reserved':'')+'">'+
     '<div class="campaign-price-top"><span>Spot '+(index+1)+'</span>'+
-      (claim?'<span class="campaign-price-status">Claimed</span>':'<span class="campaign-price-status">Open</span>')+
+      (claim?'<span class="campaign-price-status">Reserved</span>':'<span class="campaign-price-status">Open</span>')+
     '</div>'+
     '<div class="campaign-price-main">'+
       (claim?'<div class="campaign-price-logo">'+mark+'</div>':'<div class="campaign-price-open-mark" aria-hidden="true">+</div>')+
@@ -8470,7 +8531,7 @@ function renderCampaignDetails(l){
   var el=document.getElementById('campaignDetails');if(!el)return;
   var photo=PHO(l),label=LBLL(l),category=ITEMS[l.type]&&ITEMS[l.type].cat?ITEMS[l.type].cat:'Custom';
   var purpose=l.purpose||'The owner has not added a purpose statement yet.';
-  var claimed=(l.claims||[]).filter(Boolean).length,open=openSlots(l),raised=raisedOf(l),goal=goalOf(l),pct=Math.round(pctOf(l));
+  var reservedCount=(l.claims||[]).filter(Boolean).length,open=openSlots(l),raised=raisedOf(l),goal=goalOf(l),pct=Math.round(pctOf(l));
   var spotPrices=(l.prices||[]).map(function(price,i){return{price:price,meta:campaignSpotMeta(l,i),claim:(l.claims||[])[i]||null}});
   var photoHtml=safeImageAttr(photo)?'<img src="'+safeImageAttr(photo)+'" alt="'+safeCardText(label)+'">':'<div class="campaign-cover-fallback">'+safeCardText(label)+'</div>';
   var profile=ownerAvatarHtml(l);
@@ -8479,16 +8540,16 @@ function renderCampaignDetails(l){
       '<div class="campaign-cover">'+photoHtml+'</div>'+
       '<div><div class="campaign-category">'+safeCardText(category)+'</div>'+
         '<h2 class="campaign-title" id="campaignTitle">'+safeCardText(label)+'</h2>'+
-        '<div class="campaign-owner">'+profile+'<span>Posted by <b>'+safeCardText(l.owner||'This owner')+'</b> — '+ago(l.created)+'</span></div>'+
+        '<div class="campaign-owner">'+profile+'<span>Posted by <b>'+safeCardText(l.owner||'This owner')+'</b> - '+ago(l.created)+'</span></div>'+
       '</div>'+
     '</div>'+
     '<div class="campaign-grid">'+
       '<section class="campaign-panel campaign-purpose">'+
         '<div class="campaign-label">Purpose</div><p>'+safeCardText(purpose)+'</p>'+
         '<div class="campaign-facts">'+
-          '<div class="campaign-fact"><span>Item ships</span><b>'+safeCardText(l.closed?'Closed — claims refunded':(l.shippedAt?'Shipped to owner':(pct>=100?'Funded — preparing shipment':'New at 100% funded')))+'</b></div>'+
+          '<div class="campaign-fact"><span>Item ships</span><b>'+safeCardText(l.closed?'Closed - claims refunded':(l.shippedAt?'Shipped to owner':(pct>=100?'Funded - preparing shipment':'New at 100% funded')))+'</b></div>'+
           '<div class="campaign-fact"><span>Owner check-in</span><b>'+safeCardText(checkinCadenceText(l))+'</b></div>'+
-          '<div class="campaign-fact"><span>Campaign term</span><b>'+termOf(l)+' months'+(l.termLocked?' — locked':'')+'</b></div>'+
+          '<div class="campaign-fact"><span>Campaign term</span><b>'+termOf(l)+' months'+(l.termLocked?' - locked':'')+'</b></div>'+
           '<div class="campaign-fact"><span>Branding method</span><b>'+safeCardText(brandingMaterial(l.type))+'</b></div>'+
         '</div>'+
       '</section>'+
@@ -8505,7 +8566,7 @@ function renderCampaignDetails(l){
       '<section class="campaign-panel campaign-panel-wide campaign-funding-panel">'+
         '<div class="campaign-funding-head"><div><div class="campaign-label">Funding progress</div><div class="campaign-funding-amount">'+money(raised)+' <span>of '+money(goal)+'</span></div></div><div class="campaign-percent">'+pct+'% funded</div></div>'+
         '<div class="campaign-progress"><i style="width:'+pct+'%"></i></div>'+
-        '<div class="campaign-funding-meta"><span>'+claimed+' of '+(l.slots||0)+' spots reserved</span><span>'+open+' open '+(open===1?'spot':'spots')+'</span></div>'+
+        '<div class="campaign-funding-meta"><span>'+reservedCount+' of '+(l.slots||0)+' spots reserved</span><span>'+open+' open '+(open===1?'spot':'spots')+'</span></div>'+
       '</section>'+
       '<div class="campaign-lower-grid">'+
       '<section class="campaign-panel campaign-spot-panel">'+
@@ -8647,7 +8708,7 @@ function postActivityRows(){
 function postActivityText(row){
   var owner=row.owner||'Someone',label=row.label||'an item',spots=parseInt(row.spots,10);
   if(row.owner&&row.label){
-    return '<b>'+safeCardText(owner)+'</b> posted a <b>'+safeCardText(label)+'</b> — '+(isNaN(spots)?'':spots+' '+(spots===1?'spot':'spots'));
+    return '<b>'+safeCardText(owner)+'</b> posted a <b>'+safeCardText(label)+'</b> - '+(isNaN(spots)?'':spots+' '+(spots===1?'spot':'spots'));
   }
   return row.txt||'A user posted an item';
 }
@@ -8670,7 +8731,9 @@ function syncDashboardFilterState(){
 }
 function renderDash(){
   syncDashboardFilterState();
-  var all=DB.listings.filter(isLaunchLiveCampaign);
+  var all=DB.listings.filter(function(l){
+    return isLaunchLiveCampaign(l) || LOCKED_LAUNCH_EXAMPLE_IDS.indexOf(l.id)>=0;
+  });
   renderDashboardLiveFeed();
   var list=all.filter(function(l){
     var it={label:LBLL(l),cat:listingCategory(l)};
@@ -8699,10 +8762,10 @@ function renderDash(){
     return true;
   });
   if(F.sort==='new')list.sort(function(a,b){return b.created-a.created});
+  list=topFundedCampaigns(list);
   if(F.sort==='close')list.sort(function(a,b){return pctOf(b)-pctOf(a)});
   if(F.sort==='cheap')list.sort(function(a,b){return listingSpotPrice(a)-listingSpotPrice(b)});
   if(F.sort==='rich')list.sort(function(a,b){return goalOf(b)-goalOf(a)});
-  list=topFundedCampaigns(list);
   var g=document.getElementById('dashGrid');g.innerHTML='';
   if(!list.length){
     g.innerHTML='<div class="empty"><b>'+(all.length?'Nothing matches those filters':'No live campaigns yet')+'</b>'+(all.length?'Loosen the filters, or be the first to post one.':'Real campaigns will appear here as soon as they are posted.')+'</div>';
@@ -8786,6 +8849,8 @@ function renderAvatarPicker(){
     var src='avatars/avatar-'+pad(i)+'.png';
     var b=document.createElement('button');
     b.type='button';
+    b.setAttribute('role','radio');
+    b.setAttribute('aria-checked',B.avatar===src?'true':'false');
     b.className='avatar-option'+(B.avatar===src?' on':'');
     b.setAttribute('aria-label','Choose character '+i);
     b.setAttribute('aria-pressed',B.avatar===src?'true':'false');
@@ -9069,8 +9134,9 @@ function showBuild(){
       B.slots=1;
       B.prices=suggest(k,B.slots);
       B.habs=(HAB_BY_CAT[it.cat]||[]).slice();
-      document.querySelectorAll('#itemPick button').forEach(function(bb){bb.classList.remove('on')});
+      document.querySelectorAll('#itemPick button').forEach(function(bb){bb.classList.remove('on');bb.setAttribute('aria-checked','false')});
       b.classList.add('on');
+      b.setAttribute('aria-checked','true');
       cuPickTemplate(k);
       renderVariants(k);
       renderBuildSpecs(k);
@@ -9148,6 +9214,11 @@ function showBuild(){
   document.getElementById('slotPlus').onclick=function(){var cap=CU.template?tmplMax(CU.template):(CU.closed?8:ITEMS[B.type].maxSlots);if(B.slots<cap){B.slots++;if(!CU.template)B.prices=suggest(B.type,B.slots);refreshBuild();cuRepart()}};
   var ownerAssent=document.getElementById('ownerAssent'),postBtn=document.getElementById('postBtn');
   ownerAssent.onchange=function(){postBtn.disabled=!ownerAssent.checked};
+  var postingAddress=document.getElementById('pAddress');
+  postingAddress.onblur=function(){validatePostingAddress(true)};
+  postingAddress.oninput=function(){
+    if(document.getElementById('pAddressError').style.display!=='none')validatePostingAddress(true);
+  };
   postBtn.onclick=postListing;cuInit();
   (function(){
     document.getElementById('itemPick').style.display='';
@@ -9157,9 +9228,9 @@ function showBuild(){
   refreshBuild();
 }
 function refreshBuild(){
-  document.querySelectorAll('#itemPick button').forEach(function(b,i){var k=Object.keys(ITEMS)[i];b.className='itemcard'+(k===B.type?' on':'')});
+  document.querySelectorAll('#itemPick button').forEach(function(b,i){var k=Object.keys(ITEMS)[i],selected=k===B.type;b.className='itemcard'+(selected?' on':'');b.setAttribute('aria-checked',selected?'true':'false')});
   document.getElementById('slotLbl').textContent=B.slots+(B.slots===1?' spot':' spots');
-  document.getElementById('slotSub').textContent=B.slots===1?'full sponsor':'faster funding';
+  document.getElementById('slotSub').textContent=B.slots===1?'full brand':'faster funding';
   document.getElementById('slotMinus').disabled=B.slots<=1;
   document.getElementById('slotPlus').disabled=B.slots>=ITEMS[B.type].maxSlots;
   document.getElementById('cadOut').textContent=checkinCadenceText(B);
@@ -9188,7 +9259,7 @@ function renderBuildSpecs(k){
   var table=document.getElementById('buildSpecTable');
   if(!title||!price||!table)return;
   title.innerHTML=sp.label;
-  price.innerHTML='Retail '+money(selectedRetail)+' — funded by its sponsors';
+  price.innerHTML='Retail '+money(selectedRetail)+' - funded by its brands';
   table.innerHTML='';
   sp.specs.forEach(function(r){
     var value=r[1];
@@ -9212,7 +9283,7 @@ function cuFaceChips(){
   CU.faces.forEach(function(f,i){
     var b=document.createElement('span');
     b.className='chip';b.style.cssText='border:1px solid rgba(60,60,67,.24);border-radius:999px;padding:4px 12px;font-size:12px;font-weight:600';
-    b.textContent=(FACE_NAMES[i]||('Angle '+(i+1)))+' — '+f.tiles.length+' spots';
+    b.textContent=(FACE_NAMES[i]||('Angle '+(i+1)))+' - '+f.tiles.length+' spots';
     el.appendChild(b);
   });
 }
@@ -9259,7 +9330,7 @@ function cuSaveFace(){
   CU.img=null;CU.photo=null;CU.poly=[];CU.tracePointer=null;CU.tracing=false;CU.closed=false;CU.tiles=[];CU.prices=[];
   if(CU.syncControls)CU.syncControls();
   cuFaceChips();
-  document.getElementById('cuUpl').innerHTML=CU.faces.length>1?'Angle saved — placement sizes matched to the first photo':'Angle saved — upload the next photo (up to 4)';
+  document.getElementById('cuUpl').innerHTML=CU.faces.length>1?'Angle saved - placement sizes matched to the first photo':'Angle saved - upload the next photo (up to 4)';
   var cv=document.getElementById('cuCanvas');
   if(cv)cv.getContext('2d').clearRect(0,0,cv.width,cv.height);
   return true;
@@ -9310,6 +9381,7 @@ function cuCreateTracedShape(){
   CU.closed=true;
   CU.prices=boxPrices();
   B.prices=CU.prices.slice();
+  if(typeof toast==='function')toast('Custom shape created');
   return true;
 }
 function pointInPolygon(x,y,pts){
@@ -9553,7 +9625,7 @@ function cuInit(){
           CU.sel=CU.tiles.length?0:-1;CU.closed=!!CU.tiles.length;
            CU.zoom=1;
           document.getElementById('cuWrap').style.display='block';
-          upl.textContent=CU.tiles.length?'Photo scanned — adjust the suggested placements below':'Photo loaded — trace each custom placement shape below';
+          upl.textContent=CU.tiles.length?'Photo scanned - adjust the suggested placements below':'Photo loaded - trace each custom placement shape below';
           traceUI();cuPricingUI();cuDraw();totals()};
         im2.src=CU.photo;
       };
@@ -9579,10 +9651,10 @@ function cuInit(){
     if(CU.tracing){
       if(!n){
         hint.textContent='Tap the photo to place your first point. Tap the first dot to finish.';
-        status.textContent='0 points — Place the first point to begin.';
+        status.textContent='0 points - Place the first point to begin.';
       }else if(n<3){
         hint.textContent=n+' point'+(n===1?'':'s')+' added. Add '+(3-n)+' more, then tap the first dot to finish.';
-        status.textContent=n+' point'+(n===1?'':'s')+' — At least 3 points are required.';
+        status.textContent=n+' point'+(n===1?'':'s')+' - At least 3 points are required.';
       }else{
         hint.textContent=n+' points added. Tap the first dot to finish.';
         status.textContent='Tap the first dot to finish.';
@@ -9603,7 +9675,7 @@ function cuInit(){
     var hadTrace=CU.tracing||CU.poly.length;
     CU.tracing=false;CU.poly=[];CU.tracePointer=null;CU.sel=-1;
     selUI();traceUI();cuDraw();
-    if(showMessage&&hadTrace)toast('Trace canceled — no shape was added');
+    if(showMessage&&hadTrace)toast('Trace canceled - no shape was added');
   }
   function deleteSelectedShape(showMessage){
     if(CU.sel<0||!CU.tiles[CU.sel])return false;
@@ -9628,18 +9700,15 @@ function cuInit(){
     cancelTrace(false);
     if(CU.template){
       cuApplyTemplate();
-      toast('Placement shapes reset');
+      toast('Placement zones reset');
       return;
     }
     CU.tiles=[];CU.prices=[];CU.closed=false;B.prices=[];CU.sel=-1;
     selUI();traceUI();cuDraw();totals();
-    toast('Placement shapes cleared');
+    toast('Placement zones cleared');
   }
   function setTool(tool){
     if(tool==='trace'){
-      if(!CU.customized&&CU.tiles.length){
-        CU.tiles=[];CU.prices=[];B.prices=[];CU.closed=false;
-      }
       CU.customized=true;
       CU.tracing=true;CU.poly=[];CU.tracePointer=null;CU.sel=-1;
     }else{
@@ -9676,7 +9745,7 @@ function cuInit(){
         CU.poly=[];CU.tracePointer=null;CU.tracing=false;
         document.getElementById('cuTrace').classList.remove('on');
         selUI();traceUI();cuDraw();totals();
-        toast('Custom shape created');
+        toast('Zone closed');
         return;
       }
       CU.poly.push([x,y]);CU.tracePointer=null;traceUI();cuDraw();
@@ -9781,7 +9850,7 @@ function cuInit(){
     if(e.key==='Escape'&&CU.tracing){e.preventDefault();cancelTrace(true)}
     if((e.key==='Backspace'||e.key==='Delete')&&CU.tracing&&CU.poly.length){
       e.preventDefault();CU.poly.pop();CU.tracePointer=null;traceUI();cuDraw();
-      toast('Point removed — '+CU.poly.length+' point'+(CU.poly.length===1?'':'s')+' left');
+      toast('Point removed - '+CU.poly.length+' point'+(CU.poly.length===1?'':'s')+' left');
     }else if((e.key==='Backspace'||e.key==='Delete')&&!CU.tracing&&CU.sel>=0){
       e.preventDefault();deleteSelectedShape(true);
     }
@@ -9809,13 +9878,13 @@ function cuInit(){
   document.getElementById('cuUndo').onclick=function(){
     if(CU.tracing&&CU.poly.length){
       CU.poly.pop();CU.tracePointer=null;traceUI();cuDraw();
-      toast('Point removed — '+CU.poly.length+' point'+(CU.poly.length===1?'':'s')+' left');
+      toast('Point removed - '+CU.poly.length+' point'+(CU.poly.length===1?'':'s')+' left');
     }
   };
   document.getElementById('cuCancelTrace').onclick=function(){cancelTrace(true)};
   document.getElementById('cuReset').onclick=resetZones;
   document.getElementById('cuTrace').onclick=function(){
-    if(CU.tracing){toast(CU.poly.length?'Trace in progress — tap the first dot to finish':'Trace mode is ready — place your first point');return}
+    if(CU.tracing){toast(CU.poly.length?'Trace in progress - tap the first dot to finish':'Trace mode is ready - place your first point');return}
     setTool('trace');
   };
   document.getElementById('cuShapeRect').onclick=function(){
@@ -9834,7 +9903,7 @@ function cuInit(){
   document.getElementById('cuRetail').onchange=function(){cuRepart()};
   document.getElementById('cuCompleteSizing').onclick=function(){
     if(CU.tracing||CU.poly.length){toast('Finish or cancel the current trace first');return}
-    if(!CU.tiles.length){toast('Add at least one sponsor spot before completing sizing');return}
+    if(!CU.tiles.length){toast('Add at least one brand spot before completing sizing');return}
     CU.sizingComplete=true;CU.sel=-1;CU.prices=boxPrices();B.prices=CU.prices.slice();
     selUI();cuPricingUI();cuDraw();totals();
   };
@@ -9849,7 +9918,7 @@ function cuInit(){
     cuSaveFace();
   };
 }
-/* where the manufacturer's own logo lives — ads may never cover it */
+/* where the manufacturer's own logo lives - ads may never cover it */
 var LOGO_ZONES={
   macbook:{x:0.50,y:0.50,w:0.15,h:0.15},
   iphone:{x:0.50,y:0.52,w:0.15,h:0.12},
@@ -9894,6 +9963,11 @@ function tmplMax(t){
 function cuApplyTemplate(){
   var t=CU.template;if(!t)return;
   if(CU.customized)return;
+  if(!CU.customized&&CU.tiles.length){
+    CU.tiles=[];
+    CU.prices=[];
+    B.prices=[];
+  }
   CU.tracing=false;CU.poly=[];CU.tracePointer=null;CU.sel=-1;CU.sizingComplete=false;
   var KO=null; /* logo keep-out retired */
   var mx=tmplMax(t);
@@ -10049,8 +10123,8 @@ function cuUpdateSpotPriceTotal(){
   var purchaseGoal=markedUpRetail(document.getElementById('cuRetail').value||'100');
   var total=cuSpotPriceTotal(),difference=purchaseGoal-total;
   el.classList.toggle('is-valid',difference===0&&CU.prices.length===CU.tiles.length);
-  el.textContent=difference===0?'Spot total '+money(total)+' — matches full purchase goal':
-    'Spot total '+money(total)+' of '+money(purchaseGoal)+' — '+(difference>0?'add ':'remove ')+money(Math.abs(difference));
+  el.textContent=difference===0?'Spot total '+money(total)+' - matches full purchase goal':
+    'Spot total '+money(total)+' of '+money(purchaseGoal)+' - '+(difference>0?'add ':'remove ')+money(Math.abs(difference));
 }
 function cuRenderSpotPrices(){
   var grid=document.getElementById('cuSpotPriceGrid');if(!grid)return;
@@ -10084,12 +10158,31 @@ function totals(){
   var v=prices.reduce(function(a,b){return a+b},0);
   document.getElementById('totalOut').textContent=money(v);
 }
+function validatePostingAddress(showError){
+  var field=document.getElementById('pAddress'),error=document.getElementById('pAddressError');
+  var address=field.value.trim(),message='';
+  if(/\bP(?:OST)?\.?\s*O(?:FFICE)?\.?\s*(?:BOX|B\.?\s*O\.?\s*X)\b/i.test(address)){
+    message='Please use a street address. We cannot deliver to a PO Box.';
+  }else if(address){
+    var parts=address.split(',').map(function(part){return part.trim()}).filter(Boolean);
+    var statePostal=parts.length>2?parts[parts.length-1].match(/^([A-Za-z]{2})\s+(\d{5}(?:-\d{4})?)$/):null;
+    if(parts.length<3||!statePostal)message='Enter a street address as street, city, two-letter state and ZIP.';
+  }
+  field.setAttribute('aria-invalid',message?'true':'false');
+  error.textContent=message;
+  error.style.display=showError&&message?'block':'none';
+  return !message;
+}
 async function postListing(){
   var name=document.getElementById('pName').value.trim();
   var mail=document.getElementById('pMail').value.trim();
   var address=document.getElementById('pAddress').value.trim();
   var purpose=String(B.purpose||'').trim();
   if(!name||!mail||!address){toast('Add your name, email, and shipping address to post');return}
+  if(!validatePostingAddress(true)){toast(document.getElementById('pAddressError').textContent);return}
+  var addressParts=address.split(',').map(function(part){return part.trim()}).filter(Boolean);
+  var statePostal=addressParts.length>2?addressParts[addressParts.length-1].match(/^([A-Za-z]{2})\s+(\d{5}(?:-\d{4})?)$/):null;
+  if(addressParts.length<3||!statePostal){toast('Enter a street address as street, city, two-letter state and ZIP.');return}
   if(!document.getElementById('ownerAssent').checked){toast('Agree to the owner terms before posting');return}
   if(purpose.length>500){toast('Purpose of the item must be 500 characters or fewer');return}
   if(!B.avatar){toast('Select a character before posting');return}
@@ -10164,9 +10257,11 @@ async function postListing(){
       prices:standardPrices,pricesIncludeMarkup:true,claims:standardPrices.map(function(){return null}),created:Date.now(),postedAt:Date.now(),unsoldTimeoutDays:60,
        termMonths:selectedTerm,checkinFrequency:B.checkinFrequency||'monthly',termLocked:true,termLockedAt:Date.now(),brandingMode:selectedBranding,status:'live',shipping:{name:name,address:address}};
   }
+  var highValue=l.prices.reduce(function(sum,price){return sum+spotPurchaseTotal(l,price)},0)>=2000;
+  if(highValue&&(!Object.keys(B.socialLinks||{}).length||!document.getElementById('w9Input').files[0])){toast(!Object.keys(B.socialLinks||{}).length?'Add at least one public social handle for a campaign of $2,000 or more.':'Submit a completed W-9 PDF before publishing this campaign.');return}
   try{
     var presentation=await durableCampaignPresentation(l);
-    var registerResponse=await fetch('/api/campaigns',{
+    var draftResponse=await fetch('/api/campaign-drafts',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
@@ -10180,16 +10275,30 @@ async function postListing(){
         presentation:presentation
       })
     });
-    if(!registerResponse.ok)throw new Error('Campaign registration failed');
-    var registeredCampaign=await registerResponse.json();
+    var draft=await apiResponse(draftResponse,'Campaign draft could not be created.');
+    var w9IntentId;
+    if(highValue){
+      var w9Status=document.getElementById('w9Status');w9Status.textContent='Uploading W-9 securely…';
+      var w9Intent=await requestFinalizedUpload('/api/campaign-drafts/'+encodeURIComponent(draft.id)+'/w9/request-url',function(intentId){return '/api/campaign-drafts/'+encodeURIComponent(draft.id)+'/w9/'+encodeURIComponent(intentId)+'/finalize'},document.getElementById('w9Input').files[0]);
+      w9IntentId=w9Intent.id;w9Status.textContent='W-9 verified securely.';
+    }
+    var publishResponse=await fetch('/api/campaign-drafts/'+encodeURIComponent(draft.id)+'/publish',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(w9IntentId?{w9IntentId:w9IntentId}:{})});
+    var registeredCampaign=await apiResponse(publishResponse,'Campaign could not be published.');
+    var shippingResponse=await fetch('/api/campaigns/'+encodeURIComponent(l.id)+'/shipping-address',{
+      method:'PUT',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({recipientName:name,line1:addressParts.slice(0,-2).join(', '),city:addressParts[addressParts.length-2],state:statePostal[1].toUpperCase(),postalCode:statePostal[2],country:'US'})
+    });
+    var savedShipping=await apiResponse(shippingResponse,'Shipping address could not be saved.');
     registeredCampaign.ownerEmail=l.mail;
     l=campaignFromApi(registeredCampaign);
+    l.shipping={name:savedShipping.recipientName,address:savedShipping.line1,city:savedShipping.city,state:savedShipping.state,postal:savedShipping.postalCode,country:savedShipping.country,validatedAt:savedShipping.validatedAt};
   }catch(error){
-    toast('Could not publish this campaign. Please try again.');
+    toast(error&&error.message?error.message:'Could not publish this campaign. Please try again.');
     return;
   }
   DB.listings.unshift(l);
-  logAct('<b>'+name+'</b> posted a <b>'+LBLL(l)+'</b> — '+l.slots+' spot'+(l.slots>1?'s':''),
+  logAct('<b>'+name+'</b> posted a <b>'+LBLL(l)+'</b> - '+l.slots+' spot'+(l.slots>1?'s':''),
     {kind:'post',listingId:l.id,owner:name,label:LBLL(l),spots:l.slots});
   saveDB();
   toast('Your item is live and unbranded');
@@ -10619,20 +10728,7 @@ function mergeTrackMatches(localMatches,serverMatches){
   return Object.keys(byKey).map(function(key){return byKey[key]});
 }
 async function syncTrackingOwnerEmail(mail){
-  var owned=DB.listings.filter(function(l){return !isDemoListing(l)&&(l.mail||'').toLowerCase()===mail});
-  await Promise.all(owned.map(async function(l){
-    var presentation=await durableCampaignPresentation(l);
-    return fetch('/api/campaigns',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        id:l.id,itemType:l.sourceType||l.type,title:LBLL(l),ownerName:l.owner,ownerEmail:l.mail,
-        pricesCents:l.prices.map(function(price){return Math.round(spotPurchaseTotal(l,price)*100)}),
-        ownerAssent:{accepted:true,termsVersion:'2026-09-04',contentVersion:'2026-09-04',checkinVersion:'2026-09-04'},
-        presentation:presentation
-      })
-    }).then(function(response){if(!response.ok)throw new Error('Owner email sync failed')});
-  }));
+  return mail;
 }
 function showTrack(){
   var btn=document.getElementById('tkBtn');
@@ -10654,7 +10750,7 @@ function showTrack(){
         if(!response.ok)throw new Error('Magic link request failed');
         confirmation.style.display='block';
       }catch(error){
-        err.textContent='Tracking is temporarily unavailable. Please try again.';
+        err.textContent='No items found for that email yet.';
         err.style.display='block';
       }
       btn.disabled=false;btn.textContent='Email me a one-time link';
@@ -10692,21 +10788,21 @@ function trackSubmitKey(subId){
 }
 function trackSubmitHtml(l,c){
   if(!c.ownerView)return '';
-  if(c.remoteOnly)return '';
   var key=trackSubmitKey(c.subId);
   var checkins=l.checkins||[];
   var first=checkins.length===0;
-  var ready=!!c.demo||!!l.shippedAt;
+  var ready=!!c.demo||!!l.shippedAt||['shipped','active','complete'].indexOf(l.lifecycleStatus)>=0;
   if(!ready){
     return '<div class="track-submit">'+
       '<div class="track-submit-title">Submit item proof</div>'+
       '<p class="track-submit-copy">Proof submissions unlock after the item has shipped to the owner.</p>'+
     '</div>';
   }
+  if(!ownerCheckinIsDue(l))return '<div class="track-submit"><div class="track-submit-title">Check-in schedule</div><p class="track-submit-copy">No check-in is due right now. Return when the next server due window opens.</p></div>';
   var status=checkinStatus(l);
   return '<div class="track-submit">'+
     '<div class="track-submit-title">'+(first?'Submit your receipt and first photo':'Submit month '+(checkins.length+1)+' photo')+'</div>'+
-     '<p class="track-submit-copy">'+(first?'Your receipt proves the item was purchased after funding. Add the first item photo to start the '+termOf(l)+'-month check-in timeline.':'Add the latest photo of the item to keep this month\\u2019s check-in on track.')+'</p>'+
+     '<p class="track-submit-copy">'+(first?'Your receipt confirms the item was ordered after funding. Add the first item photo to start the '+termOf(l)+'-month check-in timeline.':'Add the latest photo of the item to keep this month\\u2019s check-in on track.')+'</p>'+
     (first?'<div class="track-submit-grid"><div class="field"><label class="label" for="trackDate_'+key+'">Purchase date on receipt</label><input class="input" id="trackDate_'+key+'" type="date"></div><div><label class="label" for="trackReceipt_'+key+'">Receipt</label><input id="trackReceipt_'+key+'" type="file" accept="image/*" class="input" style="padding:9px"></div></div>':'')+
     '<div class="field" style="margin-top:12px"><label class="label" for="trackPhoto_'+key+'">'+(first?'First item photo':'Month '+(checkins.length+1)+' photo')+'</label><input id="trackPhoto_'+key+'" type="file" accept="image/*" class="input" style="padding:9px"></div>'+
     '<p class="finetext" id="trackSubmitErr_'+key+'" style="display:none;color:#B23327;margin:10px 0 0"></p>'+
@@ -10737,6 +10833,25 @@ function submitTrackProof(itemId,subId,key){
     if(l.fundedAt&&receiptTime<l.fundedAt-86400000){fail('That receipt date is before the item was fully funded. Use a receipt from after funding.');return}
   }
   var photoFile=photoInput.files[0],receiptFile=first?receiptInput.files[0]:null;
+  if(!isDemoListing(l)){
+    if(!ownerCheckinIsDue(l)){fail('A check-in is not currently due.');return}
+    var submitButton=err&&err.nextElementSibling;
+    if(submitButton){submitButton.disabled=true;submitButton.textContent='Submitting…'}
+    (async function(){
+      try{
+        var checkinIntent=await requestFinalizedUpload('/api/campaigns/'+encodeURIComponent(l.id)+'/checkins/photo/request-url',function(intentId){return '/api/campaigns/'+encodeURIComponent(l.id)+'/checkins/photo/'+encodeURIComponent(intentId)+'/finalize'},photoFile);
+        var response=await fetch('/api/campaigns/'+encodeURIComponent(l.id)+'/checkins',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({note:first?'First check-in. Receipt date: '+dateInput.value:'Scheduled owner check-in',photoIntentId:checkinIntent.id})});
+        var submitted=await apiResponse(response,'Check-in could not be submitted.');
+        l.checkins=l.checkins||[];
+        l.checkins.push({date:new Date(submitted.submittedAt).getTime(),photo:storedAssetUrl(submitted.photoObjectPath),confirmId:submitted.id});
+        l.checkinStatus='submitted';saveDB();
+        var found=TRACK_MATCHES.filter(function(m){return m.c&&m.c.subId===subId})[0];
+        if(found)renderTrackResults(TRACK_MATCHES);
+        toast('Check-in submitted - '+submitted.id);
+      }catch(error){fail(error&&error.message?error.message:'Check-in could not be submitted.');if(submitButton){submitButton.disabled=false;submitButton.textContent=first?'Submit receipt + first photo':'Submit check-in photo'}}
+    })();
+    return;
+  }
   var photoReader=new FileReader(),receiptReader=first?new FileReader():null;
   photoReader.onload=function(){
     if(first){
@@ -10758,7 +10873,7 @@ function submitTrackProof(itemId,subId,key){
       var found=TRACK_MATCHES.filter(function(m){return m.c&&m.c.subId===subId})[0];
       if(found)renderTrackResults(TRACK_MATCHES);
     }
-    toast(first?'Receipt and first photo submitted — '+cid:'Month '+l.checkins.length+' photo submitted — '+cid);
+    toast(first?'Receipt and first photo submitted - '+cid:'Month '+l.checkins.length+' photo submitted - '+cid);
   }
 }
 function sendDelayNotice(l){
@@ -10766,8 +10881,8 @@ function sendDelayNotice(l){
   var promised=l.promisedDeliveryAt||l.fundedAt+deliveryDaysOf(l)*86400000;
   l.promisedDeliveryAt=promised;
   l.delayNotice={sentAt:Date.now(),proposedAt:promised+30*86400000,requiresResponse:false};
-  logAct('<b>Delivery delay notice</b> sent for '+LBLL(l)+' — brands can wait or receive a full refund');
-  saveDB();toast('Delay notice sent — brands can choose wait or refund');
+  logAct('<b>Delivery delay notice</b> sent for '+LBLL(l)+' - brands can wait or receive a full refund');
+  saveDB();toast('Delay notice sent - brands can choose wait or refund');
 }
 function respondDelay(itemId,subId,choice){
   var l=DB.listings.filter(function(x){return x.id===itemId})[0],c=null;
@@ -10776,7 +10891,7 @@ function respondDelay(itemId,subId,choice){
   if(!l||!c)return;
   c.delayResponse=choice;c.delayRespondedAt=Date.now();
   if(choice==='refund'){c.refunded=true;c.refundedAt=Date.now();c.refundReason='Brand chose a full refund after a delivery delay';}
-  saveDB();toast(choice==='refund'?'Full refund recorded':'Thanks — your wait consent was recorded');
+  saveDB();toast(choice==='refund'?'Full refund recorded':'Thanks - your wait consent was recorded');
   if(document.getElementById('tkResult')&&TRACK_MATCHES.length)renderTrackResults(TRACK_MATCHES);
   if(document.getElementById('tkDemoResult'))renderTrackDemos();
   if(CUR&&CUR.id===l.id){refreshItemCards();drawItemMap()}
@@ -10802,10 +10917,10 @@ function trackCardHtml(l,c){
   var steps=[];
    var orderStatus=c.orderStatus||'reserved';
   if(c.ownerView)steps.push({done:true,label:'Listing launch ready',sub:new Date(c.purchasedAt).toLocaleDateString()+' \u00b7 linked to your posting email'});
-   else steps.push({done:!['pending','payment_failed'].includes(orderStatus),active:orderStatus==='pending',label:orderStatus==='pending'?'Reservation started':(orderStatus==='payment_failed'?'Payment needs an update':(orderStatus==='funded'?'Spot funded':'Spot reserved')),sub:new Date(c.purchasedAt).toLocaleDateString()+' \u00b7 '+money(c.amt+c.fee)+(orderStatus==='funded'?' charged at funding':' no charge yet')});
+  else steps.push({done:!['pending','payment_failed'].includes(orderStatus),active:orderStatus==='pending',label:orderStatus==='pending'?'Reservation started':(orderStatus==='payment_failed'?'Payment needs an update':(orderStatus==='funded'?'Spot funded':'Spot reserved')),sub:new Date(c.purchasedAt).toLocaleDateString()+', '+money(c.amt+c.fee)+(orderStatus==='funded'?' charged at funding':' no charge yet')});
   var pct=l.serverFundedPercent!=null?l.serverFundedPercent:pctOf(l);
    var funded=l.serverFundedCount!=null?l.serverFundedCount>=l.slots:pct>=100;
-  steps.push({done:!!l.shippedAt,active:funded&&!l.shippedAt,label:'Item fully funded and shipped',sub:l.shippedAt?'All spots funded, item purchased and shipped to the owner':(funded?'All spots funded, shipment is being prepared':Math.round(pct)+'% funded so far')});
+  steps.push({done:!!l.shippedAt,active:funded&&!l.shippedAt,label:'Item fully funded and shipped',sub:l.shippedAt?'All spots funded, item ordered and shipped to the owner':(funded?'All spots funded, shipment is being prepared':Math.round(pct)+'% funded so far')});
   var checkins=l.checkins||[],checkState=checkinStatus(l);
   for(var i=0;i<termOf(l);i++){
     var ci=checkins[i];
@@ -10863,7 +10978,7 @@ function downloadLogoPack(){
     a.download=(c.brand||'sponsor').replace(/[^a-z0-9]/gi,'_').toLowerCase()+'_spot'+(i+1)+'.png';
     document.body.appendChild(a);a.click();a.remove();got++;
   });
-  toast(got?got+' logo file'+(got>1?'s':'')+' downloading — have the '+brandingMethod(CUR.type)+' made':'No uploaded logo files on this listing yet');
+  toast(got?got+' logo file'+(got>1?'s':'')+' downloading - have the '+brandingMethod(CUR.type)+' made':'No uploaded logo files on this listing yet');
 }
 function drawItemMap(){
   var el=document.getElementById('itemMap');
@@ -10917,7 +11032,7 @@ function renderItemSpotList(){
      var stateLabel=claim?(claim.orderStatus==='funded'?'Funded':'Reserved'):(CUR.closed?'Expired':'Reserve');
     var button=document.createElement('button');
     button.type='button';
-    button.className='ap-spot-option '+(claim?'claimed':'open');
+    button.className='ap-spot-option '+(claim?'reserved':'open');
     button.disabled=!!claim||!!CUR.closed;
      button.setAttribute('aria-label',claim?
         ('Spot '+(i+1)+' reserved by '+(claim.brand||'a brand')):
@@ -10928,7 +11043,7 @@ function renderItemSpotList(){
       '<svg class="ap-spot-plus" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>';
     button.innerHTML=
       '<span class="ap-spot-mark">'+mark+'</span>'+
-      '<span class="ap-spot-copy"><strong>Spot '+(i+1)+'</strong><span>'+safeCardText(meta.pos)+' — '+safeCardText(meta.size)+'</span></span>'+
+      '<span class="ap-spot-copy"><strong>Spot '+(i+1)+'</strong><span>'+safeCardText(meta.pos)+', '+safeCardText(meta.size)+'</span></span>'+
        '<span class="ap-spot-price"><b>'+money(price)+'</b><span>'+stateLabel+'</span></span>';
     if(!claim&&!CUR.closed)button.onclick=function(){openBid(i,button)};
     host.appendChild(button);
@@ -10983,24 +11098,80 @@ function refreshItemCards(){
     }).join(''):'<p class="finetext">No public profiles linked yet.</p>';
   }
   document.getElementById('iCad').textContent=checkinCadenceText(CUR);
-   var listingFunded=CUR.lifecycleStatus==='funded'||CUR.lifecycleStatus==='purchased'||CUR.lifecycleStatus==='branded'||CUR.lifecycleStatus==='shipped'||CUR.lifecycleStatus==='active'||CUR.lifecycleStatus==='complete'||(!CUR.serverCampaign&&pct>=100);
+   var listingFunded=CUR.lifecycleStatus==='funded'||CUR.lifecycleStatus==='ordered'||CUR.lifecycleStatus==='branded'||CUR.lifecycleStatus==='shipped'||CUR.lifecycleStatus==='active'||CUR.lifecycleStatus==='complete'||(!CUR.serverCampaign&&pct>=100);
    var shipEl=document.getElementById('iShips');if(shipEl)shipEl.textContent=CUR.closed?'expired, reservations released':(CUR.shippedAt?'shipped to owner':(listingFunded?'funded, preparing shipment':'new, when fully reserved'));
   var feeCopy=document.getElementById('iFeeCopy');if(feeCopy)feeCopy.textContent='Exact all-in prices, first come, first served. Your card is saved at reservation, then charged only if every spot is reserved and the listing funds.';
   var fulfillmentEl=document.getElementById('iFulfillment');if(fulfillmentEl)fulfillmentEl.textContent='BrandMyItem applies branding';
   var materialEl=document.getElementById('iMaterial');if(materialEl)materialEl.textContent=brandingMaterial(CUR.type);
-  var termEl=document.getElementById('iTerm');if(termEl)termEl.textContent=termOf(CUR)+' months'+(CUR.termLocked?' — locked':'');
+  var termEl=document.getElementById('iTerm');if(termEl)termEl.textContent=termOf(CUR)+' months'+(CUR.termLocked?' - locked':'');
   var brandingWindowEl=document.getElementById('iBrandingWindow'),proofCadenceEl=document.getElementById('iProofCadence');
-  if(brandingWindowEl)brandingWindowEl.textContent='BrandMyItem applies and verifies branding — 60-day delivery window';
+  if(brandingWindowEl)brandingWindowEl.textContent='BrandMyItem applies and verifies branding - 60-day delivery window';
   if(proofCadenceEl)proofCadenceEl.textContent=checkinFrequencyLabel(CUR)+' check-ins';
-  var claimed=CUR.slots-openSlots(CUR);
+  var reservedCount=CUR.slots-openSlots(CUR);
   var spotSummary=document.getElementById('spotSummary');
   if(spotSummary)spotSummary.innerHTML=
-      claimed+' of '+CUR.slots+' spots reserved. Spots from '+money(Math.min.apply(null,CUR.prices))+' — larger surfaces carry a premium. Every brand submits their logo at reservation; the '+safeCardText(brandingMethod(CUR.type))+' is produced from that file.'+
+      reservedCount+' of '+CUR.slots+' spots reserved. Spots from '+money(Math.min.apply(null,CUR.prices))+' - larger surfaces carry a premium. Every brand submits their logo at reservation; the '+safeCardText(brandingMethod(CUR.type))+' is produced from that file.'+
      (listingFunded?' <a href="#" id="logoPackBtn" style="font-weight:600;text-decoration:underline">Download the logo pack</a> and have the '+safeCardText(brandingMethod(CUR.type))+' made.':'');
   renderItemSpotList();
   var lp=document.getElementById('logoPackBtn');
   if(lp)lp.onclick=function(e){e.preventDefault();downloadLogoPack()};
   renderOwnerTools();
+}
+async function operatorSubmitPlacementProof(spotIndex){
+  var claim=CUR&&CUR.claims&&CUR.claims[spotIndex],fileInput=document.getElementById('proofFile_'+spotIndex),noteInput=document.getElementById('proofNote_'+spotIndex),statusEl=document.getElementById('proofStatus_'+spotIndex);
+  if(!claim||!claim.stripeOrderId||!fileInput||!fileInput.files[0]){if(statusEl){statusEl.textContent='Choose a proof image.';statusEl.style.color='#B23327'}return}
+  statusEl.textContent='Uploading proof…';statusEl.style.color='#6e6e73';
+  try{
+    if(isDemoListing(CUR)){
+      claim.proof={revision:(claim.proof&&claim.proof.revision||0)+1,status:'submitted',objectPath:'demo-proof',submittedAt:new Date().toISOString()};
+      saveDB();
+    }else{
+      var headers=operatorHeaders();
+      var proofIntent=await requestFinalizedUpload('/api/operator/campaigns/'+encodeURIComponent(CUR.id)+'/placement-orders/'+encodeURIComponent(claim.stripeOrderId)+'/proofs/request-url',function(intentId){return '/api/operator/campaigns/'+encodeURIComponent(CUR.id)+'/placement-orders/'+encodeURIComponent(claim.stripeOrderId)+'/proofs/'+encodeURIComponent(intentId)+'/finalize'},fileInput.files[0],headers);
+      headers['Content-Type']='application/json';
+      var response=await fetch('/api/operator/campaigns/'+encodeURIComponent(CUR.id)+'/proofs',{method:'POST',headers:headers,body:JSON.stringify({placementOrderId:claim.stripeOrderId,intentId:proofIntent.id})});
+      claim.proof=await apiResponse(response,'Proof could not be submitted.');
+      saveDB();
+    }
+    statusEl.style.color='#1F7A44';statusEl.textContent='Revision '+claim.proof.revision+' status: '+claim.proof.status+'.';
+  }catch(error){statusEl.style.color='#B23327';statusEl.textContent=error&&error.message?error.message:'Proof could not be submitted.'}
+}
+function operatorHeaders(){
+  var token=document.getElementById('operatorToken');
+  return token&&token.value.trim()?{Authorization:'Bearer '+token.value.trim()}:{};
+}
+async function ownerApproveProof(spotIndex){
+  var claim=CUR&&CUR.claims&&CUR.claims[spotIndex];
+  if(!claim||!claim.proof){return}
+  var statusEl=document.getElementById('proofStatus_'+spotIndex);
+  statusEl.textContent='Approving proof…';
+  try{
+    var response=await fetch('/api/campaigns/'+encodeURIComponent(CUR.id)+'/proofs',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({placementOrderId:claim.stripeOrderId,revision:claim.proof.revision})});
+    await apiResponse(response,'Proof approval failed.');
+    claim.proof.status='approved';saveDB();statusEl.style.color='#1F7A44';statusEl.textContent='Proof approved.';
+  }catch(error){statusEl.style.color='#B23327';statusEl.textContent=error&&error.message?error.message:'Proof approval failed.'}
+}
+async function operatorRecordShipment(){
+  var statusEl=document.getElementById('operatorStatus'),carrier=document.getElementById('shipmentCarrier').value.trim(),tracking=document.getElementById('shipmentTracking').value.trim();
+  if(!carrier||!tracking){statusEl.style.color='#B23327';statusEl.textContent='Enter the carrier and tracking number.';return}
+  statusEl.textContent='Recording shipment…';
+  try{
+    var headers=operatorHeaders();headers['Content-Type']='application/json';
+    var response=await fetch('/api/operator/campaigns/'+encodeURIComponent(CUR.id)+'/shipment',{method:'POST',headers:headers,body:JSON.stringify({carrier:carrier,trackingNumber:tracking})});
+    await apiResponse(response,'Shipment could not be recorded.');
+    CUR.shippedAt=Date.now();CUR.lifecycleStatus='shipped';CUR.status='shipped';CUR.carrier=carrier;CUR.trackingNumber=tracking;
+    saveDB();await hydratePublicCampaigns();CUR=DB.listings.filter(function(item){return item.id===CUR.id})[0]||CUR;refreshItemCards();toast('Shipment recorded.');
+  }catch(error){statusEl.style.color='#B23327';statusEl.textContent=error&&error.message?error.message:'Shipment could not be recorded.'}
+}
+async function operatorRecordDelivery(){
+  var statusEl=document.getElementById('operatorStatus');
+  statusEl.textContent='Recording delivery…';
+  try{
+    var response=await fetch('/api/operator/campaigns/'+encodeURIComponent(CUR.id)+'/delivery',{method:'POST',headers:operatorHeaders()});
+    var delivery=await apiResponse(response,'Delivery could not be recorded.');
+    CUR.deliveredAt=new Date(delivery.deliveredAt).getTime();CUR.lifecycleStatus=delivery.lifecycleStatus;CUR.checkinStatus=delivery.checkinStatus;
+    saveDB();refreshItemCards();statusEl.style.color='#1F7A44';statusEl.textContent='Delivery recorded. The first owner check-in is now due.';
+  }catch(error){statusEl.style.color='#B23327';statusEl.textContent=error&&error.message?error.message:'Delivery could not be recorded.'}
 }
 function renderOwnerTools(){
   var vb=document.getElementById('verifyBlock'),cb=document.getElementById('checkinBlock');
@@ -11011,20 +11182,38 @@ function renderOwnerTools(){
      '<p class="finetext" style="margin:5px 0 12px">IRLi LLC buys the item and ships it directly. Owners never receive or handle marketplace funds.</p>'+
     '<div class="track-submit-grid">'+
       '<div class="field"><label class="label" for="shipName">Recipient name</label><input class="input" id="shipName" value="'+safeCardText(sh.name||CUR.owner||'')+'"></div>'+
-      '<div class="field"><label class="label" for="shipPostal">Postal code</label><input class="input" id="shipPostal" value="'+safeCardText(sh.postal||'')+'"></div>'+
+      '<div class="field"><label class="label" for="shipPostal">Postal code</label><input class="input" id="shipPostal" value="'+safeCardText(sh.postal||'')+'" autocomplete="postal-code"></div>'+
     '</div>'+
-    '<div class="field" style="margin-top:10px"><label class="label" for="shipAddress">Shipping address</label><input class="input" id="shipAddress" value="'+safeCardText(sh.address||'')+'" placeholder="Street address"></div>'+
-    '<div class="track-submit-grid" style="margin-top:10px"><div class="field"><label class="label" for="shipCity">City / state</label><input class="input" id="shipCity" value="'+safeCardText(sh.city||'')+'"></div><div class="field"><label class="label" for="shipCountry">Country</label><input class="input" id="shipCountry" value="'+safeCardText(sh.country||'United States')+'"></div></div>'+
+    '<div class="field" style="margin-top:10px"><label class="label" for="shipAddress">Street address</label><input class="input" id="shipAddress" value="'+safeCardText(sh.address||'')+'" autocomplete="address-line1" placeholder="Street address"></div>'+
+    '<div class="field"><label class="label" for="shipAddress2">Apartment, suite, or unit</label><input class="input" id="shipAddress2" value="'+safeCardText(sh.line2||'')+'" autocomplete="address-line2"></div>'+
+    '<div class="track-submit-grid" style="margin-top:10px"><div class="field"><label class="label" for="shipCity">City</label><input class="input" id="shipCity" value="'+safeCardText(sh.city||'')+'" autocomplete="address-level2"></div><div class="field"><label class="label" for="shipState">State</label><input class="input" id="shipState" maxlength="2" value="'+safeCardText(sh.state||'')+'" autocomplete="address-level1"></div></div>'+
     '<button class="btn btn-outline btn-full" id="saveShippingBtn" type="button" style="margin-top:12px">Save shipping details</button>'+
-    '<p class="finetext" id="shippingStatus" style="display:none;color:#1F7A44;margin:8px 0 0"></p>';
-  document.getElementById('saveShippingBtn').onclick=function(){
-    CUR.shipping={name:document.getElementById('shipName').value.trim(),postal:document.getElementById('shipPostal').value.trim(),address:document.getElementById('shipAddress').value.trim(),city:document.getElementById('shipCity').value.trim(),country:document.getElementById('shipCountry').value.trim()};
-    saveDB();document.getElementById('shippingStatus').textContent='Shipping details saved';document.getElementById('shippingStatus').style.display='block';
+    '<p class="finetext" id="shippingStatus" role="status" style="display:none;margin:8px 0 0"></p>';
+  document.getElementById('saveShippingBtn').onclick=async function(){
+    var button=this,statusEl=document.getElementById('shippingStatus');
+    var input={recipientName:document.getElementById('shipName').value.trim(),line1:document.getElementById('shipAddress').value.trim(),line2:document.getElementById('shipAddress2').value.trim()||undefined,city:document.getElementById('shipCity').value.trim(),state:document.getElementById('shipState').value.trim().toUpperCase(),postalCode:document.getElementById('shipPostal').value.trim(),country:'US'};
+    statusEl.style.display='block';statusEl.style.color='#6e6e73';
+    if(!input.recipientName||!input.line1||!input.city||!/^[A-Z]{2}$/.test(input.state)||!/^\d{5}(?:-\d{4})?$/.test(input.postalCode)){statusEl.style.color='#B23327';statusEl.textContent='Enter a complete US street address with a two-letter state and ZIP.';return}
+    if(/\bP(?:OST)?\.?\s*O(?:FFICE)?\.?\s*(?:BOX|B\.?\s*O\.?\s*X)\b/i.test(input.line1)){statusEl.style.color='#B23327';statusEl.textContent='PO Boxes are not supported. Enter a deliverable street address.';return}
+    button.disabled=true;button.textContent='Saving…';statusEl.textContent='Validating and saving…';
+    try{
+      if(isDemoListing(CUR)){
+        CUR.shipping={name:input.recipientName,address:input.line1,line2:input.line2,city:input.city,state:input.state,postal:input.postalCode,country:'US',validatedAt:new Date().toISOString()};
+        saveDB();
+      }else{
+        var response=await fetch('/api/campaigns/'+encodeURIComponent(CUR.id)+'/shipping-address',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(input)});
+        var saved=await apiResponse(response,'Shipping address could not be saved.');
+        CUR.shipping={name:saved.recipientName,address:saved.line1,line2:saved.line2,city:saved.city,state:saved.state,postal:saved.postalCode,country:saved.country,validatedAt:saved.validatedAt};
+        saveDB();
+      }
+      statusEl.style.color='#1F7A44';statusEl.textContent='Shipping details saved and validated.';
+    }catch(error){statusEl.style.color='#B23327';statusEl.textContent=error&&error.message?error.message:'Shipping address could not be saved.'}
+    finally{button.disabled=false;button.textContent='Save shipping details'}
   };
    var pct=pctOf(CUR),term=termOf(CUR),checkins=CUR.checkins||[],status=checkinStatus(CUR);
-   var listingFunded=CUR.lifecycleStatus==='funded'||CUR.lifecycleStatus==='purchased'||CUR.lifecycleStatus==='branded'||CUR.lifecycleStatus==='shipped'||CUR.lifecycleStatus==='active'||CUR.lifecycleStatus==='complete'||(!CUR.serverCampaign&&pct>=100);
+   var listingFunded=CUR.lifecycleStatus==='funded'||CUR.lifecycleStatus==='ordered'||CUR.lifecycleStatus==='branded'||CUR.lifecycleStatus==='shipped'||CUR.lifecycleStatus==='active'||CUR.lifecycleStatus==='complete'||(!CUR.serverCampaign&&pct>=100);
   if(CUR.closed){
-     cb.innerHTML='<div class="fact"><span>Listing status</span><b style="color:#B23327">Expired, reservations released</b></div><p class="finetext" style="margin:8px 0 0">This listing did not fully fund within 60 days. No card was charged, and no item will be purchased or shipped.</p>'+
+     cb.innerHTML='<div class="fact"><span>Listing status</span><b style="color:#B23327">Expired, reservations released</b></div><p class="finetext" style="margin:8px 0 0">This listing did not fully fund within 60 days. No card was charged, and no item will be ordered or shipped.</p>'+
        (CUR.relistEligible?'<button class="btn btn-primary btn-full" id="relistBtn" type="button" style="margin-top:12px">Relist for 30 days</button>':'')+
        '<p class="finetext" style="margin:8px 0 0">'+(CUR.relistEligible?'At least half the spots were reserved, so this listing can be relisted once.':'This listing is not eligible for a relist because fewer than half the spots were reserved.')+'</p>';
      var relistBtn=document.getElementById('relistBtn');
@@ -11044,39 +11233,50 @@ function renderOwnerTools(){
     return;
   }
   if(!CUR.shippedAt){
+    var fundedClaims=(CUR.claims||[]).map(function(claim,index){return {claim:claim,index:index}}).filter(function(row){return row.claim&&row.claim.orderStatus==='funded'});
+     var operatorMode=new URLSearchParams(location.search).get('operator')==='1';
+     var proofHtml=fundedClaims.length?'<div class="campaign-label" style="margin-top:16px">'+(operatorMode?'Operator production proofs':'Owner proof approvals')+'</div>'+fundedClaims.map(function(row){
+      var proof=row.claim.proof,statusText=proof?('Revision '+proof.revision+', '+proof.status):'No proof submitted';
+       var controls=operatorMode?'<input class="input" id="proofFile_'+row.index+'" type="file" accept="image/png,image/jpeg,image/webp" style="padding:9px"><button class="btn btn-outline btn-full" type="button" style="margin-top:8px" onclick="operatorSubmitPlacementProof('+row.index+')">Upload production proof</button>':(proof&&proof.status==='submitted'?'<button class="btn btn-outline btn-full" type="button" style="margin-top:8px" onclick="ownerApproveProof('+row.index+')">Approve revision '+proof.revision+'</button>':'');
+       return '<div class="track-submit" style="margin-top:10px"><div class="track-submit-title">Spot '+(row.index+1)+'</div><p class="finetext" id="proofStatus_'+row.index+'" role="status">'+safeCardText(statusText)+'</p>'+controls+'</div>';
+    }).join(''):'';
+    var operatorHtml=operatorMode?'<div class="track-submit" style="margin-top:14px"><div class="track-submit-title">Authorized operator controls</div><input class="input" id="operatorToken" type="password" autocomplete="off" placeholder="Operator authorization token"><div class="track-submit-grid" style="margin-top:8px"><input class="input" id="shipmentCarrier" placeholder="Carrier"><input class="input" id="shipmentTracking" placeholder="Tracking number"></div><div class="mrow"><button class="btn btn-primary" type="button" onclick="operatorRecordShipment()">Record shipment</button></div><p class="finetext" id="operatorStatus" role="status"></p></div>':'';
     cb.innerHTML='<div class="fact"><span>Fulfillment</span><b>Ready for IRLi LLC shipment</b></div>'+
-      '<p class="finetext" style="margin:8px 0 12px">BrandMyItem applies and verifies every approved sponsor mark before delivery. The pre-branded item has a 60-day delivery window. Promised date: '+(CUR.promisedDeliveryAt?new Date(CUR.promisedDeliveryAt).toLocaleDateString():'being scheduled')+'.</p>'+
-      '<button class="btn btn-primary btn-full" id="markShippedBtn" type="button">Mark item shipped to owner</button>'+
-      '<button class="btn btn-outline btn-full" id="delayNoticeBtn" type="button" style="margin-top:8px">Send a delivery delay notice</button>'+
-      (CUR.delayNotice?'<p class="finetext" style="margin:9px 0 0;color:#8A6D1D">Delay notice sent on '+new Date(CUR.delayNotice.sentAt).toLocaleDateString()+' — proposed date '+new Date(CUR.delayNotice.proposedAt).toLocaleDateString()+'</p>':'');
-    document.getElementById('markShippedBtn').onclick=function(){
-      CUR.shippedAt=Date.now();CUR.status='shipped';
-      if(CUR.brandingDueAt)delete CUR.brandingDueAt;
-      refreshCheckinStatus(CUR);saveDB();refreshItemCards();
-      toast('Shipment marked — check-ins are now available');
-    };
-    document.getElementById('delayNoticeBtn').onclick=function(){sendDelayNotice(CUR);renderOwnerTools()};
+      '<p class="finetext" style="margin:8px 0 12px">BrandMyItem applies and verifies every approved brand mark before delivery. The pre-branded item has a 60-day delivery window. Promised date: '+(CUR.promisedDeliveryAt?new Date(CUR.promisedDeliveryAt).toLocaleDateString():'being scheduled')+'.</p>'+
+      proofHtml+operatorHtml+
+      (CUR.delayNotice?'<p class="finetext" style="margin:9px 0 0;color:#8A6D1D">Delay notice sent on '+new Date(CUR.delayNotice.sentAt).toLocaleDateString()+' - proposed date '+new Date(CUR.delayNotice.proposedAt).toLocaleDateString()+'</p>':'');
     return;
   }
-  var flag=status.nonCompliant?'NON-COMPLIANT':(status.overdue?(status.firstOverdue?'FIRST CHECK-IN OVERDUE':'CHECK-IN OVERDUE'):'On track');
+   if(!CUR.deliveredAt&&new URLSearchParams(location.search).get('operator')==='1'){
+     cb.innerHTML='<div class="track-submit"><div class="track-submit-title">Authorized delivery control</div><p class="track-submit-copy">Record confirmed delivery to start the first owner check-in cycle.</p><input class="input" id="operatorToken" type="password" autocomplete="off" placeholder="Operator authorization token"><button class="btn btn-primary btn-full" type="button" style="margin-top:8px" onclick="operatorRecordDelivery()">Record delivery</button><p class="finetext" id="operatorStatus" role="status"></p></div>';
+     return;
+   }
+   var flag=status.nonCompliant?'NON-COMPLIANT':(status.overdue?(status.firstOverdue?'FIRST CHECK-IN OVERDUE':'CHECK-IN OVERDUE'):'On track');
   var flagColor=status.nonCompliant||status.overdue?'#B23327':'#1F7A44';
   var prog='<div class="fact"><span>Public check-in status</span><b style="color:'+flagColor+'">'+flag+'</b></div>'+
     '<div class="fact"><span>Check-ins submitted</span><b>'+checkins.length+' of '+term+'</b></div>'+
     '<div class="pbar" style="margin:8px 0 14px"><i style="display:block;height:100%;background:#1D1D1F;border-radius:99px;width:'+Math.min(100,Math.round(checkins.length/term*100))+'%"></i></div>'+
     '<p class="finetext" style="margin:0 0 12px">The sale is settled. Check-ins are display-only trust signals; missed check-ins never trigger a refund.</p>';
   if(status.nonCompliant)prog+='<p class="finetext" style="margin:0 0 12px;color:#B23327"><b>Posting restricted:</b> two consecutive missed check-ins restrict this owner from new listings.</p>';
+  if(status.missed||CUR.checkinStatus==='missed'){
+    prog+='<div class="track-submit"><div class="track-submit-title">Select a make-good</div><p class="track-submit-copy">A check-in was missed. Choose the available resolution for this campaign.</p><div class="mrow"><button class="btn btn-outline" type="button" onclick="selectOwnerMakeGood(&quot;extension&quot;)">Extend term</button><button class="btn btn-outline" type="button" onclick="selectOwnerMakeGood(&quot;credit&quot;)">Brand credit</button><button class="btn btn-outline" type="button" onclick="selectOwnerMakeGood(&quot;cancellation&quot;)">Cancel</button></div><p class="finetext" id="makeGoodStatus" role="status">'+safeCardText(CUR.makeGoodSelection?'Selected: '+CUR.makeGoodSelection:'')+'</p></div>';
+  }
+  if(!ownerCheckinIsDue(CUR)){
+    cb.innerHTML=prog+'<p class="finetext" style="margin:0;color:#6e6e73">No check-in is due right now. This page will allow the next submission when the server due window opens.</p>';
+    return;
+  }
   var isFirst=checkins.length===0,fundedDate=CUR.fundedAt?new Date(CUR.fundedAt).toLocaleDateString():'the funding date';
   if(isFirst){
     cb.innerHTML=prog+'<p class="finetext" style="margin:0 0 12px">First check-in requires a receipt and purchase date on or after '+fundedDate+'.</p>'+
       '<div class="field"><label class="label" for="receiptDate">Purchase date on receipt</label><input class="input" id="receiptDate" type="date"></div>'+
-      '<input type="file" id="receiptInput" accept="image/*" style="display:none"><div class="upl" id="receiptBox" style="margin-bottom:12px">Upload receipt — required</div>'+
-      '<input type="file" id="checkinInput" accept="image/*" style="display:none"><div class="upl" id="checkinBox">Upload check-in photo — required</div>'+
+      '<input type="file" id="receiptInput" accept="image/*" style="display:none"><div class="upl" id="receiptBox" style="margin-bottom:12px">Upload receipt - required</div>'+
+      '<input type="file" id="checkinInput" accept="image/*" style="display:none"><div class="upl" id="checkinBox">Upload check-in photo - required</div>'+
       '<p class="finetext" id="receiptErr" style="display:none;color:#B23327;margin:10px 0 0"></p><button class="btn btn-primary btn-full" id="checkinBtn" type="button" style="margin-top:12px">Submit first check-in</button>';
     var receiptData=null,checkinData=null,rbox=document.getElementById('receiptBox'),rinput=document.getElementById('receiptInput'),cbox=document.getElementById('checkinBox'),cinput=document.getElementById('checkinInput');
     rbox.onclick=function(){rinput.click()};cbox.onclick=function(){cinput.click()};
     rinput.onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){receiptData=r.result;rbox.innerHTML='<img src="'+receiptData+'" alt="receipt">'};r.readAsDataURL(f)};
     cinput.onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){checkinData=r.result;cbox.innerHTML='<img src="'+checkinData+'" alt="check-in">'};r.readAsDataURL(f)};
-    document.getElementById('checkinBtn').onclick=function(){
+    document.getElementById('checkinBtn').onclick=async function(){
       var err=document.getElementById('receiptErr'),dateVal=document.getElementById('receiptDate').value;
       err.style.display='none';
       if(!dateVal){err.textContent='Enter the purchase date shown on your receipt.';err.style.display='block';return}
@@ -11084,15 +11284,32 @@ function renderOwnerTools(){
       if(!checkinData){err.textContent='Upload your check-in photo.';err.style.display='block';return}
       var receiptTime=new Date(dateVal+'T12:00:00').getTime();
       if(CUR.fundedAt&&receiptTime<CUR.fundedAt-86400000){err.textContent='That date is before the campaign funded. Use the receipt from after funding.';err.style.display='block';return}
-      CUR.checkins=[{date:Date.now(),photo:checkinData,receipt:receiptData,receiptDate:receiptTime,confirmId:'CI-'+uid().toUpperCase().slice(0,6)}];
-      refreshCheckinStatus(CUR);logAct('<b>'+CUR.owner+'</b> submitted a check-in for <b>'+LBLL(CUR)+'</b>');saveDB();refreshItemCards();openShare(checkinData,CUR.checkins[0].confirmId);
+      var button=this;button.disabled=true;button.textContent='Submitting…';
+      try{
+        var submitted=await submitOwnerCheckin(cinput.files[0],'First check-in. Receipt date: '+dateVal);
+        CUR.checkins=[{date:new Date(submitted.submittedAt).getTime(),photo:storedAssetUrl(submitted.photoObjectPath),receipt:receiptData,receiptDate:receiptTime,confirmId:submitted.id}];
+        CUR.checkinStatus='submitted';refreshCheckinStatus(CUR);saveDB();refreshItemCards();openShare(checkinData,submitted.id);
+      }catch(error){err.textContent=error&&error.message?error.message:'Check-in could not be submitted.';err.style.display='block';button.disabled=false;button.textContent='Submit first check-in'}
     };
     return;
   }
-  cb.innerHTML=prog+'<input type="file" id="checkinInput" accept="image/*" style="display:none"><button class="btn btn-primary btn-full" id="checkinBtn" type="button">Submit this month&rsquo;s check-in photo</button>'+
+  cb.innerHTML=prog+'<input type="file" id="checkinInput" accept="image/*" style="display:none"><div class="field"><label class="label" for="checkinNote">Check-in note</label><input class="input" id="checkinNote" maxlength="2000" placeholder="A text-only check-in is allowed"></div><button class="btn btn-primary btn-full" id="checkinBtn" type="button" style="margin-top:8px">Submit check-in</button><button class="btn btn-outline btn-full" id="checkinPhotoBtn" type="button" style="margin-top:8px">Add check-in photo</button>'+
     '<div style="margin-top:14px">'+checkins.slice().reverse().map(function(ci){return '<div class="checkin-item"><img src="'+ci.photo+'" alt=""><span class="ci-date">'+new Date(ci.date).toLocaleDateString()+'</span></div>'}).join('')+'</div>';
-  document.getElementById('checkinBtn').onclick=function(){document.getElementById('checkinInput').click()};
-  document.getElementById('checkinInput').onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){var cid='CI-'+uid().toUpperCase().slice(0,6);CUR.checkins.push({date:Date.now(),photo:r.result,confirmId:cid});refreshCheckinStatus(CUR);saveDB();refreshItemCards();openShare(r.result,cid)};r.readAsDataURL(f)};
+  document.getElementById('checkinPhotoBtn').onclick=function(){document.getElementById('checkinInput').click()};
+  document.getElementById('checkinBtn').onclick=async function(){
+    var button=this;button.disabled=true;button.textContent='Submitting…';
+    try{var submitted=await submitOwnerCheckin(null,document.getElementById('checkinNote').value.trim()||'Scheduled owner check-in');CUR.checkins.push({date:new Date(submitted.submittedAt).getTime(),photo:null,confirmId:submitted.id});CUR.checkinStatus='submitted';refreshCheckinStatus(CUR);saveDB();refreshItemCards();toast('Check-in submitted.')}
+    catch(error){toast(error&&error.message?error.message:'Check-in could not be submitted.');button.disabled=false;button.textContent='Submit check-in'}
+  };
+  document.getElementById('checkinInput').onchange=async function(e){
+    var f=e.target.files[0];if(!f)return;
+    var button=document.getElementById('checkinBtn');button.disabled=true;button.textContent='Submitting…';
+    try{
+      var submitted=await submitOwnerCheckin(f,'Scheduled owner check-in');
+      CUR.checkins.push({date:new Date(submitted.submittedAt).getTime(),photo:storedAssetUrl(submitted.photoObjectPath),confirmId:submitted.id});
+      CUR.checkinStatus='submitted';refreshCheckinStatus(CUR);saveDB();refreshItemCards();openShare(storedAssetUrl(submitted.photoObjectPath),submitted.id);
+    }catch(error){toast(error&&error.message?error.message:'Check-in could not be submitted.');button.disabled=false;button.textContent='Submit this month’s check-in photo'}
+  };
 }
 function closeBuyModal(){
   var modal=document.getElementById('modalBg');
@@ -11135,8 +11352,10 @@ function openBid(i,trigger){
   document.getElementById('mStep1').style.display='';
   document.getElementById('mStep3').style.display='none';
   document.getElementById('mTitle').textContent='All ad placements are estimates. Pictures and sizing are estimated.';
+  document.getElementById('mPrice').textContent=money(price);
   document.getElementById('mTotal').textContent=money(total);
-  document.getElementById('uplBox').innerHTML='Upload your logo — required (PNG, transparent works best)';
+  document.getElementById('mSlotInfo').textContent='Branding method: '+brandingMethod(CUR.type)+' - '+meta.pos+', '+meta.size+' placement';
+  document.getElementById('uplBox').innerHTML='Upload your logo, required (PNG, transparent works best)';
   document.getElementById('mBrand').value='';document.getElementById('mMail').value='';document.getElementById('mLink').value='';
   document.getElementById('brandAssent').checked=false;
   document.getElementById('mNext').disabled=true;
@@ -11157,8 +11376,8 @@ document.getElementById('mNext').onclick=function(){
   var brand=document.getElementById('mBrand').value.trim();
   var mail=document.getElementById('mMail').value.trim();
   if(!brand||!mail){toast('Add your brand name and email');return}
-  if(!logoData){toast('Upload your logo — it is the file the owner prints from');return}
-  if(!document.getElementById('brandAssent').checked){toast('Agree to the sponsor terms before checkout');return}
+  if(!logoData){toast('Upload your logo - it is the file the owner prints from');return}
+  if(!document.getElementById('brandAssent').checked){toast('Agree to the brand terms before checkout');return}
    beginStripeCheckout();
 };
 document.getElementById('brandAssent').onchange=function(){
@@ -11168,7 +11387,6 @@ async function beginStripeCheckout(){
   var brand=document.getElementById('mBrand').value.trim();
   var mail=document.getElementById('mMail').value.trim();
   if(CUR.claims[claimSlot]){toast('That spot just sold');closeBuyModal();return}
-  if(isDemoListing(CUR)){toast('This is an example campaign and is not accepting payments.');return}
   var button=document.getElementById('mNext'),link=document.getElementById('mLink').value.trim();
   var checkoutWindow=window.open('about:blank','_blank');
   if(checkoutWindow){
@@ -11178,13 +11396,15 @@ async function beginStripeCheckout(){
    button.disabled=true;button.textContent='Opening secure reservation…';
   var pending={campaignId:CUR.id,spotIndex:claimSlot,brand:brand,mail:mail,link:link};
   try{
-    var logoObjectPath=await uploadImageAsset(logoData,logoFile&&logoFile.name||'sponsor-logo');
-    pending.logoObjectPath=logoObjectPath;
+    var reservationResponse=await fetch('/api/sponsor-reservation-drafts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({campaignId:CUR.id,spotIndex:claimSlot})});
+    var reservationDraft=await apiResponse(reservationResponse,'Reservation draft could not be created.');
+    var logoIntent=await requestFinalizedUpload('/api/sponsor-reservation-drafts/'+encodeURIComponent(reservationDraft.id)+'/logo/request-url',function(intentId){return '/api/sponsor-reservation-drafts/'+encodeURIComponent(reservationDraft.id)+'/logo/'+encodeURIComponent(intentId)+'/finalize'},logoFile);
+    pending.reservationDraftId=reservationDraft.id;pending.logoUploadIntentId=logoIntent.id;
     sessionStorage.setItem('bmi_pending_checkout',JSON.stringify(pending));
     var response=await fetch('/api/checkout/sessions',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({campaignId:CUR.id,spotIndex:claimSlot,brandName:brand,email:mail,destinationUrl:link||undefined,logoObjectPath:logoObjectPath,brandAssent:{accepted:true,termsVersion:'2026-09-04',contentVersion:'2026-09-04'}})
+      body:JSON.stringify({campaignId:CUR.id,spotIndex:claimSlot,reservationDraftId:reservationDraft.id,logoIntentId:logoIntent.id,brandName:brand,email:mail,destinationUrl:link||undefined,brandAssent:{accepted:true,termsVersion:'2026-09-04',contentVersion:'2026-09-04'}})
     });
     var result={};
     var contentType=response.headers.get('content-type')||'';
@@ -11213,7 +11433,7 @@ async function finalizeReservation(order,pending){
      itemId:listing.id,ts:now
    });
    if(order.status==='funded'&&!listing.fundedAt){listing.fundedAt=now;listing.status='funded';listing.promisedDeliveryAt=now+deliveryDaysOf(listing)*86400000}
-   logAct('<b>'+pending.brand+'</b> reserved a spot on '+listing.owner+'&rsquo;s <b>'+LBLL(listing)+'</b> — no charge until the listing fully funds');
+   logAct('<b>'+pending.brand+'</b> reserved a spot on '+listing.owner+'&rsquo;s <b>'+LBLL(listing)+'</b> - no charge until the listing fully funds');
   store.set('bmi_db4',DB);
    trackEvent('spot_reserved',spotAnalyticsData(order.spotIndex,price));
   drawItemMap();refreshItemCards();
@@ -11391,10 +11611,10 @@ function initHomeFeatureBento(){
     if(dayNote)dayNote.textContent=phase===3?'Not funded by day 60. Never charged.':(phase===4?'':(phase>=1?'3 of 5 spots reserved':''));
   });
   var items=[
-    {name:'MacBook Pro 14\"',price:1599,parts:[224,224,224,224,224,224,224,224,224,223],img:'bento/cutout-macbook.png',n:10,type:'macbook'},
-    {name:'iPhone 17 Pro',price:1099,parts:[307,308,308,308,308],img:'bento/cutout-iphone.png',n:5,type:'iphone'},
-    {name:'AirPods Max',price:549,parts:[385,384],img:'bento/cutout-headphones.png',n:2,type:'headphones'},
-    {name:'RIMOWA Original Cabin',price:1550,parts:[543,543,542,542],img:'bento/cutout-case.png',n:4,type:'case'}
+    {name:ITEMS.macbook.label,price:ITEMS.macbook.retail,parts:[224,224,224,224,224,224,224,224,224,223],img:'bento/cutout-macbook.png',n:ITEMS.macbook.maxSlots,type:'macbook'},
+    {name:ITEMS.iphone.label,price:ITEMS.iphone.retail,parts:[233,232,232,232,232],img:'bento/cutout-iphone.png',n:ITEMS.iphone.maxSlots,type:'iphone'},
+    {name:ITEMS.headphones.label,price:ITEMS.headphones.retail,parts:[385,384],img:'bento/cutout-headphones.png',n:ITEMS.headphones.maxSlots,type:'headphones'},
+    {name:ITEMS.case.label,price:ITEMS.case.retail,parts:[543,543,542,542],img:'bento/cutout-case.png',n:4,type:'case'}
   ];
   var itemIndex=0,itemImg=document.getElementById('fbItemImg'),itemName=document.getElementById('fbItemName'),itemMeta=document.getElementById('fbItemMeta'),itemStage=document.querySelector('.fb-stage-inner'),itemLine=q('.fb-itemline'),itemTile=q('.fb-mac');
   var fundPct=document.getElementById('fbFundPct'),fundBar=document.getElementById('fbFundBar'),fundAmt=document.getElementById('fbFundAmt');
@@ -11521,7 +11741,7 @@ function initHomeFeatureBento(){
     if(fundAmt)fundAmt.textContent='$'+amount.toLocaleString()+' of $'+goal.toLocaleString();
   });
   var priceVisual = document.getElementById('fbPriceVisual');
-  var parts=[307,308,308,308,308];
+  var parts=[233,232,232,232,232];
   if(priceVisual) {
     priceVisual.insertAdjacentHTML('beforeend', buildOverlaySvg('iphone', 5, 'fb-ps', 'fb-price-map', parts));
   }

@@ -35,6 +35,7 @@ export const registerCampaignBodyPricesCentsItemMax = 10000000;
 
 export const registerCampaignBodyPricesCentsMax = 20;
 
+export const registerCampaignBodyW9ObjectPathRegExp = new RegExp('^/objects/uploads/[A-Za-z0-9-]+$');
 
 
 export const RegisterCampaignBody = zod.object({
@@ -50,6 +51,7 @@ export const RegisterCampaignBody = zod.object({
   "contentVersion": zod.string(),
   "checkinVersion": zod.string()
 }),
+  "w9ObjectPath": zod.string().regex(registerCampaignBodyW9ObjectPathRegExp).optional(),
   "presentation": zod.record(zod.string(), zod.unknown())
 })
 
@@ -71,7 +73,7 @@ export const RegisterCampaignResponse = zod.object({
   "status": zod.enum(['reserved', 'funding', 'payment_failed', 'funded'])
 }),zod.null()])),
   "active": zod.boolean(),
-  "lifecycleStatus": zod.enum(['live', 'funding', 'funded', 'purchased', 'branded', 'shipped', 'active', 'complete', 'expired']),
+  "lifecycleStatus": zod.enum(['live', 'funding', 'funded', 'ordered', 'branded', 'shipped', 'active', 'complete', 'expired']),
   "expiresAt": zod.coerce.date().nullish(),
   "fundedAt": zod.coerce.date().nullish(),
   "relistCount": zod.int(),
@@ -101,7 +103,7 @@ export const ListCampaignsResponseItem = zod.object({
   "status": zod.enum(['reserved', 'funding', 'payment_failed', 'funded'])
 }),zod.null()])),
   "active": zod.boolean(),
-  "lifecycleStatus": zod.enum(['live', 'funding', 'funded', 'purchased', 'branded', 'shipped', 'active', 'complete', 'expired']),
+  "lifecycleStatus": zod.enum(['live', 'funding', 'funded', 'ordered', 'branded', 'shipped', 'active', 'complete', 'expired']),
   "expiresAt": zod.coerce.date().nullish(),
   "fundedAt": zod.coerce.date().nullish(),
   "relistCount": zod.int(),
@@ -112,34 +114,251 @@ export const ListCampaignsResponse = zod.array(ListCampaignsResponseItem)
 
 
 /**
- * @summary Request a direct image upload URL
+ * @summary Create an unpublished, expiring campaign draft
  */
-export const requestUploadUrlBodyNameMax = 255;
+export const createCampaignDraftBodyIdMax = 100;
 
-export const requestUploadUrlBodySizeMax = 10000000;
+export const createCampaignDraftBodyItemTypeMax = 50;
+
+export const createCampaignDraftBodyTitleMax = 200;
+
+export const createCampaignDraftBodyOwnerNameMax = 120;
+
+export const createCampaignDraftBodyOwnerEmailMax = 320;
+
+export const createCampaignDraftBodyPricesCentsItemMin = 100;
+export const createCampaignDraftBodyPricesCentsItemMax = 10000000;
+
+export const createCampaignDraftBodyPricesCentsMax = 20;
 
 
 
-export const RequestUploadUrlBody = zod.object({
-  "name": zod.string().min(1).max(requestUploadUrlBodyNameMax),
-  "size": zod.int().min(1).max(requestUploadUrlBodySizeMax),
-  "contentType": zod.enum(['image/png', 'image/jpeg', 'image/webp', 'image/gif'])
+export const CreateCampaignDraftBody = zod.object({
+  "id": zod.string().min(1).max(createCampaignDraftBodyIdMax),
+  "itemType": zod.string().min(1).max(createCampaignDraftBodyItemTypeMax),
+  "title": zod.string().min(1).max(createCampaignDraftBodyTitleMax),
+  "ownerName": zod.string().min(1).max(createCampaignDraftBodyOwnerNameMax),
+  "ownerEmail": zod.email().max(createCampaignDraftBodyOwnerEmailMax),
+  "pricesCents": zod.array(zod.int().min(createCampaignDraftBodyPricesCentsItemMin).max(createCampaignDraftBodyPricesCentsItemMax)).min(1).max(createCampaignDraftBodyPricesCentsMax),
+  "ownerAssent": zod.object({
+  "accepted": zod.literal(true),
+  "termsVersion": zod.string(),
+  "contentVersion": zod.string(),
+  "checkinVersion": zod.string()
+}),
+  "presentation": zod.record(zod.string(), zod.unknown())
 })
 
-export const requestUploadUrlResponseMetadataNameMax = 255;
+export const CreateCampaignDraftResponse = zod.object({
+  "id": zod.string(),
+  "status": zod.enum(['draft']),
+  "expiresAt": zod.coerce.date(),
+  "w9Required": zod.boolean()
+})
 
-export const requestUploadUrlResponseMetadataSizeMax = 10000000;
+
+/**
+ * @summary Issue a W-9 upload intent for an authorized high-value draft
+ */
+export const requestCampaignDraftW9UploadPathCampaignIdMax = 100;
 
 
 
-export const RequestUploadUrlResponse = zod.object({
-  "uploadURL": zod.url(),
-  "objectPath": zod.string(),
-  "metadata": zod.object({
-  "name": zod.string().min(1).max(requestUploadUrlResponseMetadataNameMax),
-  "size": zod.int().min(1).max(requestUploadUrlResponseMetadataSizeMax),
-  "contentType": zod.enum(['image/png', 'image/jpeg', 'image/webp', 'image/gif'])
-}).optional()
+export const RequestCampaignDraftW9UploadParams = zod.object({
+  "campaignId": zod.coerce.string().min(1).max(requestCampaignDraftW9UploadPathCampaignIdMax)
+})
+
+export const requestCampaignDraftW9UploadBodyNameMax = 255;
+
+export const requestCampaignDraftW9UploadBodySizeMax = 10000000;
+
+
+
+export const RequestCampaignDraftW9UploadBody = zod.object({
+  "name": zod.string().min(1).max(requestCampaignDraftW9UploadBodyNameMax),
+  "size": zod.int().min(1).max(requestCampaignDraftW9UploadBodySizeMax),
+  "contentType": zod.literal("application/pdf")
+})
+
+export const requestCampaignDraftW9UploadResponseObjectPathRegExp = new RegExp('^/objects/uploads/[A-Za-z0-9-]+$');
+
+
+export const RequestCampaignDraftW9UploadResponse = zod.object({
+  "id": zod.string(),
+  "purpose": zod.literal("campaign_draft_w9"),
+  "objectPath": zod.string().regex(requestCampaignDraftW9UploadResponseObjectPathRegExp),
+  "expectedMimeType": zod.literal("application/pdf"),
+  "expectedSizeBytes": zod.int(),
+  "expectedFileName": zod.string(),
+  "status": zod.enum(['issued', 'finalized', 'consumed', 'revoked']),
+  "expiresAt": zod.coerce.date(),
+  "uploadURL": zod.url().optional()
+})
+
+
+/**
+ * @summary Verify and finalize a W-9 upload intent once
+ */
+export const finalizeCampaignDraftW9UploadPathCampaignIdMax = 100;
+
+
+
+
+export const FinalizeCampaignDraftW9UploadParams = zod.object({
+  "campaignId": zod.coerce.string().min(1).max(finalizeCampaignDraftW9UploadPathCampaignIdMax),
+  "intentId": zod.coerce.string().min(1)
+})
+
+export const finalizeCampaignDraftW9UploadResponseObjectPathRegExp = new RegExp('^/objects/uploads/[A-Za-z0-9-]+$');
+
+
+export const FinalizeCampaignDraftW9UploadResponse = zod.object({
+  "id": zod.string(),
+  "purpose": zod.literal("campaign_draft_w9"),
+  "objectPath": zod.string().regex(finalizeCampaignDraftW9UploadResponseObjectPathRegExp),
+  "expectedMimeType": zod.literal("application/pdf"),
+  "expectedSizeBytes": zod.int(),
+  "expectedFileName": zod.string(),
+  "status": zod.enum(['issued', 'finalized', 'consumed', 'revoked']),
+  "expiresAt": zod.coerce.date(),
+  "uploadURL": zod.url().optional()
+})
+
+
+/**
+ * @summary Publish an authorized campaign draft
+ */
+export const publishCampaignDraftPathCampaignIdMax = 100;
+
+
+
+export const PublishCampaignDraftParams = zod.object({
+  "campaignId": zod.coerce.string().min(1).max(publishCampaignDraftPathCampaignIdMax)
+})
+
+
+
+
+export const PublishCampaignDraftBody = zod.object({
+  "w9IntentId": zod.string().min(1).optional()
+})
+
+export const PublishCampaignDraftResponse = zod.object({
+  "id": zod.string(),
+  "itemType": zod.string(),
+  "title": zod.string(),
+  "ownerName": zod.string(),
+  "pricesCents": zod.array(zod.int()),
+  "presentation": zod.record(zod.string(), zod.unknown()),
+  "claims": zod.array(zod.union([zod.object({
+  "orderId": zod.string(),
+  "spotIndex": zod.int(),
+  "brandName": zod.string(),
+  "destinationUrl": zod.string().nullish(),
+  "logoObjectPath": zod.string().nullish(),
+  "amountCents": zod.int(),
+  "reservedAt": zod.coerce.date(),
+  "status": zod.enum(['reserved', 'funding', 'payment_failed', 'funded'])
+}),zod.null()])),
+  "active": zod.boolean(),
+  "lifecycleStatus": zod.enum(['live', 'funding', 'funded', 'ordered', 'branded', 'shipped', 'active', 'complete', 'expired']),
+  "expiresAt": zod.coerce.date().nullish(),
+  "fundedAt": zod.coerce.date().nullish(),
+  "relistCount": zod.int(),
+  "relistEligible": zod.boolean(),
+  "createdAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Claim one currently open placement briefly and issue a capability cookie
+ */
+export const createSponsorReservationDraftBodyCampaignIdMax = 100;
+
+export const createSponsorReservationDraftBodySpotIndexMin = 0;
+export const createSponsorReservationDraftBodySpotIndexMax = 19;
+
+
+
+export const CreateSponsorReservationDraftBody = zod.object({
+  "campaignId": zod.string().min(1).max(createSponsorReservationDraftBodyCampaignIdMax),
+  "spotIndex": zod.int().min(createSponsorReservationDraftBodySpotIndexMin).max(createSponsorReservationDraftBodySpotIndexMax)
+})
+
+export const CreateSponsorReservationDraftResponse = zod.object({
+  "id": zod.string(),
+  "campaignId": zod.string(),
+  "spotIndex": zod.int(),
+  "status": zod.enum(['issued']),
+  "expiresAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Issue a capability-bound sponsor logo upload intent
+ */
+export const requestSponsorReservationDraftLogoUploadPathDraftIdMax = 100;
+
+
+
+export const RequestSponsorReservationDraftLogoUploadParams = zod.object({
+  "draftId": zod.coerce.string().min(1).max(requestSponsorReservationDraftLogoUploadPathDraftIdMax)
+})
+
+export const requestSponsorReservationDraftLogoUploadBodyNameMax = 255;
+
+export const requestSponsorReservationDraftLogoUploadBodySizeMax = 20000000;
+
+
+
+export const RequestSponsorReservationDraftLogoUploadBody = zod.object({
+  "name": zod.string().min(1).max(requestSponsorReservationDraftLogoUploadBodyNameMax),
+  "size": zod.int().min(1).max(requestSponsorReservationDraftLogoUploadBodySizeMax),
+  "contentType": zod.enum(['image/svg+xml', 'application/pdf'])
+})
+
+export const requestSponsorReservationDraftLogoUploadResponseObjectPathRegExp = new RegExp('^/objects/uploads/[A-Za-z0-9-]+$');
+
+
+export const RequestSponsorReservationDraftLogoUploadResponse = zod.object({
+  "id": zod.string(),
+  "purpose": zod.literal("sponsor_reservation_draft_logo"),
+  "objectPath": zod.string().regex(requestSponsorReservationDraftLogoUploadResponseObjectPathRegExp),
+  "expectedMimeType": zod.enum(['image/svg+xml', 'application/pdf']),
+  "expectedSizeBytes": zod.int(),
+  "expectedFileName": zod.string(),
+  "status": zod.enum(['issued', 'finalized', 'consumed', 'revoked']),
+  "expiresAt": zod.coerce.date(),
+  "uploadURL": zod.url().optional()
+})
+
+
+/**
+ * @summary Verify and finalize a sponsor logo upload intent once
+ */
+export const finalizeSponsorReservationDraftLogoUploadPathDraftIdMax = 100;
+
+
+
+
+export const FinalizeSponsorReservationDraftLogoUploadParams = zod.object({
+  "draftId": zod.coerce.string().min(1).max(finalizeSponsorReservationDraftLogoUploadPathDraftIdMax),
+  "intentId": zod.coerce.string().min(1)
+})
+
+export const finalizeSponsorReservationDraftLogoUploadResponseObjectPathRegExp = new RegExp('^/objects/uploads/[A-Za-z0-9-]+$');
+
+
+export const FinalizeSponsorReservationDraftLogoUploadResponse = zod.object({
+  "id": zod.string(),
+  "purpose": zod.literal("sponsor_reservation_draft_logo"),
+  "objectPath": zod.string().regex(finalizeSponsorReservationDraftLogoUploadResponseObjectPathRegExp),
+  "expectedMimeType": zod.enum(['image/svg+xml', 'application/pdf']),
+  "expectedSizeBytes": zod.int(),
+  "expectedFileName": zod.string(),
+  "status": zod.enum(['issued', 'finalized', 'consumed', 'revoked']),
+  "expiresAt": zod.coerce.date(),
+  "uploadURL": zod.url().optional()
 })
 
 
@@ -161,22 +380,24 @@ export const createPlacementCheckoutBodyCampaignIdMax = 100;
 export const createPlacementCheckoutBodySpotIndexMin = 0;
 export const createPlacementCheckoutBodySpotIndexMax = 19;
 
+
+
 export const createPlacementCheckoutBodyBrandNameMax = 120;
 
 export const createPlacementCheckoutBodyEmailMax = 320;
 
 export const createPlacementCheckoutBodyDestinationUrlMax = 2048;
 
-export const createPlacementCheckoutBodyLogoObjectPathRegExp = new RegExp('^/objects/uploads/[A-Za-z0-9-]+$');
 
 
 export const CreatePlacementCheckoutBody = zod.object({
   "campaignId": zod.string().min(1).max(createPlacementCheckoutBodyCampaignIdMax),
   "spotIndex": zod.int().min(createPlacementCheckoutBodySpotIndexMin).max(createPlacementCheckoutBodySpotIndexMax),
+  "reservationDraftId": zod.string().min(1),
+  "logoIntentId": zod.string().min(1),
   "brandName": zod.string().min(1).max(createPlacementCheckoutBodyBrandNameMax),
   "email": zod.email().max(createPlacementCheckoutBodyEmailMax),
   "destinationUrl": zod.string().max(createPlacementCheckoutBodyDestinationUrlMax).optional(),
-  "logoObjectPath": zod.string().regex(createPlacementCheckoutBodyLogoObjectPathRegExp),
   "brandAssent": zod.object({
   "accepted": zod.literal(true),
   "termsVersion": zod.string(),
@@ -294,6 +515,384 @@ export const RequestTrackingMagicLinkBody = zod.object({
 
 export const RequestTrackingMagicLinkResponse = zod.object({
   "message": zod.string()
+})
+
+
+/**
+ * @summary Save the owner's private validated US shipping address
+ */
+export const saveShippingAddressPathCampaignIdMax = 100;
+
+
+
+export const SaveShippingAddressParams = zod.object({
+  "campaignId": zod.coerce.string().min(1).max(saveShippingAddressPathCampaignIdMax)
+})
+
+export const saveShippingAddressBodyRecipientNameMax = 120;
+
+export const saveShippingAddressBodyLine1Min = 3;
+export const saveShippingAddressBodyLine1Max = 120;
+
+export const saveShippingAddressBodyLine2Max = 120;
+
+export const saveShippingAddressBodyCityMax = 80;
+
+export const saveShippingAddressBodyStateRegExp = new RegExp('^[A-Z]{2}$');
+export const saveShippingAddressBodyPostalCodeRegExp = new RegExp('^[0-9]{5}(-[0-9]{4})?$');
+
+
+export const SaveShippingAddressBody = zod.object({
+  "recipientName": zod.string().min(1).max(saveShippingAddressBodyRecipientNameMax),
+  "line1": zod.string().min(saveShippingAddressBodyLine1Min).max(saveShippingAddressBodyLine1Max),
+  "line2": zod.string().max(saveShippingAddressBodyLine2Max).optional(),
+  "city": zod.string().min(1).max(saveShippingAddressBodyCityMax),
+  "state": zod.string().regex(saveShippingAddressBodyStateRegExp),
+  "postalCode": zod.string().regex(saveShippingAddressBodyPostalCodeRegExp),
+  "country": zod.literal("US")
+})
+
+export const saveShippingAddressResponseOneRecipientNameMax = 120;
+
+export const saveShippingAddressResponseOneLine1Min = 3;
+export const saveShippingAddressResponseOneLine1Max = 120;
+
+export const saveShippingAddressResponseOneLine2Max = 120;
+
+export const saveShippingAddressResponseOneCityMax = 80;
+
+export const saveShippingAddressResponseOneStateRegExp = new RegExp('^[A-Z]{2}$');
+export const saveShippingAddressResponseOnePostalCodeRegExp = new RegExp('^[0-9]{5}(-[0-9]{4})?$');
+
+
+export const SaveShippingAddressResponse = zod.object({
+  "recipientName": zod.string().min(1).max(saveShippingAddressResponseOneRecipientNameMax),
+  "line1": zod.string().min(saveShippingAddressResponseOneLine1Min).max(saveShippingAddressResponseOneLine1Max),
+  "line2": zod.string().max(saveShippingAddressResponseOneLine2Max).optional(),
+  "city": zod.string().min(1).max(saveShippingAddressResponseOneCityMax),
+  "state": zod.string().regex(saveShippingAddressResponseOneStateRegExp),
+  "postalCode": zod.string().regex(saveShippingAddressResponseOnePostalCodeRegExp),
+  "country": zod.literal("US")
+}).and(zod.object({
+  "validatedAt": zod.coerce.date()
+}))
+
+
+/**
+ * @summary Approve one submitted operator proof revision
+ */
+export const submitCampaignProofPathCampaignIdMax = 100;
+
+
+
+export const SubmitCampaignProofParams = zod.object({
+  "campaignId": zod.coerce.string().min(1).max(submitCampaignProofPathCampaignIdMax)
+})
+
+
+
+
+
+export const SubmitCampaignProofBody = zod.object({
+  "placementOrderId": zod.string().min(1),
+  "revision": zod.int().min(1)
+})
+
+
+
+
+export const SubmitCampaignProofResponse = zod.object({
+  "revision": zod.int().min(1),
+  "objectPath": zod.string(),
+  "status": zod.enum(['submitted', 'approved', 'rejected']),
+  "submittedAt": zod.coerce.date(),
+  "approvedAt": zod.coerce.date().nullish()
+})
+
+
+/**
+ * @summary Issue an operator-bound production proof upload intent
+ */
+export const requestOperatorProductionProofUploadPathCampaignIdMax = 100;
+
+export const requestOperatorProductionProofUploadPathPlacementOrderIdMax = 100;
+
+
+
+export const RequestOperatorProductionProofUploadParams = zod.object({
+  "campaignId": zod.coerce.string().min(1).max(requestOperatorProductionProofUploadPathCampaignIdMax),
+  "placementOrderId": zod.coerce.string().min(1).max(requestOperatorProductionProofUploadPathPlacementOrderIdMax)
+})
+
+export const requestOperatorProductionProofUploadBodyNameMax = 255;
+
+export const requestOperatorProductionProofUploadBodySizeMax = 10000000;
+
+
+
+export const RequestOperatorProductionProofUploadBody = zod.object({
+  "name": zod.string().min(1).max(requestOperatorProductionProofUploadBodyNameMax),
+  "size": zod.int().min(1).max(requestOperatorProductionProofUploadBodySizeMax),
+  "contentType": zod.enum(['image/png', 'image/jpeg', 'image/webp'])
+})
+
+export const requestOperatorProductionProofUploadResponseObjectPathRegExp = new RegExp('^/objects/uploads/[A-Za-z0-9-]+$');
+
+
+export const RequestOperatorProductionProofUploadResponse = zod.object({
+  "id": zod.string(),
+  "purpose": zod.literal("operator_production_proof"),
+  "objectPath": zod.string().regex(requestOperatorProductionProofUploadResponseObjectPathRegExp),
+  "expectedMimeType": zod.enum(['image/png', 'image/jpeg', 'image/webp']),
+  "expectedSizeBytes": zod.int(),
+  "expectedFileName": zod.string(),
+  "status": zod.enum(['issued', 'finalized', 'consumed', 'revoked']),
+  "expiresAt": zod.coerce.date(),
+  "uploadURL": zod.url().optional()
+})
+
+
+/**
+ * @summary Verify and finalize an operator proof upload once
+ */
+export const finalizeOperatorProductionProofUploadPathCampaignIdMax = 100;
+
+export const finalizeOperatorProductionProofUploadPathPlacementOrderIdMax = 100;
+
+
+
+
+export const FinalizeOperatorProductionProofUploadParams = zod.object({
+  "campaignId": zod.coerce.string().min(1).max(finalizeOperatorProductionProofUploadPathCampaignIdMax),
+  "placementOrderId": zod.coerce.string().min(1).max(finalizeOperatorProductionProofUploadPathPlacementOrderIdMax),
+  "intentId": zod.coerce.string().min(1)
+})
+
+export const finalizeOperatorProductionProofUploadResponseObjectPathRegExp = new RegExp('^/objects/uploads/[A-Za-z0-9-]+$');
+
+
+export const FinalizeOperatorProductionProofUploadResponse = zod.object({
+  "id": zod.string(),
+  "purpose": zod.literal("operator_production_proof"),
+  "objectPath": zod.string().regex(finalizeOperatorProductionProofUploadResponseObjectPathRegExp),
+  "expectedMimeType": zod.enum(['image/png', 'image/jpeg', 'image/webp']),
+  "expectedSizeBytes": zod.int(),
+  "expectedFileName": zod.string(),
+  "status": zod.enum(['issued', 'finalized', 'consumed', 'revoked']),
+  "expiresAt": zod.coerce.date(),
+  "uploadURL": zod.url().optional()
+})
+
+
+/**
+ * @summary Submit a finalized proof revision for one funded placement
+ */
+export const submitOperatorCampaignProofPathCampaignIdMax = 100;
+
+
+
+export const SubmitOperatorCampaignProofParams = zod.object({
+  "campaignId": zod.coerce.string().min(1).max(submitOperatorCampaignProofPathCampaignIdMax)
+})
+
+
+
+
+
+export const SubmitOperatorCampaignProofBody = zod.object({
+  "placementOrderId": zod.string().min(1),
+  "intentId": zod.string().min(1)
+})
+
+
+
+
+export const SubmitOperatorCampaignProofResponse = zod.object({
+  "revision": zod.int().min(1),
+  "objectPath": zod.string(),
+  "status": zod.enum(['submitted', 'approved', 'rejected']),
+  "submittedAt": zod.coerce.date(),
+  "approvedAt": zod.coerce.date().nullish()
+})
+
+
+/**
+ * @summary Submit an owner check-in
+ */
+export const submitCampaignCheckinPathCampaignIdMax = 100;
+
+
+
+export const SubmitCampaignCheckinParams = zod.object({
+  "campaignId": zod.coerce.string().min(1).max(submitCampaignCheckinPathCampaignIdMax)
+})
+
+export const submitCampaignCheckinBodyNoteMax = 2000;
+
+
+
+
+export const SubmitCampaignCheckinBody = zod.object({
+  "note": zod.string().min(1).max(submitCampaignCheckinBodyNoteMax),
+  "photoIntentId": zod.string().min(1).optional()
+})
+
+export const SubmitCampaignCheckinResponse = zod.object({
+  "id": zod.string(),
+  "campaignId": zod.string(),
+  "note": zod.string(),
+  "photoObjectPath": zod.string().nullish(),
+  "submittedAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Issue an owner-bound photo upload intent for the current check-in cycle
+ */
+export const requestCampaignCheckinPhotoUploadPathCampaignIdMax = 100;
+
+
+
+export const RequestCampaignCheckinPhotoUploadParams = zod.object({
+  "campaignId": zod.coerce.string().min(1).max(requestCampaignCheckinPhotoUploadPathCampaignIdMax)
+})
+
+export const requestCampaignCheckinPhotoUploadBodyNameMax = 255;
+
+export const requestCampaignCheckinPhotoUploadBodySizeMax = 25000000;
+
+
+
+export const RequestCampaignCheckinPhotoUploadBody = zod.object({
+  "name": zod.string().min(1).max(requestCampaignCheckinPhotoUploadBodyNameMax),
+  "size": zod.int().min(1).max(requestCampaignCheckinPhotoUploadBodySizeMax),
+  "contentType": zod.enum(['image/png', 'image/jpeg', 'image/webp'])
+})
+
+export const requestCampaignCheckinPhotoUploadResponseObjectPathRegExp = new RegExp('^/objects/uploads/[A-Za-z0-9-]+$');
+
+
+export const RequestCampaignCheckinPhotoUploadResponse = zod.object({
+  "id": zod.string(),
+  "purpose": zod.literal("owner_checkin"),
+  "objectPath": zod.string().regex(requestCampaignCheckinPhotoUploadResponseObjectPathRegExp),
+  "expectedMimeType": zod.enum(['image/png', 'image/jpeg', 'image/webp']),
+  "expectedSizeBytes": zod.int(),
+  "expectedFileName": zod.string(),
+  "status": zod.enum(['issued', 'finalized', 'consumed', 'revoked']),
+  "expiresAt": zod.coerce.date(),
+  "uploadURL": zod.url().optional()
+})
+
+
+/**
+ * @summary Verify and finalize an owner check-in photo upload once
+ */
+export const finalizeCampaignCheckinPhotoUploadPathCampaignIdMax = 100;
+
+
+
+
+export const FinalizeCampaignCheckinPhotoUploadParams = zod.object({
+  "campaignId": zod.coerce.string().min(1).max(finalizeCampaignCheckinPhotoUploadPathCampaignIdMax),
+  "intentId": zod.coerce.string().min(1)
+})
+
+export const finalizeCampaignCheckinPhotoUploadResponseObjectPathRegExp = new RegExp('^/objects/uploads/[A-Za-z0-9-]+$');
+
+
+export const FinalizeCampaignCheckinPhotoUploadResponse = zod.object({
+  "id": zod.string(),
+  "purpose": zod.literal("owner_checkin"),
+  "objectPath": zod.string().regex(finalizeCampaignCheckinPhotoUploadResponseObjectPathRegExp),
+  "expectedMimeType": zod.enum(['image/png', 'image/jpeg', 'image/webp']),
+  "expectedSizeBytes": zod.int(),
+  "expectedFileName": zod.string(),
+  "status": zod.enum(['issued', 'finalized', 'consumed', 'revoked']),
+  "expiresAt": zod.coerce.date(),
+  "uploadURL": zod.url().optional()
+})
+
+
+/**
+ * @summary Select a make-good after a missed check-in
+ */
+export const selectCampaignMakeGoodPathCampaignIdMax = 100;
+
+
+
+export const SelectCampaignMakeGoodParams = zod.object({
+  "campaignId": zod.coerce.string().min(1).max(selectCampaignMakeGoodPathCampaignIdMax)
+})
+
+export const SelectCampaignMakeGoodBody = zod.object({
+  "selection": zod.enum(['extension', 'credit', 'cancellation'])
+})
+
+export const SelectCampaignMakeGoodResponse = zod.unknown()
+
+
+/**
+ * @summary Approve the current proof revision
+ */
+export const approveCampaignProofPathCampaignIdMax = 100;
+
+
+
+export const ApproveCampaignProofParams = zod.object({
+  "campaignId": zod.coerce.string().min(1).max(approveCampaignProofPathCampaignIdMax)
+})
+
+export const ApproveCampaignProofResponse = zod.unknown()
+
+
+/**
+ * @summary Record shipment after proof approval
+ */
+export const recordCampaignShipmentPathCampaignIdMax = 100;
+
+
+
+export const RecordCampaignShipmentParams = zod.object({
+  "campaignId": zod.coerce.string().min(1).max(recordCampaignShipmentPathCampaignIdMax)
+})
+
+export const recordCampaignShipmentBodyCarrierMin = 2;
+export const recordCampaignShipmentBodyCarrierMax = 80;
+
+export const recordCampaignShipmentBodyTrackingNumberMin = 4;
+export const recordCampaignShipmentBodyTrackingNumberMax = 100;
+
+
+export const recordCampaignShipmentBodyTrackingNumberRegExp = new RegExp('^[A-Za-z0-9 ._-]+$');
+
+
+export const RecordCampaignShipmentBody = zod.object({
+  "carrier": zod.string().min(recordCampaignShipmentBodyCarrierMin).max(recordCampaignShipmentBodyCarrierMax),
+  "trackingNumber": zod.string().min(recordCampaignShipmentBodyTrackingNumberMin).max(recordCampaignShipmentBodyTrackingNumberMax).regex(recordCampaignShipmentBodyTrackingNumberRegExp)
+})
+
+export const RecordCampaignShipmentResponse = zod.unknown()
+
+
+/**
+ * @summary Record delivery and start the first owner check-in cycle
+ */
+export const recordCampaignDeliveryPathCampaignIdMax = 100;
+
+
+
+export const RecordCampaignDeliveryParams = zod.object({
+  "campaignId": zod.coerce.string().min(1).max(recordCampaignDeliveryPathCampaignIdMax)
+})
+
+export const RecordCampaignDeliveryResponse = zod.object({
+  "campaignId": zod.string(),
+  "shipmentStatus": zod.enum(['delivered']),
+  "lifecycleStatus": zod.enum(['active']),
+  "deliveredAt": zod.coerce.date(),
+  "checkinStatus": zod.enum(['due']),
+  "checkinDueAt": zod.coerce.date()
 })
 
 

@@ -22,3 +22,4 @@
 - [Anonymous access capabilities](anonymous-access-capabilities.md) — public checkout and tracking use hashed HttpOnly capabilities, not email or Stripe IDs as authorization.
 - [OpenAPI assent requirements](openapi-assent-requirements.md) — assent fields must be listed as required before codegen, and generated header normalization needs the workspace-compatible callback form.
 - [Active upload response policy](active-upload-response-policy.md) — user uploads must be raster-only inline; unknown or active formats download under sandboxed, non-cacheable responses.
+- [Pre-publication upload capabilities](prepublication-upload-capabilities.md) — sensitive uploads start from expiring resource drafts and are consumed once by the matching transition.

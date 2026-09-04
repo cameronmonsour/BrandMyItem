@@ -183,6 +183,41 @@ test.describe('item-specific branding methods', () => {
   });
 
   test('keeps a completed sponsor purchase trackable with case-insensitive email after reload', async ({ page }) => {
+    await page.route('**/api/storage/uploads/request-url', async (route) => {
+      console.log('Hit request-url mock');
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ uploadUrl: 'http://localhost:3000/mock-upload', objectPath: '/objects/mock-logo.png' })
+      });
+    });
+
+    await page.route('http://localhost:3000/mock-upload', async (route) => {
+      await route.fulfill({ status: 200 });
+    });
+
+    await page.route('**/api/checkout/sessions', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ url: 'http://localhost:3000/?checkout=success&session_id=mock_session_123#item/demo1' })
+      });
+    });
+
+    await page.route('**/api/checkout/sessions/mock_session_123', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          id: 'mock_order_123',
+          campaignId: 'demo1',
+          spotIndex: 0,
+          amountCents: 14700,
+          status: 'reserved'
+        })
+      });
+    });
+
     await page.goto('/#item/demo1');
     await expect(page.locator('#v-item')).toHaveClass(/on/);
     await expect(page.locator('#iSpotList')).toBeVisible();
@@ -221,8 +256,20 @@ test.describe('item-specific branding methods', () => {
     await page.locator('#mBrand').fill(brand);
     await page.locator('#mMail').fill(email);
     await page.locator('#mLink').fill('https://fixture-sponsor.example.com');
+    await page.locator('#brandAssent').check();
     await page.getByRole('button', { name: 'Continue' }).click();
 
+    // Wait a tiny bit to let async tasks finish and show any toast
+    await page.waitForTimeout(500);
+    console.log("Toast text after click:", await page.locator('#toast').textContent());
+
+    // Since the UI opens a popup for Stripe, we simulate returning from the checkout
+    await page.evaluate(() => {
+      history.pushState(null, '', '/?checkout=success&session_id=mock_session_123#item/demo1');
+      resumeStripeCheckout();
+    });
+
+    console.log("Toast text after manual resume:", await page.locator('#toast').textContent());
     await expect(page.locator('#mStep1')).toBeHidden();
     await expect(page.locator('#mStep3')).toBeVisible();
     await expect(page.locator('#mSubMail')).toHaveText(email);

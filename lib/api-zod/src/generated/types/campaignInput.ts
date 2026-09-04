@@ -38,5 +38,7 @@ export interface CampaignInput {
      */
   pricesCents: number[];
   ownerAssent: OwnerAssent;
+  /** @pattern ^/objects/uploads/[A-Za-z0-9-]+$ */
+  w9ObjectPath?: string;
   presentation: Partial<Record<'type' | 'sourceType' | 'itemName' | 'custom' | 'photo' | 'faces' | 'tiles' | 'retail' | 'title' | 'owner' | 'avatar' | 'habs' | 'cities' | 'universities' | 'purpose' | 'freq' | 'social' | 'color' | 'variantModel' | 'variantSize' | 'source' | 'verified' | 'socialLinks' | 'slots' | 'pricesIncludeMarkup' | 'postedAt' | 'unsoldTimeoutDays' | 'termMonths' | 'checkinFrequency' | 'brandingMode' | 'status' | 'mtv', unknown>>;
 }

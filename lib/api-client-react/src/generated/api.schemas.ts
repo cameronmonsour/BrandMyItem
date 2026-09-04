@@ -47,7 +47,101 @@ export interface CampaignInput {
      */
   pricesCents: number[];
   ownerAssent: OwnerAssent;
+  /** @pattern ^/objects/uploads/[A-Za-z0-9-]+$ */
+  w9ObjectPath?: string;
   presentation: Partial<Record<'type' | 'sourceType' | 'itemName' | 'custom' | 'photo' | 'faces' | 'tiles' | 'retail' | 'title' | 'owner' | 'avatar' | 'habs' | 'cities' | 'universities' | 'purpose' | 'freq' | 'social' | 'color' | 'variantModel' | 'variantSize' | 'source' | 'verified' | 'socialLinks' | 'slots' | 'pricesIncludeMarkup' | 'postedAt' | 'unsoldTimeoutDays' | 'termMonths' | 'checkinFrequency' | 'brandingMode' | 'status' | 'mtv', unknown>>;
+}
+
+export type CampaignDraftInputPresentation = { [key: string]: unknown };
+
+export interface CampaignDraftInput {
+  /**
+     * @minLength 1
+     * @maxLength 100
+     */
+  id: string;
+  /**
+     * @minLength 1
+     * @maxLength 50
+     */
+  itemType: string;
+  /**
+     * @minLength 1
+     * @maxLength 200
+     */
+  title: string;
+  /**
+     * @minLength 1
+     * @maxLength 120
+     */
+  ownerName: string;
+  /** @maxLength 320 */
+  ownerEmail: string;
+  /**
+     * @minItems 1
+     * @maxItems 20
+     * @items.minimum 100
+     * @items.maximum 10000000
+     */
+  pricesCents: number[];
+  ownerAssent: OwnerAssent;
+  presentation: CampaignDraftInputPresentation;
+}
+
+export type CampaignDraftStatus = typeof CampaignDraftStatus[keyof typeof CampaignDraftStatus];
+
+
+export const CampaignDraftStatus = {
+  draft: 'draft',
+} as const;
+
+export interface CampaignDraft {
+  id: string;
+  status: CampaignDraftStatus;
+  expiresAt: string;
+  w9Required: boolean;
+}
+
+export interface W9UploadRequest {
+  /**
+     * @minLength 1
+     * @maxLength 255
+     */
+  name: string;
+  /**
+     * @minimum 1
+     * @maximum 10000000
+     */
+  size: number;
+  contentType: 'application/pdf';
+}
+
+export type W9UploadIntentStatus = typeof W9UploadIntentStatus[keyof typeof W9UploadIntentStatus];
+
+
+export const W9UploadIntentStatus = {
+  issued: 'issued',
+  finalized: 'finalized',
+  consumed: 'consumed',
+  revoked: 'revoked',
+} as const;
+
+export interface W9UploadIntent {
+  id: string;
+  purpose: 'campaign_draft_w9';
+  /** @pattern ^/objects/uploads/[A-Za-z0-9-]+$ */
+  objectPath: string;
+  expectedMimeType: 'application/pdf';
+  expectedSizeBytes: number;
+  expectedFileName: string;
+  status: W9UploadIntentStatus;
+  expiresAt: string;
+  uploadURL?: string;
+}
+
+export interface PublishCampaignDraftInput {
+  /** @minLength 1 */
+  w9IntentId?: string;
 }
 
 export type CampaignPresentation = { [key: string]: unknown };
@@ -59,7 +153,7 @@ export const CampaignLifecycleStatus = {
   live: 'live',
   funding: 'funding',
   funded: 'funded',
-  purchased: 'purchased',
+  ordered: 'ordered',
   branded: 'branded',
   shipped: 'shipped',
   active: 'active',
@@ -126,6 +220,10 @@ export interface PlacementCheckoutInput {
      * @maximum 19
      */
   spotIndex: number;
+  /** @minLength 1 */
+  reservationDraftId: string;
+  /** @minLength 1 */
+  logoIntentId: string;
   /**
      * @minLength 1
      * @maxLength 120
@@ -135,9 +233,88 @@ export interface PlacementCheckoutInput {
   email: string;
   /** @maxLength 2048 */
   destinationUrl?: string;
-  /** @pattern ^/objects/uploads/[A-Za-z0-9-]+$ */
-  logoObjectPath: string;
   brandAssent: BrandAssent;
+}
+
+export interface SponsorReservationDraftInput {
+  /**
+     * @minLength 1
+     * @maxLength 100
+     */
+  campaignId: string;
+  /**
+     * @minimum 0
+     * @maximum 19
+     */
+  spotIndex: number;
+}
+
+export type SponsorReservationDraftStatus = typeof SponsorReservationDraftStatus[keyof typeof SponsorReservationDraftStatus];
+
+
+export const SponsorReservationDraftStatus = {
+  issued: 'issued',
+} as const;
+
+export interface SponsorReservationDraft {
+  id: string;
+  campaignId: string;
+  spotIndex: number;
+  status: SponsorReservationDraftStatus;
+  expiresAt: string;
+}
+
+export type SponsorLogoUploadRequestContentType = typeof SponsorLogoUploadRequestContentType[keyof typeof SponsorLogoUploadRequestContentType];
+
+
+export const SponsorLogoUploadRequestContentType = {
+  'image/svg+xml': 'image/svg+xml',
+  'application/pdf': 'application/pdf',
+} as const;
+
+export interface SponsorLogoUploadRequest {
+  /**
+     * @minLength 1
+     * @maxLength 255
+     */
+  name: string;
+  /**
+     * @minimum 1
+     * @maximum 20000000
+     */
+  size: number;
+  contentType: SponsorLogoUploadRequestContentType;
+}
+
+export type SponsorLogoUploadIntentExpectedMimeType = typeof SponsorLogoUploadIntentExpectedMimeType[keyof typeof SponsorLogoUploadIntentExpectedMimeType];
+
+
+export const SponsorLogoUploadIntentExpectedMimeType = {
+  'image/svg+xml': 'image/svg+xml',
+  'application/pdf': 'application/pdf',
+} as const;
+
+export type SponsorLogoUploadIntentStatus = typeof SponsorLogoUploadIntentStatus[keyof typeof SponsorLogoUploadIntentStatus];
+
+
+export const SponsorLogoUploadIntentStatus = {
+  issued: 'issued',
+  finalized: 'finalized',
+  consumed: 'consumed',
+  revoked: 'revoked',
+} as const;
+
+export interface SponsorLogoUploadIntent {
+  id: string;
+  purpose: 'sponsor_reservation_draft_logo';
+  /** @pattern ^/objects/uploads/[A-Za-z0-9-]+$ */
+  objectPath: string;
+  expectedMimeType: SponsorLogoUploadIntentExpectedMimeType;
+  expectedSizeBytes: number;
+  expectedFileName: string;
+  status: SponsorLogoUploadIntentStatus;
+  expiresAt: string;
+  uploadURL?: string;
 }
 
 export interface TrackingMagicLinkInput {
@@ -231,6 +408,18 @@ export const UploadUrlRequestContentType = {
   'image/jpeg': 'image/jpeg',
   'image/webp': 'image/webp',
   'image/gif': 'image/gif',
+  'image/svg+xml': 'image/svg+xml',
+  'application/pdf': 'application/pdf',
+} as const;
+
+export type UploadUrlRequestPurpose = typeof UploadUrlRequestPurpose[keyof typeof UploadUrlRequestPurpose];
+
+
+export const UploadUrlRequestPurpose = {
+  sponsor_logo: 'sponsor_logo',
+  checkin_photo: 'checkin_photo',
+  proof: 'proof',
+  w9: 'w9',
 } as const;
 
 export interface UploadUrlRequest {
@@ -245,12 +434,261 @@ export interface UploadUrlRequest {
      */
   size: number;
   contentType: UploadUrlRequestContentType;
+  purpose: UploadUrlRequestPurpose;
 }
 
 export interface UploadUrlResponse {
   uploadURL: string;
   objectPath: string;
   metadata?: UploadUrlRequest;
+}
+
+export interface ShippingAddressInput {
+  /**
+     * @minLength 1
+     * @maxLength 120
+     */
+  recipientName: string;
+  /**
+     * @minLength 3
+     * @maxLength 120
+     */
+  line1: string;
+  /** @maxLength 120 */
+  line2?: string;
+  /**
+     * @minLength 1
+     * @maxLength 80
+     */
+  city: string;
+  /** @pattern ^[A-Z]{2}$ */
+  state: string;
+  /** @pattern ^[0-9]{5}(-[0-9]{4})?$ */
+  postalCode: string;
+  country: 'US';
+}
+
+export type ShippingAddress = ShippingAddressInput & {
+  validatedAt: string;
+};
+
+export interface ProofSubmissionInput {
+  /** @minLength 1 */
+  placementOrderId: string;
+  /** @minLength 1 */
+  intentId: string;
+}
+
+export interface ProofApprovalInput {
+  /** @minLength 1 */
+  placementOrderId: string;
+  /** @minimum 1 */
+  revision: number;
+}
+
+export type ProofUploadRequestContentType = typeof ProofUploadRequestContentType[keyof typeof ProofUploadRequestContentType];
+
+
+export const ProofUploadRequestContentType = {
+  'image/png': 'image/png',
+  'image/jpeg': 'image/jpeg',
+  'image/webp': 'image/webp',
+} as const;
+
+export interface ProofUploadRequest {
+  /**
+     * @minLength 1
+     * @maxLength 255
+     */
+  name: string;
+  /**
+     * @minimum 1
+     * @maximum 10000000
+     */
+  size: number;
+  contentType: ProofUploadRequestContentType;
+}
+
+export type ProofUploadIntentExpectedMimeType = typeof ProofUploadIntentExpectedMimeType[keyof typeof ProofUploadIntentExpectedMimeType];
+
+
+export const ProofUploadIntentExpectedMimeType = {
+  'image/png': 'image/png',
+  'image/jpeg': 'image/jpeg',
+  'image/webp': 'image/webp',
+} as const;
+
+export type ProofUploadIntentStatus = typeof ProofUploadIntentStatus[keyof typeof ProofUploadIntentStatus];
+
+
+export const ProofUploadIntentStatus = {
+  issued: 'issued',
+  finalized: 'finalized',
+  consumed: 'consumed',
+  revoked: 'revoked',
+} as const;
+
+export interface ProofUploadIntent {
+  id: string;
+  purpose: 'operator_production_proof';
+  /** @pattern ^/objects/uploads/[A-Za-z0-9-]+$ */
+  objectPath: string;
+  expectedMimeType: ProofUploadIntentExpectedMimeType;
+  expectedSizeBytes: number;
+  expectedFileName: string;
+  status: ProofUploadIntentStatus;
+  expiresAt: string;
+  uploadURL?: string;
+}
+
+export type ProofStatus = typeof ProofStatus[keyof typeof ProofStatus];
+
+
+export const ProofStatus = {
+  submitted: 'submitted',
+  approved: 'approved',
+  rejected: 'rejected',
+} as const;
+
+export interface Proof {
+  /** @minimum 1 */
+  revision: number;
+  objectPath: string;
+  status: ProofStatus;
+  submittedAt: string;
+  /** @nullable */
+  approvedAt?: string | null;
+}
+
+export interface ShipmentInput {
+  /**
+     * @minLength 2
+     * @maxLength 80
+     */
+  carrier: string;
+  /**
+     * @minLength 4
+     * @maxLength 100
+     * @pattern ^[A-Za-z0-9 ._-]+$
+     */
+  trackingNumber: string;
+}
+
+export type DeliveryShipmentStatus = typeof DeliveryShipmentStatus[keyof typeof DeliveryShipmentStatus];
+
+
+export const DeliveryShipmentStatus = {
+  delivered: 'delivered',
+} as const;
+
+export type DeliveryLifecycleStatus = typeof DeliveryLifecycleStatus[keyof typeof DeliveryLifecycleStatus];
+
+
+export const DeliveryLifecycleStatus = {
+  active: 'active',
+} as const;
+
+export type DeliveryCheckinStatus = typeof DeliveryCheckinStatus[keyof typeof DeliveryCheckinStatus];
+
+
+export const DeliveryCheckinStatus = {
+  due: 'due',
+} as const;
+
+export interface Delivery {
+  campaignId: string;
+  shipmentStatus: DeliveryShipmentStatus;
+  lifecycleStatus: DeliveryLifecycleStatus;
+  deliveredAt: string;
+  checkinStatus: DeliveryCheckinStatus;
+  checkinDueAt: string;
+}
+
+export interface CheckinSubmissionInput {
+  /**
+     * @minLength 1
+     * @maxLength 2000
+     */
+  note: string;
+  /** @minLength 1 */
+  photoIntentId?: string;
+}
+
+export type CheckinPhotoUploadRequestContentType = typeof CheckinPhotoUploadRequestContentType[keyof typeof CheckinPhotoUploadRequestContentType];
+
+
+export const CheckinPhotoUploadRequestContentType = {
+  'image/png': 'image/png',
+  'image/jpeg': 'image/jpeg',
+  'image/webp': 'image/webp',
+} as const;
+
+export interface CheckinPhotoUploadRequest {
+  /**
+     * @minLength 1
+     * @maxLength 255
+     */
+  name: string;
+  /**
+     * @minimum 1
+     * @maximum 25000000
+     */
+  size: number;
+  contentType: CheckinPhotoUploadRequestContentType;
+}
+
+export type CheckinPhotoUploadIntentExpectedMimeType = typeof CheckinPhotoUploadIntentExpectedMimeType[keyof typeof CheckinPhotoUploadIntentExpectedMimeType];
+
+
+export const CheckinPhotoUploadIntentExpectedMimeType = {
+  'image/png': 'image/png',
+  'image/jpeg': 'image/jpeg',
+  'image/webp': 'image/webp',
+} as const;
+
+export type CheckinPhotoUploadIntentStatus = typeof CheckinPhotoUploadIntentStatus[keyof typeof CheckinPhotoUploadIntentStatus];
+
+
+export const CheckinPhotoUploadIntentStatus = {
+  issued: 'issued',
+  finalized: 'finalized',
+  consumed: 'consumed',
+  revoked: 'revoked',
+} as const;
+
+export interface CheckinPhotoUploadIntent {
+  id: string;
+  purpose: 'owner_checkin';
+  /** @pattern ^/objects/uploads/[A-Za-z0-9-]+$ */
+  objectPath: string;
+  expectedMimeType: CheckinPhotoUploadIntentExpectedMimeType;
+  expectedSizeBytes: number;
+  expectedFileName: string;
+  status: CheckinPhotoUploadIntentStatus;
+  expiresAt: string;
+  uploadURL?: string;
+}
+
+export interface Checkin {
+  id: string;
+  campaignId: string;
+  note: string;
+  /** @nullable */
+  photoObjectPath?: string | null;
+  submittedAt: string;
+}
+
+export type MakeGoodInputSelection = typeof MakeGoodInputSelection[keyof typeof MakeGoodInputSelection];
+
+
+export const MakeGoodInputSelection = {
+  extension: 'extension',
+  credit: 'credit',
+  cancellation: 'cancellation',
+} as const;
+
+export interface MakeGoodInput {
+  selection: MakeGoodInputSelection;
 }
 
 export type GetTrackingParams = {

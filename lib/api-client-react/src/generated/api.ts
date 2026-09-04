@@ -21,17 +21,38 @@ import type {
 
 import type {
   Campaign,
+  CampaignDraft,
+  CampaignDraftInput,
   CampaignInput,
+  Checkin,
+  CheckinPhotoUploadIntent,
+  CheckinPhotoUploadRequest,
+  CheckinSubmissionInput,
+  Delivery,
   GetTrackingParams,
   HealthStatus,
+  MakeGoodInput,
   PlacementCheckoutInput,
   PlacementCheckoutSession,
   PlacementOrder,
+  Proof,
+  ProofApprovalInput,
+  ProofSubmissionInput,
+  ProofUploadIntent,
+  ProofUploadRequest,
+  PublishCampaignDraftInput,
+  ShipmentInput,
+  ShippingAddress,
+  ShippingAddressInput,
+  SponsorLogoUploadIntent,
+  SponsorLogoUploadRequest,
+  SponsorReservationDraft,
+  SponsorReservationDraftInput,
   TrackingMagicLinkInput,
   TrackingMagicLinkResponse,
   TrackingResult,
-  UploadUrlRequest,
-  UploadUrlResponse
+  W9UploadIntent,
+  W9UploadRequest
 } from './api.schemas';
 
 import { customFetch } from '../custom-fetch';
@@ -296,18 +317,18 @@ export function useListCampaigns<TData = Awaited<ReturnType<typeof listCampaigns
 
 
 
-export const getRequestUploadUrlUrl = () => {
+export const getCreateCampaignDraftUrl = () => {
 
 
 
 
-  return `/api/storage/uploads/request-url`
+  return `/api/campaign-drafts`
 }
 
 /**
- * @summary Request a direct image upload URL
+ * @summary Create an unpublished, expiring campaign draft
  */
-export const requestUploadUrl = async (uploadUrlRequest: UploadUrlRequest, options?: Parameters<typeof customFetch>[1]): Promise<UploadUrlResponse> => {
+export const createCampaignDraft = async (campaignDraftInput: CampaignDraftInput, options?: Parameters<typeof customFetch>[1]): Promise<CampaignDraft> => {
 
     const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
     if (!h) return {};
@@ -315,12 +336,12 @@ export const requestUploadUrl = async (uploadUrlRequest: UploadUrlRequest, optio
     if (Array.isArray(h)) return Object.fromEntries(h);
     return h;
   };
-return customFetch<UploadUrlResponse>(getRequestUploadUrlUrl(),
+return customFetch<CampaignDraft>(getCreateCampaignDraftUrl(),
   {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
-    body: JSON.stringify(uploadUrlRequest)
+    body: JSON.stringify(campaignDraftInput)
   }
 );}
 
@@ -328,13 +349,13 @@ return customFetch<UploadUrlResponse>(getRequestUploadUrlUrl(),
 
 
 
-export const getRequestUploadUrlMutationKey = () => ['requestUploadUrl'] as const;
+export const getCreateCampaignDraftMutationKey = () => ['createCampaignDraft'] as const;
 
-export const getRequestUploadUrlMutationOptions = <TError = ErrorType<void>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof requestUploadUrl>>, TError,RequestUploadUrlMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof requestUploadUrl>>, TError,RequestUploadUrlMutationVariables, TContext> => {
+export const getCreateCampaignDraftMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCampaignDraft>>, TError,CreateCampaignDraftMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createCampaignDraft>>, TError,CreateCampaignDraftMutationVariables, TContext> => {
 
-const mutationKey = getRequestUploadUrlMutationKey();
+const mutationKey = getCreateCampaignDraftMutationKey();
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -344,10 +365,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof requestUploadUrl>>, RequestUploadUrlMutationVariables> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createCampaignDraft>>, CreateCampaignDraftMutationVariables> = (props) => {
           const {data} = props ?? {};
 
-          return  requestUploadUrl(data,requestOptions)
+          return  createCampaignDraft(data,requestOptions)
         }
 
 
@@ -357,23 +378,498 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type RequestUploadUrlMutationResult = NonNullable<Awaited<ReturnType<typeof requestUploadUrl>>>
-    export type RequestUploadUrlMutationBody = BodyType<UploadUrlRequest>
-    export type RequestUploadUrlMutationError = ErrorType<void>
-    export type RequestUploadUrlMutationVariables = {data: BodyType<UploadUrlRequest>}
+    export type CreateCampaignDraftMutationResult = NonNullable<Awaited<ReturnType<typeof createCampaignDraft>>>
+    export type CreateCampaignDraftMutationBody = BodyType<CampaignDraftInput>
+    export type CreateCampaignDraftMutationError = ErrorType<void>
+    export type CreateCampaignDraftMutationVariables = {data: BodyType<CampaignDraftInput>}
 
     /**
- * @summary Request a direct image upload URL
+ * @summary Create an unpublished, expiring campaign draft
  */
-export const useRequestUploadUrl = <TError = ErrorType<void>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof requestUploadUrl>>, TError,RequestUploadUrlMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+export const useCreateCampaignDraft = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCampaignDraft>>, TError,CreateCampaignDraftMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
  ): UseMutationResult<
-        Awaited<ReturnType<typeof requestUploadUrl>>,
+        Awaited<ReturnType<typeof createCampaignDraft>>,
         TError,
-        RequestUploadUrlMutationVariables,
+        CreateCampaignDraftMutationVariables,
         TContext
       > => {
-      return useMutation(getRequestUploadUrlMutationOptions(options));
+      return useMutation(getCreateCampaignDraftMutationOptions(options));
+    }
+
+export const getRequestCampaignDraftW9UploadUrl = (campaignId: string,) => {
+
+
+
+
+  return `/api/campaign-drafts/${campaignId}/w9/request-url`
+}
+
+/**
+ * @summary Issue a W-9 upload intent for an authorized high-value draft
+ */
+export const requestCampaignDraftW9Upload = async (campaignId: string,
+    w9UploadRequest: W9UploadRequest, options?: Parameters<typeof customFetch>[1]): Promise<W9UploadIntent> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Array.isArray(h)) return Object.fromEntries(h);
+    return h;
+  };
+return customFetch<W9UploadIntent>(getRequestCampaignDraftW9UploadUrl(campaignId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(w9UploadRequest)
+  }
+);}
+
+
+
+
+
+export const getRequestCampaignDraftW9UploadMutationKey = () => ['requestCampaignDraftW9Upload'] as const;
+
+export const getRequestCampaignDraftW9UploadMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof requestCampaignDraftW9Upload>>, TError,RequestCampaignDraftW9UploadMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof requestCampaignDraftW9Upload>>, TError,RequestCampaignDraftW9UploadMutationVariables, TContext> => {
+
+const mutationKey = getRequestCampaignDraftW9UploadMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof requestCampaignDraftW9Upload>>, RequestCampaignDraftW9UploadMutationVariables> = (props) => {
+          const {campaignId,data} = props ?? {};
+
+          return  requestCampaignDraftW9Upload(campaignId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RequestCampaignDraftW9UploadMutationResult = NonNullable<Awaited<ReturnType<typeof requestCampaignDraftW9Upload>>>
+    export type RequestCampaignDraftW9UploadMutationBody = BodyType<W9UploadRequest>
+    export type RequestCampaignDraftW9UploadMutationError = ErrorType<void>
+    export type RequestCampaignDraftW9UploadMutationVariables = {campaignId: string;data: BodyType<W9UploadRequest>}
+
+    /**
+ * @summary Issue a W-9 upload intent for an authorized high-value draft
+ */
+export const useRequestCampaignDraftW9Upload = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof requestCampaignDraftW9Upload>>, TError,RequestCampaignDraftW9UploadMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof requestCampaignDraftW9Upload>>,
+        TError,
+        RequestCampaignDraftW9UploadMutationVariables,
+        TContext
+      > => {
+      return useMutation(getRequestCampaignDraftW9UploadMutationOptions(options));
+    }
+
+export const getFinalizeCampaignDraftW9UploadUrl = (campaignId: string,
+    intentId: string,) => {
+
+
+
+
+  return `/api/campaign-drafts/${campaignId}/w9/${intentId}/finalize`
+}
+
+/**
+ * @summary Verify and finalize a W-9 upload intent once
+ */
+export const finalizeCampaignDraftW9Upload = async (campaignId: string,
+    intentId: string, options?: Parameters<typeof customFetch>[1]): Promise<W9UploadIntent> => {
+
+  return customFetch<W9UploadIntent>(getFinalizeCampaignDraftW9UploadUrl(campaignId,intentId),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getFinalizeCampaignDraftW9UploadMutationKey = () => ['finalizeCampaignDraftW9Upload'] as const;
+
+export const getFinalizeCampaignDraftW9UploadMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof finalizeCampaignDraftW9Upload>>, TError,FinalizeCampaignDraftW9UploadMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof finalizeCampaignDraftW9Upload>>, TError,FinalizeCampaignDraftW9UploadMutationVariables, TContext> => {
+
+const mutationKey = getFinalizeCampaignDraftW9UploadMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof finalizeCampaignDraftW9Upload>>, FinalizeCampaignDraftW9UploadMutationVariables> = (props) => {
+          const {campaignId,intentId} = props ?? {};
+
+          return  finalizeCampaignDraftW9Upload(campaignId,intentId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type FinalizeCampaignDraftW9UploadMutationResult = NonNullable<Awaited<ReturnType<typeof finalizeCampaignDraftW9Upload>>>
+
+    export type FinalizeCampaignDraftW9UploadMutationError = ErrorType<void>
+    export type FinalizeCampaignDraftW9UploadMutationVariables = {campaignId: string;intentId: string}
+
+    /**
+ * @summary Verify and finalize a W-9 upload intent once
+ */
+export const useFinalizeCampaignDraftW9Upload = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof finalizeCampaignDraftW9Upload>>, TError,FinalizeCampaignDraftW9UploadMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof finalizeCampaignDraftW9Upload>>,
+        TError,
+        FinalizeCampaignDraftW9UploadMutationVariables,
+        TContext
+      > => {
+      return useMutation(getFinalizeCampaignDraftW9UploadMutationOptions(options));
+    }
+
+export const getPublishCampaignDraftUrl = (campaignId: string,) => {
+
+
+
+
+  return `/api/campaign-drafts/${campaignId}/publish`
+}
+
+/**
+ * @summary Publish an authorized campaign draft
+ */
+export const publishCampaignDraft = async (campaignId: string,
+    publishCampaignDraftInput: PublishCampaignDraftInput, options?: Parameters<typeof customFetch>[1]): Promise<Campaign> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Array.isArray(h)) return Object.fromEntries(h);
+    return h;
+  };
+return customFetch<Campaign>(getPublishCampaignDraftUrl(campaignId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(publishCampaignDraftInput)
+  }
+);}
+
+
+
+
+
+export const getPublishCampaignDraftMutationKey = () => ['publishCampaignDraft'] as const;
+
+export const getPublishCampaignDraftMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof publishCampaignDraft>>, TError,PublishCampaignDraftMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof publishCampaignDraft>>, TError,PublishCampaignDraftMutationVariables, TContext> => {
+
+const mutationKey = getPublishCampaignDraftMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof publishCampaignDraft>>, PublishCampaignDraftMutationVariables> = (props) => {
+          const {campaignId,data} = props ?? {};
+
+          return  publishCampaignDraft(campaignId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PublishCampaignDraftMutationResult = NonNullable<Awaited<ReturnType<typeof publishCampaignDraft>>>
+    export type PublishCampaignDraftMutationBody = BodyType<PublishCampaignDraftInput>
+    export type PublishCampaignDraftMutationError = ErrorType<void>
+    export type PublishCampaignDraftMutationVariables = {campaignId: string;data: BodyType<PublishCampaignDraftInput>}
+
+    /**
+ * @summary Publish an authorized campaign draft
+ */
+export const usePublishCampaignDraft = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof publishCampaignDraft>>, TError,PublishCampaignDraftMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof publishCampaignDraft>>,
+        TError,
+        PublishCampaignDraftMutationVariables,
+        TContext
+      > => {
+      return useMutation(getPublishCampaignDraftMutationOptions(options));
+    }
+
+export const getCreateSponsorReservationDraftUrl = () => {
+
+
+
+
+  return `/api/sponsor-reservation-drafts`
+}
+
+/**
+ * @summary Claim one currently open placement briefly and issue a capability cookie
+ */
+export const createSponsorReservationDraft = async (sponsorReservationDraftInput: SponsorReservationDraftInput, options?: Parameters<typeof customFetch>[1]): Promise<SponsorReservationDraft> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Array.isArray(h)) return Object.fromEntries(h);
+    return h;
+  };
+return customFetch<SponsorReservationDraft>(getCreateSponsorReservationDraftUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(sponsorReservationDraftInput)
+  }
+);}
+
+
+
+
+
+export const getCreateSponsorReservationDraftMutationKey = () => ['createSponsorReservationDraft'] as const;
+
+export const getCreateSponsorReservationDraftMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createSponsorReservationDraft>>, TError,CreateSponsorReservationDraftMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createSponsorReservationDraft>>, TError,CreateSponsorReservationDraftMutationVariables, TContext> => {
+
+const mutationKey = getCreateSponsorReservationDraftMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createSponsorReservationDraft>>, CreateSponsorReservationDraftMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  createSponsorReservationDraft(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateSponsorReservationDraftMutationResult = NonNullable<Awaited<ReturnType<typeof createSponsorReservationDraft>>>
+    export type CreateSponsorReservationDraftMutationBody = BodyType<SponsorReservationDraftInput>
+    export type CreateSponsorReservationDraftMutationError = ErrorType<void>
+    export type CreateSponsorReservationDraftMutationVariables = {data: BodyType<SponsorReservationDraftInput>}
+
+    /**
+ * @summary Claim one currently open placement briefly and issue a capability cookie
+ */
+export const useCreateSponsorReservationDraft = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createSponsorReservationDraft>>, TError,CreateSponsorReservationDraftMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createSponsorReservationDraft>>,
+        TError,
+        CreateSponsorReservationDraftMutationVariables,
+        TContext
+      > => {
+      return useMutation(getCreateSponsorReservationDraftMutationOptions(options));
+    }
+
+export const getRequestSponsorReservationDraftLogoUploadUrl = (draftId: string,) => {
+
+
+
+
+  return `/api/sponsor-reservation-drafts/${draftId}/logo/request-url`
+}
+
+/**
+ * @summary Issue a capability-bound sponsor logo upload intent
+ */
+export const requestSponsorReservationDraftLogoUpload = async (draftId: string,
+    sponsorLogoUploadRequest: SponsorLogoUploadRequest, options?: Parameters<typeof customFetch>[1]): Promise<SponsorLogoUploadIntent> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Array.isArray(h)) return Object.fromEntries(h);
+    return h;
+  };
+return customFetch<SponsorLogoUploadIntent>(getRequestSponsorReservationDraftLogoUploadUrl(draftId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(sponsorLogoUploadRequest)
+  }
+);}
+
+
+
+
+
+export const getRequestSponsorReservationDraftLogoUploadMutationKey = () => ['requestSponsorReservationDraftLogoUpload'] as const;
+
+export const getRequestSponsorReservationDraftLogoUploadMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof requestSponsorReservationDraftLogoUpload>>, TError,RequestSponsorReservationDraftLogoUploadMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof requestSponsorReservationDraftLogoUpload>>, TError,RequestSponsorReservationDraftLogoUploadMutationVariables, TContext> => {
+
+const mutationKey = getRequestSponsorReservationDraftLogoUploadMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof requestSponsorReservationDraftLogoUpload>>, RequestSponsorReservationDraftLogoUploadMutationVariables> = (props) => {
+          const {draftId,data} = props ?? {};
+
+          return  requestSponsorReservationDraftLogoUpload(draftId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RequestSponsorReservationDraftLogoUploadMutationResult = NonNullable<Awaited<ReturnType<typeof requestSponsorReservationDraftLogoUpload>>>
+    export type RequestSponsorReservationDraftLogoUploadMutationBody = BodyType<SponsorLogoUploadRequest>
+    export type RequestSponsorReservationDraftLogoUploadMutationError = ErrorType<void>
+    export type RequestSponsorReservationDraftLogoUploadMutationVariables = {draftId: string;data: BodyType<SponsorLogoUploadRequest>}
+
+    /**
+ * @summary Issue a capability-bound sponsor logo upload intent
+ */
+export const useRequestSponsorReservationDraftLogoUpload = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof requestSponsorReservationDraftLogoUpload>>, TError,RequestSponsorReservationDraftLogoUploadMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof requestSponsorReservationDraftLogoUpload>>,
+        TError,
+        RequestSponsorReservationDraftLogoUploadMutationVariables,
+        TContext
+      > => {
+      return useMutation(getRequestSponsorReservationDraftLogoUploadMutationOptions(options));
+    }
+
+export const getFinalizeSponsorReservationDraftLogoUploadUrl = (draftId: string,
+    intentId: string,) => {
+
+
+
+
+  return `/api/sponsor-reservation-drafts/${draftId}/logo/${intentId}/finalize`
+}
+
+/**
+ * @summary Verify and finalize a sponsor logo upload intent once
+ */
+export const finalizeSponsorReservationDraftLogoUpload = async (draftId: string,
+    intentId: string, options?: Parameters<typeof customFetch>[1]): Promise<SponsorLogoUploadIntent> => {
+
+  return customFetch<SponsorLogoUploadIntent>(getFinalizeSponsorReservationDraftLogoUploadUrl(draftId,intentId),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getFinalizeSponsorReservationDraftLogoUploadMutationKey = () => ['finalizeSponsorReservationDraftLogoUpload'] as const;
+
+export const getFinalizeSponsorReservationDraftLogoUploadMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof finalizeSponsorReservationDraftLogoUpload>>, TError,FinalizeSponsorReservationDraftLogoUploadMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof finalizeSponsorReservationDraftLogoUpload>>, TError,FinalizeSponsorReservationDraftLogoUploadMutationVariables, TContext> => {
+
+const mutationKey = getFinalizeSponsorReservationDraftLogoUploadMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof finalizeSponsorReservationDraftLogoUpload>>, FinalizeSponsorReservationDraftLogoUploadMutationVariables> = (props) => {
+          const {draftId,intentId} = props ?? {};
+
+          return  finalizeSponsorReservationDraftLogoUpload(draftId,intentId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type FinalizeSponsorReservationDraftLogoUploadMutationResult = NonNullable<Awaited<ReturnType<typeof finalizeSponsorReservationDraftLogoUpload>>>
+
+    export type FinalizeSponsorReservationDraftLogoUploadMutationError = ErrorType<void>
+    export type FinalizeSponsorReservationDraftLogoUploadMutationVariables = {draftId: string;intentId: string}
+
+    /**
+ * @summary Verify and finalize a sponsor logo upload intent once
+ */
+export const useFinalizeSponsorReservationDraftLogoUpload = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof finalizeSponsorReservationDraftLogoUpload>>, TError,FinalizeSponsorReservationDraftLogoUploadMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof finalizeSponsorReservationDraftLogoUpload>>,
+        TError,
+        FinalizeSponsorReservationDraftLogoUploadMutationVariables,
+        TContext
+      > => {
+      return useMutation(getFinalizeSponsorReservationDraftLogoUploadMutationOptions(options));
     }
 
 export const getGetStorageObjectUrl = (objectPath: string,) => {
@@ -997,5 +1493,957 @@ export const useRequestTrackingMagicLink = <TError = ErrorType<void>,
         TContext
       > => {
       return useMutation(getRequestTrackingMagicLinkMutationOptions(options));
+    }
+
+export const getSaveShippingAddressUrl = (campaignId: string,) => {
+
+
+
+
+  return `/api/campaigns/${campaignId}/shipping-address`
+}
+
+/**
+ * @summary Save the owner's private validated US shipping address
+ */
+export const saveShippingAddress = async (campaignId: string,
+    shippingAddressInput: ShippingAddressInput, options?: Parameters<typeof customFetch>[1]): Promise<ShippingAddress> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Array.isArray(h)) return Object.fromEntries(h);
+    return h;
+  };
+return customFetch<ShippingAddress>(getSaveShippingAddressUrl(campaignId),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(shippingAddressInput)
+  }
+);}
+
+
+
+
+
+export const getSaveShippingAddressMutationKey = () => ['saveShippingAddress'] as const;
+
+export const getSaveShippingAddressMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof saveShippingAddress>>, TError,SaveShippingAddressMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof saveShippingAddress>>, TError,SaveShippingAddressMutationVariables, TContext> => {
+
+const mutationKey = getSaveShippingAddressMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof saveShippingAddress>>, SaveShippingAddressMutationVariables> = (props) => {
+          const {campaignId,data} = props ?? {};
+
+          return  saveShippingAddress(campaignId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SaveShippingAddressMutationResult = NonNullable<Awaited<ReturnType<typeof saveShippingAddress>>>
+    export type SaveShippingAddressMutationBody = BodyType<ShippingAddressInput>
+    export type SaveShippingAddressMutationError = ErrorType<void>
+    export type SaveShippingAddressMutationVariables = {campaignId: string;data: BodyType<ShippingAddressInput>}
+
+    /**
+ * @summary Save the owner's private validated US shipping address
+ */
+export const useSaveShippingAddress = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof saveShippingAddress>>, TError,SaveShippingAddressMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof saveShippingAddress>>,
+        TError,
+        SaveShippingAddressMutationVariables,
+        TContext
+      > => {
+      return useMutation(getSaveShippingAddressMutationOptions(options));
+    }
+
+export const getSubmitCampaignProofUrl = (campaignId: string,) => {
+
+
+
+
+  return `/api/campaigns/${campaignId}/proofs`
+}
+
+/**
+ * @summary Approve one submitted operator proof revision
+ */
+export const submitCampaignProof = async (campaignId: string,
+    proofApprovalInput: ProofApprovalInput, options?: Parameters<typeof customFetch>[1]): Promise<Proof> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Array.isArray(h)) return Object.fromEntries(h);
+    return h;
+  };
+return customFetch<Proof>(getSubmitCampaignProofUrl(campaignId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(proofApprovalInput)
+  }
+);}
+
+
+
+
+
+export const getSubmitCampaignProofMutationKey = () => ['submitCampaignProof'] as const;
+
+export const getSubmitCampaignProofMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof submitCampaignProof>>, TError,SubmitCampaignProofMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof submitCampaignProof>>, TError,SubmitCampaignProofMutationVariables, TContext> => {
+
+const mutationKey = getSubmitCampaignProofMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof submitCampaignProof>>, SubmitCampaignProofMutationVariables> = (props) => {
+          const {campaignId,data} = props ?? {};
+
+          return  submitCampaignProof(campaignId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SubmitCampaignProofMutationResult = NonNullable<Awaited<ReturnType<typeof submitCampaignProof>>>
+    export type SubmitCampaignProofMutationBody = BodyType<ProofApprovalInput>
+    export type SubmitCampaignProofMutationError = ErrorType<void>
+    export type SubmitCampaignProofMutationVariables = {campaignId: string;data: BodyType<ProofApprovalInput>}
+
+    /**
+ * @summary Approve one submitted operator proof revision
+ */
+export const useSubmitCampaignProof = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof submitCampaignProof>>, TError,SubmitCampaignProofMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof submitCampaignProof>>,
+        TError,
+        SubmitCampaignProofMutationVariables,
+        TContext
+      > => {
+      return useMutation(getSubmitCampaignProofMutationOptions(options));
+    }
+
+export const getRequestOperatorProductionProofUploadUrl = (campaignId: string,
+    placementOrderId: string,) => {
+
+
+
+
+  return `/api/operator/campaigns/${campaignId}/placement-orders/${placementOrderId}/proofs/request-url`
+}
+
+/**
+ * @summary Issue an operator-bound production proof upload intent
+ */
+export const requestOperatorProductionProofUpload = async (campaignId: string,
+    placementOrderId: string,
+    proofUploadRequest: ProofUploadRequest, options?: Parameters<typeof customFetch>[1]): Promise<ProofUploadIntent> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Array.isArray(h)) return Object.fromEntries(h);
+    return h;
+  };
+return customFetch<ProofUploadIntent>(getRequestOperatorProductionProofUploadUrl(campaignId,placementOrderId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(proofUploadRequest)
+  }
+);}
+
+
+
+
+
+export const getRequestOperatorProductionProofUploadMutationKey = () => ['requestOperatorProductionProofUpload'] as const;
+
+export const getRequestOperatorProductionProofUploadMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof requestOperatorProductionProofUpload>>, TError,RequestOperatorProductionProofUploadMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof requestOperatorProductionProofUpload>>, TError,RequestOperatorProductionProofUploadMutationVariables, TContext> => {
+
+const mutationKey = getRequestOperatorProductionProofUploadMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof requestOperatorProductionProofUpload>>, RequestOperatorProductionProofUploadMutationVariables> = (props) => {
+          const {campaignId,placementOrderId,data} = props ?? {};
+
+          return  requestOperatorProductionProofUpload(campaignId,placementOrderId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RequestOperatorProductionProofUploadMutationResult = NonNullable<Awaited<ReturnType<typeof requestOperatorProductionProofUpload>>>
+    export type RequestOperatorProductionProofUploadMutationBody = BodyType<ProofUploadRequest>
+    export type RequestOperatorProductionProofUploadMutationError = ErrorType<void>
+    export type RequestOperatorProductionProofUploadMutationVariables = {campaignId: string;placementOrderId: string;data: BodyType<ProofUploadRequest>}
+
+    /**
+ * @summary Issue an operator-bound production proof upload intent
+ */
+export const useRequestOperatorProductionProofUpload = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof requestOperatorProductionProofUpload>>, TError,RequestOperatorProductionProofUploadMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof requestOperatorProductionProofUpload>>,
+        TError,
+        RequestOperatorProductionProofUploadMutationVariables,
+        TContext
+      > => {
+      return useMutation(getRequestOperatorProductionProofUploadMutationOptions(options));
+    }
+
+export const getFinalizeOperatorProductionProofUploadUrl = (campaignId: string,
+    placementOrderId: string,
+    intentId: string,) => {
+
+
+
+
+  return `/api/operator/campaigns/${campaignId}/placement-orders/${placementOrderId}/proofs/${intentId}/finalize`
+}
+
+/**
+ * @summary Verify and finalize an operator proof upload once
+ */
+export const finalizeOperatorProductionProofUpload = async (campaignId: string,
+    placementOrderId: string,
+    intentId: string, options?: Parameters<typeof customFetch>[1]): Promise<ProofUploadIntent> => {
+
+  return customFetch<ProofUploadIntent>(getFinalizeOperatorProductionProofUploadUrl(campaignId,placementOrderId,intentId),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getFinalizeOperatorProductionProofUploadMutationKey = () => ['finalizeOperatorProductionProofUpload'] as const;
+
+export const getFinalizeOperatorProductionProofUploadMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof finalizeOperatorProductionProofUpload>>, TError,FinalizeOperatorProductionProofUploadMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof finalizeOperatorProductionProofUpload>>, TError,FinalizeOperatorProductionProofUploadMutationVariables, TContext> => {
+
+const mutationKey = getFinalizeOperatorProductionProofUploadMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof finalizeOperatorProductionProofUpload>>, FinalizeOperatorProductionProofUploadMutationVariables> = (props) => {
+          const {campaignId,placementOrderId,intentId} = props ?? {};
+
+          return  finalizeOperatorProductionProofUpload(campaignId,placementOrderId,intentId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type FinalizeOperatorProductionProofUploadMutationResult = NonNullable<Awaited<ReturnType<typeof finalizeOperatorProductionProofUpload>>>
+
+    export type FinalizeOperatorProductionProofUploadMutationError = ErrorType<void>
+    export type FinalizeOperatorProductionProofUploadMutationVariables = {campaignId: string;placementOrderId: string;intentId: string}
+
+    /**
+ * @summary Verify and finalize an operator proof upload once
+ */
+export const useFinalizeOperatorProductionProofUpload = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof finalizeOperatorProductionProofUpload>>, TError,FinalizeOperatorProductionProofUploadMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof finalizeOperatorProductionProofUpload>>,
+        TError,
+        FinalizeOperatorProductionProofUploadMutationVariables,
+        TContext
+      > => {
+      return useMutation(getFinalizeOperatorProductionProofUploadMutationOptions(options));
+    }
+
+export const getSubmitOperatorCampaignProofUrl = (campaignId: string,) => {
+
+
+
+
+  return `/api/operator/campaigns/${campaignId}/proofs`
+}
+
+/**
+ * @summary Submit a finalized proof revision for one funded placement
+ */
+export const submitOperatorCampaignProof = async (campaignId: string,
+    proofSubmissionInput: ProofSubmissionInput, options?: Parameters<typeof customFetch>[1]): Promise<Proof> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Array.isArray(h)) return Object.fromEntries(h);
+    return h;
+  };
+return customFetch<Proof>(getSubmitOperatorCampaignProofUrl(campaignId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(proofSubmissionInput)
+  }
+);}
+
+
+
+
+
+export const getSubmitOperatorCampaignProofMutationKey = () => ['submitOperatorCampaignProof'] as const;
+
+export const getSubmitOperatorCampaignProofMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof submitOperatorCampaignProof>>, TError,SubmitOperatorCampaignProofMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof submitOperatorCampaignProof>>, TError,SubmitOperatorCampaignProofMutationVariables, TContext> => {
+
+const mutationKey = getSubmitOperatorCampaignProofMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof submitOperatorCampaignProof>>, SubmitOperatorCampaignProofMutationVariables> = (props) => {
+          const {campaignId,data} = props ?? {};
+
+          return  submitOperatorCampaignProof(campaignId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SubmitOperatorCampaignProofMutationResult = NonNullable<Awaited<ReturnType<typeof submitOperatorCampaignProof>>>
+    export type SubmitOperatorCampaignProofMutationBody = BodyType<ProofSubmissionInput>
+    export type SubmitOperatorCampaignProofMutationError = ErrorType<void>
+    export type SubmitOperatorCampaignProofMutationVariables = {campaignId: string;data: BodyType<ProofSubmissionInput>}
+
+    /**
+ * @summary Submit a finalized proof revision for one funded placement
+ */
+export const useSubmitOperatorCampaignProof = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof submitOperatorCampaignProof>>, TError,SubmitOperatorCampaignProofMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof submitOperatorCampaignProof>>,
+        TError,
+        SubmitOperatorCampaignProofMutationVariables,
+        TContext
+      > => {
+      return useMutation(getSubmitOperatorCampaignProofMutationOptions(options));
+    }
+
+export const getSubmitCampaignCheckinUrl = (campaignId: string,) => {
+
+
+
+
+  return `/api/campaigns/${campaignId}/checkins`
+}
+
+/**
+ * @summary Submit an owner check-in
+ */
+export const submitCampaignCheckin = async (campaignId: string,
+    checkinSubmissionInput: CheckinSubmissionInput, options?: Parameters<typeof customFetch>[1]): Promise<Checkin> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Array.isArray(h)) return Object.fromEntries(h);
+    return h;
+  };
+return customFetch<Checkin>(getSubmitCampaignCheckinUrl(campaignId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(checkinSubmissionInput)
+  }
+);}
+
+
+
+
+
+export const getSubmitCampaignCheckinMutationKey = () => ['submitCampaignCheckin'] as const;
+
+export const getSubmitCampaignCheckinMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof submitCampaignCheckin>>, TError,SubmitCampaignCheckinMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof submitCampaignCheckin>>, TError,SubmitCampaignCheckinMutationVariables, TContext> => {
+
+const mutationKey = getSubmitCampaignCheckinMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof submitCampaignCheckin>>, SubmitCampaignCheckinMutationVariables> = (props) => {
+          const {campaignId,data} = props ?? {};
+
+          return  submitCampaignCheckin(campaignId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SubmitCampaignCheckinMutationResult = NonNullable<Awaited<ReturnType<typeof submitCampaignCheckin>>>
+    export type SubmitCampaignCheckinMutationBody = BodyType<CheckinSubmissionInput>
+    export type SubmitCampaignCheckinMutationError = ErrorType<void>
+    export type SubmitCampaignCheckinMutationVariables = {campaignId: string;data: BodyType<CheckinSubmissionInput>}
+
+    /**
+ * @summary Submit an owner check-in
+ */
+export const useSubmitCampaignCheckin = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof submitCampaignCheckin>>, TError,SubmitCampaignCheckinMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof submitCampaignCheckin>>,
+        TError,
+        SubmitCampaignCheckinMutationVariables,
+        TContext
+      > => {
+      return useMutation(getSubmitCampaignCheckinMutationOptions(options));
+    }
+
+export const getRequestCampaignCheckinPhotoUploadUrl = (campaignId: string,) => {
+
+
+
+
+  return `/api/campaigns/${campaignId}/checkins/photo/request-url`
+}
+
+/**
+ * @summary Issue an owner-bound photo upload intent for the current check-in cycle
+ */
+export const requestCampaignCheckinPhotoUpload = async (campaignId: string,
+    checkinPhotoUploadRequest: CheckinPhotoUploadRequest, options?: Parameters<typeof customFetch>[1]): Promise<CheckinPhotoUploadIntent> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Array.isArray(h)) return Object.fromEntries(h);
+    return h;
+  };
+return customFetch<CheckinPhotoUploadIntent>(getRequestCampaignCheckinPhotoUploadUrl(campaignId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(checkinPhotoUploadRequest)
+  }
+);}
+
+
+
+
+
+export const getRequestCampaignCheckinPhotoUploadMutationKey = () => ['requestCampaignCheckinPhotoUpload'] as const;
+
+export const getRequestCampaignCheckinPhotoUploadMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof requestCampaignCheckinPhotoUpload>>, TError,RequestCampaignCheckinPhotoUploadMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof requestCampaignCheckinPhotoUpload>>, TError,RequestCampaignCheckinPhotoUploadMutationVariables, TContext> => {
+
+const mutationKey = getRequestCampaignCheckinPhotoUploadMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof requestCampaignCheckinPhotoUpload>>, RequestCampaignCheckinPhotoUploadMutationVariables> = (props) => {
+          const {campaignId,data} = props ?? {};
+
+          return  requestCampaignCheckinPhotoUpload(campaignId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RequestCampaignCheckinPhotoUploadMutationResult = NonNullable<Awaited<ReturnType<typeof requestCampaignCheckinPhotoUpload>>>
+    export type RequestCampaignCheckinPhotoUploadMutationBody = BodyType<CheckinPhotoUploadRequest>
+    export type RequestCampaignCheckinPhotoUploadMutationError = ErrorType<void>
+    export type RequestCampaignCheckinPhotoUploadMutationVariables = {campaignId: string;data: BodyType<CheckinPhotoUploadRequest>}
+
+    /**
+ * @summary Issue an owner-bound photo upload intent for the current check-in cycle
+ */
+export const useRequestCampaignCheckinPhotoUpload = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof requestCampaignCheckinPhotoUpload>>, TError,RequestCampaignCheckinPhotoUploadMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof requestCampaignCheckinPhotoUpload>>,
+        TError,
+        RequestCampaignCheckinPhotoUploadMutationVariables,
+        TContext
+      > => {
+      return useMutation(getRequestCampaignCheckinPhotoUploadMutationOptions(options));
+    }
+
+export const getFinalizeCampaignCheckinPhotoUploadUrl = (campaignId: string,
+    intentId: string,) => {
+
+
+
+
+  return `/api/campaigns/${campaignId}/checkins/photo/${intentId}/finalize`
+}
+
+/**
+ * @summary Verify and finalize an owner check-in photo upload once
+ */
+export const finalizeCampaignCheckinPhotoUpload = async (campaignId: string,
+    intentId: string, options?: Parameters<typeof customFetch>[1]): Promise<CheckinPhotoUploadIntent> => {
+
+  return customFetch<CheckinPhotoUploadIntent>(getFinalizeCampaignCheckinPhotoUploadUrl(campaignId,intentId),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getFinalizeCampaignCheckinPhotoUploadMutationKey = () => ['finalizeCampaignCheckinPhotoUpload'] as const;
+
+export const getFinalizeCampaignCheckinPhotoUploadMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof finalizeCampaignCheckinPhotoUpload>>, TError,FinalizeCampaignCheckinPhotoUploadMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof finalizeCampaignCheckinPhotoUpload>>, TError,FinalizeCampaignCheckinPhotoUploadMutationVariables, TContext> => {
+
+const mutationKey = getFinalizeCampaignCheckinPhotoUploadMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof finalizeCampaignCheckinPhotoUpload>>, FinalizeCampaignCheckinPhotoUploadMutationVariables> = (props) => {
+          const {campaignId,intentId} = props ?? {};
+
+          return  finalizeCampaignCheckinPhotoUpload(campaignId,intentId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type FinalizeCampaignCheckinPhotoUploadMutationResult = NonNullable<Awaited<ReturnType<typeof finalizeCampaignCheckinPhotoUpload>>>
+
+    export type FinalizeCampaignCheckinPhotoUploadMutationError = ErrorType<void>
+    export type FinalizeCampaignCheckinPhotoUploadMutationVariables = {campaignId: string;intentId: string}
+
+    /**
+ * @summary Verify and finalize an owner check-in photo upload once
+ */
+export const useFinalizeCampaignCheckinPhotoUpload = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof finalizeCampaignCheckinPhotoUpload>>, TError,FinalizeCampaignCheckinPhotoUploadMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof finalizeCampaignCheckinPhotoUpload>>,
+        TError,
+        FinalizeCampaignCheckinPhotoUploadMutationVariables,
+        TContext
+      > => {
+      return useMutation(getFinalizeCampaignCheckinPhotoUploadMutationOptions(options));
+    }
+
+export const getSelectCampaignMakeGoodUrl = (campaignId: string,) => {
+
+
+
+
+  return `/api/campaigns/${campaignId}/make-good`
+}
+
+/**
+ * @summary Select a make-good after a missed check-in
+ */
+export const selectCampaignMakeGood = async (campaignId: string,
+    makeGoodInput: MakeGoodInput, options?: Parameters<typeof customFetch>[1]): Promise<void> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Array.isArray(h)) return Object.fromEntries(h);
+    return h;
+  };
+return customFetch<void>(getSelectCampaignMakeGoodUrl(campaignId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(makeGoodInput)
+  }
+);}
+
+
+
+
+
+export const getSelectCampaignMakeGoodMutationKey = () => ['selectCampaignMakeGood'] as const;
+
+export const getSelectCampaignMakeGoodMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof selectCampaignMakeGood>>, TError,SelectCampaignMakeGoodMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof selectCampaignMakeGood>>, TError,SelectCampaignMakeGoodMutationVariables, TContext> => {
+
+const mutationKey = getSelectCampaignMakeGoodMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof selectCampaignMakeGood>>, SelectCampaignMakeGoodMutationVariables> = (props) => {
+          const {campaignId,data} = props ?? {};
+
+          return  selectCampaignMakeGood(campaignId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SelectCampaignMakeGoodMutationResult = NonNullable<Awaited<ReturnType<typeof selectCampaignMakeGood>>>
+    export type SelectCampaignMakeGoodMutationBody = BodyType<MakeGoodInput>
+    export type SelectCampaignMakeGoodMutationError = ErrorType<void>
+    export type SelectCampaignMakeGoodMutationVariables = {campaignId: string;data: BodyType<MakeGoodInput>}
+
+    /**
+ * @summary Select a make-good after a missed check-in
+ */
+export const useSelectCampaignMakeGood = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof selectCampaignMakeGood>>, TError,SelectCampaignMakeGoodMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof selectCampaignMakeGood>>,
+        TError,
+        SelectCampaignMakeGoodMutationVariables,
+        TContext
+      > => {
+      return useMutation(getSelectCampaignMakeGoodMutationOptions(options));
+    }
+
+export const getApproveCampaignProofUrl = (campaignId: string,) => {
+
+
+
+
+  return `/api/operator/campaigns/${campaignId}/proofs/approve`
+}
+
+/**
+ * @summary Approve the current proof revision
+ */
+export const approveCampaignProof = async (campaignId: string, options?: Parameters<typeof customFetch>[1]): Promise<void> => {
+
+  return customFetch<void>(getApproveCampaignProofUrl(campaignId),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getApproveCampaignProofMutationKey = () => ['approveCampaignProof'] as const;
+
+export const getApproveCampaignProofMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof approveCampaignProof>>, TError,ApproveCampaignProofMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof approveCampaignProof>>, TError,ApproveCampaignProofMutationVariables, TContext> => {
+
+const mutationKey = getApproveCampaignProofMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof approveCampaignProof>>, ApproveCampaignProofMutationVariables> = (props) => {
+          const {campaignId} = props ?? {};
+
+          return  approveCampaignProof(campaignId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ApproveCampaignProofMutationResult = NonNullable<Awaited<ReturnType<typeof approveCampaignProof>>>
+
+    export type ApproveCampaignProofMutationError = ErrorType<void>
+    export type ApproveCampaignProofMutationVariables = {campaignId: string}
+
+    /**
+ * @summary Approve the current proof revision
+ */
+export const useApproveCampaignProof = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof approveCampaignProof>>, TError,ApproveCampaignProofMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof approveCampaignProof>>,
+        TError,
+        ApproveCampaignProofMutationVariables,
+        TContext
+      > => {
+      return useMutation(getApproveCampaignProofMutationOptions(options));
+    }
+
+export const getRecordCampaignShipmentUrl = (campaignId: string,) => {
+
+
+
+
+  return `/api/operator/campaigns/${campaignId}/shipment`
+}
+
+/**
+ * @summary Record shipment after proof approval
+ */
+export const recordCampaignShipment = async (campaignId: string,
+    shipmentInput: ShipmentInput, options?: Parameters<typeof customFetch>[1]): Promise<void> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Array.isArray(h)) return Object.fromEntries(h);
+    return h;
+  };
+return customFetch<void>(getRecordCampaignShipmentUrl(campaignId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(shipmentInput)
+  }
+);}
+
+
+
+
+
+export const getRecordCampaignShipmentMutationKey = () => ['recordCampaignShipment'] as const;
+
+export const getRecordCampaignShipmentMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recordCampaignShipment>>, TError,RecordCampaignShipmentMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof recordCampaignShipment>>, TError,RecordCampaignShipmentMutationVariables, TContext> => {
+
+const mutationKey = getRecordCampaignShipmentMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof recordCampaignShipment>>, RecordCampaignShipmentMutationVariables> = (props) => {
+          const {campaignId,data} = props ?? {};
+
+          return  recordCampaignShipment(campaignId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RecordCampaignShipmentMutationResult = NonNullable<Awaited<ReturnType<typeof recordCampaignShipment>>>
+    export type RecordCampaignShipmentMutationBody = BodyType<ShipmentInput>
+    export type RecordCampaignShipmentMutationError = ErrorType<void>
+    export type RecordCampaignShipmentMutationVariables = {campaignId: string;data: BodyType<ShipmentInput>}
+
+    /**
+ * @summary Record shipment after proof approval
+ */
+export const useRecordCampaignShipment = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recordCampaignShipment>>, TError,RecordCampaignShipmentMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof recordCampaignShipment>>,
+        TError,
+        RecordCampaignShipmentMutationVariables,
+        TContext
+      > => {
+      return useMutation(getRecordCampaignShipmentMutationOptions(options));
+    }
+
+export const getRecordCampaignDeliveryUrl = (campaignId: string,) => {
+
+
+
+
+  return `/api/operator/campaigns/${campaignId}/delivery`
+}
+
+/**
+ * @summary Record delivery and start the first owner check-in cycle
+ */
+export const recordCampaignDelivery = async (campaignId: string, options?: Parameters<typeof customFetch>[1]): Promise<Delivery> => {
+
+  return customFetch<Delivery>(getRecordCampaignDeliveryUrl(campaignId),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getRecordCampaignDeliveryMutationKey = () => ['recordCampaignDelivery'] as const;
+
+export const getRecordCampaignDeliveryMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recordCampaignDelivery>>, TError,RecordCampaignDeliveryMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof recordCampaignDelivery>>, TError,RecordCampaignDeliveryMutationVariables, TContext> => {
+
+const mutationKey = getRecordCampaignDeliveryMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof recordCampaignDelivery>>, RecordCampaignDeliveryMutationVariables> = (props) => {
+          const {campaignId} = props ?? {};
+
+          return  recordCampaignDelivery(campaignId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RecordCampaignDeliveryMutationResult = NonNullable<Awaited<ReturnType<typeof recordCampaignDelivery>>>
+
+    export type RecordCampaignDeliveryMutationError = ErrorType<void>
+    export type RecordCampaignDeliveryMutationVariables = {campaignId: string}
+
+    /**
+ * @summary Record delivery and start the first owner check-in cycle
+ */
+export const useRecordCampaignDelivery = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recordCampaignDelivery>>, TError,RecordCampaignDeliveryMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof recordCampaignDelivery>>,
+        TError,
+        RecordCampaignDeliveryMutationVariables,
+        TContext
+      > => {
+      return useMutation(getRecordCampaignDeliveryMutationOptions(options));
     }
 

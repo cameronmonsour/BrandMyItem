@@ -1,14 +1,32 @@
 import { logger } from "./lib/logger.ts";
+import { pool } from "@workspace/db";
 import {
   expireUnfundedCampaigns,
   reconcileReservationPayments,
+  advanceCheckinLifecycle,
+  autoApprovePlacementProofs,
 } from "./paymentFunding.ts";
 
 const DEFAULT_INTERVAL_MS = 5 * 60 * 1000;
 
 export async function reconcilePayments(now = new Date()): Promise<void> {
-  await reconcileReservationPayments(now);
-  await expireUnfundedCampaigns(now);
+  const client = await pool.connect();
+  try {
+    const lock = await client.query<{ locked: boolean }>(
+      "SELECT pg_try_advisory_lock(hashtext('brandmyitem-lifecycle-sweep')) AS locked",
+    );
+    if (!lock.rows[0]?.locked) return;
+    try {
+      await reconcileReservationPayments(now);
+      await expireUnfundedCampaigns(now);
+      await advanceCheckinLifecycle(now);
+      await autoApprovePlacementProofs(now);
+    } finally {
+      await client.query("SELECT pg_advisory_unlock(hashtext('brandmyitem-lifecycle-sweep'))");
+    }
+  } finally {
+    client.release();
+  }
 }
 
 export function startPaymentReconciliation(): () => void {

@@ -1,5 +1,5 @@
 import { campaignsTable, db, placementOrdersTable } from "@workspace/db";
-import { and, eq, inArray } from "drizzle-orm";
+import { and, eq, inArray, lte } from "drizzle-orm";
 import { logger } from "./lib/logger.ts";
 import { stripeRequest } from "./stripeClient.ts";
 import {
@@ -112,6 +112,10 @@ export async function attemptCampaignFunding(
         .update(placementOrdersTable)
         .set({
           status: "funded",
+          // Standard sticker artwork is automatically approved when funding
+          // completes. Later proof revisions replace this state explicitly.
+          proofStatus: "approved",
+          proofApprovedAt: now,
           stripePaymentIntentId: paymentIntent.id,
           chargedAt: now,
           paymentFailureAt: null,
@@ -258,6 +262,48 @@ export async function expireUnfundedCampaigns(now = new Date()): Promise<void> {
         );
     }
   }
+}
+
+/**
+ * Advances check-ins exactly once through due -> reminded -> missed. Email
+ * dispatch is intentionally separate from this durable transition so a
+ * delivery outage cannot cause duplicate reminders on the next sweep.
+ */
+export async function advanceCheckinLifecycle(now = new Date()): Promise<void> {
+  const reminderCutoff = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+  await db
+    .update(campaignsTable)
+    .set({ checkinStatus: "reminded", checkinReminderSentAt: now, updatedAt: now })
+    .where(
+      and(
+        eq(campaignsTable.checkinStatus, "due"),
+        lte(campaignsTable.checkinDueAt, now),
+      ),
+    );
+  await db
+    .update(campaignsTable)
+    .set({ checkinStatus: "missed", updatedAt: now })
+    .where(
+      and(
+        eq(campaignsTable.checkinStatus, "reminded"),
+        lte(campaignsTable.checkinReminderSentAt, reminderCutoff),
+      ),
+    );
+}
+
+export async function autoApprovePlacementProofs(now = new Date()): Promise<void> {
+  const cutoff = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+  await db
+    .update(placementOrdersTable)
+    .set({ proofStatus: "approved", proofApprovedAt: now, updatedAt: now })
+    .where(
+      and(
+        eq(placementOrdersTable.proofStatus, "submitted"),
+        // Conditional update makes repeated sweeps harmless.
+        inArray(placementOrdersTable.status, ["funded"]),
+        lte(placementOrdersTable.proofSentAt, cutoff),
+      ),
+    );
 }
 
 export async function relistCampaign(

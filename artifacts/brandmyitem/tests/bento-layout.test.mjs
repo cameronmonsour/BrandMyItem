@@ -26,9 +26,9 @@ test('every rotating bento item uses an exact-dimension transparent cutout with 
   }
   assert.match(html, /\.fb-stage-inner>svg\{position:absolute;inset:0/);
   assert.match(html, /lockedCatalogPlacements\(\{width:d\.size\[0\], height:d\.size\[1\]\}, type, n\)/);
-  assert.match(html, /img:'bento\/cutout-macbook\.png',n:10,type:'macbook'/);
-  assert.match(html, /img:'bento\/cutout-iphone\.png',n:5,type:'iphone'/);
-  assert.match(html, /img:'bento\/cutout-headphones\.png',n:2,type:'headphones'/);
+  assert.match(html, /img:'bento\/cutout-macbook\.png',n:ITEMS\.macbook\.maxSlots,type:'macbook'/);
+  assert.match(html, /img:'bento\/cutout-iphone\.png',n:ITEMS\.iphone\.maxSlots,type:'iphone'/);
+  assert.match(html, /img:'bento\/cutout-headphones\.png',n:ITEMS\.headphones\.maxSlots,type:'headphones'/);
   assert.match(html, /img:'bento\/cutout-case\.png',n:4,type:'case'/);
   assert.match(html, /'case':\{\s*4:\[\s*\{x:0\.3585,y:0\.4425,w:0\.2770,h:0\.2650,round:18\}/);
   assert.match(html, /'case':\{size:\[952,1275\],surface:\[209,395,534,682\]/);
@@ -80,7 +80,7 @@ test('price tile uses the transparent iPhone cutout with black priced tracker sp
   assert.match(html, /\.fb-price h3\{[^}]*max-width:10ch/);
   assert.match(html, /\.fb-price-visual\{[^}]*height:130px;width:calc\(130px \* \(952 \/ 1275\)\)/);
   assert.match(html, /\.fb-price-map \.fb-ps\{fill:none;stroke:#000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter/);
-  assert.match(html, /var parts=\[307,308,308,308,308\]/);
+  assert.match(html, /var parts=\[233,232,232,232,232\]/);
   assert.match(html, /buildOverlaySvg\('iphone', 5, 'fb-ps', 'fb-price-map', parts\)/);
   assert.match(html, /priceUnits\[index\]\.classList\.toggle\('is-bought',fraction>\.92\)/);
 });

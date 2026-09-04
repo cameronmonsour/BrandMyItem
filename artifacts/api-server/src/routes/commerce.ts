@@ -3,7 +3,10 @@ import {
   campaignsTable,
   db,
   placementOrdersTable,
+  sponsorReservationDraftsTable,
   trackingMagicLinksTable,
+  trackingMagicLinkRequestsTable,
+  uploadIntentsTable,
 } from "@workspace/db";
 import {
   CreatePlacementCheckoutBody,
@@ -22,10 +25,12 @@ import {
   desc,
   eq,
   gt,
+  gte,
   inArray,
   isNotNull,
   isNull,
   lte,
+  ne,
   or,
   sql,
 } from "drizzle-orm";
@@ -43,6 +48,7 @@ import {
   checkoutIdempotencyKey,
 } from "../paymentTransitions.ts";
 import { verifyImageObject } from "../lib/objectStorage.ts";
+import { uploadCapabilityMatches } from "../lib/uploadIntents.ts";
 import {
   attemptCampaignFunding,
   relistCampaign,
@@ -54,6 +60,14 @@ import { logger } from "../lib/logger.ts";
 
 const router: IRouter = Router();
 const TRACKING_LINK_TTL_MS = 15 * 60 * 1000;
+
+// Kept as a deliberately non-functional compatibility endpoint.  New
+// registrations must establish a draft and owner capability before publish.
+router.post("/campaigns", (_req, res): void => {
+  res.status(410).json({
+    error: "Campaign registration now requires POST /campaign-drafts followed by publication.",
+  });
+});
 
 async function cleanupTrackingMagicLinks(now = new Date()): Promise<void> {
   await db
@@ -137,6 +151,18 @@ router.post("/campaigns", async (req, res): Promise<void> => {
     return;
   }
   const input = parsed.data;
+  const totalCents = input.pricesCents.reduce((sum, cents) => sum + cents, 0);
+  const highValue = totalCents >= 200000;
+  const socialHandle = typeof input.presentation.social === "string"
+    ? input.presentation.social.trim()
+    : "";
+  if (
+    highValue &&
+    (!socialHandle || !input.w9ObjectPath || !(await verifyImageObject(input.w9ObjectPath, "w9")))
+  ) {
+    res.status(400).json({ error: "High-value listings require a social handle and submitted W-9 before publication." });
+    return;
+  }
   const [existing] = await db
     .select()
     .from(campaignsTable)
@@ -176,11 +202,13 @@ router.post("/campaigns", async (req, res): Promise<void> => {
         ownerContentVersion: input.ownerAssent.contentVersion,
         ownerCheckinVersion: input.ownerAssent.checkinVersion,
         expiresAt: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
-        w9Required: input.pricesCents.reduce((sum, cents) => sum + cents, 0) >= 200000,
+        w9Required: highValue,
         w9Status:
-          input.pricesCents.reduce((sum, cents) => sum + cents, 0) >= 200000
-            ? "required"
+          highValue
+            ? "submitted"
             : "not_required",
+        w9ObjectPath: highValue ? input.w9ObjectPath : null,
+        w9SubmittedAt: highValue ? new Date() : null,
       })
       .returning();
     setAccessCookie(res, "campaign", campaign.id, ownerAccessToken);
@@ -193,7 +221,7 @@ router.get("/campaigns", async (_req, res): Promise<void> => {
   const campaigns = await db
     .select()
     .from(campaignsTable)
-    .where(eq(campaignsTable.active, true))
+    .where(and(eq(campaignsTable.active, true), ne(campaignsTable.lifecycleStatus, "draft")))
     .orderBy(desc(campaignsTable.createdAt));
   res.json(ListCampaignsResponse.parse(await publicCampaigns(campaigns)));
 });
@@ -205,6 +233,16 @@ router.post("/tracking/magic-link", async (req, res): Promise<void> => {
     return;
   }
   const email = parsed.data.email.trim().toLowerCase();
+  const hourAgo = new Date(Date.now() - 60 * 60 * 1000);
+  const recent = await db
+    .select({ tokenHash: trackingMagicLinkRequestsTable.id })
+    .from(trackingMagicLinkRequestsTable)
+    .where(and(eq(trackingMagicLinkRequestsTable.normalizedEmail, email), gte(trackingMagicLinkRequestsTable.requestedAt, hourAgo)));
+  if (recent.length >= 5) {
+    res.status(202).json({ message: "If that email is linked to an item, a one-time tracking link is on its way." });
+    return;
+  }
+  await db.insert(trackingMagicLinkRequestsTable).values({ id: randomUUID(), normalizedEmail: email });
   const token = createAccessToken();
   const tokenHash = hashAccessToken(token);
   const expiresAt = new Date(Date.now() + TRACKING_LINK_TTL_MS);
@@ -216,10 +254,20 @@ router.post("/tracking/magic-link", async (req, res): Promise<void> => {
   });
 
   try {
-    const publicAppUrl =
-      process.env.BRANDMYITEM_PUBLIC_URL ??
-      `${req.get("x-forwarded-proto")?.split(",")[0].trim() || req.protocol}://${req.get("host")}`;
-    const trackingUrl = new URL("/", publicAppUrl);
+    const publicAppUrl = process.env.BRANDMYITEM_PUBLIC_URL;
+    const allowedOrigins = (process.env.BRANDMYITEM_PUBLIC_ORIGINS ?? "")
+      .split(",")
+      .map((origin) => origin.trim().replace(/\/$/, ""))
+      .filter(Boolean);
+    const canonicalOrigin = publicAppUrl?.replace(/\/$/, "");
+    if (
+      !canonicalOrigin ||
+      !/^https:\/\/[a-z0-9.-]+(?::443)?$/i.test(canonicalOrigin) ||
+      !allowedOrigins.includes(canonicalOrigin)
+    ) {
+      throw new Error("BRANDMYITEM_PUBLIC_URL must be an allowlisted HTTPS canonical origin");
+    }
+    const trackingUrl = new URL("/", canonicalOrigin);
     trackingUrl.searchParams.set("tracking_token", token);
 
     await sendTransactionalEmail(
@@ -434,16 +482,18 @@ router.post("/checkout/sessions", async (req, res): Promise<void> => {
     return;
   }
   const input = parsed.data;
-  if (!(await verifyImageObject(input.logoObjectPath))) {
-    res.status(400).json({ error: "Sponsor logo upload is missing or invalid" });
+  const reservationCapability = readAccessToken(req, "sponsor_reservation", input.reservationDraftId);
+  if (!reservationCapability) {
+    res.status(404).json({ error: "Reservation draft not found" });
     return;
   }
+  const now = new Date();
   const [campaign] = await db
     .select()
     .from(campaignsTable)
     .where(and(eq(campaignsTable.id, input.campaignId), eq(campaignsTable.active, true)))
     .limit(1);
-  if (!campaign || campaign.lifecycleStatus === "expired") {
+  if (!campaign || campaign.lifecycleStatus !== "live" || (campaign.expiresAt && campaign.expiresAt <= now)) {
     res.status(404).json({ error: "Campaign is not available" });
     return;
   }
@@ -452,28 +502,10 @@ router.post("/checkout/sessions", async (req, res): Promise<void> => {
     res.status(400).json({ error: "Placement is not available" });
     return;
   }
-  const [existing] = await db
-    .select()
-    .from(placementOrdersTable)
-    .where(
-      and(
-        eq(placementOrdersTable.campaignId, campaign.id),
-        eq(placementOrdersTable.spotIndex, input.spotIndex),
-      ),
-    )
-    .limit(1);
-  if (
-    existing &&
-    ["reserved", "funding", "funded", "payment_failed"].includes(existing.status)
-  ) {
-    res.status(409).json({ error: "Placement is already reserved" });
-    return;
-  }
-  const orderId = existing?.id ?? randomUUID();
+  const orderId = randomUUID();
   const checkoutAccessToken = createAccessToken();
   const checkoutAccessTokenHash = hashAccessToken(checkoutAccessToken);
   const idempotencyKey = checkoutIdempotencyKey(orderId);
-  setAccessCookie(res, "checkout", orderId, checkoutAccessToken);
   const reservationValues = {
     campaignId: campaign.id,
     spotIndex: input.spotIndex,
@@ -481,43 +513,62 @@ router.post("/checkout/sessions", async (req, res): Promise<void> => {
     brandName: input.brandName,
     email: input.email,
     destinationUrl: input.destinationUrl || null,
-    logoObjectPath: input.logoObjectPath || null,
+    logoObjectPath: null,
     status: "pending",
     stripeCheckoutSessionId: null,
     stripeCheckoutIdempotencyKey: idempotencyKey,
     checkoutAccessTokenHash,
-    brandAssentAt: new Date(),
+    brandAssentAt: now,
     brandAssentIp: req.ip,
     brandTermsVersion: input.brandAssent.termsVersion,
     brandContentVersion: input.brandAssent.contentVersion,
-    updatedAt: new Date(),
+    updatedAt: now,
   };
-  if (existing) {
-    const claimed = await db
-      .update(placementOrdersTable)
-      .set(reservationValues)
-      .where(
-        and(
-          eq(placementOrdersTable.id, orderId),
-          inArray(placementOrdersTable.status, ["cancelled", "released", "expired"]),
-        ),
-      )
-      .returning({ id: placementOrdersTable.id });
-    if (!claimed.length) {
-      res.status(409).json({ error: "Placement is already reserved" });
-      return;
+  const committed = await db.transaction(async (tx) => {
+    const [liveCampaign] = await tx.select({
+      id: campaignsTable.id,
+      active: campaignsTable.active,
+      lifecycleStatus: campaignsTable.lifecycleStatus,
+      expiresAt: campaignsTable.expiresAt,
+    }).from(campaignsTable).where(eq(campaignsTable.id, campaign.id)).limit(1);
+    const [draft] = await tx.select().from(sponsorReservationDraftsTable)
+      .where(eq(sponsorReservationDraftsTable.id, input.reservationDraftId)).limit(1);
+    const [intent] = await tx.select().from(uploadIntentsTable)
+      .where(eq(uploadIntentsTable.id, input.logoIntentId)).limit(1);
+    if (!liveCampaign || !liveCampaign.active || liveCampaign.lifecycleStatus !== "live" ||
+        (liveCampaign.expiresAt && liveCampaign.expiresAt <= now) ||
+        !draft || !intent || draft.status !== "issued" || draft.expiresAt <= now ||
+        !accessTokenMatches(draft.capabilityDigest, reservationCapability) ||
+        intent.purpose !== "sponsor_reservation_draft_logo" || intent.actorType !== "sponsor" ||
+        intent.actorId !== draft.id || intent.resourceType !== "sponsor_reservation_draft" ||
+        intent.resourceId !== draft.id || intent.campaignId !== campaign.id ||
+        intent.spotIndex !== input.spotIndex || intent.status !== "finalized" ||
+        intent.expiresAt <= now || !uploadCapabilityMatches(intent.capabilityDigest, reservationCapability)) {
+        throw new Error("invalid_reservation_draft");
     }
-  } else {
-    const inserted = await db
-      .insert(placementOrdersTable)
-      .values({ id: orderId, ...reservationValues })
-      .onConflictDoNothing()
-      .returning({ id: placementOrdersTable.id });
-    if (!inserted.length) {
-      res.status(409).json({ error: "Placement is already reserved" });
-      return;
-    }
+    const consumedIntent = await tx.update(uploadIntentsTable).set({
+      status: "consumed", statusVersion: intent.statusVersion + 1, consumedAt: now,
+    }).where(and(eq(uploadIntentsTable.id, intent.id), eq(uploadIntentsTable.status, "finalized"),
+      eq(uploadIntentsTable.statusVersion, intent.statusVersion), gt(uploadIntentsTable.expiresAt, now))).returning();
+    const consumedDraft = await tx.update(sponsorReservationDraftsTable).set({
+      status: "consumed", statusVersion: draft.statusVersion + 1, consumedAt: now, updatedAt: now,
+    }).where(and(eq(sponsorReservationDraftsTable.id, draft.id), eq(sponsorReservationDraftsTable.status, "issued"),
+      eq(sponsorReservationDraftsTable.statusVersion, draft.statusVersion), gt(sponsorReservationDraftsTable.expiresAt, now))).returning();
+    if (!consumedIntent.length || !consumedDraft.length) throw new Error("invalid_reservation_draft");
+    const inserted = await tx.insert(placementOrdersTable).values({
+      id: orderId, ...reservationValues, logoObjectPath: intent.objectPath,
+    }).onConflictDoNothing().returning({ id: placementOrdersTable.id });
+    if (!inserted.length) throw new Error("invalid_reservation_draft");
+    return inserted[0];
+  }).catch((error) => {
+    if (error instanceof Error && error.message === "invalid_reservation_draft") return null;
+    throw error;
+  });
+  if (!committed) {
+    res.status(409).json({ error: "Reservation draft or logo intent is no longer valid" });
+    return;
   }
+  setAccessCookie(res, "checkout", orderId, checkoutAccessToken);
   const forwardedProto = req.get("x-forwarded-proto")?.split(",")[0];
   const origin = `${forwardedProto ?? req.protocol}://${req.get("host")}`;
   const form = new URLSearchParams({

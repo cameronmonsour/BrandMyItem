@@ -19,3 +19,7 @@
 
 // @ts-expect-error TS5097: source-level Node tests need the extension.
 export * from "./campaigns.ts";
+// @ts-expect-error TS5097: source-level Node tests need the extension.
+export * from "./uploadIntents.ts";
+// @ts-expect-error TS5097: source-level Node tests need the extension.
+export * from "./reservationDrafts.ts";

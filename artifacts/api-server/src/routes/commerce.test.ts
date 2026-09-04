@@ -39,6 +39,10 @@ test("campaign presentation rejects invalid semantic field types", () => {
 });
 
 test("tracking email failures keep the response generic and invalidate the link", async () => {
+  const previousOrigin = process.env.BRANDMYITEM_PUBLIC_URL;
+  const previousOrigins = process.env.BRANDMYITEM_PUBLIC_ORIGINS;
+  process.env.BRANDMYITEM_PUBLIC_URL = "https://example.test";
+  process.env.BRANDMYITEM_PUBLIC_ORIGINS = "https://example.test";
   let requestBody = "";
   const providerError = "provider outage details must stay server-side";
   const proxyMock = mock.method(
@@ -95,6 +99,10 @@ test("tracking email failures keep the response generic and invalidate the link"
       error: "Tracking link is invalid or expired",
     });
   } finally {
+    if (previousOrigin === undefined) delete process.env.BRANDMYITEM_PUBLIC_URL;
+    else process.env.BRANDMYITEM_PUBLIC_URL = previousOrigin;
+    if (previousOrigins === undefined) delete process.env.BRANDMYITEM_PUBLIC_ORIGINS;
+    else process.env.BRANDMYITEM_PUBLIC_ORIGINS = previousOrigins;
     proxyMock.mock.restore();
     await new Promise<void>((resolve, reject) => {
       server.close((error) => (error ? reject(error) : resolve()));

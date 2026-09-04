@@ -18,6 +18,10 @@ export interface PlacementCheckoutInput {
      * @maximum 19
      */
   spotIndex: number;
+  /** @minLength 1 */
+  reservationDraftId: string;
+  /** @minLength 1 */
+  logoIntentId: string;
   /**
      * @minLength 1
      * @maxLength 120
@@ -27,7 +31,5 @@ export interface PlacementCheckoutInput {
   email: string;
   /** @maxLength 2048 */
   destinationUrl?: string;
-  /** @pattern ^/objects/uploads/[A-Za-z0-9-]+$ */
-  logoObjectPath: string;
   brandAssent: BrandAssent;
 }

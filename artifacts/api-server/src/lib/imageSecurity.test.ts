@@ -2,10 +2,10 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { imageResponsePolicy } from "./imageSecurity.ts";
 
-test("raster images remain inline", () => {
+test("user-supplied raster originals are forced to download", () => {
   assert.deepEqual(imageResponsePolicy("image/png"), {
-    contentType: "image/png",
-    attachment: false,
+    contentType: "application/octet-stream",
+    attachment: true,
   });
 });
 

@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { UploadUrlRequestContentType } from './uploadUrlRequestContentType';
+import type { UploadUrlRequestPurpose } from './uploadUrlRequestPurpose';
 
 export interface UploadUrlRequest {
   /**
@@ -19,4 +20,5 @@ export interface UploadUrlRequest {
      */
   size: number;
   contentType: UploadUrlRequestContentType;
+  purpose: UploadUrlRequestPurpose;
 }
