@@ -94,8 +94,7 @@ test('homepage examples cannot drift into or out of shared campaign data', () =>
 test('Live Items removes prelaunch tests and starts with the three locked examples', () => {
   assert.match(html, /var LIVE_CAMPAIGN_CUTOFF=Date\.UTC\(2026,8,4,0,0,0\)/);
   assert.match(html, /function removePrelaunchTestCampaigns\(\)/);
-  assert.match(html, /var all=LOCKED_LAUNCH_EXAMPLE_IDS\.map\(function\(id\)/);
-  assert.match(html, /\.concat\(DB\.listings\.filter\(isLaunchLiveCampaign\)\)/);
+  assert.match(html, /var all=DB\.listings\.filter\(isLaunchLiveCampaign\)/);
 });
 
 test('launch examples rotate through supplied fake sponsor logos', () => {

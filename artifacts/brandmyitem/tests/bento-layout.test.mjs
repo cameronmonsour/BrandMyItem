@@ -49,6 +49,12 @@ test('every rotating bento item uses an exact-dimension transparent cutout with 
   assert.match(html, /requestAnimationFrame\(syncItemStageTop\)/);
 });
 
+test('catalog tuxedo uses the locked supplied photo at scanner dimensions', () => {
+  assert.deepEqual(pngSize('campaign/product-suit.png'), [952, 1275]);
+  assert.match(html, /suit:'campaign\/product-suit\.png\?v=locked-tuxedo-20260904'/);
+  assert.match(html, /suit:\{size:\[952,1275\],surface:\[324,472,305,446\],cols:2,source:'campaign\/product-suit\.png'\}/);
+});
+
 test('lead suitcase uses four rounded silver-shell boxes that avoid the halo and wheels', () => {
   assert.deepEqual(pngSize('bento/bag.png'), [187, 324]);
   assert.match(html, /<img class="fb-photo-cutout" src="bento\/bag\.png" alt="">\s*<svg viewBox="0 0 187 324">/);
