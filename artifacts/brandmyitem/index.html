@@ -842,7 +842,9 @@ details.faq .fa b{color:var(--fg);font-weight:600}
 .campaign-price-logo{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#fff;border:1px solid var(--border);flex:0 0 auto}
 .campaign-price-logo img{width:100%;height:100%;object-fit:contain;padding:3px}
 .campaign-price-logo span{font-size:9px;font-weight:700;color:var(--fg)}
-.campaign-price-open-mark{width:26px;height:26px;border-radius:50%;border:1px dashed #A1A1A6;display:flex;align-items:center;justify-content:center;color:#6E6E73;font-size:14px;line-height:1;flex:0 0 auto}
+.campaign-price-open-mark{width:26px;height:26px;border-radius:50%;border:1.5px solid #A1A1A6;display:flex;align-items:center;justify-content:center;color:#0071E3;font-size:0;line-height:1;flex:0 0 auto;position:relative}
+.campaign-price-open-mark:before,.campaign-price-open-mark:after{content:'';position:absolute;left:50%;top:50%;width:12px;height:2px;background:#0071E3;transform:translate(-50%,-50%);border-radius:2px}
+.campaign-price-open-mark:after{transform:translate(-50%,-50%) rotate(90deg)}
 .campaign-no-open{font-size:13px;color:var(--mfg)}
 .campaign-footer{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 34px;border-top:1px solid #D2D2D7;background:#fff}
 .campaign-footer-note{font-size:12px;line-height:1.4;color:var(--mfg)}
@@ -1465,7 +1467,9 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
   width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
   overflow: hidden; flex-shrink: 0; background: #F2F2F7; color: #1D1D1F; font-size: 12px; font-weight: 700;
 }
-.ap-spot-option.open .ap-spot-mark { border: 1.5px dashed #86868B; background: #FFFFFF; color: #0071E3; font-size: 22px; font-weight: 400; }
+.ap-spot-option.open .ap-spot-mark { border: 1.5px solid #86868B; background: #FFFFFF; color: #0071E3; font-size: 0; font-weight: 400; position:relative; }
+.ap-spot-option.open .ap-spot-mark:before,.ap-spot-option.open .ap-spot-mark:after{content:'';position:absolute;left:50%;top:50%;width:14px;height:2px;background:#0071E3;transform:translate(-50%,-50%);border-radius:2px}
+.ap-spot-option.open .ap-spot-mark:after{transform:translate(-50%,-50%) rotate(90deg)}
 .ap-spot-mark img { width: 100%; height: 100%; object-fit: contain; padding: 5px; background: #FFFFFF; }
 .ap-spot-copy { min-width: 0; }
 .ap-spot-copy strong { display: block; font-size: 14px; line-height: 1.2; font-weight: 600; color: #1D1D1F; }
