@@ -1,0 +1,428 @@
+# BrandMyItem — Consolidated pre-ship prompt (Replit)
+
+This is the complete, reconciled change set. It supersedes every earlier prompt. Paste the whole document into Replit Agent. Do every item in Parts A, B, and C. Do not redesign anything not listed. Do not change locked headline/subheadline copy except where a specific swap is given. Run every acceptance checklist (A§8, B§9, C§7) before reporting done.
+
+---
+
+# PART A — Site, copy, legal, layout, build
+
+---
+
+## 0. Global rules (apply everywhere)
+
+**Vocabulary — locked.** Use exactly these words, site-wide, in UI and copy:
+- **reserved** — a spot with a saved card, before the listing funds
+- **funded** — the listing state once every spot is charged; never "sold", "claimed", "purchased"
+- **listing** — never "campaign" for an owner's item (the brand-facing dollar figure is still called "campaign total")
+- **term** — never "commitment"
+- **owner** — never "user"
+- **spot** — never "placement" or "ad space" in UI labels (prose in the bento can keep "ad space" where it's already locked)
+
+**Catalog phone — locked.** The phone is the **iPhone 17**, not the 17 Pro. Two tiers: 256GB and 512GB. Unlocked prices $829 / $1,029. Campaign total = retail × 1.4 → $1,161 / $1,441. Specs: A19 chip, 6.3" Super Retina XDR, 48MP Fusion main + 48MP Fusion Ultra Wide, 256GB–512GB. Source line: "Official Apple product page". Replace every "iPhone 17 Pro" string and every Pro-derived number ($1,099, $1,539, $2,099, $1,499, 1TB) across hero, picker, live card, bento, ticker, spec panel, and any JSON/config.
+
+**Catalog data — single source of truth.** Move all item names, brand names, storage/size/finish options, base prices, price deltas, and spec rows into one config object/file. Hero, picker, live card, bento demo, ticker, and spec panel all read from it. No hardcoded prices in templates.
+
+**Brand-facing money.** Brands see ONE number per listing: **Campaign total $X · N spots**, with the single line: *"Includes the item, tax, branding application, delivery, and check-in verification."* No itemized breakdown anywhere. "Retail $X" appears only in the owner configurator spec panel.
+
+**Apple marks.** No Apple logo in any render. Product names (MacBook Pro, iPhone 17, AirPods Max, RIMOWA, YETI, Stanley) appear only as item identifiers in the catalog/picker/card — never in headlines or marketing copy. Never use the word "Memoji" anywhere in the UI.
+
+**Dev artifacts.** Remove the floating page-minimap thumbnail (bottom-right) and the small blue dot in the nav bar (top-right). Remove any other dev/debug overlays.
+
+---
+
+## 1. Legal / trust
+
+1.1 **Activity ticker.** Replace the fake ticker. Either wire it to real purchase events, or (until real data exists) prefix the strip with a static label "Example activity", remove all timestamps ("2h ago"), and format each item as `Your Brand Here · $167 spot · iPhone 17`. Add 48px gradient masks on both ends of the strip so text fades instead of hard-clipping.
+
+1.2 **Demo listing.** Remove the "Cam · 1h ago" demo listing from Live items before launch (keep it available behind a `?demo=1` flag for screenshots). Live items must show only real listings.
+
+1.3 **Track my item → magic link.** Entering an email must NOT show any data. Flow: email → "Check your inbox — we sent a one-time link" → link opens the tracking view. Links expire in 15 minutes and are single-use. Placeholder text: `you@email.com`. Intro line: "Use the email on your listing or your spot purchase."
+
+1.4 **Assent before posting.** Directly above "Post my item live": a required checkbox — *"I'm 18 or older and I agree to the Terms of Use, Content Standards, and Check-in Policy."* (each document linked, opens in new tab). Button disabled until checked. Store timestamp + IP + document versions with the listing.
+
+1.5 **Assent before brand checkout.** Directly above the "Reserve this spot" button: required checkbox — *"I agree to the Terms of Use and Refund Policy."* Same storage.
+
+1.6 **Escrow.** Search the entire codebase and all five legal documents for "escrow". The only permitted occurrence is the footer negation ("it is not a bank, money transmitter, payment processor, escrow service…"). Remove any other use (especially the brand checkout explainer). Do not replace with "held" language — under Part B no money is held; use: *"Your card is saved, not charged. You're charged only when the listing fully funds."*
+
+1.7 **W-9 at $2,000.** Superseded by Part C §0 rule 6 and §1: the W-9 (and one linked social) is required *before publishing* any listing with a campaign total ≥ $2,000. Keep this line under the shipping address in the owner flow: *"Items are taxable compensation. If the value is $2,000 or more, a Form 1099 is issued."*
+
+1.8 **Purchasing-agent language.** Add to Terms of Use (item purchase section): *"IRLi LLC purchases the item as the Owner's purchasing agent. Title passes from the retailer directly to the Owner. Sales tax is charged at the Owner's shipping address and is included in the campaign total."* Keep the Details line "Branding application, item sales tax, shipping, and handling are included."
+
+1.9 **Share modal disclosure.** Every auto-generated social post body must begin with: `Paid placement by [Brand] via BrandMyItem.` — in the post text, not as a hashtag. If multiple brands, list them.
+
+1.10 **Term lock timing — locked at publish.** The term and check-in cadence lock when the listing is published. Audit all five legal documents (Terms, Privacy, Refund, Content Standards, Check-in Policy) and the FAQ for any "first sale" wording; change to "when the listing is published".
+
+1.11 **Content Standards — methods.** Add: *"Patch, embroidery, and engraving simplify artwork: no gradients, minimum stroke weight applies, limited colors. The brand approves a production proof before any placement is applied."*
+
+1.12 **Avatar credit.** Add to the footer Company column or The story page: `Avatars by [pack author], CC BY 4.0` (author name to be supplied with the asset drop).
+
+1.13 **Endorsement line.** Add to the footer disclaimer block: *"Placements are paid advertising, not endorsements by the owner."*
+
+---
+
+## 2. Naming / copy
+
+2.1 Hero: the Your/My/Any word cycle stays. But the DOM `<h1>` must contain static text "BrandMyItem" (visually hidden, `sr-only`), with the animated word marked `aria-hidden="true"`. `<title>` and `og:title` = "BrandMyItem".
+
+2.2 "I'm a user" → **"I'm an owner"**.
+
+2.3 "View all campaigns" → **"View all live items"**.
+
+2.4 "0/7 sold" → **"0/6 reserved"** while the listing is live; a **"Funded"** badge once funded. Never "sold".
+
+2.5 "Goal when fully claimed" → **"Campaign total"**.
+
+2.6 "Item ships — new, at 100% claimed" → **"new, when fully funded"**.
+
+2.7 "3 of 5 spots purchased" (bento) → **"3 of 5 spots funded"**.
+
+2.8 Configurator: "Lock the shapes, then set the price for every spot." → **"Lock the shapes — every spot is priced by its surface share."**
+
+2.9 Details row "Branded material — Adhesive sticker/decal applied by BrandMyItem" → **"Method — set by surface: sticker, patch, embroidery, or engraving. Applied by BrandMyItem."** Method is assigned per item in the catalog config, not chosen by the owner: hard shells (laptop, phone, cooler, carry-on, paddle, skis/snowboard) = sticker; soft goods (backpack, weekender, golf bag, suit, stroller) = patch/embroidery; metal (tumbler) = engraving.
+
+2.10 Bento "Sticker, patch, embroidery, or engraving. Applied to a real item, carried in public for the whole term." — **keep as is** (all four methods launch).
+
+2.11 "Why brands should brand this item" → **"Why brands want this item"**.
+
+2.12 "Everyday settings" → **"Where it's carried"**.
+
+2.13 "Email for purchases and shipping" → **"Email for updates and shipping"**.
+
+2.14 "Listing window — 60 days, until completed or deleted" → **"60 days, until funded or expired"**.
+
+2.15 "Your name" placeholder "Cam" → **"Your name"**.
+
+2.16 Track page placeholder "you@brand.com" → **"you@email.com"**.
+
+2.17 Live card title includes storage/size: **"iPhone 17 · 512GB"**, **"MacBook Pro · 14""**.
+
+2.18 Bento "Real items, not points." caption → **"iPhone 17 — $829 retail, 6 spots"**. "Priced by surface" tile → 6 spots, **"$1,161 campaign total"** (drop "combined all-in spot total").
+
+2.19 Footer bottom bar: **Terms of Use · Privacy Policy · Refund Policy · Contact**. Remove the duplicate "Legal" link.
+
+2.20 Move "Cam on X" out of the footer Company column; put a founder line on The story page instead. Company column: The story · FAQ · Contact.
+
+2.21 Live card location line: format as **"City, ST · University"** (one city, one university, no state name spelled out, no duplicate). Example: "Newport Beach, CA · UCLA".
+
+---
+
+## 3. Categories / nav
+
+3.1 **One taxonomy**, defined once in the catalog config and used by Live-items tabs, footer Items column, and the filter sidebar: Laptops · Phones · Audio · Luggage · Bags · Golf · Coolers & bottles · Sports · Style. Remove "Event", "Carry", "Hydration", "Tech", "Travel".
+
+3.2 Live-items tabs use the Apple product-chip pattern: white card, product icon above label, horizontal scroll, one selected state (ink fill, white text). Icons come from the catalog render assets.
+
+3.3 Nav: add one filled button at far right — **"Sponsor an item"** — linking to Live items (brand entry). Order: How it works · Live items · FAQ · Build your item · Track my item · [Sponsor an item].
+
+3.4 Nav focus ring: `outline: 2px solid #1D1D1F; outline-offset: 4px; border-radius: 8px`. Apply the same ring to all interactive elements.
+
+---
+
+## 4. Catalog
+
+4.1 Stanley Quencher H2.0 tumbler stays at $45. Its picker name is **"Quencher H2.0 40oz"** (one line). Method = engraving.
+
+4.2 All picker names must fit one line; clamp with ellipsis if needed; fixed card height so every price sits on the same baseline.
+
+4.3 Storage step for iPhone 17: **256GB — Included · 512GB — +$200**. Same component as the MacBook Size step.
+
+---
+
+## 5. Layout / UI fixes
+
+5.1 Live listing card image: `object-fit: contain` with 24px inner padding. The full item and every spot box must be visible (currently the phone is cropped top and bottom).
+
+5.2 Configurator toolbar: one row. Order: Rect · Ellipse · Add point · Trace · Copy box · Undo · Reset · Delete. Every icon gets a `title` tooltip and `aria-label`. Remove the unlabeled black dot, or label it "Spot outline color" if it's functional.
+
+5.3 Term picker (6/12/18) and cadence picker (Weekly/Biweekly/Monthly): use the same chip component as "Where it's carried" and "Social following" — not full-width 70px cards.
+
+5.4 "Add city" / "Add university" buttons: fixed width 160px, inputs fill the remaining width, so both rows align.
+
+5.5 Filter sidebar: remove the duplicate "Open spots" under Item & inventory (keep under Status). Status options: All items · Open spots · Funded. Rename "Exact item price" → "Item price", "Method" → "Branding method", "Commitment" → "Term". Chevron on every expandable row. "Clear filters" in ink (#1D1D1F), not red.
+
+5.6 Bento "Proof, on a schedule" tile: the hand/phone image must either fully bleed (image extends ≥40px past the tile edge and the tile clips it cleanly) or be fully contained. Not half-cut.
+
+5.7 Track page: below the email card, add a muted preview of the tracking view — a 4-step status line: Funded → Branded → Shipped → Check-ins.
+
+5.8 Contrast: every gray text on #F5F5F7 or white must be ≥ 4.5:1. Use #6E6E73 as the lightest body gray. Footer disclaimer text uses it.
+
+5.9 Alt text on every product image (item name + finish). Every form input has a bound `<label>`.
+
+---
+
+## 6. Assets (swap when supplied — do not generate)
+
+6.1 iPhone render → iPhone 17 (vertical pill camera). Replace in hero, picker, card, bento, ticker icon when the new PNG is provided.
+
+6.2 Headphones render → new front-on render when provided.
+
+6.3 How-it-works step illustrations → five die-cut sticker renders when provided.
+
+6.4 Avatars → 16 monochrome die-cut PNGs when provided; row label stays "Choose your character".
+
+---
+
+## 7. Build / performance
+
+7.1 Stop base64-inlining assets. Serve images as separate files: AVIF with WebP fallback, explicit `width`/`height` on every `<img>`, `fetchpriority="high"` on the hero images, `loading="lazy"` below the fold.
+
+7.2 Fonts: `font-display: swap`, preload Inter and Cormorant Garamond.
+
+7.3 Targets: LCP ≤ 2.5s, INP ≤ 200ms, CLS ≤ 0.1 on mobile.
+
+---
+
+## 8. Acceptance checks (run all, report results)
+
+- [ ] Grep the codebase for: `17 Pro`, `1,099`, `1,539`, `2,099`, `1,499`, `1TB`, `sold`, `claimed`, `purchased`, `campaign` (outside "campaign total"), `commitment`, `I'm a user`, `escrow`, `Memoji`, `first sale`, `deleted`, `you@brand.com`, `charged at checkout`, `held`, `refunded automatically`. Each must return zero hits except where this document allows.
+- [ ] Every price on the site resolves from the catalog config; changing iPhone 17 256GB to $839 in one place updates hero, picker, card, bento, ticker, spec panel.
+- [ ] Track my item with any email shows no data; magic link works end-to-end.
+- [ ] "Post my item live" and the brand pay button are disabled until the assent checkbox is checked; timestamp/IP/version stored.
+- [ ] No minimap thumbnail, no blue dot, no console errors on any page.
+- [ ] Live card shows the whole item with all spot boxes visible at 390px, 768px, 1440px.
+- [ ] Picker prices sit on one baseline at 1440px.
+- [ ] All text/background pairs ≥ 4.5:1 (run an automated contrast check and list any failures).
+- [ ] `<h1>` contains "BrandMyItem"; `<title>` and `og:title` are "BrandMyItem".
+- [ ] Lighthouse mobile: Performance ≥ 90, Accessibility ≥ 95.
+- [ ] Screenshot every page at 390px and 1440px and attach.
+
+
+---
+
+# PART B — Payments: reserve now, charge at funding
+
+Where Part B conflicts with Part A, Part B wins.
+
+---
+
+## 0. The rule (locked)
+
+Brands are **never charged at checkout**. A brand reserves a spot by saving a card. Cards are charged **only when the listing fully funds**, all at once. If the listing does not fund by day 60, reservations release and no charge is ever made. There are no refunds for unfunded listings because no money was taken.
+
+Stripe mechanics: SetupIntent at checkout (saves the payment method and runs Stripe's $0 card verification). Off-session PaymentIntent per reserved spot at funding. Never use manual-capture authorization holds for the reservation (they expire in 7 days).
+
+---
+
+## 1. Spot and listing states
+
+**Spot states:** `open` → `reserved` → `funded` (charged) → `applied`. Failure branches: `reserved` → `open` (brand cancels before funding, listing expires, or card declines and is not fixed in 48h).
+
+**Listing states:** `live` → `funded` → `purchased` → `branded` → `shipped` → `active` (check-in term running) → `complete`. Failure branch: `live` → `expired` (day 60, not funded). Owner may `relist` once (see §4).
+
+Store on every reservation: brand id, spot id, Stripe customer id, Stripe payment method id, SetupIntent id, reserved_at, assent timestamp/IP/document versions. Store on every charge: PaymentIntent id, charged_at, amount, status, decline reason if any.
+
+---
+
+## 2. Brand checkout flow
+
+1. Brand picks a spot, uploads logo, sees **Campaign total $X · N spots** and the single line "Includes the item, tax, branding application, delivery, and check-in verification."
+2. Assent checkbox (required): "I agree to the Terms of Use and Refund Policy."
+3. Card entry via Stripe Elements → create SetupIntent → confirm. On success: spot becomes `reserved`, brand gets Reservation ID `BMI-XXXXXX` (reuse the existing Submission ID format).
+4. Confirmation screen and email: "Your spot is reserved. Your card has not been charged. You'll be charged $X only when this listing fully funds. If it doesn't fund by [date], your reservation releases and nothing is charged."
+5. Brand can cancel a reservation any time before the listing funds (link in the confirmation email and on the Track page). Cancellation sets the spot back to `open` immediately and detaches nothing (keep the Stripe customer for future use).
+
+Button label: **"Reserve this spot"** (not "Pay", not "Buy").
+
+---
+
+## 3. Funding event
+
+When the last open spot becomes `reserved`:
+
+1. Lock the listing (`funding` transient state — no new reservations, no cancellations).
+2. Charge every reserved spot's saved payment method off-session, in one job, idempotency key = reservation id.
+3. **All succeed** → listing `funded`, every spot `funded`, owner and all brands emailed, IRLi purchase task created.
+4. **Any decline** → that spot enters `payment_failed` with a 48-hour clock. Brand emailed with an update-card link (Stripe Elements, new SetupIntent, retry charge on submit). Successful charges on other spots stand. The listing shows "Funding — 1 spot pending payment."
+   - Fixed within 48h → retry charge → if success, continue to step 3.
+   - Not fixed within 48h → that spot returns to `open`, listing returns to `live`, countdown resumes from where it was, other brands' charges remain (they are funded spots on a live listing). Owner and remaining brands emailed.
+5. Retry policy for declines: one automatic retry after 6 hours (soft declines only), then the 48h brand-fix window.
+
+If the 60-day window expires while a spot is in `payment_failed`, the window extends until that 48h clock ends, then resolves.
+
+---
+
+## 4. Listing window (locked)
+
+- 60 days from publish for every listing. Not owner-selectable.
+- Day 60, not funded → listing `expired`, all reservations release (`open`), brands emailed "Your reservation on [item] has been released. Your card was never charged."
+- **One relist:** if ≥50% of spots were reserved at expiry, the owner may relist once for 30 more days. Existing reservations carry over (brands emailed "The listing was extended 30 days; your reservation is still in place. Cancel any time before it funds."). Below 50% → no relist; owner may post a new listing from scratch.
+- Countdown UI ("59d 22h") stays exactly as is.
+
+---
+
+## 5. Copy swaps (override Part A where they overlap)
+
+- Bento tile headline "Not funded? Refunded." → **"Not funded? Never charged."**
+  Body → **"Your card is saved at checkout, not charged. When the listing funds, everyone is charged at once. If it doesn't, nobody is."**
+- Bento spot pills "$233 charged at checkout" → **"$233 reserved"**
+- Bento caption "3 of 5 spots purchased" → **"3 of 5 spots reserved"**
+- How-it-works step 2 "Brands claim a spot, upload their logo, and pay in full upfront." → **"Brands reserve a spot, upload their logo, and are charged only when the listing funds."**
+- Checkout button → **"Reserve this spot"**
+- Live card "0/6 funded" → **"0/6 reserved"** while `live`; **"Funded"** badge once funded.
+- Live-items filter "Open spots" stays; Status options → All items · Open spots · Funded.
+- Details row "Listing window — 60 days, until funded or withdrawn" → **"60 days, until funded or expired"**
+- Any remaining "held", "held and fully refundable", "refunded automatically", "charged at checkout", "pay in full" → remove.
+- Footer disclaimer paragraph 1: replace the sentences "Every spot is charged in full at checkout. If a listing is not fully funded within its 60-day funding window, every purchase on it is refunded automatically to the original payment method, with refunds initiated within 5 business days; no request is required." with **"Spots are reserved with a saved card and charged only when the listing fully funds. If a listing does not fully fund within its 60-day window, reservations are released and no charge is made."**
+- Vocabulary: add **reserved** (spot state before funding). "Funded" remains the listing state.
+
+---
+
+## 6. FAQ rewrites (For brands)
+
+- **How does payment work?** → "You reserve a spot with a card. Nothing is charged. When the last spot on the listing is reserved, every brand is charged at the same time and BrandMyItem buys the item. You can cancel your reservation any time before that moment."
+- **What happens if a listing doesn't fully fund?** → "It expires at day 60, every reservation is released, and no card is charged. If the listing was at least half reserved, the owner can extend it once for 30 days; your reservation carries over and you can still cancel."
+- Add: **When am I charged?** → "Only at the moment the listing fully funds — one charge, for the amount shown when you reserved."
+- Add: **What if my card declines at funding?** → "You get 48 hours and a link to update your card. If it isn't fixed, your spot reopens and the listing continues."
+
+---
+
+## 7. Legal documents
+
+- **Refund Policy** — rewrite around: no charge before funding, therefore no refund for unfunded or expired listings; brand may cancel a reservation free before funding; after funding, refunds only if (a) IRLi cannot source the item at the quoted campaign total, (b) a placement is declined under Content Standards, or (c) IRLi fails to deliver within 60 days of funding. State that Stripe processing fees are not recoverable on post-funding refunds and are absorbed by IRLi.
+- **Terms of Use** — payment section: card saved via Stripe, charge only on funding, off-session authorization language ("You authorize IRLi LLC to charge your saved payment method for the reserved amount when the listing fully funds"), 48h cure period, reservation release on expiry, relist rule. Keep the purchasing-agent paragraph from Part A §1.8.
+- **Privacy Policy** — add Stripe as processor for saved payment methods; IRLi never stores card numbers.
+- Grep all five documents for "charged at checkout", "refund within", "5 business days", "held" → remove or rewrite.
+
+---
+
+## 8. Emails (transactional)
+
+Create templates: reservation confirmed · reservation cancelled · listing funded (brand) · listing funded (owner) · card declined / update card · spot released after 48h · listing expired / reservation released · listing relisted · item purchased · item shipped · check-in reminder · missed check-in. Plain text + minimal HTML, ink/wash palette, no images required.
+
+---
+
+## 9. Acceptance checks (run all, report results)
+
+- [ ] Reserve a spot in test mode: Stripe shows a SetupIntent, **no** PaymentIntent, no charge.
+- [ ] Reserve every spot on a test listing: exactly N PaymentIntents fire, all succeed, listing state `funded`, both emails sent.
+- [ ] Use Stripe test card `4000000000000341` (attach succeeds, charge fails) on one spot: listing enters `funding` with that spot `payment_failed`, brand email with update link sent, other charges succeed, 48h clock visible on the listing.
+- [ ] Simulate 48h expiry: spot returns to `open`, listing `live`, countdown resumes, emails sent.
+- [ ] Simulate day 60 at 3/6 reserved: listing `expired`, reservations released, owner sees "Relist for 30 days" button; at 2/6 reserved the button does not appear.
+- [ ] Brand cancels a reservation before funding: spot `open` immediately, no Stripe charge or refund created.
+- [ ] Grep codebase, copy, FAQ, and all five legal docs for: `charged at checkout`, `refunded automatically`, `5 business days`, `pay in full`, `held`, `escrow`, `purchased` (as a spot state). Zero hits except where §5–7 allow.
+- [ ] Spot pills read "$X reserved"; bento headline reads "Not funded? Never charged."
+- [ ] Checkout button reads "Reserve this spot"; assent checkbox blocks it until checked.
+- [ ] Screenshots: checkout, confirmation, funded listing, payment_failed listing, expired listing with relist button.
+
+
+---
+
+# PART C — Ownership, breach, make-good, fulfillment
+
+Where Part C conflicts with Parts A or B, Part C wins.
+
+---
+
+## 0. Rules (locked)
+
+1. **Ownership.** The owner takes title to the item at delivery. IRLi LLC does not retain title and does not keep an owner card on file.
+2. **Breach.** During the term, the owner may not (a) sell, gift, trade, or otherwise transfer the item, or (b) intentionally remove, cover, deface, or alter any placement. Either is a breach; the owner owes IRLi LLC the listing's campaign total plus reasonable collection costs. Pursued by demand letter, then small claims, then collections.
+3. **Visibility.** Placements must remain visible whenever the item is in use. Applies to every item, no exceptions. Opaque cases, skins, covers, or sleeves that hide a placement while the item is in use count as covering. Protective covers while packed or in transit are fine.
+4. **Wear is not breach.** Normal wear (peeling, fraying, fading) is reported through check-in; IRLi replaces or reapplies at no cost to the owner.
+5. **Theft or loss is not breach.** Owner files a police report and uploads it; the term ends; the owner owes nothing; brands receive the make-good.
+6. **$2,000 gate.** For any listing whose campaign total is ≥ $2,000, before the listing can be published the owner must (a) complete a W-9 and (b) link at least one social account, with the handle displayed on the listing.
+7. **Make-good.** If a placement fails during the term because of owner breach, theft, or loss, IRLi provides the brand a comparable spot on another item for the remaining term at no charge. If none is available within 30 days, IRLi refunds the unserved portion of the term (prorated by months remaining) from its own funds. This is the brand's exclusive remedy.
+8. **Fulfillment.** Sticker placements are applied in-house by IRLi LLC. Patch, embroidery, and engraving are outsourced to vendors under the vendor terms in §6.
+
+---
+
+## 1. Owner posting flow
+
+- Add a required acknowledgment block above the assent checkbox (keep the assent checkbox from Part A §1.4). Plain text, three lines, always visible:
+  - "The item is yours when it arrives."
+  - "During your term, don't sell it, and don't remove or cover the placements. If you do, you owe the campaign total."
+  - "Stolen or lost? File a police report and you're done — no penalty."
+- **$2,000 gate.** If campaign total ≥ $2,000: the "Post my item live" button is disabled until (a) W-9 step completed (name, address, TIN; store encrypted, display last 4 only) and (b) at least one social account linked. Show a short line under the button: "Listings of $2,000 or more require a tax form and a linked social account."
+- The linked handle renders on the listing card and listing page (already exists for optional links; make it mandatory at this threshold).
+
+---
+
+## 2. Check-in flow
+
+- Check-in photo instruction text: **"Show the item in use with every placement visible."**
+- Add a **"Report wear"** option in the check-in flow: owner selects the affected spot(s), uploads a photo, submits. Creates a replacement task for IRLi; no flag, no penalty. Listing shows "Replacement in progress" on that spot.
+- Add a **"Report theft or loss"** option: owner uploads a police report (PDF/image) and the report number. On submission: term status → `ended_theft`, owner liability = none, all brands on the listing enter the make-good queue (§3), owner and brands emailed.
+- Missed check-ins keep the existing behavior: public flag, then posting restriction. No financial consequence for missed check-ins.
+
+---
+
+## 3. Make-good system (brand side)
+
+States on a brand's spot after funding: `applied` → `active` → (`make_good_pending` → `make_good_placed` | `make_good_refunded`).
+
+Trigger `make_good_pending` when: owner breach is confirmed by IRLi (admin action with note), or owner submits a theft/loss report, or the listing is flagged past the restriction threshold with no wear report.
+
+- On trigger: email the brand immediately: "A placement on [item] can't continue. We're moving you to a comparable item for the remaining [N] months at no charge. You'll hear from us within 30 days." Show the same on the brand's Track page.
+- Admin tool: pick a comparable open spot on another live/funded listing (same category tier, similar surface share), assign it, mark `make_good_placed`. Brand emailed with the new item and its owner's handle. The new spot is applied at IRLi's cost.
+- If 30 days pass with no assignment: auto-compute prorated refund = spot price × (months remaining ÷ term months), issue via Stripe refund, mark `make_good_refunded`, email the brand with the amount.
+- Every listing keeps an **evidence pack** (auto-assembled, admin-downloadable): delivery confirmation, applied-placement photo, all check-in photos with timestamps, all wear/theft reports, and the assent record (timestamp, IP, document versions). This is the dispute response.
+
+---
+
+## 4. Legal documents
+
+**Terms of Use**
+- Owner section: add rules 1–6 in plain language. Breach clause: "If you sell, gift, trade, or transfer the item, or intentionally remove, cover, deface, or alter any placement during the term, you owe IRLi LLC the listing's campaign total plus reasonable costs of collection. IRLi may pursue this by demand, small claims court, or a collection agency." State that these are actual damages equal to the amount brands paid — do not use the phrase "liquidated damages."
+- Visibility: "Placements must remain visible whenever the item is in use. A case, skin, cover, or sleeve that hides a placement while the item is in use is treated as covering it."
+- Wear and theft clauses per rules 4–5.
+- Brand section: make-good clause per rule 7, ending with: "This make-good is your exclusive remedy for a placement that fails during the term for reasons attributable to the owner. You agree not to initiate a chargeback for any placement covered by this policy."
+- $2,000 gate disclosed in the owner section.
+
+**Refund Policy**
+- Add "Make-good" section: comparable spot first, prorated refund after 30 days, formula shown. Keep the reserve-then-charge language from Part B (no refunds for unfunded listings). Post-funding refunds limited to: IRLi cannot source the item, placement declined under Content Standards, IRLi misses the 60-day delivery, or make-good fallback.
+
+**Check-in Policy**
+- What a check-in photo must show (item in use, all placements visible). Wear reports. Theft/loss reports and their effect. Reiterate: missed check-ins → flag → restriction, no financial penalty; breach of ownership/visibility rules is a separate matter governed by the Terms.
+
+**Content Standards**
+- No change beyond Part A §1.11's proof-approval line.
+
+**Privacy Policy**
+- Add: W-9 data (including TIN) collected for listings ≥ $2,000, stored encrypted, used only for tax reporting; police reports stored for the term plus 3 years.
+
+Grep all documents for "no financial consequences" — keep it, but make sure it's scoped to missed check-ins only.
+
+---
+
+## 5. Site copy
+
+- FAQ "Who owns the item?" → **"You do, from the day it arrives. Two rules for the term: don't sell it, and keep the placements visible. Stolen or lost? A police report ends the term with nothing owed."**
+- FAQ "What do I commit to?" → add the two rules and the $2,000 gate.
+- FAQ (brands) add: **"What if the owner stops holding up their end?"** → "You get a comparable spot on another item for the rest of your term at no charge. If we can't place you within 30 days, we refund the unserved months."
+- Bento "Proof, on a schedule" body: append **"Every photo shows the item in use, placements visible."**
+- Details row "Fulfillment — BrandMyItem applies branding" stays. Method row from Part A §2.9 stays.
+- Footer disclaimer: add one sentence: **"Owners keep the item; selling it or covering placements during the term is a breach of the Terms."**
+
+---
+
+## 6. Vendor terms (internal document, generate as /docs/vendor-terms.md)
+
+For patch, embroidery, and engraving vendors:
+1. Risk of loss transfers to vendor on receipt; returns to IRLi on carrier pickup. Damaged or lost items replaced by vendor at full retail, not repaired.
+2. No production before written proof approval from IRLi. Damage after approved proof is vendor's.
+3. Certificate of insurance (general liability and bailee's coverage) on file before first job.
+4. Turnaround: 10 business days from receipt.
+5. Test piece on any new material before the first live item.
+Sticker application is in-house; no vendor terms needed.
+
+---
+
+## 7. Acceptance checks (run all, report results)
+
+- [ ] Post a $1,500 listing: no W-9 step, no social requirement.
+- [ ] Post a $2,239 listing: button disabled until W-9 complete and one social linked; handle shows on the card.
+- [ ] Owner acknowledgment block renders above the assent checkbox on every posting flow.
+- [ ] Check-in flow shows "Report wear" and "Report theft or loss"; theft report requires a file and report number; submitting sets term `ended_theft` and creates make-good entries for every brand on the listing.
+- [ ] Admin can assign a make-good spot; brand emailed; state `make_good_placed`.
+- [ ] Simulate 30 days with no assignment: prorated refund computed correctly (e.g., $233 spot, 12-month term, 8 months remaining → $155.33), Stripe refund issued, state `make_good_refunded`.
+- [ ] Evidence pack downloads as a single zip with delivery proof, photos, reports, assent record.
+- [ ] Terms, Refund Policy, Check-in Policy, Privacy Policy updated; grep for "liquidated" returns zero; grep for "exclusive remedy" returns one hit in Terms.
+- [ ] /docs/vendor-terms.md exists with the five clauses.
+- [ ] Screenshots: owner acknowledgment block, $2k gate state, check-in report options, brand Track page in `make_good_pending`.
+
+
+---
+
+# FINAL — Report format
+
+Report back with: (1) each acceptance checklist item marked pass/fail with a one-line note, (2) the grep results verbatim, (3) all requested screenshots attached, (4) a list of anything you could not do and why. Do not summarize work you did not verify.
