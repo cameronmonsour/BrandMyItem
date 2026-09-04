@@ -335,6 +335,13 @@ test('FAQ owner and brand groups are separated so the second heading has spacing
   assert.match(html, /Who owns the item\?<span class="x"><\/span><\/summary><div class="fa">[\s\S]*?<\/div><\/details>\s*<\/div>\s*<\/div>\s*<div class="faq-group">\s*<h3>For brands<\/h3>/);
 });
 
+test('deleted campaign records stay removed from cached campaign state', () => {
+  assert.match(html, /var DELETED_CAMPAIGN_IDS=\['p9ot6i4'\]/);
+  assert.match(html, /remote\.listings\.filter\(function\(r\)\{return !isDeletedCampaign\(r\)&&isLaunchLiveCampaign\(r\)\}\)/);
+  assert.match(html, /campaigns\.filter\(function\(campaign\)\{return !isDeletedCampaign\(campaign\)\}\)/);
+  assert.match(html, /return !isDeletedCampaign\(listing\)&&isLaunchLiveCampaign\(listing\)/);
+});
+
 test('posting requires and saves the owner shipping address', () => {
   assert.match(html, /var address=document\.getElementById\('pAddress'\)\.value\.trim\(\)/);
   assert.match(html, /if\(!name\|\|!mail\|\|!address\)\{toast\('Add your name, email, and shipping address to post'\);return\}/);

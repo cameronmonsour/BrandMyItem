@@ -6783,6 +6783,16 @@ if(!DB){
   ]};
   store.set('bmi_db4',DB);
 }
+var DELETED_CAMPAIGN_IDS=['p9ot6i4'];
+function isDeletedCampaign(listing){
+  return !!(listing&&DELETED_CAMPAIGN_IDS.indexOf(String(listing.id))>=0);
+}
+var removedDeletedCampaign=false;
+DB.listings=(DB.listings||[]).filter(function(listing){
+  if(isDeletedCampaign(listing)){removedDeletedCampaign=true;return false}
+  return true;
+});
+if(removedDeletedCampaign)store.set('bmi_db4',DB);
 var DEMO_CONTEXT={
   demo1:{social:'10K\u2013100K',cities:['Los Angeles, CA'],universities:['UCLA'],avatar:'avatars/avatar-01.png'},
   demo2:{social:'1K\u201310K',cities:['Miami, FL'],avatar:'avatars/avatar-02.png'},
@@ -6942,13 +6952,13 @@ async function hydratePublicCampaigns(){
   if(!response.ok)throw new Error('Campaigns could not be loaded');
   var campaigns=await response.json();
   DB.listings=DB.listings.filter(isDemoListing);
-  campaigns.forEach(function(campaign){DB.listings.push(campaignFromApi(campaign))});
+  campaigns.filter(function(campaign){return !isDeletedCampaign(campaign)}).forEach(function(campaign){DB.listings.push(campaignFromApi(campaign))});
   DB.listings.sort(function(a,b){return (b.created||0)-(a.created||0)});
   store.set('bmi_db4',DB);
   return campaigns;
 }
 async function backfillLocalCampaigns(){
-  var local=(DB.listings||[]).filter(isLaunchLiveCampaign);
+  var local=(DB.listings||[]).filter(function(listing){return !isDeletedCampaign(listing)&&isLaunchLiveCampaign(listing)});
   await Promise.all(local.map(async function(listing){
     var presentation=await durableCampaignPresentation(listing);
     var response=await fetch('/api/campaigns',{
@@ -6992,7 +7002,7 @@ function mergeDB(remote){
   if(!remote||!remote.listings)return false;
   var changed=false;
   var byId={};DB.listings.forEach(function(l){byId[l.id]=l});
-  remote.listings.filter(isLaunchLiveCampaign).forEach(function(r){
+  remote.listings.filter(function(r){return !isDeletedCampaign(r)&&isLaunchLiveCampaign(r)}).forEach(function(r){
     var mine=byId[r.id];
     if(!mine){DB.listings.push(r);changed=true;return}
     for(var i=0;i<r.claims.length;i++){
