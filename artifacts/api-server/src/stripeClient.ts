@@ -6,6 +6,12 @@ type StripeErrorResponse = {
   };
 };
 
+type StripeConfiguration = {
+  secretKey: string;
+  publishableKey: string;
+  mode: "test" | "live";
+};
+
 function getStripeSecretKey(): string {
   const secretKey = process.env.STRIPE_SECRET_KEY?.trim();
   if (!secretKey || !/^sk_(test|live)_/.test(secretKey)) {
@@ -16,8 +22,42 @@ function getStripeSecretKey(): string {
   return secretKey;
 }
 
+function getStripePublishableKey(): string {
+  const publishableKey = process.env.STRIPE_PUBLISHABLE_KEY?.trim();
+  if (!publishableKey || !/^pk_(test|live)_/.test(publishableKey)) {
+    throw new Error(
+      "STRIPE_PUBLISHABLE_KEY must be configured with a Stripe test or live publishable key",
+    );
+  }
+  return publishableKey;
+}
+
+function readStripeConfiguration(): StripeConfiguration {
+  const secretKey = getStripeSecretKey();
+  const publishableKey = getStripePublishableKey();
+  const mode = secretKey.startsWith("sk_test_") ? "test" : "live";
+  const publishableMode = publishableKey.startsWith("pk_test_") ? "test" : "live";
+  if (mode !== publishableMode) {
+    throw new Error("Stripe secret and publishable keys must use the same mode");
+  }
+  return { secretKey, publishableKey, mode };
+}
+
 export function getConfiguredStripeMode(): "test" | "live" {
-  return getStripeSecretKey().startsWith("sk_test_") ? "test" : "live";
+  return readStripeConfiguration().mode;
+}
+
+export function getConfiguredStripeDiagnostics(): {
+  mode: "test" | "live";
+  secretKeyPrefix: string;
+  publishableKeyPrefix: string;
+} {
+  const configuration = readStripeConfiguration();
+  return {
+    mode: configuration.mode,
+    secretKeyPrefix: configuration.secretKey.slice(0, 8),
+    publishableKeyPrefix: configuration.publishableKey.slice(0, 8),
+  };
 }
 
 export async function stripeRequest<T>(
@@ -28,8 +68,9 @@ export async function stripeRequest<T>(
     idempotencyKey?: string;
   },
 ): Promise<T> {
+  const { secretKey } = readStripeConfiguration();
   const headers: Record<string, string> = {
-    Authorization: `Bearer ${getStripeSecretKey()}`,
+    Authorization: `Bearer ${secretKey}`,
   };
   if (options?.body) {
     headers["Content-Type"] = "application/x-www-form-urlencoded";
