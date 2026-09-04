@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type GetTrackingParams = {
-token: string;
-};
+export interface TrackingMagicLinkInput {
+  /** @maxLength 320 */
+  email: string;
+}

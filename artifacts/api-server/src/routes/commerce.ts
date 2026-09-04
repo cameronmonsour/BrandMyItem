@@ -10,6 +10,7 @@ import {
   ListCampaignsResponse,
   RegisterCampaignBody,
   RegisterCampaignResponse,
+  RequestTrackingMagicLinkBody,
 } from "@workspace/api-zod";
 import { and, desc, eq, inArray, sql } from "drizzle-orm";
 import { Router, type IRouter } from "express";
@@ -31,6 +32,11 @@ import {
 import { verifyImageObject } from "../lib/objectStorage";
 
 const router: IRouter = Router();
+const TRACKING_LINK_TTL_MS = 15 * 60 * 1000;
+const trackingMagicLinks = new Map<
+  string,
+  { email: string; expiresAt: number; used: boolean }
+>();
 
 function publicClaim(order: typeof placementOrdersTable.$inferSelect) {
   return {
@@ -122,6 +128,16 @@ router.post("/campaigns", async (req, res): Promise<void> => {
       .values({
         ...input,
         ownerAccessTokenHash: hashAccessToken(ownerAccessToken),
+        ownerAssentAt: new Date(),
+        ownerAssentIp: req.ip,
+        ownerTermsVersion: input.ownerAssent.termsVersion,
+        ownerContentVersion: input.ownerAssent.contentVersion,
+        ownerCheckinVersion: input.ownerAssent.checkinVersion,
+        w9Required: input.pricesCents.reduce((sum, cents) => sum + cents, 0) >= 200000,
+        w9Status:
+          input.pricesCents.reduce((sum, cents) => sum + cents, 0) >= 200000
+            ? "required"
+            : "not_required",
       })
       .returning();
     setAccessCookie(res, "campaign", campaign.id, ownerAccessToken);
@@ -139,45 +155,90 @@ router.get("/campaigns", async (_req, res): Promise<void> => {
   res.json(ListCampaignsResponse.parse(await publicCampaigns(campaigns)));
 });
 
-router.get("/tracking", async (req, res): Promise<void> => {
-  res.setHeader("Cache-Control", "no-store");
-  const parsed = GetTrackingQueryParams.safeParse(req.query);
+router.post("/tracking/magic-link", async (req, res): Promise<void> => {
+  const parsed = RequestTrackingMagicLinkBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: "Invalid email" });
     return;
   }
-
   const email = parsed.data.email.trim().toLowerCase();
+  for (const [hash, link] of trackingMagicLinks) {
+    if (link.used || link.expiresAt <= Date.now()) trackingMagicLinks.delete(hash);
+  }
+  const token = createAccessToken();
+  trackingMagicLinks.set(hashAccessToken(token), {
+    email,
+    expiresAt: Date.now() + TRACKING_LINK_TTL_MS,
+    used: false,
+  });
+  // Email delivery belongs behind this boundary. Never return tracking data
+  // or reveal whether the address is present in the marketplace.
+  res.status(202).json({
+    message:
+      "If that email is linked to an item, a one-time tracking link is on its way.",
+  });
+});
+
+router.get("/tracking", async (req, res): Promise<void> => {
+  res.setHeader("Cache-Control", "no-store");
+  const token = typeof req.query.token === "string" ? req.query.token : "";
+  const magicLink = token
+    ? trackingMagicLinks.get(hashAccessToken(token))
+    : undefined;
+  if (magicLink && (magicLink.used || magicLink.expiresAt <= Date.now())) {
+    trackingMagicLinks.delete(hashAccessToken(token));
+    res.status(401).json({ error: "Tracking link is invalid or expired" });
+    return;
+  }
+  if (magicLink) {
+    magicLink.used = true;
+    trackingMagicLinks.delete(hashAccessToken(token));
+  }
+  const parsed = GetTrackingQueryParams.safeParse(req.query);
+  if (!parsed.success) {
+    res.status(400).json({ error: "Invalid or expired tracking link" });
+    return;
+  }
+
+  if (!magicLink) {
+    res.status(401).json({ error: "Tracking link is invalid or expired" });
+    return;
+  }
+  const email = magicLink.email.trim().toLowerCase();
   const ownerAccessHashes = accessTokenHashesForScope(req, "campaign");
   const checkoutAccessHashes = accessTokenHashesForScope(req, "checkout");
-  if (!ownerAccessHashes.length && !checkoutAccessHashes.length) {
+  if (!magicLink && !ownerAccessHashes.length && !checkoutAccessHashes.length) {
     res.status(401).json({ error: "Tracking access is required" });
     return;
   }
 
-  const ownerCampaigns = ownerAccessHashes.length
+  const ownerCampaigns = magicLink || ownerAccessHashes.length
     ? await db
         .select()
         .from(campaignsTable)
         .where(
           and(
             sql`lower(${campaignsTable.ownerEmail}) = ${email}`,
-            inArray(campaignsTable.ownerAccessTokenHash, ownerAccessHashes),
+            magicLink
+              ? sql`true`
+              : inArray(campaignsTable.ownerAccessTokenHash, ownerAccessHashes),
           ),
         )
         .orderBy(desc(campaignsTable.createdAt))
     : [];
-  const brandOrders = checkoutAccessHashes.length
+  const brandOrders = magicLink || checkoutAccessHashes.length
     ? await db
         .select()
         .from(placementOrdersTable)
         .where(
           and(
             sql`lower(${placementOrdersTable.email}) = ${email}`,
-            inArray(
-              placementOrdersTable.checkoutAccessTokenHash,
-              checkoutAccessHashes,
-            ),
+            magicLink
+              ? sql`true`
+              : inArray(
+                  placementOrdersTable.checkoutAccessTokenHash,
+                  checkoutAccessHashes,
+                ),
           ),
         )
         .orderBy(desc(placementOrdersTable.createdAt))
@@ -395,6 +456,10 @@ router.post("/checkout/sessions", async (req, res): Promise<void> => {
     stripeCheckoutSessionId: null,
     stripeCheckoutIdempotencyKey: idempotencyKey,
     checkoutAccessTokenHash,
+    brandAssentAt: new Date(),
+    brandAssentIp: req.ip,
+    brandTermsVersion: input.brandAssent.termsVersion,
+    brandContentVersion: input.brandAssent.contentVersion,
     updatedAt: new Date(),
   };
   if (existing) {

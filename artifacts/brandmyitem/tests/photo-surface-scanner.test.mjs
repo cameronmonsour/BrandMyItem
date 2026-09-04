@@ -35,7 +35,7 @@ test('iPhone placements fill the usable back panel below the camera', () => {
   assert.ok(iphone, 'iPhone five-placement reference geometry should exist');
   assert.equal((iphone.match(/\{x:/g) || []).length, 5);
   assert.match(iphone, /\{x:0\.6355,y:0\.1804,w:0\.2416,h:0\.2039\}/);
-  assert.match(html, /iphone:\{label:'iPhone 17 Pro'[^}]*maxSlots:5/);
+   assert.match(html, /iphone:\{label:'iPhone 17'[^}]*maxSlots:5/);
   assert.match(html, /type:'iphone'[^}]*slots:5,\s*prices:\[167,233,233,233,233\]/);
   assert.match(html, /if\(isDemo&&l\.type==='iphone'&&l\.slots!==5\)/);
   assert.match(html, /l\.claims=\[iphoneClaim,null,null,null,null\]/);

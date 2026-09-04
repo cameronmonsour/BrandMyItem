@@ -20,3 +20,4 @@
 - [Surface-based campaign pricing](surface-based-campaign-pricing.md) — placements with the same visible area must share the same whole-dollar price tier.
 - [Example campaign labeling](example-campaign-labeling.md) — locked demo cards use a neutral Example badge at top right, separate from status.
 - [Anonymous access capabilities](anonymous-access-capabilities.md) — public checkout and tracking use hashed HttpOnly capabilities, not email or Stripe IDs as authorization.
+- [OpenAPI assent requirements](openapi-assent-requirements.md) — assent fields must be listed as required before codegen, and generated header normalization needs the workspace-compatible callback form.

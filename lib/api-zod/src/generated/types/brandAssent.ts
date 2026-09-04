@@ -6,6 +6,8 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type GetTrackingParams = {
-token: string;
-};
+export interface BrandAssent {
+  accepted: true;
+  termsVersion: string;
+  contentVersion: string;
+}

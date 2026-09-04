@@ -15,7 +15,7 @@ tags:
   - name: checkout
     description: Stripe placement checkout operations
   - name: tracking
-    description: Email-linked campaign and placement tracking
+    description: One-time magic-link campaign and placement tracking
   - name: storage
     description: Durable image upload and serving
 paths:
@@ -156,16 +156,14 @@ paths:
     get:
       operationId: getTracking
       tags: [tracking]
-      summary: Find authorized campaigns and placement orders linked to an email
-      description: Requires an HttpOnly capability cookie issued for a campaign owner or buyer order. The email query parameter is not an identity proof.
+      summary: Resolve a one-time tracking link
+      description: Requires a one-time magic-link token. Email is never an authorization credential.
       parameters:
         - in: query
-          name: email
+          name: token
           required: true
           schema:
             type: string
-            format: email
-            maxLength: 320
       responses:
         "200":
           description: Email-linked tracking records
@@ -174,9 +172,30 @@ paths:
               schema:
                 $ref: "#/components/schemas/TrackingResult"
         "400":
-          description: Invalid email
+          description: Invalid or expired link
         "401":
-          description: Tracking capability is required
+           description: Tracking link is invalid, expired, or already used
+  /tracking/magic-link:
+    post:
+      operationId: requestTrackingMagicLink
+      tags: [tracking]
+      summary: Email a one-time tracking link
+      description: Always returns the same generic response so email addresses cannot be enumerated.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TrackingMagicLinkInput"
+      responses:
+        "202":
+          description: Generic confirmation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TrackingMagicLinkResponse"
+        "400":
+          description: Invalid email
 components:
   schemas:
     HealthStatus:
@@ -188,7 +207,7 @@ components:
         - status
     CampaignInput:
       type: object
-      required: [id, itemType, title, ownerName, ownerEmail, pricesCents, presentation]
+      required: [id, itemType, title, ownerName, ownerEmail, pricesCents, ownerAssent, presentation]
       properties:
         id:
           type: string
@@ -218,6 +237,8 @@ components:
             type: integer
             minimum: 100
             maximum: 10000000
+        ownerAssent:
+          $ref: "#/components/schemas/OwnerAssent"
         presentation:
           type: object
           additionalProperties: true
@@ -253,7 +274,7 @@ components:
           format: date-time
     PlacementCheckoutInput:
       type: object
-      required: [campaignId, spotIndex, brandName, email, logoObjectPath]
+      required: [campaignId, spotIndex, brandName, email, logoObjectPath, brandAssent]
       properties:
         campaignId:
           type: string
@@ -277,6 +298,46 @@ components:
         logoObjectPath:
           type: string
           pattern: "^/objects/uploads/[A-Za-z0-9-]+$"
+        brandAssent:
+          $ref: "#/components/schemas/BrandAssent"
+    OwnerAssent:
+      type: object
+      required: [accepted, termsVersion, contentVersion, checkinVersion]
+      properties:
+        accepted:
+          type: boolean
+          const: true
+        termsVersion:
+          type: string
+        contentVersion:
+          type: string
+        checkinVersion:
+          type: string
+    BrandAssent:
+      type: object
+      required: [accepted, termsVersion, contentVersion]
+      properties:
+        accepted:
+          type: boolean
+          const: true
+        termsVersion:
+          type: string
+        contentVersion:
+          type: string
+    TrackingMagicLinkInput:
+      type: object
+      required: [email]
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 320
+    TrackingMagicLinkResponse:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
     PlacementCheckoutSession:
       type: object
       required: [url, orderId, sessionId]

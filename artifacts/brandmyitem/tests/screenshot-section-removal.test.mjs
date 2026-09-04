@@ -49,7 +49,7 @@ test('keeps outlined hero art while referenced suit and backpack photos remain i
 });
 
 test('dashboard filters use listing metadata and compose with displayed spot prices', () => {
-  assert.match(html, /\{id:'Event',item:'cooler'\}/);
+  assert.match(html, /\{id:'Coolers',item:'cooler'\}/);
   assert.doesNotMatch(html, /\{id:'Custom',item:null\}/);
   assert.match(html, /function listingCategory\(l\)\{\s+var type=l&&\(l\.sourceType\|\|l\.type\);\s+if\(type&&ITEMS\[type\]\)return ITEMS\[type\]\.cat;\s+return 'Custom';/);
   assert.match(html, /var it=\{label:LBLL\(l\),cat:listingCategory\(l\)\}/);
@@ -81,8 +81,8 @@ test('dashboard activity uses the same live ticker as the homepage', () => {
   assert.match(html, /var brand='Your Brand Here',photo=PHO\(row\.l\),label=LBLL\(row\.l\)/);
   assert.match(html, /var brandMark='<img src="'\+row\.c\.logo\+'" alt="Your Brand Here logo">';/);
   assert.doesNotMatch(html, /var brand=\(row\.c&&row\.c\.brand\|\|'A brand'\)\.trim\(\)/);
-  assert.match(html, /<span class="home-activity-time">'\+ago\(row\.ts\)\+'<\/span>/);
-  assert.doesNotMatch(html, /home-activity-time">— /);
+  assert.match(html, /<span class="home-activity-static">Example activity<\/span>/);
+  assert.doesNotMatch(html, /home-activity-time">/);
   assert.match(html, /function postActivityRows\(\)/);
   assert.match(html, /\{kind:'post',listingId:l\.id,owner:name,label:LBLL\(l\),spots:l\.slots\}/);
   assert.match(html, /brand:'Your Brand Here',\s*logo:FAKE_SPONSOR_LOGOS\[row\.logoIndex\]/);
@@ -170,7 +170,7 @@ test('dashboard keeps compact tracker cards without a duplicate left category bo
   assert.match(builderHtml, /class="card details-card"/);
   assert.match(builderHtml, /<div class="card-t">Details<\/div><p class="details-subheadline">Branding application, item sales tax, shipping, and handling are included\.<\/p>/);
   assert.match(builderHtml, /id="totalOut"/);
-  assert.match(builderHtml, /Goal when fully claimed/);
+  assert.match(builderHtml, /Campaign total/);
   assert.doesNotMatch(builderHtml, /<span>Platform fee<\/span>/);
   assert.doesNotMatch(builderHtml, /<span>Branding application<\/span>/);
   assert.doesNotMatch(builderHtml, /Total fee before tax &amp; shipping/);
@@ -204,7 +204,7 @@ test('dashboard keeps compact tracker cards without a duplicate left category bo
   assert.match(builderHtml, /<div class="label">Check-in term<\/div>/);
   assert.match(builderHtml, /data-value="6"[^>]*><strong>6 months<\/strong>/);
   assert.doesNotMatch(builderHtml, /This sets how long you want to send check-ins after delivery/);
-  assert.match(builderHtml, /<span>Listing window<\/span><b>60 days, until completed or deleted<\/b>/);
+  assert.match(builderHtml, /<span>Listing window<\/span><b>60 days, until funded or withdrawn<\/b>/);
   assert.match(html, /\.brand-profile-card \.label\{margin-top:16px;color:var\(--fg\)\}/);
   assert.match(html, /<div class="campaign-label">Purpose<\/div><p>'\+safeCardText\(purpose\)\+'<\/p>/);
   assert.doesNotMatch(html, /<div class="campaign-label">Campaign brief<\/div>/);
@@ -328,7 +328,7 @@ test('builder separates placement sizing from per-spot pricing', () => {
   assert.match(html, /id="cuEditSizing"[^>]*>Edit sizing<\/button>/);
   assert.match(html, /CU\.sizingComplete=true;CU\.sel=-1;CU\.prices=boxPrices\(\);B\.prices=CU\.prices\.slice\(\)/);
   assert.match(html, /function renderPhotoOnly\(el,st\)/);
-  assert.match(html, /if\(CU\.tiles\.length&&!CU\.sizingComplete\)\{toast\('Complete sizing and price every ad space before posting'\);return\}/);
+  assert.match(html, /if\(CU\.tiles\.length&&!CU\.sizingComplete\)\{toast\('Complete sizing and price every sponsor spot before posting'\);return\}/);
   assert.match(html, /cuSpotPriceTotal\(\)!==pricingGoal/);
   assert.match(html, /Every spot must add up to the full purchase goal\./);
   assert.match(html, /matches full purchase goal/);
@@ -373,17 +373,17 @@ test('posting requires and saves the owner shipping address', () => {
 test('tracking is launch ready for campaign owners and brand purchases', () => {
   assert.doesNotMatch(html, /Track orders and campaigns/);
   assert.doesNotMatch(html, /Use the email from your item posting or brand purchase/);
-  assert.match(html, /Use the email connected to your item or logo placement\./);
+  assert.match(html, /Use the email on your listing or your spot purchase\./);
   assert.match(html, /\.view#v-track\{padding-top:112px\}/);
   assert.match(html, /\.track-page \.site-footer\{display:none\}/);
   assert.match(html, /document\.body\.classList\.toggle\('track-page',h==='track'\)/);
-  assert.match(html, /fetch\('\/api\/tracking\?email='\+encodeURIComponent\(mail\)\)/);
+  assert.match(html, /fetch\('\/api\/tracking\/magic-link',\{\s*method:'POST'/);
   assert.match(html, /function localTrackMatches\(mail\)/);
   assert.match(html, /ownerView:true/);
   assert.match(html, /function serverTrackingMatches\(payload,mail\)/);
   assert.match(html, /c\.orderStatus=order\.status/);
-  assert.match(html, /await syncTrackingOwnerEmail\(mail\)/);
-  assert.match(html, /No items found for that email yet\./);
+  assert.doesNotMatch(html, /await syncTrackingOwnerEmail\(mail\)/);
+  assert.match(html, /confirmation\.style\.display='block'/);
   assert.match(html, /\.track-order-chevron\{[^}]*display:grid;place-items:center/);
   assert.match(html, /\.track-order-chevron svg\{display:block;width:14px;height:14px\}/);
   assert.match(html, /track-order-chevron" aria-hidden="true"><svg viewBox="0 0 24 24"/);

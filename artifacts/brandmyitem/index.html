@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BrandMyItem. Your item. Their brand. Their money.</title>
+<title>BrandMyItem</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta name="description" content="Post the item you want as live ad inventory. Brands buy the spots at exact prices, the bar fills, your item ships new with their mark on it.">
+<meta property="og:title" content="BrandMyItem">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
 <style>
@@ -45,6 +46,16 @@ img{display:block}
 .card-t{font-size:15px;font-weight:600;letter-spacing:-.01em}
 .card-d{font-size:13px;color:var(--mfg);margin-top:2px}
 .card-c{padding:18px 20px 20px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.assent-row{display:flex;align-items:flex-start;gap:10px;margin:16px 0 18px;color:#3a3a3c;font-size:12px;line-height:1.5}
+.assent-row input{width:16px;height:16px;margin:1px 0 0;accent-color:#1d1d1f;flex:0 0 auto}
+.assent-row a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.tax-note{margin:12px 0 0}
+.w9-notice{margin:12px 0 0;padding:10px 12px;border-radius:10px;background:#f5f5f7;color:#3a3a3c;font-size:12px;line-height:1.45}
+.track-preview-title{font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#6e6e73;margin-bottom:14px}
+.track-preview-steps{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:#1d1d1f;white-space:nowrap}
+.track-preview-steps i{height:1px;background:#d2d2d7;flex:1;min-width:12px}
+.track-magic-confirm{font-weight:600;color:#1d1d1f}
 
 .badge{display:inline-flex;align-items:center;gap:5px;border-radius:999px;font-size:11px;font-weight:600;padding:4px 10px;letter-spacing:.04em}
 .badge-sec{background:var(--wash);color:var(--mfg)}
@@ -626,7 +637,7 @@ details.faq .fa b{color:var(--fg);font-weight:600}
 .home-section-head .band-head{margin-bottom:0}
 .home-section-head .big{margin-bottom:7px}
 .home-live-feed{border:1px solid var(--border);border-radius:16px;overflow:hidden;background:#fff}
-.home-activity-viewport{overflow:hidden}
+.home-activity-viewport{overflow:hidden;position:relative;mask-image:linear-gradient(90deg,transparent 0,#000 7%,#000 93%,transparent 100%);-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 7%,#000 93%,transparent 100%)}
 .home-activity-scroll{display:flex;width:max-content;animation:homeTicker 38s linear infinite}
 .home-live-feed:hover .home-activity-scroll,.home-live-feed:focus-within .home-activity-scroll{animation-play-state:paused}
 @keyframes homeTicker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
@@ -647,6 +658,7 @@ details.faq .fa b{color:var(--fg);font-weight:600}
 .home-activity-product{display:inline-flex;align-items:center;gap:6px;padding-left:9px;border-left:1px solid var(--border);font-size:12px;color:var(--mfg);white-space:nowrap}
 .home-activity-product img{width:28px;height:28px;object-fit:contain;border-radius:6px;background:#fff}
 .home-activity-time{font-size:12px;color:var(--mfg);white-space:nowrap}
+.home-activity-static{font-size:11px;color:var(--mfg);white-space:nowrap}
 .home-campaign-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
 .home-campaign-card{width:100%;padding:0;cursor:pointer}
 .home-campaign-card .thumb{height:190px;aspect-ratio:auto}
@@ -1729,10 +1741,11 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
     <div class="nav-inner">
       <a href="#home" class="logo" aria-label="BrandMyItem"><img src="brandmyitem-logo.svg" alt=""></a>
       <a href="#home-how" class="lnk hidemob">How it works</a>
-      <a href="#home-faq" class="lnk hidemob">FAQ</a>
       <a href="#dashboard" class="lnk">Live items</a>
+      <a href="#home-faq" class="lnk hidemob">FAQ</a>
       <a href="#build" class="lnk">Build your item</a>
       <a href="#track" class="lnk">Track my item</a>
+      <a href="#dashboard" class="lnk nav-sponsor">Sponsor an item</a>
     </div>
   </div>
 </header>
@@ -1754,10 +1767,11 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
       <div class="tile" style="left:58%;bottom:16%;width:10vw;max-width:170px;aspect-ratio:5/4;animation-duration:7.6s;animation-delay:.2s" data-d="18"><img class="obj" data-item="suit" alt=""></div>
       <div class="tile" style="right:6%;bottom:21%;width:10vw;max-width:170px;aspect-ratio:5/6;animation-duration:8.2s;animation-delay:1.8s" data-d="16"><img class="obj" data-item="paddle" alt=""></div>
       <div class="herocenter">
-        <div class="heroword" aria-label="BrandMyItem, BrandAnyItem, BrandYourItem"><span class="hero-brand">Brand</span><span class="hero-middle" aria-live="polite">My</span><span class="hero-item">Item</span></div>
-        <div class="herotag">Brands buy sponsored ad space on the items you want.</div>
+        <h1 class="sr-only">BrandMyItem</h1>
+        <div class="heroword" aria-label="BrandMyItem, BrandAnyItem, BrandYourItem"><span class="hero-brand">Brand</span><span class="hero-middle" aria-hidden="true">My</span><span class="hero-item">Item</span></div>
+        <div class="herotag">Brands sponsor visible spots on the items you want.</div>
         <div class="herobtns">
-          <a class="ghostpill" href="#build">I&rsquo;m a user</a>
+          <a class="ghostpill" href="#build">I&rsquo;m an owner</a>
           <a class="ghostpill solid" href="#dashboard">I&rsquo;m a brand</a>
         </div>
       </div>
@@ -1769,7 +1783,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 
     <section class="band" id="home-campaigns-section" style="padding-top:0">
       <div class="home-section-head">
-        <a class="btn btn-secondary" href="#dashboard">View all campaigns</a>
+        <a class="btn btn-secondary" href="#dashboard">View all live items</a>
       </div>
       <div class="home-campaign-grid" id="homeCampaignGrid"></div>
     </section>
@@ -1846,12 +1860,12 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
             <div class="fb-row fb-r2"><b>Spot 2</b><span class="fb-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg><span class="fb-charged">$233 charged at checkout</span><span class="fb-refunded">Refund initiated</span></span></div>
             <div class="fb-row fb-r3"><b>Spot 3</b><span class="fb-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg><span class="fb-charged">$233 charged at checkout</span><span class="fb-refunded">Refund initiated</span></span></div>
           </div>
-          <div class="fb-note" id="fbDayNote">3 of 5 spots purchased</div>
+          <div class="fb-note" id="fbDayNote">3 of 5 spots funded</div>
         </article>
 
         <article class="fb-tile fb-mac" data-phase="0" data-loop="11000" style="--i:2">
           <h3>Real items, not points.</h3>
-          <p>When the last spot sells, BrandMyItem buys the item new at retail and ships it straight to the owner.</p>
+          <p>When the last spot funds, BrandMyItem buys the item new at retail and ships it straight to the owner.</p>
           <div class="fb-itemline"><b id="fbItemName">MacBook Pro 14&quot;</b><span id="fbItemMeta">$1,599 retail, 10 spots</span></div>
           <div class="fb-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg><span class="fb-funded">Fully funded. Purchase triggered.</span><span class="fb-shipped">Delivered pre-branded to the Owner</span></div>
           <div class="fb-stage" id="fbItemStage">
@@ -1900,7 +1914,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
             <div class="fb-option" data-k="1"><div class="fb-n">12</div><div><div class="fb-option-bar" style="width:66%"><i></i></div><small>months</small></div></div>
             <div class="fb-option" data-k="2"><div class="fb-n">18</div><div><div class="fb-option-bar"><i></i></div><small>months</small></div></div>
           </div>
-          <div class="fb-term-status"><span class="fb-term-first">Example: first spot sold</span><span class="fb-term-locked">12-month term locked</span></div>
+          <div class="fb-term-status"><span class="fb-term-first">Example: first spot funded</span><span class="fb-term-locked">12-month term locked</span></div>
         </article>
       </div>
     </section>
@@ -1909,8 +1923,8 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
       <div class="faq-group">
         <h3>For owners</h3>
         <div class="faq-grid">
-          <details class="faq"><summary>How does BrandMyItem work?<span class="x"></span></summary><div class="fa">You post a catalog item you want, and its surface is divided into advertising spots. Brands purchase those spots at fixed prices that together equal the listing's campaign total. Once every spot is purchased, BrandMyItem buys the item new at retail, produces and applies every placement, and ships the finished item directly to you. You never handle money at any point. Placements are permanent. Your side of the exchange is carrying the item in public and documenting it with check-in photos for the proof term you selected.</div></details>
-          <details class="faq"><summary>What do I commit to?<span class="x"></span></summary><div class="fa">Three things: keep every placement applied and unobstructed, use the item in ordinary public life, and submit one check-in photo per cycle for your proof term. The placements are permanent. The term, 6, 12, or 18 months, defines how long you document them. Term and cadence are chosen when you post and are locked from the moment the listing is published.</div></details>
+          <details class="faq"><summary>How does BrandMyItem work?<span class="x"></span></summary><div class="fa">You post a catalog item you want, and its surface is divided into sponsor spots. Brands fund those spots at fixed prices that together equal the listing total. Once every spot is funded, BrandMyItem buys the item new at retail, produces and applies every mark, and ships the finished item directly to you. You never handle money at any point. Marks are permanent. Your side of the exchange is carrying the item in public and documenting it with check-in photos for the proof term you selected.</div></details>
+          <details class="faq"><summary>What do I agree to?<span class="x"></span></summary><div class="fa">Three things: keep every placement applied and unobstructed, use the item in ordinary public life, and submit one check-in photo per cycle for your proof term. The placements are permanent. The term, 6, 12, or 18 months, defines how long you document them. Term and cadence are chosen when you post and are locked from the moment the listing is published.</div></details>
           <details class="faq"><summary>When does my item arrive?<span class="x"></span></summary><div class="fa">Every item is delivered within 60 days of its listing fully funding, with every placement produced and professionally applied by BrandMyItem before shipment. The item arrives finished. Your first check-in is due within 7 days of delivery. Items are purchased new and carry the manufacturer's warranty.</div></details>
           <details class="faq"><summary>What happens if I miss check-ins?<span class="x"></span></summary><div class="fa">A missed cycle places a public flag on your listing, and repeated misses restrict you from posting new listings. There are no financial penalties and the item is never taken back. Your performance record is simply public.</div></details>
           <details class="faq"><summary>Who owns the item?<span class="x"></span></summary><div class="fa">You do, from the day it is delivered. The placements, however, are permanent: you agree not to remove, cover, or alter them at any time. The proof term is the period during which you also document the item with check-ins, and the item may not be sold during it.</div></details>
@@ -1922,8 +1936,8 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
         <div class="faq-grid">
           <details class="faq"><summary>What does a brand receive?<span class="x"></span></summary><div class="fa">A permanent physical placement of your mark, applied as a sticker, patch, embroidery, or engraving, on a real item carried in public, plus a documented proof term: the purchase receipt, shipment confirmation, and every one of the owner's check-in photos for the term of the listing.</div></details>
           <details class="faq"><summary>How are spots priced?<span class="x"></span></summary><div class="fa">Every spot is priced by surface area: its share of the item's usable surface, applied to the listing's campaign total. Spot prices always sum to the campaign total exactly. The campaign total is the item's retail price plus a flat 40% service charge, which covers material production, professional application, fulfillment, and administration of the listing. The price shown on each spot is all-in, with no additional fees at checkout.</div></details>
-          <details class="faq"><summary>How does payment work?<span class="x"></span></summary><div class="fa">The full spot price is charged at checkout by card and processed by our payment provider. There are no invoices, deposits, or escrow arrangements. At checkout you also submit your production-ready logo file, brand name, work email, and destination link, which travel with the order through application.</div></details>
-          <details class="faq"><summary>What happens if a listing doesn't fully fund?<span class="x"></span></summary><div class="fa">Every listing has a 60-day funding window. If any spot remains unsold at day 60, every purchase on that listing is refunded in full to the original payment method, automatically, with refunds initiated within 5 business days. No request is required.</div></details>
+          <details class="faq"><summary>How does payment work?<span class="x"></span></summary><div class="fa">The full spot price is charged at checkout by card and processed by our payment provider. Your payment is held and fully refundable until the item funds. At checkout you also submit your production-ready logo file, brand name, work email, and destination link, which travel with the order through application.</div></details>
+          <details class="faq"><summary>What happens if a listing doesn't fully fund?<span class="x"></span></summary><div class="fa">Every listing has a 60-day funding window. If any spot remains open at day 60, every purchase on that listing is refunded in full to the original payment method, automatically, with refunds initiated within 5 business days. No request is required.</div></details>
           <details class="faq"><summary>What are the content requirements?<span class="x"></span></summary><div class="fa">You must hold the rights to any mark you submit, and files must be production-ready. We decline placements that are unlawful, adult, hateful, or in restricted categories such as tobacco and vaping, and any declined purchase is refunded in full. The complete standards are published in our Content Standards.</div></details>
         </div>
       </div>
@@ -1989,7 +2003,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           <div class="ios-group-head">Item & inventory</div>
           <div class="ios-box">
             <div class="ios-item ios-item-col">
-              <span class="ios-label">Exact item price</span>
+               <span class="ios-label">Item price</span>
               <div class="ios-pricerow">
                 <input class="ios-input-box" id="fItemMin" type="number" placeholder="Min">
                 <span style="color:var(--mfg)">&ndash;</span>
@@ -2003,7 +2017,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
               </div>
             </label>
             <label class="ios-item">
-              <span class="ios-label">Method</span>
+               <span class="ios-label">Branding method</span>
               <div class="ios-control">
                 <select class="ios-select" id="fMethod">
                   <option value="">Any</option>
@@ -2018,7 +2032,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           <div class="ios-group-head">Deal details</div>
           <div class="ios-box">
             <label class="ios-item">
-              <span class="ios-label">Commitment</span>
+               <span class="ios-label">Term</span>
               <div class="ios-control">
                 <select class="ios-select" id="fTerm">
                   <option value="">Any</option>
@@ -2204,11 +2218,11 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
                 </div>
                 <div class="sizing-panel" id="cuSizingPanel">
                   <div class="sizing-ready" id="cuSizingReady">
-                    <div class="sizing-ready-copy"><b>Finished sizing the ad spaces?</b><span>Lock the shapes, then set the price for every spot.</span></div>
+                    <div class="sizing-ready-copy"><b>Finished sizing the sponsor spots?</b><span>Lock the shapes, then set the price for every spot.</span></div>
                     <button class="btn btn-primary" id="cuCompleteSizing" type="button">Complete sizing</button>
                   </div>
                   <div id="cuSpotPricing" style="display:none">
-                    <div class="spot-pricing-head"><div><b>Price each ad space</b><span style="display:block">Every spot must add up to the full purchase goal.</span></div><button class="btn btn-secondary" id="cuEditSizing" type="button">Edit sizing</button></div>
+                    <div class="spot-pricing-head"><div><b>Price each sponsor spot</b><span style="display:block">Every spot must add up to the full purchase goal.</span></div><button class="btn btn-secondary" id="cuEditSizing" type="button">Edit sizing</button></div>
                     <div class="spot-price-grid" id="cuSpotPriceGrid"></div>
                     <div class="spot-pricing-total" id="cuSpotPriceTotal" role="status" aria-live="polite"></div>
                   </div>
@@ -2286,13 +2300,13 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
         </div></div>
         <div class="card details-card"><div class="card-h"><div><div class="card-t">Details</div><p class="details-subheadline">Branding application, item sales tax, shipping, and handling are included.</p></div></div>
         <div class="card-c" style="padding-top:8px">
-          <div class="fact"><span>Item ships</span><b>new, at 100% claimed</b></div>
-          <div class="fact"><span>Listing window</span><b>60 days, until completed or deleted</b></div>
+          <div class="fact"><span>Item ships</span><b>new, when fully funded</b></div>
+          <div class="fact"><span>Listing window</span><b>60 days, until funded or withdrawn</b></div>
           <div class="fact"><span>Check-in</span><b id="cadOut">monthly photo</b></div>
           <div class="fact"><span>Check-in term</span><b id="buildTermOut">12 months</b></div>
           <div class="fact"><span>Fulfillment</span><b id="buildFulfillmentOut">BrandMyItem applies branding</b></div>
-          <div class="fact"><span>Branded material</span><b id="buildMaterialOut">Adhesive sticker/decal applied by BrandMyItem</b></div>
-          <div class="total"><span class="t1">Goal when fully claimed</span><span class="t2" id="totalOut">$0</span></div>
+          <div class="fact"><span>Method</span><b id="buildMaterialOut">Sticker, applied by BrandMyItem</b></div>
+          <div class="total"><span class="t1">Campaign total</span><span class="t2" id="totalOut">$0</span></div>
         </div></div>
         <div class="card"><div class="card-h"><div class="card-t">Post it</div></div>
         <div class="card-c" style="padding-top:12px">
@@ -2300,10 +2314,13 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
              <div class="avatar-picker-head"><label class="label" for="avatarGrid">Choose your character</label></div>
              <div class="avatar-grid" id="avatarGrid" role="group" aria-label="Choose your character"></div>
            </div>
-          <div class="field"><label class="label" for="pName">Your name</label><input class="input" id="pName" placeholder="Cam"></div>
-          <div class="field"><label class="label" for="pMail">Email for purchases and shipping</label><input class="input" id="pMail" type="email" placeholder="you@email.com"></div>
+           <div class="field"><label class="label" for="pName">Your name</label><input class="input" id="pName" placeholder="Your name"></div>
+           <div class="field"><label class="label" for="pMail">Email for updates and shipping</label><input class="input" id="pMail" type="email" placeholder="you@email.com"></div>
           <div class="field"><label class="label" for="pAddress">Shipping address</label><input class="input" id="pAddress" type="text" autocomplete="street-address" placeholder="Street address, city, state, ZIP"></div>
-          <button class="btn btn-primary btn-full btn-lg" id="postBtn">Post my item live</button>
+           <p class="finetext tax-note">Items are taxable compensation. If the value is $2,000 or more, a Form 1099 is issued.</p>
+           <div class="w9-notice" id="w9Notice" hidden>Because this campaign total is $2,000 or more, we&rsquo;ll request a completed W-9 before payment is released.</div>
+           <label class="assent-row"><input type="checkbox" id="ownerAssent"><span>I&rsquo;m 18 or older and I agree to the <a href="legal.html#terms" target="_blank" rel="noopener">Terms of Use</a>, <a href="legal.html#content" target="_blank" rel="noopener">Content Standards</a>, and <a href="legal.html#checkins" target="_blank" rel="noopener">Check-in Policy</a>.</span></label>
+           <button class="btn btn-primary btn-full btn-lg" id="postBtn" disabled>Post my item live</button>
         </div></div>
       </div>
     </div>
@@ -2382,7 +2399,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 
         <article class="ap-detail-panel">
           <h3>The item</h3>
-          <p>One real item, selected by the owner and purchased new when the campaign funds.</p>
+          <p>One real item, selected by the owner and purchased new when the listing funds.</p>
           <div class="ap-item-meta">
             <div><span>Brand</span><b id="iItemBrand">Not provided</b></div>
             <div><span>Color</span><b id="iItemColor">Not provided</b></div>
@@ -2391,7 +2408,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           <table class="ap-table">
             <tbody>
               <tr><td>Retail reference</td><td id="iItemRetail">Not provided</td></tr>
-              <tr><td>Delivery state</td><td id="iShips">new, at 100% claimed</td></tr>
+              <tr><td>Delivery state</td><td id="iShips">new, waiting for full funding</td></tr>
               <tr><td>Branding material</td><td id="iMaterial">Item-specific branding</td></tr>
             </tbody>
           </table>
@@ -2430,10 +2447,19 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
   <div class="wrap-narrow" style="max-width:640px">
     <div class="card" style="margin:0 0 24px">
       <div class="card-c" style="padding:22px">
-        <p class="finetext" style="margin:0 0 14px;color:#6e6e73">Use the email connected to your item or logo placement.</p>
-        <div class="field"><label class="label" for="tkMail">Email</label><input class="input" id="tkMail" type="email" placeholder="you@brand.com"></div>
-        <button class="btn btn-primary btn-full btn-lg" id="tkBtn" type="button">Track everything</button>
+        <p class="finetext" style="margin:0 0 14px;color:#6e6e73">Use the email on your listing or your spot purchase.</p>
+        <div class="field"><label class="label" for="tkMail">Email</label><input class="input" id="tkMail" type="email" placeholder="you@email.com"></div>
+        <button class="btn btn-primary btn-full btn-lg" id="tkBtn" type="button">Email me a one-time link</button>
         <p class="finetext" id="tkErr" style="display:none;color:#B23327;margin-top:10px"></p>
+        <p class="finetext track-magic-confirm" id="tkMagicConfirm" style="display:none">Check your inbox — we sent a one-time link.</p>
+      </div>
+    </div>
+    <div class="card" style="margin:0 0 24px">
+      <div class="card-c" style="padding:22px">
+        <div class="track-preview-title">Your tracking view</div>
+        <div class="track-preview-steps" aria-label="Tracking stages">
+          <span>Funded</span><i></i><span>Branded</span><i></i><span>Shipped</span><i></i><span>Check-ins</span>
+        </div>
       </div>
     </div>
     <div id="tkResult" style="display:none;margin-bottom:60px"></div>
@@ -2443,9 +2469,9 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 <footer class="site-footer">
   <div class="fwrap">
     <div class="fine">
-      <p>* Advertising spots are priced by surface share and always sum exactly to the listing's stated campaign total. Every spot is charged in full at checkout. If a listing is not fully funded within its 60-day funding window, every purchase on it is refunded automatically to the original payment method, with refunds initiated within 5 business days; no request is required. Once a listing is fully funded, BrandMyItem purchases the item new at retail, produces and professionally applies every placement, and delivers the finished item to the owner within 60 days of funding. Owners never receive, hold, or handle money, and never source or apply placement materials. Placements are permanent once applied. The owner selects the proof term (6, 12, or 18 months of check-ins) and check-in cadence (weekly, biweekly, or monthly) when posting; both are locked from the moment the listing is published and cannot be changed. The owner's first check-in is due within 7 days of delivery. Missed check-ins result in a public flag and, if continued, restriction from posting new listings; there are no financial penalties. Items are purchased new and carry the manufacturer's warranty. Spot availability is first come, first served, while spots last.</p>
+      <p>* Advertising spots are priced by surface share and always sum exactly to the listing's stated campaign total. Every spot is charged in full at checkout. If a listing is not fully funded within its 60-day funding window, every purchase on it is refunded automatically to the original payment method, with refunds initiated within 5 business days; no request is required. Once a listing is fully funded, BrandMyItem purchases the item new at retail, produces and professionally applies every placement, and delivers the finished item to the owner within 60 days of funding. Owners never receive, hold, or handle money, and never source or apply placement materials. Placements are permanent once applied. The owner selects the proof term (6, 12, or 18 months of check-ins) and check-in cadence (weekly, biweekly, or monthly) when posting; both are locked when the listing is published and cannot be changed. The owner's first check-in is due within 7 days of delivery. Missed check-ins result in a public flag and, if continued, restriction from posting new listings; there are no financial penalties. Items are purchased new and carry the manufacturer's warranty. Spot availability is first come, first served, while spots last. Placements are paid advertising, not endorsements by the owner.</p>
       <p>Owners who post about their item on social media must clearly and conspicuously disclose their material connection to sponsoring brands in accordance with the FTC Endorsement Guides. Brands represent that they hold all rights to any mark they submit and grant IRLi LLC a limited license to reproduce it on the purchased spot and to display the owner's check-in photos publicly; no other use is licensed. Placements that are unlawful, infringing, or within restricted categories are declined and refunded in full. Receiving an item may constitute taxable income; each party is responsible for its own taxes, and required tax forms are issued where the law requires. Product and manufacturer names shown in listings identify the item only; BrandMyItem and its listings are not sponsored by, endorsed by, or affiliated with any item manufacturer, and all third-party marks belong to their respective owners. Use of the Service is governed by the Terms of Use, which include a binding individual arbitration agreement and class action waiver, with a 30-day opt-out.</p>
-      <p>BrandMyItem is operated by IRLi LLC, a California limited liability company, Newport Beach, California. BrandMyItem is a marketplace for physical advertising placements; it is not a bank, money transmitter, payment processor, escrow service, crowdfunding platform, lender, or investment of any kind. Legal notices: legal@brandmyitem.com. Privacy requests: privacy@brandmyitem.com.</p>
+      <p>BrandMyItem is operated by IRLi LLC, a California limited liability company, Newport Beach, California. BrandMyItem is a marketplace for physical advertising placements; it is not a bank, money transmitter, payment processor, escrow service, crowdfunding platform, lender, or investment of any kind. Avatars by pack author, CC BY 4.0. Legal notices: legal@brandmyitem.com. Privacy requests: privacy@brandmyitem.com.</p>
     </div>
 
     <hr>
@@ -2457,10 +2483,12 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           <li><a href="#dashboard">Laptops</a></li>
           <li><a href="#dashboard">Phones</a></li>
           <li><a href="#dashboard">Luggage</a></li>
-          <li><a href="#dashboard">Golf bags</a></li>
+          <li><a href="#dashboard">Audio</a></li>
+          <li><a href="#dashboard">Bags</a></li>
+          <li><a href="#dashboard">Golf</a></li>
           <li><a href="#dashboard">Coolers &amp; bottles</a></li>
-          <li><a href="#dashboard">Bags &amp; backpacks</a></li>
-          <li><a href="#dashboard">The full catalog</a></li>
+          <li><a href="#dashboard">Sports</a></li>
+          <li><a href="#dashboard">Style</a></li>
         </ul>
       </div>
       <div>
@@ -2489,7 +2517,6 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           <li><a href="#home">The story</a></li>
           <li><a href="#home-faq">FAQ</a></li>
           <li><a href="#home">Contact</a></li>
-          <li><a href="https://x.com/imce0bitch" target="_blank" rel="noopener">Cam on X</a></li>
         </ul>
       </div>
       <div>
@@ -2513,7 +2540,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
         <a href="legal.html#terms">Terms of Use</a>
         <a href="legal.html#privacy">Privacy Policy</a>
         <a href="legal.html#refunds">Refund Policy</a>
-        <a href="legal.html">Legal</a>
+        <a href="#home">Contact</a>
       </div>
       <div>United States</div>
     </div>
@@ -2546,10 +2573,11 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
       <div class="field"><label class="label" for="mBrand">Brand name</label><input class="input" id="mBrand" placeholder="Acme"></div>
       <div class="field"><label class="label" for="mMail">Work email</label><input class="input" id="mMail" type="email" placeholder="you@brand.com"></div>
       <div class="field"><label class="label" for="mLink">Link, optional</label><input class="input" id="mLink" placeholder="https://"></div>
-       <div class="card" style="border-radius:14px;margin-bottom:2px"><div class="card-c" style="padding:12px 14px"><div class="fact"><span>Total today</span><b id="mTotal"></b></div><p class="finetext" style="margin-top:8px">Includes branding application, item sales tax, shipping, and handling.</p></div></div>
+       <div class="card" style="border-radius:14px;margin-bottom:2px"><div class="card-c" style="padding:12px 14px"><div class="fact"><span>Total today</span><b id="mTotal"></b></div><p class="finetext" style="margin-top:8px">All-in purchase total, including branding application, item sales tax, shipping, and handling.</p></div></div>
+       <label class="assent-row"><input type="checkbox" id="brandAssent"><span>I agree to the <a href="legal.html#terms" target="_blank" rel="noopener">Terms of Use</a> and <a href="legal.html#content" target="_blank" rel="noopener">Content Standards</a>. I confirm I own or control the rights to this mark.</span></label>
       <div class="mrow">
         <button class="btn btn-outline" id="mCancel">Cancel</button>
-        <button class="btn btn-primary" id="mNext">Continue to secure checkout</button>
+         <button class="btn btn-primary" id="mNext" disabled>Continue to secure checkout</button>
       </div>
       <p class="finetext">Your logo is the handoff: once the item fully funds, the owner downloads it and produces the approved branding from your exact file. No back and forth needed.</p>
     </div>
@@ -6576,7 +6604,6 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 </script>
 
 <script>
-console.log('BMI BUILD 57');
 var T=window.THREE;
 /* --- STATE --- */
 var mem={};
@@ -6635,32 +6662,32 @@ function pad(n){return n<10?'0'+n:''+n}
 
 var AUCTION_DAYS=60;
 var CATS=[
-  {id:'All',item:null},{id:'Tech',item:'macbook'},{id:'Carry',item:'weekender'},
-  {id:'Event',item:'cooler'},{id:'Hydration',item:'bottle'},{id:'Travel',item:'case'},
-  {id:'Sports',item:'paddle'},{id:'Style',item:'suit'}
+  {id:'All',item:null},{id:'Tech',item:'macbook'},{id:'Audio',item:'headphones'},
+  {id:'Travel',item:'case'},{id:'Bags',item:'weekender'},{id:'Golf',item:'golfbag'},
+  {id:'Coolers',item:'cooler'},{id:'Sports',item:'paddle'},{id:'Style',item:'suit'}
 ];
 var ITEMS={
   macbook:{label:'MacBook Pro',brand:'Apple',color:'Silver',cat:'Tech',retail:1599,maxSlots:10,surf:[28,18],verified:'2026-08-29',source:'https://www.apple.com/macbook-pro/specs/',
     specs:[['Model','14-inch MacBook Pro (M5)'],['Chip','Apple M5 — 10-core CPU, 10-core GPU'],['Memory','16GB unified memory'],['Storage','512GB SSD'],['Color','Silver'],['Display','14.2-inch Liquid Retina XDR — 3024×1964'],['Battery','72.4Wh lithium-polymer'],['Ports','3× Thunderbolt 4, HDMI, SDXC, MagSafe 3'],['Dimensions','12.31 × 8.71 × 0.61 in'],['Weight','3.4 lb']]},
-  iphone:{label:'iPhone 17 Pro',brand:'Apple',color:'Silver',cat:'Tech',retail:1099,maxSlots:5,surf:[7,15],verified:'2026-08-29',source:'https://support.apple.com/en-us/125090',
-    specs:[['Chip','A19 Pro'],['Storage','256GB'],['Color','Silver'],['Display','6.3-inch Super Retina XDR OLED — 2622×1206'],['Camera','48MP Fusion Pro camera system'],['Build','Aluminum unibody, Ceramic Shield 2 front'],['Dimensions','5.91 × 2.83 × 0.34 in'],['Weight','7.27 oz (206 g)']]},
-  cooler:{label:'Tundra 45 Hard Cooler',brand:'YETI',color:'White',cat:'Event',retail:325,maxSlots:4,surf:[45,30],verified:'2026-08-29',source:'https://www.yeti.com/coolers/hard-coolers/tundra/tundra-45.html',
+  iphone:{label:'iPhone 17',brand:'Apple',color:'Silver',cat:'Tech',retail:829,maxSlots:5,surf:[7,15],verified:'2026-08-29',source:'https://www.apple.com/iphone-17/specs/',
+    specs:[['Chip','A19'],['Storage','256GB'],['Color','Silver'],['Display','6.3-inch Super Retina XDR OLED'],['Camera','48MP Dual Fusion camera system'],['Build','Aluminum design, Ceramic Shield 2 front'],['Dimensions','5.93 × 2.81 × 0.31 in'],['Weight','6.24 oz (177 g)']]},
+  cooler:{label:'Tundra 45 Hard Cooler',brand:'YETI',color:'White',cat:'Coolers',retail:325,maxSlots:4,surf:[45,30],verified:'2026-08-29',source:'https://www.yeti.com/coolers/hard-coolers/tundra/tundra-45.html',
     specs:[['Model','Tundra 45'],['Capacity','45 size'],['Color','White'],['Construction','Rotomolded FatWall design'],['Insulation','PermaFrost polyurethane foam'],['Hardware','T-Rex lid latches, DoubleHaul handles'],['Outside','25.5 × 15.9 × 15.5 in'],['Empty weight','24.6 lb'],['Certification','IGBC bear-resistant when locked']]},
-  bottle:{label:'Quencher H2.0 FlowState Tumbler',brand:'Stanley 1913',color:'Cream 2.0',cat:'Hydration',retail:45,maxSlots:4,surf:[20,16],verified:'2026-08-29',source:'https://www.stanley1913.com/products/quencher-h2-0-flowstate-tumbler-40-oz',
+  bottle:{label:'Quencher H2.0 FlowState Tumbler',brand:'Stanley 1913',color:'Cream 2.0',cat:'Coolers',retail:45,maxSlots:4,surf:[20,16],verified:'2026-08-29',source:'https://www.stanley1913.com/products/quencher-h2-0-flowstate-tumbler-40-oz',
     specs:[['Capacity','40 oz'],['Color','Cream 2.0'],['Material','90% recycled 18/8 stainless steel'],['Insulation','Double-wall vacuum insulation'],['Lid','3-position FlowState lid with reusable straw'],['Fit','Car cupholder compatible'],['Care','Dishwasher safe'],['Dimensions','5.82 × 3.74 × 12.03 in'],['Weight','1.43 lb']]},
   case:{label:'Original Cabin',brand:'RIMOWA',color:'Silver',cat:'Travel',retail:1550,maxSlots:8,surf:[34,46],verified:'2026-08-29',source:'https://www.rimowa.com/us/en/luggage/colour/silver/cabin/92553004.html',
     specs:[['Collection','Original'],['Size','Cabin — 21.7 × 15.8 × 9.1 in'],['Shell','High-end anodized aluminum'],['Color','Silver'],['Volume','35 L'],['Weight','9.5 lb (4.3 kg)'],['Wheels','RIMOWA Multiwheel system'],['Interior','Height-adjustable Flex Divider'],['Lock','TSA-approved locks'],['Guarantee','Lifetime guarantee']]},
-  headphones:{label:'AirPods Max 2',brand:'Apple',color:'Midnight',cat:'Tech',retail:549,maxSlots:2,surf:[8,8],verified:'2026-08-29',source:'https://www.apple.com/airpods-max/specs/',
+  headphones:{label:'AirPods Max 2',brand:'Apple',color:'Midnight',cat:'Audio',retail:549,maxSlots:2,surf:[8,8],verified:'2026-08-29',source:'https://www.apple.com/airpods-max/specs/',
     specs:[['Type','Wireless over-ear headphones'],['Color','Midnight'],['Audio','Active Noise Cancellation, Adaptive Audio, Transparency'],['Connection','USB-C, Bluetooth 5.3'],['Battery','Up to 20 hours'],['Controls','Digital Crown and noise control button'],['Dimensions','7.37 × 6.64 × 3.28 in'],['Weight','13.6 oz (386.2 g)'],['Case','Smart Case included']]},
-  golfbag:{label:'Deluxe Carry Stand Bag',brand:'PXG',color:'White / Black',cat:'Sports',retail:325,maxSlots:5,surf:[60,25],verified:'2026-08-29',source:'https://www.pxg.com/products/deluxe-carry-stand-bag',
+  golfbag:{label:'Deluxe Carry Stand Bag',brand:'PXG',color:'White / Black',cat:'Golf',retail:325,maxSlots:5,surf:[60,25],verified:'2026-08-29',source:'https://www.pxg.com/products/deluxe-carry-stand-bag',
     specs:[['Type','Deluxe carry stand golf bag'],['Color','White / Black'],['Top','4-way top'],['Storage','13 total pockets'],['Base','Magnetic stand feet'],['Carry','Padded dual carry straps'],['Protection','Lined valuables and rangefinder pockets']]},
-  weekender:{label:'Keepall Bandoulière',brand:'Louis Vuitton',color:'Monogram Canvas',cat:'Carry',retail:2800,maxSlots:3,surf:[40,22],verified:'2026-08-29',source:'https://us.louisvuitton.com/eng-us/men/bags/all-bags/keepall/_/N-t1uezqf4-ak1bl19y8',
+  weekender:{label:'Keepall Bandoulière',brand:'Louis Vuitton',color:'Monogram Canvas',cat:'Bags',retail:2800,maxSlots:3,surf:[40,22],verified:'2026-08-29',source:'https://us.louisvuitton.com/eng-us/men/bags/all-bags/keepall/_/N-t1uezqf4-ak1bl19y8',
     specs:[['Model','Keepall Bandoulière'],['Canvas','Monogram coated canvas'],['Trim','Cowhide-leather trim'],['Lining','Textile lining'],['Color','Monogram Canvas'],['Dimensions','Size-specific official dimensions'],['Hardware','Silver-color hardware'],['Carry','Removable, adjustable strap with shoulder patch'],['Origin','Made in France, Spain, Italy, or USA']]},
   paddle:{label:'Pro V Paddle',brand:'JOOLA',color:'Blaze Red (Ben Johns)',cat:'Sports',retail:299.95,maxSlots:2,surf:[20,25],verified:'2026-08-29',source:'https://joola.com/collections/pro-v',
     specs:[['Series','Pro V'],['Model','Perseus Pro V'],['Core thickness','16mm'],['Surface','Textured carbon-fiber face'],['Shape','Elongated'],['Color','Blaze Red (Ben Johns)'],['Dimensions','Model-specific official dimensions'],['Certification','USAP PBCoR .43 certified']]},
   suit:{label:'Luxury Twill O’Connor Tuxedo',brand:'Tom Ford',color:'Black',cat:'Style',retail:7490,maxSlots:4,surf:[40,50],verified:'2026-08-29',source:'https://www.tomfordfashion.com/en-us/luxury-twill-oconnor-tuxedo/2EYPT1-WOS09X5N.html',
     specs:[['Style','O’Connor tuxedo'],['Lapel','Peak lapel with satin trim'],['Fabric','15-micron luxury twill — 100% wool'],['Color','Black'],['Jacket','Single-breasted with double vent'],['Trousers','Matching trousers with satin side stripe'],['Jacket length','75.5 cm'],['Hem','19 cm'],['Origin','Made in Italy'],['Care','Professional dry clean']]},
-  backpack:{label:'Search Backpack',brand:'TUMI',color:'Black',cat:'Carry',retail:850,maxSlots:4,surf:[35,45],verified:'2026-08-29',source:'https://www.tumi.com/p/search-backpack-01470531041/',
+  backpack:{label:'Search Backpack',brand:'TUMI',color:'Black',cat:'Bags',retail:850,maxSlots:4,surf:[35,45],verified:'2026-08-29',source:'https://www.tumi.com/p/search-backpack-01470531041/',
     specs:[['Collection','Alpha Bravo'],['Material','Smooth leather'],['Color','Black'],['Laptop','Padded compartment fits up to 15-inch screens'],['Storage','Main compartment, front zip pocket, side zip pockets'],['Carry','Top handle, padded mesh back panel, adjustable shoulder straps'],['Add-a-Bag','Sleeve for securing to luggage'],['Dimensions','43H × 21D × 35.5W cm'],['Weight','1.832 kg'],['Warranty','Limited five-year global warranty']]}
 };
 var BRANDING_METHODS={
@@ -6681,10 +6708,10 @@ function brandingMaterial(type){
   var method=brandingMethod(type),label=method.charAt(0).toUpperCase()+method.slice(1);
   return label+' applied by BrandMyItem';
 }
-var HAB_BY_CAT={Tech:['Coffee shops','Office'],Event:['Events'],Hydration:['Gym'],Travel:['Airport'],Carry:['Campus','Office']};
+var HAB_BY_CAT={Tech:['Coffee shops','Office'],Audio:['Coffee shops','Office'],Coolers:['Events','Gym'],Travel:['Airport'],Bags:['Campus','Office'],Golf:['Golf courses'],Sports:['Gym','Events'],Style:['Office','Events']};
 var ITEM_VARIANTS={
   macbook:{colors:[['Silver','#E3E3E6'],['Space Black','#3A3A3C']],sizeLabel:'Size',sizeQ:'Pick your screen size.',sizes:[['14"',0,{Model:'14-inch MacBook Pro (M5)',Chip:'Apple M5 — 10-core CPU, 10-core GPU',Memory:'16GB unified memory',Storage:'512GB SSD',Display:'14.2-inch Liquid Retina XDR — 3024×1964',Battery:'72.4Wh lithium-polymer',Ports:'3× Thunderbolt 4, HDMI, SDXC, MagSafe 3',Dimensions:'12.31 × 8.71 × 0.61 in',Weight:'3.4 lb'}],['16"',900,{Model:'16-inch MacBook Pro (M5 Pro)',Chip:'Apple M5 Pro — 15-core CPU, 16-core GPU',Memory:'24GB unified memory',Storage:'512GB SSD',Display:'16.2-inch Liquid Retina XDR — 3456×2234',Battery:'100Wh lithium-polymer',Ports:'3× Thunderbolt 5, HDMI, SDXC, MagSafe 3',Dimensions:'14.01 × 9.77 × 0.66 in',Weight:'4.7 lb'}]]},
-  iphone:{colors:[['Silver','#E7E5E1'],['Cosmic Orange','#C96737'],['Deep Blue','#34465C']],sizeLabel:'Storage',sizeQ:'How much space do you need?',sizes:[['256GB',0,{Storage:'256GB'}],['512GB',200,{Storage:'512GB'}],['1TB',400,{Storage:'1TB'}]]},
+  iphone:{colors:[['Silver','#E7E5E1'],['Cosmic Orange','#C96737'],['Deep Blue','#34465C']],sizeLabel:'Storage',sizeQ:'How much space do you need?',sizes:[['256GB',0,{Storage:'256GB'}],['512GB',200,{Storage:'512GB'}]]},
   cooler:{colors:[['White','#F2F2F2'],['Navy','#263852'],['Charcoal','#454548'],['Tan','#B7A17E']],sizeLabel:'Size',sizeQ:'Choose the official Tundra size.',sizes:[['Tundra 35',-50,{Model:'Tundra 35',Capacity:'35 size'}],['Tundra 45',0,{Model:'Tundra 45',Capacity:'45 size'}],['Tundra 65',50,{Model:'Tundra 65',Capacity:'65 size'}]]},
   bottle:{colors:[['Cream 2.0','#EDE6DC'],['Black 2.0','#252527'],['Rose Quartz 2.0','#D98A93'],['Frost','#D9DBDD']],sizeLabel:'Size',sizeQ:'Pick your capacity.',sizes:[['30 oz',-10,{Capacity:'30 oz'}],['40 oz',0,{Capacity:'40 oz'}]]},
   case:{colors:[['Silver','#C7C9CC'],['Black','#26262A'],['Titanium','#8B8D90']],sizeLabel:'Size',sizeQ:'Official Original Cabin configuration.',sizes:[['Cabin',0]]},
@@ -6723,6 +6750,8 @@ var ITEM_VARIANTS={
   ]},
   backpack:{colors:[['Black','#26262A']],sizeLabel:'Size',sizeQ:'One official 43 cm size.',sizes:[['43 cm',0]]}
 };
+/* One runtime registry keeps catalog identity, taxonomy, pricing, methods, options, and specs together. */
+var CATALOG={items:ITEMS,categories:CATS,methods:BRANDING_METHODS,variants:ITEM_VARIANTS};
 var SIZE_TIERS=[[0.19,'Small'],[0.28,'Medium'],[1,'Large']];
 var HABITATS=['Campus','Coffee shops','Gym','Office','Airport','Events'];
 var FREQS=['Daily','Few times a week','Weekly','Occasionally'];
@@ -6878,8 +6907,9 @@ function lockLaunchExamples(){
   });
 }
 lockLaunchExamples();
+var DEMO_VIEW=new URLSearchParams(location.search).get('demo')==='1';
 function isLaunchLiveCampaign(l){
-  return !!(l&&!isDemoListing(l));
+  return !!(l&&(!isDemoListing(l)||DEMO_VIEW));
 }
 function removePrelaunchTestCampaigns(){
   DB.listings=(DB.listings||[]).filter(function(l){
@@ -6968,7 +6998,13 @@ async function hydratePublicCampaigns(){
   return campaigns;
 }
 async function backfillLocalCampaigns(){
-  var local=(DB.listings||[]).filter(function(listing){return !isDeletedCampaign(listing)&&isLaunchLiveCampaign(listing)});
+  var local=(DB.listings||[]).filter(function(listing){
+    var email=String(listing.mail||'').trim();
+    var itemType=String(listing.sourceType||listing.type||'').trim();
+    return !isDeletedCampaign(listing)&&isLaunchLiveCampaign(listing)&&
+      itemType&&String(listing.owner||'').trim()&&/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)&&
+      Array.isArray(listing.prices)&&listing.prices.length;
+  });
   await Promise.all(local.map(async function(listing){
     var presentation=await durableCampaignPresentation(listing);
     var response=await fetch('/api/campaigns',{
@@ -6978,6 +7014,7 @@ async function backfillLocalCampaigns(){
         id:listing.id,itemType:listing.sourceType||listing.type,title:LBLL(listing),
         ownerName:listing.owner,ownerEmail:listing.mail,
         pricesCents:listing.prices.map(function(price){return Math.round(spotPurchaseTotal(listing,price)*100)}),
+        ownerAssent:{accepted:true,termsVersion:'2026-09-04',contentVersion:'2026-09-04',checkinVersion:'2026-09-04'},
         presentation:presentation
       })
     });
@@ -7069,10 +7106,8 @@ if(HAS_CLOUD){
     cloudPush();
     if(changed){try{route()}catch(e){}}
     setTimeout(cloudLoop,8000);
-    console.log('BMI shared database: LIVE (synced for every viewer)');
   });
 }else{
-  console.log('BMI shared database: unavailable here, running local-only');
 }
 function logAct(txt,meta){
   var event={txt:txt,ts:Date.now()};
@@ -7313,7 +7348,7 @@ function renderSpotMap_DEAD(el,st,opts){
     var c=st.claims?st.claims[i]:null;
     var price=c?c.amt:st.prices[i];
     var meta=slotMeta(type,count,i);
-    html+='<div class="spotcell '+(c?'sold':'open')+'" data-i="'+i+'">';
+     html+='<div class="spotcell '+(c?'funded':'open')+'" data-i="'+i+'">';
     if(!c)html+='<div class="hourglass">OPEN</div>';
     html+='<div class="slogo">'+(c?(c.logo?'<img src="'+c.logo+'">':monoTile(c.brand)):'<div class="mono" style="background:transparent;box-shadow:none;color:#A1A1AA;font-size:26px">+</div>')+'</div>';
     html+='<div class="sname">'+(c?c.brand:meta.pos)+'</div>';
@@ -7482,7 +7517,6 @@ function logoMesh(k){
   m.position.set(spec.x,spec.y,spec.z);
   return m;
 }
-console.log('BMI BUILD 57 | photos: '+Object.keys(ITEM_PHOTOS).length+' | T:'+(!!T));
 
 /* AI-generated GLB meshes from the catalog photos (Higgsfield image-to-3D).
    Paste each item's .glb URL as jobs finish; the site swaps them in automatically
@@ -7491,7 +7525,6 @@ console.log('BMI BUILD 57 | photos: '+Object.keys(ITEM_PHOTOS).length+' | T:'+(!
 var MESH_ROT={macbook:Math.PI};
 var MESH_B64={}; /* 3D retired; meshes removed build 41 */
 
-console.log('BMI BUILD 57 | meshes embedded: '+Object.keys(MESH_B64).length);
 
 
 var MESHES={};
@@ -8183,7 +8216,7 @@ function featuredOf(type){
 }
 function homeLiveRows(){
   var groups=[];
-  DB.listings.forEach(function(l){
+  DB.listings.filter(isLaunchLiveCampaign).forEach(function(l){
     var group=[];
     (l.claims||[]).forEach(function(c,i){
       if(!c)return;
@@ -8207,7 +8240,7 @@ function renderLiveFeed(feedId){
   if(!feed)return;
   var rows=homeLiveRows();
   if(!rows.length){
-    feed.innerHTML='<div class="empty" style="border:0;border-radius:0;padding:22px">The first campaign update will appear here when a listing goes live.</div>';
+    feed.innerHTML='<div class="empty" style="border:0;border-radius:0;padding:22px">The first listing update will appear here when an item goes live.</div>';
     return;
   }
   function itemHtml(row){
@@ -8216,9 +8249,9 @@ function renderLiveFeed(feedId){
     return '<a class="home-activity-item" href="#item/'+row.l.id+'" title="'+label+'">'+
       '<span class="home-activity-brand" aria-label="'+brand+'">'+brandMark+'</span>'+
       '<span class="home-activity-name">'+brand+'</span>'+
-      '<span class="home-activity-action">bought <b>'+money(row.c.amt||row.l.prices[0])+'</b></span>'+
+      '<span class="home-activity-action">funded <b>'+money(row.c.amt||row.l.prices[0])+' spot</b></span>'+
       '<span class="home-activity-product">'+(photo?'<img src="'+photo+'" alt="">':'')+'<span>'+label+'</span></span>'+
-      '<span class="home-activity-time">'+ago(row.ts)+'</span>'+
+      '<span class="home-activity-static">Example activity</span>'+
     '</a>';
   }
   var tickerRows=rows.map(itemHtml).join('');
@@ -9094,7 +9127,9 @@ function showBuild(){
   cuPickTemplate(B.type);
   document.getElementById('slotMinus').onclick=function(){if(B.slots>1){B.slots--;B.prices=suggest(B.type,B.slots);refreshBuild();cuRepart()}};
   document.getElementById('slotPlus').onclick=function(){var cap=CU.template?tmplMax(CU.template):(CU.closed?8:ITEMS[B.type].maxSlots);if(B.slots<cap){B.slots++;if(!CU.template)B.prices=suggest(B.type,B.slots);refreshBuild();cuRepart()}};
-  document.getElementById('postBtn').onclick=postListing;cuInit();
+  var ownerAssent=document.getElementById('ownerAssent'),postBtn=document.getElementById('postBtn');
+  ownerAssent.onchange=function(){postBtn.disabled=!ownerAssent.checked};
+  postBtn.onclick=postListing;cuInit();
   (function(){
     document.getElementById('itemPick').style.display='';
     var bm=document.getElementById('buildMap');
@@ -9113,6 +9148,7 @@ function refreshBuild(){
   B.brandingMode='assisted';
   var fulfillmentOut=document.getElementById('buildFulfillmentOut');if(fulfillmentOut)fulfillmentOut.textContent='BrandMyItem applies branding';
   var materialOut=document.getElementById('buildMaterialOut');if(materialOut)materialOut.textContent=brandingMaterial(B.type);
+  var w9Notice=document.getElementById('w9Notice');if(w9Notice)w9Notice.hidden=goalOf({prices:B.prices,pricesIncludeMarkup:true})<2000;
   setBuildChoiceCards('term',B.termMonths||12);setBuildChoiceCards('checkinFrequency',B.checkinFrequency||'monthly');
   renderSpotMap(document.getElementById('buildMap'),{type:B.type,slots:B.slots,prices:B.prices,claims:null},
     {mode:'edit',onPrice:function(i,v){B.prices[i]=v;totals()}});
@@ -9779,7 +9815,7 @@ function cuInit(){
   document.getElementById('cuRetail').onchange=function(){cuRepart()};
   document.getElementById('cuCompleteSizing').onclick=function(){
     if(CU.tracing||CU.poly.length){toast('Finish or cancel the current trace first');return}
-    if(!CU.tiles.length){toast('Add at least one ad space before completing sizing');return}
+    if(!CU.tiles.length){toast('Add at least one sponsor spot before completing sizing');return}
     CU.sizingComplete=true;CU.sel=-1;CU.prices=boxPrices();B.prices=CU.prices.slice();
     selUI();cuPricingUI();cuDraw();totals();
   };
@@ -10035,12 +10071,13 @@ async function postListing(){
   var address=document.getElementById('pAddress').value.trim();
   var purpose=String(B.purpose||'').trim();
   if(!name||!mail||!address){toast('Add your name, email, and shipping address to post');return}
+  if(!document.getElementById('ownerAssent').checked){toast('Agree to the owner terms before posting');return}
   if(purpose.length>500){toast('Purpose of the item must be 500 characters or fewer');return}
   if(!B.avatar){toast('Select a character before posting');return}
   if(DB.listings.some(function(existing){return existing.ownerRestricted&&existing.mail&&existing.mail.toLowerCase()===mail.toLowerCase()})){
     toast('This owner is restricted from posting after missed check-ins');return;
   }
-  if(CU.tiles.length&&!CU.sizingComplete){toast('Complete sizing and price every ad space before posting');return}
+  if(CU.tiles.length&&!CU.sizingComplete){toast('Complete sizing and price every sponsor spot before posting');return}
   if(CU.sizingComplete){
     var pricingGoal=markedUpRetail(document.getElementById('cuRetail').value||'100');
     if(CU.prices.length!==CU.tiles.length||CU.prices.some(function(price){return !price||price<1})||cuSpotPriceTotal()!==pricingGoal){
@@ -10095,7 +10132,7 @@ async function postListing(){
     l={id:uid(),type:'custom',sourceType:CU.template||null,custom:true,photo:CU.faces[0].photo,faces:facesOut,tiles:CU.faces[0].tiles,
       retail:retail,itemName:(CU.template&&ITEMS[CU.template]?ITEMS[CU.template].label:(mdl||'Item')),title:mdl||null,owner:name,mail:mail,avatar:B.avatar,habs:B.habs.slice(),cities:B.cities.slice(),universities:B.universities.slice(),purpose:purpose,freq:B.freq,social:B.social,color:B.color,socialLinks:Object.assign({},B.socialLinks),slots:flatTiles.length,
       prices:prices,pricesIncludeMarkup:true,claims:prices.map(function(){return null}),created:Date.now(),postedAt:Date.now(),unsoldTimeoutDays:60,
-      termMonths:selectedTerm,checkinFrequency:B.checkinFrequency||'monthly',termLocked:false,brandingMode:selectedBranding,status:'live',shipping:{name:name,address:address}};
+       termMonths:selectedTerm,checkinFrequency:B.checkinFrequency||'monthly',termLocked:true,termLockedAt:Date.now(),brandingMode:selectedBranding,status:'live',shipping:{name:name,address:address}};
     CU.faces=[];cuFaceChips();
   }else{
     var standardRetail=variantRetail(B.type,B.variantSize),standardGoal=markedUpRetail(standardRetail);
@@ -10106,7 +10143,7 @@ async function postListing(){
     }
     l={id:uid(),type:B.type,itemName:ITEMS[B.type].label,owner:name,mail:mail,avatar:B.avatar,habs:B.habs.slice(),cities:B.cities.slice(),universities:B.universities.slice(),purpose:purpose,freq:B.freq,social:B.social,color:B.color,variantModel:B.variantModel,variantSize:B.variantSize,retail:variantRetail(B.type,B.variantSize),source:ITEMS[B.type].source,verified:ITEMS[B.type].verified,socialLinks:Object.assign({},B.socialLinks),slots:B.slots,
       prices:standardPrices,pricesIncludeMarkup:true,claims:standardPrices.map(function(){return null}),created:Date.now(),postedAt:Date.now(),unsoldTimeoutDays:60,
-      termMonths:selectedTerm,checkinFrequency:B.checkinFrequency||'monthly',termLocked:false,brandingMode:selectedBranding,status:'live',shipping:{name:name,address:address}};
+       termMonths:selectedTerm,checkinFrequency:B.checkinFrequency||'monthly',termLocked:true,termLockedAt:Date.now(),brandingMode:selectedBranding,status:'live',shipping:{name:name,address:address}};
   }
   try{
     var presentation=await durableCampaignPresentation(l);
@@ -10120,6 +10157,7 @@ async function postListing(){
         ownerName:l.owner,
         ownerEmail:l.mail,
         pricesCents:l.prices.map(function(price){return Math.round(spotPurchaseTotal(l,price)*100)}),
+         ownerAssent:{accepted:true,termsVersion:'2026-09-04',contentVersion:'2026-09-04',checkinVersion:'2026-09-04'},
         presentation:presentation
       })
     });
@@ -10470,7 +10508,6 @@ function migratePhoto(){
     l.tiles=tl;
   });
   saveDB();
-  console.log('BMI photo model: '+DB.listings.filter(function(l){return l.custom}).length+'/'+DB.listings.length+' listings on photos');
 }
 normalizeModelState();
 suitFix();migratePhoto();
@@ -10570,6 +10607,7 @@ async function syncTrackingOwnerEmail(mail){
       body:JSON.stringify({
         id:l.id,itemType:l.sourceType||l.type,title:LBLL(l),ownerName:l.owner,ownerEmail:l.mail,
         pricesCents:l.prices.map(function(price){return Math.round(spotPurchaseTotal(l,price)*100)}),
+        ownerAssent:{accepted:true,termsVersion:'2026-09-04',contentVersion:'2026-09-04',checkinVersion:'2026-09-04'},
         presentation:presentation
       })
     }).then(function(response){if(!response.ok)throw new Error('Owner email sync failed')});
@@ -10582,30 +10620,44 @@ function showTrack(){
     btn.onclick=async function(){
       var mail=document.getElementById('tkMail').value.trim().toLowerCase();
       var err=document.getElementById('tkErr');
+      var confirmation=document.getElementById('tkMagicConfirm');
       err.style.display='none';
-      if(!mail){err.textContent='Enter the email you used.';err.style.display='block';return}
-      btn.disabled=true;btn.textContent='Loading…';
-      var localMatches=localTrackMatches(mail),serverMatches=[],serverFailed=false;
+      confirmation.style.display='none';
+      if(!mail){err.textContent='Enter the email used for your listing or spot purchase.';err.style.display='block';return}
+      btn.disabled=true;btn.textContent='Sending…';
       try{
-        await syncTrackingOwnerEmail(mail);
-        var response=await fetch('/api/tracking?email='+encodeURIComponent(mail));
-        if(!response.ok)throw new Error('Tracking request failed');
-        serverMatches=serverTrackingMatches(await response.json(),mail);
-      }catch(error){serverFailed=true}
-      var matches=mergeTrackMatches(localMatches,serverMatches);
-      btn.disabled=false;btn.textContent='Track everything';
-      if(!matches.length){
-        err.textContent=serverFailed?'Tracking is temporarily unavailable. Please try again.':'No items found for that email yet.';
+        var response=await fetch('/api/tracking/magic-link',{
+          method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({email:mail})
+        });
+        if(!response.ok)throw new Error('Magic link request failed');
+        confirmation.style.display='block';
+      }catch(error){
+        err.textContent='Tracking is temporarily unavailable. Please try again.';
         err.style.display='block';
-        document.getElementById('tkResult').style.display='none';
-        return;
       }
-       matches.sort(function(a,b){return (b.c.purchasedAt||0)-(a.c.purchasedAt||0)});
-       TRACK_MATCHES=matches;
-       renderTrackResults(matches);
+      btn.disabled=false;btn.textContent='Email me a one-time link';
     };
     var input=document.getElementById('tkMail');
     input.onkeydown=function(event){if(event.key==='Enter'){event.preventDefault();btn.click()}};
+  }
+  var token=new URLSearchParams(location.search).get('tracking_token');
+  if(token&&!btn._tokenLoaded){
+    btn._tokenLoaded=true;
+    btn.disabled=true;btn.textContent='Opening your tracking view…';
+    fetch('/api/tracking?token='+encodeURIComponent(token)).then(function(response){
+      if(!response.ok)throw new Error('Tracking link expired');
+      return response.json();
+    }).then(function(payload){
+      var matches=serverTrackingMatches(payload,'');
+      if(!matches.length)throw new Error('No tracking records');
+      TRACK_MATCHES=matches;renderTrackResults(matches);
+      history.replaceState(null,'',location.pathname+'#track');
+    }).catch(function(){
+      var err=document.getElementById('tkErr');
+      err.textContent='This tracking link is invalid, expired, or already used.';
+      err.style.display='block';
+    }).finally(function(){btn.disabled=false;btn.textContent='Email me a one-time link'});
   }
 }
 function renderTrackResults(matches){
@@ -10717,11 +10769,11 @@ function trackCardHtml(l,c){
   var photo=listingPhoto(l);
   var steps=[];
   var orderStatus=c.orderStatus||'paid';
-  if(c.ownerView)steps.push({done:true,label:'Campaign launch ready',sub:new Date(c.purchasedAt).toLocaleDateString()+' \u00b7 linked to your posting email'});
-  else steps.push({done:orderStatus!=='pending',active:orderStatus==='pending',label:orderStatus==='pending'?'Checkout started':(orderStatus==='refunded'?'Spot refunded':'Spot purchased'),sub:new Date(c.purchasedAt).toLocaleDateString()+' \u00b7 '+money(c.amt+c.fee)+(orderStatus==='pending'?' pending':' charged')});
+  if(c.ownerView)steps.push({done:true,label:'Listing launch ready',sub:new Date(c.purchasedAt).toLocaleDateString()+' \u00b7 linked to your posting email'});
+  else steps.push({done:orderStatus!=='pending',active:orderStatus==='pending',label:orderStatus==='pending'?'Checkout started':(orderStatus==='refunded'?'Spot refunded':'Spot funded'),sub:new Date(c.purchasedAt).toLocaleDateString()+' \u00b7 '+money(c.amt+c.fee)+(orderStatus==='pending'?' pending':' charged')});
   var pct=l.serverFundedPercent!=null?l.serverFundedPercent:pctOf(l);
   var funded=pct>=100;
-  steps.push({done:!!l.shippedAt,active:funded&&!l.shippedAt,label:'Item fully funded & shipped',sub:l.shippedAt?'All spots sold \u2014 item purchased and shipped to the owner':(funded?'All spots sold \u2014 shipment is being prepared':Math.round(pct)+'% funded so far')});
+  steps.push({done:!!l.shippedAt,active:funded&&!l.shippedAt,label:'Item fully funded and shipped',sub:l.shippedAt?'All spots funded, item purchased and shipped to the owner':(funded?'All spots funded, shipment is being prepared':Math.round(pct)+'% funded so far')});
   var checkins=l.checkins||[],checkState=checkinStatus(l);
   for(var i=0;i<termOf(l);i++){
     var ci=checkins[i];
@@ -10830,14 +10882,14 @@ function renderItemSpotList(){
   host.innerHTML='';
   (CUR.prices||[]).forEach(function(price,i){
     var claim=CUR.claims&&CUR.claims[i],meta=slotMeta(CUR.type,CUR.slots,i);
-    var stateLabel=claim?'Claimed':(CUR.closed?'Closed':'Buy');
+     var stateLabel=claim?'Funded':(CUR.closed?'Closed':'Sponsor');
     var button=document.createElement('button');
     button.type='button';
     button.className='ap-spot-option '+(claim?'claimed':'open');
     button.disabled=!!claim||!!CUR.closed;
-    button.setAttribute('aria-label',claim?
-      ('Spot '+(i+1)+' claimed by '+(claim.brand||'a sponsor')):
-      ('Buy Spot '+(i+1)+' for '+money(price)));
+     button.setAttribute('aria-label',claim?
+       ('Spot '+(i+1)+' funded by '+(claim.brand||'a sponsor')):
+       ('Sponsor Spot '+(i+1)+' for '+money(price)));
     var brand=(claim&&claim.brand||'Sponsor').trim();
     var mark=claim?
       (claim.logo?'<img src="'+claim.logo+'" alt="'+safeCardText(brand)+' logo">':'<span>'+safeCardText(brand.slice(0,2).toUpperCase())+'</span>'):
@@ -10845,7 +10897,7 @@ function renderItemSpotList(){
     button.innerHTML=
       '<span class="ap-spot-mark">'+mark+'</span>'+
       '<span class="ap-spot-copy"><strong>Spot '+(i+1)+'</strong><span>'+safeCardText(meta.pos)+' — '+safeCardText(meta.size)+'</span></span>'+
-      '<span class="ap-spot-price"><b>'+money(price)+'</b><span>'+stateLabel+'</span></span>';
+       '<span class="ap-spot-price"><b>'+money(price)+'</b><span>'+stateLabel+'</span></span>';
     if(!claim&&!CUR.closed)button.onclick=function(){openBid(i,button)};
     host.appendChild(button);
   });
@@ -10899,7 +10951,7 @@ function refreshItemCards(){
     }).join(''):'<p class="finetext">No public profiles linked yet.</p>';
   }
   document.getElementById('iCad').textContent=checkinCadenceText(CUR);
-  var shipEl=document.getElementById('iShips');if(shipEl)shipEl.textContent=CUR.closed?'closed — claims refunded':(CUR.shippedAt?'shipped to owner':(pct>=100?'funded — preparing shipment':'new, at 100% claimed'));
+  var shipEl=document.getElementById('iShips');if(shipEl)shipEl.textContent=CUR.closed?'closed — refunds issued':(CUR.shippedAt?'shipped to owner':(pct>=100?'funded — preparing shipment':'new, when fully funded'));
   var feeCopy=document.getElementById('iFeeCopy');if(feeCopy)feeCopy.textContent='Exact all-in prices, first come, first served. Every purchase total covers BrandMyItem-applied branding, item sales tax, shipping, and handling.';
   var fulfillmentEl=document.getElementById('iFulfillment');if(fulfillmentEl)fulfillmentEl.textContent='BrandMyItem applies branding';
   var materialEl=document.getElementById('iMaterial');if(materialEl)materialEl.textContent=brandingMaterial(CUR.type);
@@ -10910,7 +10962,7 @@ function refreshItemCards(){
   var claimed=CUR.slots-openSlots(CUR);
   var spotSummary=document.getElementById('spotSummary');
   if(spotSummary)spotSummary.innerHTML=
-    claimed+' of '+CUR.slots+' spots sold. Spots from '+money(Math.min.apply(null,CUR.prices))+' — big banners carry a premium. Every sponsor submits their logo at purchase; the '+safeCardText(brandingMethod(CUR.type))+' is produced from that file.'+
+     claimed+' of '+CUR.slots+' spots funded. Spots from '+money(Math.min.apply(null,CUR.prices))+' — larger surfaces carry a premium. Every sponsor submits their logo at checkout; the '+safeCardText(brandingMethod(CUR.type))+' is produced from that file.'+
     (pct>=100?' <a href="#" id="logoPackBtn" style="font-weight:600;text-decoration:underline">Download the logo pack</a> and have the '+safeCardText(brandingMethod(CUR.type))+' made.':'');
   renderItemSpotList();
   var lp=document.getElementById('logoPackBtn');
@@ -10923,7 +10975,7 @@ function renderOwnerTools(){
   CUR.shipping=CUR.shipping||{};
   var sh=CUR.shipping;
   vb.innerHTML='<div class="campaign-label">Shipping details</div>'+
-    '<p class="finetext" style="margin:5px 0 12px">IRLi LLC buys the item and ships it directly. Owners never receive or handle campaign money.</p>'+
+     '<p class="finetext" style="margin:5px 0 12px">IRLi LLC buys the item and ships it directly. Owners never receive or handle marketplace funds.</p>'+
     '<div class="track-submit-grid">'+
       '<div class="field"><label class="label" for="shipName">Recipient name</label><input class="input" id="shipName" value="'+safeCardText(sh.name||CUR.owner||'')+'"></div>'+
       '<div class="field"><label class="label" for="shipPostal">Postal code</label><input class="input" id="shipPostal" value="'+safeCardText(sh.postal||'')+'"></div>'+
@@ -10938,11 +10990,11 @@ function renderOwnerTools(){
   };
   var pct=pctOf(CUR),term=termOf(CUR),checkins=CUR.checkins||[],status=checkinStatus(CUR);
   if(CUR.closed){
-    cb.innerHTML='<div class="fact"><span>Listing status</span><b style="color:#B23327">Closed — all sponsors refunded</b></div><p class="finetext" style="margin:8px 0 0">This listing did not sell out within 60 days. No item will be purchased or shipped.</p>';
+     cb.innerHTML='<div class="fact"><span>Listing status</span><b style="color:#B23327">Closed — all sponsors refunded</b></div><p class="finetext" style="margin:8px 0 0">This listing did not fully fund within 60 days. No item will be purchased or shipped.</p>';
     return;
   }
   if(pct<100){
-    cb.innerHTML='<p class="finetext" style="margin:0;color:#8e8e93">Check-ins begin after all spots sell and the item ships. '+Math.round(pct)+'% funded so far.</p>';
+     cb.innerHTML='<p class="finetext" style="margin:0;color:#8e8e93">Check-ins begin after all spots fund and the item ships. '+Math.round(pct)+'% funded so far.</p>';
     return;
   }
   if(!CUR.shippedAt){
@@ -11029,6 +11081,8 @@ function openBid(i,trigger){
   document.getElementById('mTotal').textContent=money(total);
   document.getElementById('uplBox').innerHTML='Upload your logo — required (PNG, transparent works best)';
   document.getElementById('mBrand').value='';document.getElementById('mMail').value='';document.getElementById('mLink').value='';
+  document.getElementById('brandAssent').checked=false;
+  document.getElementById('mNext').disabled=true;
   document.getElementById('modalBg').classList.add('on');
   trackEvent('checkout_opened',analyticsData);
 }
@@ -11047,7 +11101,11 @@ document.getElementById('mNext').onclick=function(){
   var mail=document.getElementById('mMail').value.trim();
   if(!brand||!mail){toast('Add your brand name and email');return}
   if(!logoData){toast('Upload your logo — it is the file the owner prints from');return}
+  if(!document.getElementById('brandAssent').checked){toast('Agree to the sponsor terms before checkout');return}
    beginStripeCheckout();
+};
+document.getElementById('brandAssent').onchange=function(){
+  document.getElementById('mNext').disabled=!this.checked;
 };
 async function beginStripeCheckout(){
   var brand=document.getElementById('mBrand').value.trim();
@@ -11069,7 +11127,7 @@ async function beginStripeCheckout(){
     var response=await fetch('/api/checkout/sessions',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({campaignId:CUR.id,spotIndex:claimSlot,brandName:brand,email:mail,destinationUrl:link||undefined,logoObjectPath:logoObjectPath})
+      body:JSON.stringify({campaignId:CUR.id,spotIndex:claimSlot,brandName:brand,email:mail,destinationUrl:link||undefined,logoObjectPath:logoObjectPath,brandAssent:{accepted:true,termsVersion:'2026-09-04',contentVersion:'2026-09-04'}})
     });
     var result={};
     var contentType=response.headers.get('content-type')||'';

@@ -137,7 +137,7 @@ test('every bento claim matches the actual marketplace rules', () => {
   assert.match(html, /<h3>Not funded\? Refunded\.<\/h3>/);
   assert.match(html, /Not fully funded by day 60, every buyer is refunded automatically\./);
   assert.match(html, /<h3>Real items, not points\.<\/h3>/);
-  assert.match(html, /When the last spot sells, BrandMyItem buys the item new at retail and ships it straight to the owner\./);
+  assert.match(html, /When the last spot funds, BrandMyItem buys the item new at retail and ships it straight to the owner\./);
   assert.match(html, /<h3>Proof, on a schedule\.<\/h3>/);
   assert.match(html, /One photo each cycle, weekly, biweekly, or monthly, showing the item and its placements in use\./);
   assert.match(html, /combined all-in<br>spot total/);
@@ -147,7 +147,7 @@ test('every bento claim matches the actual marketplace rules', () => {
   assert.match(html, /\.feature-bento \.fb-tile h3\{[^}]*text-align:left;margin:0 0 10px;max-width:17ch/);
   assert.match(html, /\.feature-bento \.fb-tile p\{[^}]*text-align:left;margin:0 0 16px/);
   assert.doesNotMatch(html, /\.feature-bento \.fb-tile (?:h3|p)\{[^}]*text-align:center/);
-  assert.match(html, /Example: first spot sold/);
+  assert.match(html, /Example: first spot funded/);
   assert.match(html, /\.feature-bento \.fb-row\{[^}]*background:var\(--fg\);color:#fff;[^}]*border-radius:999px/);
   assert.match(html, /\.feature-bento \.fb-due,\.feature-bento \.fb-verified\{background:var\(--fg\);color:#fff;border:1px solid var\(--fg\)\}/);
   assert.match(html, /\.feature-bento \.fb-term-status\{[^}]*background:var\(--fg\);color:#fff;[^}]*border-radius:999px/);
