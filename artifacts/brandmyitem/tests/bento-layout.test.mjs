@@ -56,7 +56,11 @@ test('lead suitcase uses four rounded silver-shell boxes that avoid the halo and
   assert.match(html, /<rect class="fb-spotline" x="94\.5" y="184\.5" width="77\.5" height="90\.5" rx="6"\/>/);
   assert.match(html, /\.fb-spotline\{fill:none;stroke:#000;stroke-width:1;vector-effect:non-scaling-stroke;visibility:visible\}/);
   assert.match(html, /class="fb-lead-price"><text[^>]*>\$543<\/text><text[^>]*>\$543<\/text><text[^>]*>\$542<\/text><text[^>]*>\$542<\/text>/);
-   assert.match(html, /class="fb-lead-logo"(?:[\s\S]*?<image href="logos\/fake\/(?:northloop|flint|meridian|quarry)\.svg")[\s\S]*?{4}/);
+   const leadLogos = html.match(/<g class="fb-lead-logo">([\s\S]*?)<\/g>/)?.[1] || '';
+   assert.equal((leadLogos.match(/<image href="logos\/fake\//g) || []).length, 4);
+   for (const name of ['northloop', 'flint', 'meridian', 'quarry']) {
+     assert.match(leadLogos, new RegExp(`logos/fake/${name}\\.svg`));
+   }
    assert.match(html, /class="fb-spot-logo"><image href="'\+FAKE_SPONSOR_LOGOS\[i%FAKE_SPONSOR_LOGOS\.length\]\+'/);
   assert.doesNotMatch(html, /class="fb-lead-(?:price|logo)"><rect/);
 });
