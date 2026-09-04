@@ -9154,20 +9154,28 @@ function tileContainsPoint(t,x,y){
 function cuDraw(){
   var cv=document.getElementById('cuCanvas');
   if(!cv||!CU.img)return;
-  var iw=CU.img.width,ih=CU.img.height;
-  cv.width=iw;cv.height=ih;
+  var photos=(CU.angleImgs&&CU.angleImgs.length)?CU.angleImgs:[CU.img];
+  var faceCount=(CU.angles&&CU.angles.length)||1;
+  var iw=photos[0].width,ih=photos[0].height,totalW=iw*faceCount;
+  cv.width=totalW;cv.height=ih;
   var viewport=document.getElementById('cuViewport');
   var availableWidth=viewport?Math.max(280,viewport.clientWidth):760;
-  var fit=Math.min(1,availableWidth/iw,460/ih);
+  var fit=Math.min(1,availableWidth/totalW,460/ih);
   var viewScale=fit*Math.max(0.5,Math.min(3,CU.zoom||1));
-  cv.style.width=Math.max(1,Math.round(iw*viewScale))+'px';
+  cv.style.width=Math.max(1,Math.round(totalW*viewScale))+'px';
    cv.style.height=Math.max(1,Math.round(ih*viewScale))+'px';
    cv.style.transform='translate3d('+(Math.round(CU.panX||0))+'px,'+(Math.round(CU.panY||0))+'px,0)';
   var g=cv.getContext('2d');
-  g.clearRect(0,0,iw,ih);
-  g.fillStyle='#fff';g.fillRect(0,0,iw,ih);
-  g.drawImage(CU.img,0,0,iw,ih);
-  function X(p){return p[0]*iw}
+  g.clearRect(0,0,totalW,ih);
+  g.fillStyle='#fff';g.fillRect(0,0,totalW,ih);
+  photos.forEach(function(photo,faceIndex){
+    g.drawImage(photo,faceIndex*iw,0,iw,ih);
+    if(faceIndex){
+      g.fillStyle='rgba(60,60,67,.12)';
+      g.fillRect(faceIndex*iw,ih*.08,1,ih*.84);
+    }
+  });
+  function X(p){return p[0]*totalW}
   function Y(p){return p[1]*ih}
    if(CU.poly.length){
     g.beginPath();g.moveTo(X(CU.poly[0]),Y(CU.poly[0]));
@@ -9224,16 +9232,7 @@ function cuDraw(){
   });
 }
 function cuVisibleEditorTiles(){
-  var count=(CU.angles&&CU.angles.length)||1;
-  var face=Math.max(0,Math.min(count-1,CU.angleIx||0));
-  var perFace=(typeof B!=='undefined'&&B.slots)||CU.tiles.length;
-  var start=face*perFace;
-  if(count<2)return CU.tiles.map(function(tile,index){return {tile:tile,index:index}});
-  return CU.tiles.slice(start,start+perFace).map(function(tile,index){
-    var local={x:tile.x*count-face,y:tile.y,w:tile.w*count,h:tile.h,shape:tile.shape,color:tile.color};
-    if(tile.pts)local.pts=tile.pts.map(function(p){return [p[0]*count-face,p[1]]});
-    return {tile:local,index:start+index};
-  });
+  return CU.tiles.map(function(tile,index){return {tile:tile,index:index}});
 }
 function cuWriteEditorTile(index,local){
   var count=(CU.angles&&CU.angles.length)||1;
@@ -9738,13 +9737,18 @@ function cuAngleChips(){
   var el=document.getElementById('cuFaces');if(!el)return;
   el.innerHTML='';
   if(!CU.angles||CU.angles.length<2)return;
+  el.style.display='grid';
+  el.style.gridTemplateColumns='repeat('+CU.angles.length+',minmax(0,1fr))';
+  el.style.gap='0';
+  el.style.margin='0 0 8px';
+  el.style.borderTop='1px solid rgba(60,60,67,.12)';
   CU.angles.forEach(function(a,i){
     var b=document.createElement('button');
     b.type='button';
-    b.className=(i===(CU.angleIx||0))?'btn btn-primary':'btn';
-    b.style.cssText='padding:6px 14px;font-size:13px';
+    b.className='cu-angle-caption';
+    b.style.cssText='padding:8px 10px 2px;border:0;border-radius:0;background:transparent;color:#8e8e93;font-size:13px;font-weight:500;text-align:center';
     b.textContent=a[0];
-    b.onclick=function(){cuShowAngle(i)};
+    b.onclick=function(){CU.angleIx=i;cuAngleChips();cuDraw()};
     el.appendChild(b);
   });
 }
@@ -9790,16 +9794,22 @@ function cuPickTemplate(t){
     return [angle[0],angle[1]];
   });
   document.getElementById('cuRetail').value=variantRetail(t,(typeof B!=='undefined'&&B.type===t)?B.variantSize:null);
-  var im=new Image();
-  im.onload=function(){
-    CU.img=im;CU.photo=CU.angles[0][1];CU.zoom=1;
-    if(t==='headphones')B.slots=2;
-    scanPhotoPlacements(im,t,B.slots);
-    document.getElementById('cuWrap').style.display='block';
-    cuAngleChips();
-    cuApplyTemplate();
-  };
-  im.src=CU.angles[0][1];
+  var loaded=0,angleImgs=[];
+  CU.angleImgs=angleImgs;
+  CU.angles.forEach(function(angle,angleIndex){
+    var im=new Image();
+    im.onload=function(){
+      angleImgs[angleIndex]=im;loaded++;
+      if(loaded!==CU.angles.length)return;
+      CU.img=angleImgs[0];CU.photo=CU.angles[0][1];CU.zoom=1;
+      if(t==='headphones')B.slots=2;
+      scanPhotoPlacements(angleImgs[0],t,B.slots);
+      document.getElementById('cuWrap').style.display='block';
+      cuAngleChips();
+      cuApplyTemplate();
+    };
+    im.src=angle[1];
+  });
 }
 function tmplInit(){
   var c=document.getElementById('tCat');if(!c||c._wired)return;c._wired=1;

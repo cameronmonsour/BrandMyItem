@@ -65,6 +65,8 @@ test('headphones always use two full-width polygon placements', () => {
 test('headphone builder includes right and left product faces', () => {
   assert.match(html, /var PRODUCT_ANGLE_PHOTOS=\{\s*headphones:\[\s*\['Right','campaign\/product-headphones\.png'\],\s*\['Left','campaign\/product-headphones-left\.png'\]/);
   assert.match(html, /CU\.angles=\(PRODUCT_ANGLE_PHOTOS\[t\]\|\|\[\['Front',ITEM_PHOTOS\[t\]\]\]\)/);
+  assert.match(html, /var photos=\(CU\.angleImgs&&CU\.angleImgs\.length\)\?CU\.angleImgs:\[CU\.img\]/);
+  assert.match(html, /el\.style\.gridTemplateColumns='repeat'\+CU\.angles\.length/);
   assert.match(html, /split the composite editor coordinates back into each photographed face/);
 });
 
