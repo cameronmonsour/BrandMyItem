@@ -9266,7 +9266,7 @@ function cuDraw(){
     var outlineColor=t.color||CU.color||'#1D1D1F';
     if(/^#fff(?:fff)?$/i.test(outlineColor)||/^white$/i.test(outlineColor))outlineColor='#1D1D1F';
     g.strokeStyle=outlineColor;
-    g.lineWidth=1.25;
+    g.lineWidth=1.25/viewScale;
     if(t.shape==='poly'&&t.pts&&t.pts.length>2){
       g.beginPath();
       g.moveTo(X(t.pts[0]),Y(t.pts[0]));
