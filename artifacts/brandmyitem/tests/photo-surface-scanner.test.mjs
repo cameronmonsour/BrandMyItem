@@ -130,10 +130,10 @@ test('pickleball paddle builder keeps the original image as Front and adds the s
   );
 });
 
-test('Louis Vuitton bag builder keeps the original image as Front and reuses the narrow side view for Left, Right, and Back', () => {
+test('Louis Vuitton bag builder keeps the original image as Front, reuses the narrow side view for Left and Right, and uses the wide view for Back', () => {
   assert.match(
     html,
-    /weekender:\[\s*\['Front','campaign\/product-weekender\.png'\],\s*\['Left','campaign\/product-weekender-side\.png'\],\s*\['Right','campaign\/product-weekender-side\.png'\],\s*\['Back','campaign\/product-weekender-side\.png'\]\s*\]/,
+    /weekender:\[\s*\['Front','campaign\/product-weekender\.png'\],\s*\['Left','campaign\/product-weekender-side\.png'\],\s*\['Right','campaign\/product-weekender-side\.png'\],\s*\['Back','campaign\/product-weekender-back\.png'\]\s*\]/,
   );
 });
 
