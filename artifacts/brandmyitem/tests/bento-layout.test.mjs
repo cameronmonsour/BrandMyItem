@@ -71,7 +71,7 @@ test('lead suitcase uses four rounded silver-shell boxes that avoid the halo and
   assert.doesNotMatch(html, /class="fb-lead-(?:price|logo)"><rect/);
 });
 
-test('price tile uses the white-backed iPhone image with black priced tracker spots', () => {
+test('price tile uses the shared iPhone cutout with black priced tracker spots', () => {
   assert.deepEqual(pngSize('bento/cutout-iphone.png'), [952, 1275]);
   const priceTile = html.match(/<article class="fb-tile fb-price"[\s\S]*?<\/article>/)?.[0];
   assert.ok(priceTile);
@@ -79,7 +79,7 @@ test('price tile uses the white-backed iPhone image with black priced tracker sp
   assert.match(html, /\.fb-price\{padding:24px 140px 48px 28px\}/);
   assert.match(html, /\.fb-price h3\{[^}]*max-width:10ch/);
   assert.match(html, /\.fb-price-visual\{[^}]*height:130px;width:calc\(130px \* \(952 \/ 1275\)\)/);
-  assert.match(html, /\.fb-price-phone\{[^}]*object-fit:contain;filter:none\}/);
+  assert.match(html, /\.fb-price-phone\{[^}]*object-fit:contain\}/);
   assert.match(html, /\.fb-price-map \.fb-ps\{fill:none;stroke:#000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter/);
   assert.match(html, /var parts=\[233,232,232,232,232\]/);
   assert.match(html, /buildOverlaySvg\('iphone', 5, 'fb-ps', 'fb-price-map', parts\)/);
@@ -102,7 +102,7 @@ test('all bento artwork is contained away from copy on narrow screens', () => {
 test('bento photos keep one white outline without doubling baked-in suitcase edges', () => {
   assert.match(html, /\.feature-bento \.fb-photo-cutout\{filter:drop-shadow\(3px 0 0 #fff\)[^}]*drop-shadow\(0 5px 5px rgba\(0,0,0,\.12\)\)\}/);
   assert.match(html, /\.feature-bento \.fb-stage-inner>img\.fb-rimowa\{filter:none\}/);
-  assert.match(html, /itemImg\.classList\.toggle\('fb-photo-cutout',item\.type!=='case'&&item\.type!=='iphone'\)/);
+  assert.match(html, /itemImg\.classList\.toggle\('fb-photo-cutout',item\.type!=='case'\)/);
   assert.match(html, /itemImg\.classList\.toggle\('fb-rimowa',item\.type==='case'\)/);
   assert.match(html, /\.feature-bento \.fb-photo-frame\{box-shadow:0 0 0 3px #fff,0 5px 9px rgba\(0,0,0,\.12\)\}/);
   assert.match(html, /<div class="fb-bagwrap"[^>]*>\s*<img src="bento\/bag\.png"/);

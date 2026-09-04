@@ -1283,7 +1283,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 .feature-bento .fb-price h3{font-size:24px;line-height:1;text-align:left;max-width:10ch;margin:0 0 8px;letter-spacing:-0.03em}
 .feature-bento .fb-price p{font-size:13px;line-height:1.25;text-align:left;max-width:17ch;margin:0}
 .feature-bento .fb-price-visual{position:absolute;right:22px;top:50%;transform:translateY(-50%);height:130px;width:calc(130px * (952 / 1275))}
-.feature-bento .fb-price-phone{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;filter:none}
+.feature-bento .fb-price-phone{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
 .feature-bento .fb-price-map{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
 .feature-bento .fb-price-map .fb-ps{fill:none;stroke:#000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;vector-effect:non-scaling-stroke;opacity:1;transition:opacity .4s}
 .feature-bento .fb-price-map .fb-ps.on{opacity:1}
@@ -11810,7 +11810,7 @@ function initHomeFeatureBento(){
     var item=items[itemIndex];
     var frame=CATALOG_SURFACES[item.type];
     if(!itemImg)return;
-    itemImg.classList.toggle('fb-photo-cutout',item.type!=='case'&&item.type!=='iphone');
+    itemImg.classList.toggle('fb-photo-cutout',item.type!=='case');
     itemImg.classList.toggle('fb-rimowa',item.type==='case');
     itemImg.src=item.img;
     if(itemName)itemName.textContent=item.name;
