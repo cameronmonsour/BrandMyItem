@@ -1,5 +1,4 @@
 import express, { type Express } from "express";
-import cors from "cors";
 import pinoHttp from "pino-http";
 import router from "./routes";
 import { logger } from "./lib/logger";
@@ -25,7 +24,11 @@ app.use(
     },
   }),
 );
-app.use(cors());
+app.disable("x-powered-by");
+app.use((_req, res, next) => {
+  res.setHeader("Referrer-Policy", "no-referrer");
+  next();
+});
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

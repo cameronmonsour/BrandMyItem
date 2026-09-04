@@ -15,6 +15,14 @@ import { and, desc, eq, inArray, sql } from "drizzle-orm";
 import { Router, type IRouter } from "express";
 import { stripeRequest } from "../stripeClient";
 import {
+  accessTokenHashesForScope,
+  accessTokenMatches,
+  createAccessToken,
+  hashAccessToken,
+  readAccessToken,
+  setAccessCookie,
+} from "../lib/accessControl";
+import {
   checkoutIdempotencyKey,
   checkoutTransition,
   isMissingCheckoutSessionError,
@@ -65,7 +73,11 @@ async function publicCampaigns(
         claims[claim.spotIndex] = claim;
       }
     }
-    const { ownerEmail: _ownerEmail, ...publicCampaign } = campaign;
+    const {
+      ownerEmail: _ownerEmail,
+      ownerAccessTokenHash: _ownerAccessTokenHash,
+      ...publicCampaign
+    } = campaign;
     return { ...publicCampaign, claims };
   });
 }
@@ -104,7 +116,15 @@ router.post("/campaigns", async (req, res): Promise<void> => {
         .returning();
     }
   } else {
-    [campaign] = await db.insert(campaignsTable).values(input).returning();
+    const ownerAccessToken = createAccessToken();
+    [campaign] = await db
+      .insert(campaignsTable)
+      .values({
+        ...input,
+        ownerAccessTokenHash: hashAccessToken(ownerAccessToken),
+      })
+      .returning();
+    setAccessCookie(res, "campaign", campaign.id, ownerAccessToken);
   }
   const [registered] = await publicCampaigns([campaign]);
   res.status(201).json(RegisterCampaignResponse.parse(registered));
@@ -120,6 +140,7 @@ router.get("/campaigns", async (_req, res): Promise<void> => {
 });
 
 router.get("/tracking", async (req, res): Promise<void> => {
+  res.setHeader("Cache-Control", "no-store");
   const parsed = GetTrackingQueryParams.safeParse(req.query);
   if (!parsed.success) {
     res.status(400).json({ error: "Invalid email" });
@@ -127,16 +148,40 @@ router.get("/tracking", async (req, res): Promise<void> => {
   }
 
   const email = parsed.data.email.trim().toLowerCase();
-  const ownerCampaigns = await db
-    .select()
-    .from(campaignsTable)
-    .where(sql`lower(${campaignsTable.ownerEmail}) = ${email}`)
-    .orderBy(desc(campaignsTable.createdAt));
-  const brandOrders = await db
-    .select()
-    .from(placementOrdersTable)
-    .where(sql`lower(${placementOrdersTable.email}) = ${email}`)
-    .orderBy(desc(placementOrdersTable.createdAt));
+  const ownerAccessHashes = accessTokenHashesForScope(req, "campaign");
+  const checkoutAccessHashes = accessTokenHashesForScope(req, "checkout");
+  if (!ownerAccessHashes.length && !checkoutAccessHashes.length) {
+    res.status(401).json({ error: "Tracking access is required" });
+    return;
+  }
+
+  const ownerCampaigns = ownerAccessHashes.length
+    ? await db
+        .select()
+        .from(campaignsTable)
+        .where(
+          and(
+            sql`lower(${campaignsTable.ownerEmail}) = ${email}`,
+            inArray(campaignsTable.ownerAccessTokenHash, ownerAccessHashes),
+          ),
+        )
+        .orderBy(desc(campaignsTable.createdAt))
+    : [];
+  const brandOrders = checkoutAccessHashes.length
+    ? await db
+        .select()
+        .from(placementOrdersTable)
+        .where(
+          and(
+            sql`lower(${placementOrdersTable.email}) = ${email}`,
+            inArray(
+              placementOrdersTable.checkoutAccessTokenHash,
+              checkoutAccessHashes,
+            ),
+          ),
+        )
+        .orderBy(desc(placementOrdersTable.createdAt))
+    : [];
 
   const ownerCampaignIds = ownerCampaigns.map((campaign) => campaign.id);
   const ownerOrders = ownerCampaignIds.length
@@ -205,6 +250,7 @@ router.get("/tracking", async (req, res): Promise<void> => {
 });
 
 router.post("/checkout/sessions", async (req, res): Promise<void> => {
+  res.setHeader("Cache-Control", "no-store");
   const parsed = CreatePlacementCheckoutBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: "Invalid checkout details" });
@@ -252,6 +298,26 @@ router.post("/checkout/sessions", async (req, res): Promise<void> => {
   }
 
   const orderId = existing?.id ?? randomUUID();
+  let checkoutAccessTokenHash: string;
+  if (existing?.status === "pending") {
+    const checkoutAccessToken = readAccessToken(req, "checkout", existing.id);
+    if (
+      !accessTokenMatches(
+        existing.checkoutAccessTokenHash,
+        checkoutAccessToken,
+      ) ||
+      existing.email.trim().toLowerCase() !== input.email.trim().toLowerCase()
+    ) {
+      res.status(409).json({ error: "Checkout is already in progress" });
+      return;
+    }
+    checkoutAccessTokenHash = existing.checkoutAccessTokenHash as string;
+    setAccessCookie(res, "checkout", existing.id, checkoutAccessToken as string);
+  } else {
+    const checkoutAccessToken = createAccessToken();
+    checkoutAccessTokenHash = hashAccessToken(checkoutAccessToken);
+    setAccessCookie(res, "checkout", orderId, checkoutAccessToken);
+  }
   let previousExpiredSessionId =
     existing?.status === "expired"
       ? existing.stripeCheckoutSessionId
@@ -328,6 +394,7 @@ router.post("/checkout/sessions", async (req, res): Promise<void> => {
     status: "pending",
     stripeCheckoutSessionId: null,
     stripeCheckoutIdempotencyKey: idempotencyKey,
+    checkoutAccessTokenHash,
     updatedAt: new Date(),
   };
   if (existing) {
@@ -407,14 +474,12 @@ router.post("/checkout/sessions", async (req, res): Promise<void> => {
 });
 
 router.get("/checkout/sessions/:sessionId", async (req, res): Promise<void> => {
+  res.setHeader("Cache-Control", "no-store");
   const params = GetPlacementCheckoutParams.safeParse(req.params);
   if (!params.success) {
     res.status(400).json({ error: "Invalid checkout session" });
     return;
   }
-  const session = await stripeRequest<CheckoutSnapshot>(
-    `/v1/checkout/sessions/${encodeURIComponent(params.data.sessionId)}`,
-  );
   const [order] = await db
     .select()
     .from(placementOrdersTable)
@@ -426,6 +491,14 @@ router.get("/checkout/sessions/:sessionId", async (req, res): Promise<void> => {
     res.status(404).json({ error: "Checkout session not found" });
     return;
   }
+  const checkoutAccessToken = readAccessToken(req, "checkout", order.id);
+  if (!accessTokenMatches(order.checkoutAccessTokenHash, checkoutAccessToken)) {
+    res.status(404).json({ error: "Checkout session not found" });
+    return;
+  }
+  const session = await stripeRequest<CheckoutSnapshot>(
+    `/v1/checkout/sessions/${encodeURIComponent(params.data.sessionId)}`,
+  );
   const transition = checkoutTransition(order.status, session);
   if (transition) {
     order.status = transition.status;
@@ -446,7 +519,15 @@ router.get("/checkout/sessions/:sessionId", async (req, res): Promise<void> => {
         ),
       );
   }
-  res.json(GetPlacementCheckoutResponse.parse(order));
+  res.json(
+    GetPlacementCheckoutResponse.parse({
+      id: order.id,
+      campaignId: order.campaignId,
+      spotIndex: order.spotIndex,
+      amountCents: order.amountCents,
+      status: order.status,
+    }),
+  );
 });
 
 export default router;

@@ -169,7 +169,8 @@ export const CreatePlacementCheckoutResponse = zod.object({
 
 
 /**
- * @summary Verify a Stripe Checkout session and return its order
+ * Requires the HttpOnly checkout capability cookie issued when the checkout reservation is created. The session ID alone is not authorization.
+ * @summary Verify an authorized Stripe Checkout session
  */
 
 
@@ -183,17 +184,13 @@ export const GetPlacementCheckoutResponse = zod.object({
   "campaignId": zod.string(),
   "spotIndex": zod.int(),
   "amountCents": zod.int(),
-  "brandName": zod.string(),
-  "email": zod.string(),
-  "destinationUrl": zod.string().nullish(),
-  "logoObjectPath": zod.string().nullish(),
-  "status": zod.enum(['pending', 'paid', 'expired', 'refunding', 'refunded']),
-  "stripeCheckoutSessionId": zod.string().nullish()
+  "status": zod.enum(['pending', 'paid', 'expired', 'refunding', 'refunded'])
 })
 
 
 /**
- * @summary Find campaigns and placement orders linked to an email
+ * Requires an HttpOnly capability cookie issued for a campaign owner or buyer order. The email query parameter is not an identity proof.
+ * @summary Find authorized campaigns and placement orders linked to an email
  */
 export const getTrackingQueryEmailMax = 320;
 

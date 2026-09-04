@@ -513,7 +513,8 @@ export const getGetPlacementCheckoutUrl = (sessionId: string,) => {
 }
 
 /**
- * @summary Verify a Stripe Checkout session and return its order
+ * Requires the HttpOnly checkout capability cookie issued when the checkout reservation is created. The session ID alone is not authorization.
+ * @summary Verify an authorized Stripe Checkout session
  */
 export const getPlacementCheckout = async (sessionId: string, options?: Parameters<typeof customFetch>[1]): Promise<PlacementOrder> => {
 
@@ -560,7 +561,7 @@ export type GetPlacementCheckoutQueryError = ErrorType<void>
 
 
 /**
- * @summary Verify a Stripe Checkout session and return its order
+ * @summary Verify an authorized Stripe Checkout session
  */
 
 export function useGetPlacementCheckout<TData = Awaited<ReturnType<typeof getPlacementCheckout>>, TError = ErrorType<void>>(
@@ -597,7 +598,8 @@ export const getGetTrackingUrl = (params: GetTrackingParams,) => {
 }
 
 /**
- * @summary Find campaigns and placement orders linked to an email
+ * Requires an HttpOnly capability cookie issued for a campaign owner or buyer order. The email query parameter is not an identity proof.
+ * @summary Find authorized campaigns and placement orders linked to an email
  */
 export const getTracking = async (params: GetTrackingParams, options?: Parameters<typeof customFetch>[1]): Promise<TrackingResult> => {
 
@@ -644,7 +646,7 @@ export type GetTrackingQueryError = ErrorType<void>
 
 
 /**
- * @summary Find campaigns and placement orders linked to an email
+ * @summary Find authorized campaigns and placement orders linked to an email
  */
 
 export function useGetTracking<TData = Awaited<ReturnType<typeof getTracking>>, TError = ErrorType<void>>(

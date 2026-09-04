@@ -12,13 +12,5 @@ export interface PlacementOrder {
   campaignId: string;
   spotIndex: number;
   amountCents: number;
-  brandName: string;
-  email: string;
-  /** @nullable */
-  destinationUrl?: string | null;
-  /** @nullable */
-  logoObjectPath?: string | null;
   status: PlacementOrderStatus;
-  /** @nullable */
-  stripeCheckoutSessionId?: string | null;
 }

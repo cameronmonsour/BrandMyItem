@@ -134,7 +134,8 @@ paths:
     get:
       operationId: getPlacementCheckout
       tags: [checkout]
-      summary: Verify a Stripe Checkout session and return its order
+      summary: Verify an authorized Stripe Checkout session
+      description: Requires the HttpOnly checkout capability cookie issued when the checkout reservation is created. The session ID alone is not authorization.
       parameters:
         - in: path
           name: sessionId
@@ -150,12 +151,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/PlacementOrder"
         "404":
-          description: Checkout session not found
+          description: Checkout session not found or not authorized
   /tracking:
     get:
       operationId: getTracking
       tags: [tracking]
-      summary: Find campaigns and placement orders linked to an email
+      summary: Find authorized campaigns and placement orders linked to an email
+      description: Requires an HttpOnly capability cookie issued for a campaign owner or buyer order. The email query parameter is not an identity proof.
       parameters:
         - in: query
           name: email
@@ -173,6 +175,8 @@ paths:
                 $ref: "#/components/schemas/TrackingResult"
         "400":
           description: Invalid email
+        "401":
+          description: Tracking capability is required
 components:
   schemas:
     HealthStatus:
@@ -286,8 +290,7 @@ components:
           type: string
     PlacementOrder:
       type: object
-      required:
-        [id, campaignId, spotIndex, amountCents, brandName, email, status]
+      required: [id, campaignId, spotIndex, amountCents, status]
       properties:
         id:
           type: string
@@ -297,19 +300,9 @@ components:
           type: integer
         amountCents:
           type: integer
-        brandName:
-          type: string
-        email:
-          type: string
-        destinationUrl:
-          type: ["string", "null"]
-        logoObjectPath:
-          type: ["string", "null"]
         status:
           type: string
           enum: [pending, paid, expired, refunding, refunded]
-        stripeCheckoutSessionId:
-          type: ["string", "null"]
     TrackingOrder:
       type: object
       required: [id, campaignId, spotIndex, amountCents, brandName, email, status, createdAt]

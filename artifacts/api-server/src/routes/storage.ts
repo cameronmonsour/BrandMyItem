@@ -19,6 +19,7 @@ router.post("/storage/uploads/request-url", async (req, res): Promise<void> => {
     return;
   }
   const uploadURL = await createImageUploadURL();
+  res.setHeader("Cache-Control", "no-store");
   res.json(
     RequestUploadUrlResponse.parse({
       uploadURL,
