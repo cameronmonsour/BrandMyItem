@@ -250,7 +250,7 @@ test('placement purchases use Stripe and only finalize after paid verification',
 
 test('fulfillment copy enforces BrandMyItem-applied branding', () => {
   assert.match(html, /The campaign total is the item's retail price plus a flat 40% service charge/i);
-  assert.match(html, /delivers it pre-branded within 60 days/);
+  assert.match(html, /delivers the finished item to the owner within 60 days of funding/);
   assert.match(html, /function feeRateOf\(\)\{return 0\.40\}/);
   assert.match(html, /function deliveryDaysOf\(\)\{return 60\}/);
   assert.doesNotMatch(html, /self-appl/i);

@@ -143,6 +143,9 @@ test('FAQ and footer use the supplied complete structure without legacy duplicat
   assert.doesNotMatch(html, /class="faq-grid legacy-faq-grid"/);
   assert.match(html, /The term, 6, 12, or 18 months, defines how long you document them\./);
   assert.match(html, /Term and cadence are chosen when you post and are locked from the moment the listing is published\./);
+  assert.match(html, /refunds initiated within 5 business days; no request is required\./);
+  assert.match(html, /binding individual arbitration agreement and class action waiver, with a 30-day opt-out\./);
+  assert.match(html, /Legal notices: legal@brandmyitem\.com\. Privacy requests: privacy@brandmyitem\.com\./);
 });
 
 test('check-in proofs use a clean transparent four-column structure', () => {
