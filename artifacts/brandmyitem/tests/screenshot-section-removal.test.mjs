@@ -322,6 +322,11 @@ test('item purpose is limited to 500 characters in the form and at submission', 
   assert.equal((html.match(/purpose:purpose/g) || []).length, 2);
 });
 
+test('customized catalog listings keep the real item name on campaign cards', () => {
+  assert.match(html, /if\(l\.sourceType&&ITEMS\[l\.sourceType\]\)return ITEMS\[l\.sourceType\]\.label/);
+  assert.doesNotMatch(html, /function LBLL\(l\)\{[^}]*'Custom item'/);
+});
+
 test('posting requires and saves the owner shipping address', () => {
   assert.match(html, /var address=document\.getElementById\('pAddress'\)\.value\.trim\(\)/);
   assert.match(html, /if\(!name\|\|!mail\|\|!address\)\{toast\('Add your name, email, and shipping address to post'\);return\}/);
