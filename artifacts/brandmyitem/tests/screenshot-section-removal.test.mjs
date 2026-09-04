@@ -143,7 +143,7 @@ test('dashboard keeps compact tracker cards without a duplicate left category bo
   assert.doesNotMatch(html, /id="fFulfillment"/);
   assert.match(html, /id="fTerm"/);
   assert.match(html, /id="fCadence"/);
-  assert.match(html, /listingContextHtml\(l\)\+'<div class="title-row"><div class="iname">/);
+  assert.match(html, /<div class="title-row"><div class="iname">'\+it\.label\+'<\/div><span class="catic"><img src="'\+PHO\(l\)\+'" alt=""><\/span><\/div>'\+listingContextHtml\(l\)/);
   assert.match(html, /if\(!parts\.length\)return '<div class="card-context card-context-empty" aria-hidden="true"><\/div>'/);
   assert.match(html, /\.lcard \.who\{[^}]*height:24px;min-width:0;margin-bottom:5px/);
   assert.match(html, /\.lcard \.who \.oname\{[^}]*overflow:hidden;text-overflow:ellipsis;white-space:nowrap/);
