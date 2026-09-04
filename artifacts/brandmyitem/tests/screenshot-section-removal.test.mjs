@@ -59,6 +59,17 @@ test('dashboard filters use listing metadata and compose with displayed spot pri
   assert.match(html, /if\(F\.sort==='cheap'\)list\.sort\(function\(a,b\)\{return listingSpotPrice\(a\)-listingSpotPrice\(b\)\}\)/);
 });
 
+test('main dashboard keeps only the three most-funded real campaigns', () => {
+  const block = html.match(/function renderDash\(\)\{([\s\S]*?)\n\}/)?.[1] || '';
+  assert.match(block, /list=topFundedCampaigns\(list\)/);
+});
+
+test('homepage live bar, campaigns, and item picker use compact section spacing', () => {
+  assert.match(html, /#home-live-section\{padding-bottom:20px!important\}/);
+  assert.match(html, /#home-campaigns-section\{padding-bottom:20px!important\}/);
+  assert.match(html, /#home-onboard\{padding-top:20px!important\}/);
+});
+
 test('dashboard activity uses the same live ticker as the homepage', () => {
   assert.match(html, /id="dashLiveFeed"/);
   assert.match(html, /function renderLiveFeed\(feedId\)/);
@@ -76,12 +87,12 @@ test('dashboard activity uses the same live ticker as the homepage', () => {
   assert.doesNotMatch(html, /DEMO_BIDDERS|upgradeDemoBidders|replaceAirPodsSecondDemoLogo/);
 });
 
-test('launch homepage keeps AirPods, MacBook, and iPhone examples locked', () => {
+test('homepage campaign cards show the three most-funded real campaigns', () => {
   const block = html.match(/function renderHomeCampaigns\(\)\{([\s\S]*?)\n\}/)?.[1] || '';
   assert.match(html, /var LOCKED_LAUNCH_EXAMPLE_IDS=\['demo6','demo1','demo5'\]/);
-  assert.match(block, /LOCKED_LAUNCH_EXAMPLE_IDS\.map\(function\(id\)/);
-  assert.doesNotMatch(block, /sort\(function\(a,b\)/);
-  assert.doesNotMatch(block, /openSlots\(l\)>0/);
+  assert.match(html, /function topFundedCampaigns\(list\)\{[\s\S]*?\.slice\(0,3\)/);
+  assert.match(block, /var list=topFundedCampaigns\(DB\.listings\)/);
+  assert.doesNotMatch(block, /LOCKED_LAUNCH_EXAMPLE_IDS\.map\(function\(id\)/);
 });
 
 test('homepage examples cannot drift into or out of shared campaign data', () => {
@@ -112,7 +123,6 @@ test('locked MacBook campaign prices follow the two visible surface sizes', () =
 
 test('funded campaign cards show a green funded state', () => {
   assert.match(html, /\.lcard \.countdown-badge\.funded\{background:#E8F5EC;color:#1F7A44\}/);
-  assert.match(html, /\.lcard \.example-badge\{position:absolute;top:10px;right:10px;z-index:3\}/);
   assert.match(html, /\.pbar\.funded i\{background:#1F7A44\}/);
   assert.match(html, /if\(pctOf\(l\)>=100\)return 'Funded'/);
   assert.doesNotMatch(html, /Funded, preparing shipment/);
@@ -121,10 +131,9 @@ test('funded campaign cards show a green funded state', () => {
   assert.match(html, /Math\.min\(100,pct\)/);
 });
 
-test('homepage campaign cards label locked campaigns as examples', () => {
-  assert.match(html, /example\.className='chipg sold-count example-badge'/);
-  assert.match(html, /example\.setAttribute\('aria-label','Example campaign'\)/);
-  assert.match(html, /example\.textContent='Example'/);
+test('homepage campaign cards do not label real campaigns as examples', () => {
+  assert.doesNotMatch(html, /example-badge/);
+  assert.doesNotMatch(html, /Example campaign/);
 });
 
 test('dashboard keeps compact tracker cards without a duplicate left category box', () => {
