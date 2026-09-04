@@ -268,7 +268,7 @@ test('posting requires and saves the owner shipping address', () => {
 test('tracking is launch ready for campaign owners and brand purchases', () => {
   assert.doesNotMatch(html, /Track orders and campaigns/);
   assert.doesNotMatch(html, /Use the email from your item posting or brand purchase/);
-  assert.match(html, /Use the email connected to your item or purchase\./);
+  assert.match(html, /Use the email connected to your item or logo placement\./);
   assert.match(html, /\.view#v-track\{padding-top:112px\}/);
   assert.match(html, /\.track-page \.site-footer\{display:none\}/);
   assert.match(html, /document\.body\.classList\.toggle\('track-page',h==='track'\)/);
