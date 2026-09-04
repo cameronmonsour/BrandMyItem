@@ -87,6 +87,8 @@ test('all bento artwork is contained away from copy on narrow screens', () => {
 
 test('every bento photo has the locked white outline treatment', () => {
   assert.match(html, /\.feature-bento \.fb-photo-cutout\{filter:drop-shadow\(3px 0 0 #fff\)[^}]*drop-shadow\(0 5px 5px rgba\(0,0,0,\.12\)\)\}/);
+  assert.match(html, /\.feature-bento \.fb-stage-inner>img\.fb-rimowa\{filter:none\}/);
+  assert.match(html, /itemImg\.classList\.toggle\('fb-rimowa',item\.type==='case'\)/);
   assert.match(html, /\.feature-bento \.fb-photo-frame\{box-shadow:0 0 0 3px #fff,0 5px 9px rgba\(0,0,0,\.12\)\}/);
   assert.match(html, /<img class="fb-photo-cutout" src="bento\/bag\.png"/);
   assert.match(html, /<img class="fb-photo-cutout" id="fbItemImg" src="bento\/cutout-macbook\.png"/);
@@ -134,8 +136,8 @@ test('FAQ and footer use the supplied complete structure without legacy duplicat
   assert.doesNotMatch(html, /<h2>Asked and answered\.<\/h2>/);
   assert.doesNotMatch(html, /Everything owners and brands ask before they use BrandMyItem, in plain language\. BrandMyItem is operated by IRLi LLC\./);
   assert.doesNotMatch(html, /class="faq-grid legacy-faq-grid"/);
-  assert.match(html, /The term is locked from the moment the listing goes live and cannot be changed\./);
-  assert.match(html, /both are locked from the moment the listing is published\./);
+  assert.match(html, /The term, 6, 12, or 18 months, defines how long you document them\./);
+  assert.match(html, /Term and cadence are chosen when you post and are locked from the moment the listing is published\./);
 });
 
 test('check-in proofs use a clean transparent four-column structure', () => {

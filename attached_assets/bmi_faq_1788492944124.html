@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BrandMyItem — FAQ</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#1D1D1F;--ink-soft:#6E6E73;--wash:#F5F5F7;--mist:#E5E5EA}
+  *{box-sizing:border-box}
+  body{margin:0;background:#fff;font-family:Inter,system-ui,sans-serif;color:var(--ink);padding:80px 24px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1120px;margin:0 auto}
+  h2{font-size:44px;font-weight:600;letter-spacing:-.035em;margin:0 0 10px}
+  .lede{font-size:18px;color:var(--ink-soft);margin:0 0 48px;max-width:56ch;line-height:1.5}
+  h3.group{font-size:15px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin:44px 0 16px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:820px){.grid{grid-template-columns:1fr}}
+  details{background:#fff;border:1px solid var(--mist);border-radius:18px;padding:0 22px;transition:border-color .25s}
+  details[open]{border-color:var(--ink)}
+  summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 0;font-size:16px;font-weight:600;letter-spacing:-.01em}
+  summary::-webkit-details-marker{display:none}
+  summary .x{flex:none;width:14px;height:14px;position:relative}
+  summary .x::before,summary .x::after{content:"";position:absolute;background:var(--ink);border-radius:1px}
+  summary .x::before{left:6px;top:0;width:2px;height:14px;transition:transform .25s}
+  summary .x::after{left:0;top:6px;width:14px;height:2px}
+  details[open] summary .x::before{transform:rotate(90deg)}
+  details p{font-size:14.5px;line-height:1.6;color:var(--ink-soft);margin:0 0 20px;max-width:60ch}
+  details p b{color:var(--ink);font-weight:600}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h3 class="group">For owners</h3>
+  <div class="grid">
+    <details><summary>How does BrandMyItem work?<span class="x"></span></summary>
+      <p>You post a catalog item you want, and its surface is divided into advertising spots. Brands purchase those spots at fixed prices that together equal the listing's campaign total. Once every spot is purchased, BrandMyItem buys the item new at retail, produces and applies every placement, and ships the finished item directly to you. You never handle money at any point. Placements are permanent; your side of the exchange is carrying the item in public and documenting it with check-in photos for the proof term you selected.</p></details>
+    <details><summary>What do I commit to?<span class="x"></span></summary>
+      <p>Three things: keep every placement applied and unobstructed, use the item in ordinary public life, and submit one check-in photo per cycle for your proof term. The placements are permanent; the term (6, 12, or 18 months) defines how long you document them. Term and cadence are chosen when you post and are locked from the moment the listing is published.</p></details>
+    <details><summary>When does my item arrive?<span class="x"></span></summary>
+      <p>Every item is delivered within 60 days of its listing fully funding, with every placement produced and professionally applied by BrandMyItem before shipment. The item arrives finished; your first check-in is due within 7 days of delivery. Items are purchased new and carry the manufacturer's warranty.</p></details>
+    <details><summary>What happens if I miss check-ins?<span class="x"></span></summary>
+      <p>A missed cycle places a public flag on your listing, and repeated misses restrict you from posting new listings. There are no financial penalties and the item is never taken back; your performance record is simply public.</p></details>
+    <details><summary>Who owns the item?<span class="x"></span></summary>
+      <p>You do, from the day it is delivered. The placements, however, are permanent: you agree not to remove, cover, or alter them at any time. The proof term is the period during which you also document the item with check-ins, and the item may not be sold during it.</p></details>
+  </div>
+
+  <h3 class="group">For brands</h3>
+  <div class="grid">
+    <details><summary>What does a brand receive?<span class="x"></span></summary>
+      <p>A permanent physical placement of your mark, applied as a sticker, patch, embroidery, or engraving, on a real item carried in public, plus a documented proof term: the purchase receipt, shipment confirmation, and every one of the owner's check-in photos for the term of the listing.</p></details>
+    <details><summary>How are spots priced?<span class="x"></span></summary>
+      <p>Every spot is priced by surface area: its share of the item's usable surface, applied to the listing's campaign total. Spot prices always sum to the campaign total exactly. The campaign total is the item's retail price plus a flat 40% service charge, which covers material production, professional application, fulfillment, and administration of the listing. The price shown on each spot is all-in, with no additional fees at checkout.</p></details>
+    <details><summary>How does payment work?<span class="x"></span></summary>
+      <p>The full spot price is charged at checkout by card and processed by our payment provider. There are no invoices, deposits, or escrow arrangements. At checkout you also submit your production-ready logo file, brand name, work email, and destination link, which travel with the order through application.</p></details>
+    <details><summary>What happens if a listing doesn't fully fund?<span class="x"></span></summary>
+      <p>Every listing has a 60-day funding window. If any spot remains unsold at day 60, every purchase on that listing is refunded in full to the original payment method, automatically, with refunds initiated within 5 business days. No request is required.</p></details>
+    <details><summary>What are the content requirements?<span class="x"></span></summary>
+      <p>You must hold the rights to any mark you submit, and files must be production-ready. We decline placements that are unlawful, adult, hateful, or in restricted categories such as tobacco and vaping, and any declined purchase is refunded in full. The complete standards are published in our Content Standards.</p></details>
+  </div>
+</div>
+</body>
+</html>
