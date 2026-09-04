@@ -168,6 +168,14 @@ test('every homepage and Live Items campaign card keeps the locked compact hiera
   assert.match(html, /\.lcard \.sponsor-price \.sponsor-stack\{position:absolute;right:0;bottom:calc\(100% \+ 3px\)/);
 });
 
+test('homepage and Live Items cards use the same all-in spot pricing', () => {
+  const cardPriceUses = html.match(/<span class="chipb">from '\+money\(listingSpotPrice\(l\)\)/g) || [];
+
+  assert.equal(cardPriceUses.length, 2, 'both campaign-card renderers must use the shared all-in spot price');
+  assert.match(html, /function minOpenPrice\(l\)\{[\s\S]*?var total=spotPurchaseTotal\(l,p\);[\s\S]*?return m===null\?Infinity:m;/);
+  assert.match(html, /Math\.min\.apply\(null,l\.prices\.map\(function\(p\)\{return spotPurchaseTotal\(l,p\)\}\)\)/);
+});
+
 test('fulfillment copy enforces BrandMyItem-applied branding', () => {
   assert.match(html, /purchase total includes 40% covering BrandMyItem-applied branding, item sales tax, shipping, and handling/i);
   assert.match(html, /delivers it pre-branded within 60 days/);
