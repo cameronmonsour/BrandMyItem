@@ -71,7 +71,8 @@ test('headphone builder includes right and left product faces', () => {
   assert.match(html, /id="cuSideTools" role="group" aria-label="Edit headphone side"/);
   assert.match(html, /className='cu-side-button'/);
   assert.match(html, /var rx=\(t\.x-t\.w\/2\)\*iw,ry=\(t\.y-t\.h\/2\)\*ih,rw=t\.w\*iw/);
-  assert.match(html, /g\.fillText\(String\(i\+1\),t\.x\*iw,t\.y\*ih\)/);
+  assert.match(html, /visibleTiles\.forEach\(function\(viewTile,viewIndex\)\{/);
+  assert.match(html, /g\.fillText\(String\(viewIndex\+1\),t\.x\*iw,t\.y\*ih\)/);
   assert.match(html, /Math\.max\(12,Math\.min\(18,iw\*\.018\)\)/);
   assert.match(html, /cuWriteEditorTile\(DRAG\.i,t\)/);
   assert.match(html, /if\(count<2\)\{\s*if\(stored===local\)return;/);
@@ -86,8 +87,8 @@ test('polygon points and catalog identity survive template and detail rendering'
 });
 
 test('builder placement outlines use the locked 1.25px stroke', () => {
-  assert.match(html, /var visibleTiles=cuVisibleEditorTiles\(\);[\s\S]*?visibleTiles\.forEach\(function\(viewTile\)\{[\s\S]*?g\.strokeStyle=outlineColor;\s*g\.lineWidth=1\.25;/);
-  assert.match(html, /g\.strokeStyle=outlineColor;[\s\S]*?g\.fillStyle=outlineColor;[\s\S]*?g\.fillText\(String\(i\+1\),t\.x\*iw,t\.y\*ih\)/);
+  assert.match(html, /var visibleTiles=cuVisibleEditorTiles\(\);[\s\S]*?visibleTiles\.forEach\(function\(viewTile,viewIndex\)\{[\s\S]*?g\.strokeStyle=outlineColor;\s*g\.lineWidth=1\.25;/);
+  assert.match(html, /g\.strokeStyle=outlineColor;[\s\S]*?g\.fillStyle=outlineColor;[\s\S]*?g\.fillText\(String\(viewIndex\+1\),t\.x\*iw,t\.y\*ih\)/);
 });
 
 test('posting and rendering preserve adjusted polygon placement geometry', () => {
