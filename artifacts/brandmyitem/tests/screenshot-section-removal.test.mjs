@@ -136,6 +136,11 @@ test('homepage campaign cards do not label real campaigns as examples', () => {
   assert.doesNotMatch(html, /Example campaign/);
 });
 
+test('owner verification pills show only the platform name and icon', () => {
+  assert.match(html, /p\.label\+'<\/a>'/);
+  assert.doesNotMatch(html, /p\.label\+' @'\+handle/);
+});
+
 test('dashboard keeps compact tracker cards without a duplicate left category box', () => {
   assert.doesNotMatch(html, /class="searchbar"/);
   assert.doesNotMatch(html, /id="dq"/);

@@ -10832,7 +10832,7 @@ function refreshItemCards(){
       var handle=CUR.socialLinks[p.key];
       return '<a href="'+p.url+handle+'" target="_blank" rel="noopener">'+
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">'+p.icon+'</svg>'+
-        p.label+' @'+handle+'</a>';
+        p.label+'</a>';
     }).join(''):'<p class="finetext">No public profiles linked yet.</p>';
   }
   document.getElementById('iCad').textContent=checkinCadenceText(CUR);
