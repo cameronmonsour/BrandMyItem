@@ -2204,6 +2204,8 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
                 <span class="lbl">Copy box</span>
               </button>
               <span class="tool-sep"></span>
+              <span id="cuSideTools" role="group" aria-label="Edit headphone side" style="display:none;align-items:center;gap:4px"></span>
+              <span class="tool-sep"></span>
               <label class="icontool" title="Shape color" style="cursor:pointer;position:relative">
                 <span class="colorswatch" id="cuColorSwatch"></span>
                 <input id="cuColor" type="color" value="#1D1D1F" style="position:absolute;inset:0;opacity:0;cursor:pointer">
@@ -9734,8 +9736,13 @@ function cuApplyTemplate(){
 }
 function cuAngleChips(){
   var el=document.getElementById('cuFaces');if(!el)return;
+  var sideTools=document.getElementById('cuSideTools');
   el.innerHTML='';
-  if(!CU.angles||CU.angles.length<2)return;
+  if(sideTools)sideTools.innerHTML='';
+  if(!CU.angles||CU.angles.length<2){
+    if(sideTools)sideTools.style.display='none';
+    return;
+  }
   el.style.display='grid';
   el.style.gridTemplateColumns='repeat('+CU.angles.length+',minmax(0,1fr))';
   el.style.gap='0';
@@ -9749,7 +9756,19 @@ function cuAngleChips(){
     b.textContent=a[0];
     b.onclick=function(){CU.angleIx=i;cuAngleChips();cuDraw()};
     el.appendChild(b);
+    if(sideTools){
+      var sideButton=document.createElement('button');
+      sideButton.type='button';
+      sideButton.className='cu-side-button';
+      sideButton.textContent=a[0];
+      sideButton.title='Edit the '+a[0].toLowerCase()+' side';
+      sideButton.setAttribute('aria-label','Edit the '+a[0].toLowerCase()+' side');
+      sideButton.style.cssText='padding:7px 10px;border:1px solid '+(i===(CU.angleIx||0)?'#1D1D1F':'#E5E5EA')+';border-radius:8px;background:'+(i===(CU.angleIx||0)?'#1D1D1F':'#FFFFFF')+';color:'+(i===(CU.angleIx||0)?'#FFFFFF':'#6E6E73')+';font-size:12px;font-weight:600;line-height:1;cursor:pointer';
+      sideButton.onclick=function(){CU.angleIx=i;cuAngleChips();cuDraw()};
+      sideTools.appendChild(sideButton);
+    }
   });
+  if(sideTools)sideTools.style.display='flex';
 }
 function cuShowAngle(i){
   if(!CU.angles||!CU.angles[i])return;
