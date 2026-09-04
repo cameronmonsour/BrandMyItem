@@ -67,6 +67,10 @@ test('polygon points and catalog identity survive template and detail rendering'
   assert.match(html, /var scanType=l\.sourceType\|\|l\.type/);
 });
 
+test('builder placement outlines use the locked 1.25px stroke', () => {
+  assert.match(html, /CU\.tiles\.forEach\(function\(t,i\)\{[\s\S]*?g\.strokeStyle=outlineColor;\s*g\.lineWidth=1\.25;/);
+});
+
 test('posting and rendering preserve adjusted polygon placement geometry', () => {
   const copySource = html.match(/function copyPhotoTile\(t\)\{[\s\S]*?\n\}/)?.[0];
   assert.ok(copySource, 'copyPhotoTile should exist in index.html');
