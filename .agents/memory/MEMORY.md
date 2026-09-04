@@ -15,3 +15,4 @@
 - [Mandatory branding application](mandatory-branding-application.md) — BrandMyItem applies every sponsor mark; there is no owner-applied fulfillment path.
 - [Fee disclosure placement](fee-disclosure-placement.md) — disclose the 40% amount only in FAQ answers; elsewhere use neutral all-in purchase-total language.
 - [Scanner coordinate source](scanner-coordinate-source.md) — locked surfaces must use campaign-image dimensions; bento cutout coordinates do not transfer.
+- [Stripe connector boundary](stripe-connector-boundary.md) — use the connector proxy; this connection does not expose raw Stripe or webhook secrets.

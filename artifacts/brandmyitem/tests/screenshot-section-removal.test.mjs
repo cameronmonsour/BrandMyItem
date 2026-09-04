@@ -183,6 +183,21 @@ test('campaign cards keep sponsor logos and 1.25px placement outlines on product
   assert.match(html, /drawPricePlacement\(g,t,frame,price,c\?logoImages\[i\]:null,c&&c\.brand,placementStroke\)/);
 });
 
+test('launch marketplace hides seeded demos while preserving the homepage tracker', () => {
+  assert.match(html, /var all=DB\.listings\.filter\(function\(l\)\{return !isDemoListing\(l\)\}\)/);
+  assert.match(html, /function showHomeTracker\(\)/);
+  assert.match(html, /renderHomeTrackerRows\(demoTrackMatches\(\),'demo@brandmyitem\.com'\)/);
+});
+
+test('placement purchases use Stripe and only finalize after paid verification', () => {
+  assert.match(html, /fetch\('\/api\/checkout\/sessions'/);
+  assert.match(html, /location\.assign\(result\.url\)/);
+  assert.match(html, /fetch\('\/api\/checkout\/sessions\/'\+encodeURIComponent\(sessionId\)\)/);
+  assert.match(html, /if\(!response\.ok\|\|order\.status!=='paid'\)/);
+  assert.match(html, /finalizePaidPurchase\(order,pending\)/);
+  assert.doesNotMatch(html, /Your spot was charged immediately in this demo/);
+});
+
 test('fulfillment copy enforces BrandMyItem-applied branding', () => {
   assert.match(html, /purchase total includes 40% covering BrandMyItem-applied branding, item sales tax, shipping, and handling/i);
   assert.match(html, /delivers it pre-branded within 60 days/);

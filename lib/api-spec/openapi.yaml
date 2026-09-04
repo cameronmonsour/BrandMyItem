@@ -10,6 +10,10 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: campaigns
+    description: Public campaign operations
+  - name: checkout
+    description: Stripe placement checkout operations
 paths:
   /healthz:
     get:
@@ -24,6 +28,84 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /campaigns:
+    post:
+      operationId: registerCampaign
+      tags: [campaigns]
+      summary: Register a campaign and its authoritative spot prices
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CampaignInput"
+      responses:
+        "201":
+          description: Campaign registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Campaign"
+        "400":
+          description: Invalid campaign
+    get:
+      operationId: listCampaigns
+      tags: [campaigns]
+      summary: List active real campaigns
+      responses:
+        "200":
+          description: Active campaigns
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Campaign"
+  /checkout/sessions:
+    post:
+      operationId: createPlacementCheckout
+      tags: [checkout]
+      summary: Create a Stripe Checkout session for one campaign placement
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PlacementCheckoutInput"
+      responses:
+        "201":
+          description: Checkout session created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlacementCheckoutSession"
+        "400":
+          description: Invalid or unavailable placement
+        "404":
+          description: Campaign not found
+        "409":
+          description: Placement already purchased
+  /checkout/sessions/{sessionId}:
+    get:
+      operationId: getPlacementCheckout
+      tags: [checkout]
+      summary: Verify a Stripe Checkout session and return its order
+      parameters:
+        - in: path
+          name: sessionId
+          required: true
+          schema:
+            type: string
+            minLength: 1
+      responses:
+        "200":
+          description: Checkout status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlacementOrder"
+        "404":
+          description: Checkout session not found
 components:
   schemas:
     HealthStatus:
@@ -33,4 +115,100 @@ components:
           type: string
       required:
         - status
+    CampaignInput:
+      type: object
+      required: [id, itemType, title, ownerName, pricesCents]
+      properties:
+        id:
+          type: string
+          minLength: 1
+          maxLength: 100
+        itemType:
+          type: string
+          minLength: 1
+          maxLength: 50
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        ownerName:
+          type: string
+          minLength: 1
+          maxLength: 120
+        pricesCents:
+          type: array
+          minItems: 1
+          maxItems: 20
+          items:
+            type: integer
+            minimum: 100
+            maximum: 10000000
+    Campaign:
+      allOf:
+        - $ref: "#/components/schemas/CampaignInput"
+        - type: object
+          required: [active, createdAt]
+          properties:
+            active:
+              type: boolean
+            createdAt:
+              type: string
+              format: date-time
+    PlacementCheckoutInput:
+      type: object
+      required: [campaignId, spotIndex, brandName, email]
+      properties:
+        campaignId:
+          type: string
+          minLength: 1
+          maxLength: 100
+        spotIndex:
+          type: integer
+          minimum: 0
+          maximum: 19
+        brandName:
+          type: string
+          minLength: 1
+          maxLength: 120
+        email:
+          type: string
+          format: email
+          maxLength: 320
+        destinationUrl:
+          type: string
+          maxLength: 2048
+    PlacementCheckoutSession:
+      type: object
+      required: [url, orderId, sessionId]
+      properties:
+        url:
+          type: string
+          format: uri
+        orderId:
+          type: string
+        sessionId:
+          type: string
+    PlacementOrder:
+      type: object
+      required: [id, campaignId, spotIndex, amountCents, brandName, email, status]
+      properties:
+        id:
+          type: string
+        campaignId:
+          type: string
+        spotIndex:
+          type: integer
+        amountCents:
+          type: integer
+        brandName:
+          type: string
+        email:
+          type: string
+        destinationUrl:
+          type: ["string", "null"]
+        status:
+          type: string
+          enum: [pending, paid, expired, refunded]
+        stripeCheckoutSessionId:
+          type: ["string", "null"]
 

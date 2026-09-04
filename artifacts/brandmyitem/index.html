@@ -2569,7 +2569,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
        <div class="card" style="border-radius:14px;margin-bottom:2px"><div class="card-c" style="padding:12px 14px"><div class="fact"><span>Total today</span><b id="mTotal"></b></div><p class="finetext" style="margin-top:8px">Includes branding application, item sales tax, shipping, and handling.</p></div></div>
       <div class="mrow">
         <button class="btn btn-outline" id="mCancel">Cancel</button>
-        <button class="btn btn-primary" id="mNext">Continue</button>
+        <button class="btn btn-primary" id="mNext">Continue to secure checkout</button>
       </div>
       <p class="finetext">Your logo is the handoff: once the item fully funds, the owner downloads it and produces the approved branding from your exact file. No back and forth needed.</p>
     </div>
@@ -2584,7 +2584,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
         <button class="btn btn-outline" id="mCopyId">Copy ID</button>
         <button class="btn btn-primary" id="mDone">Done</button>
       </div>
-       <p class="finetext">Your spot was charged immediately in this demo. Track fulfillment and check-ins any time from <b>Track order</b>.</p>
+       <p class="finetext">Your payment was confirmed by Stripe. Track fulfillment and check-ins any time from <b>Track order</b>.</p>
     </div>
   </div>
 </div>
@@ -7242,6 +7242,9 @@ function listingPhoto(l){
   if(p&&(!l.custom||isDemo))return p;
   return l.photo||p||'';
 }
+function isDemoListing(l){
+  return !!(l&&(String(l.id||'').indexOf('demo')===0||(typeof DEMO_CONTEXT!=='undefined'&&DEMO_CONTEXT[l.id])));
+}
 function normalizeListingPhoto(l){
   if(!l)return l;
   var p=listingPhoto(l);
@@ -8416,7 +8419,7 @@ function syncDashboardFilterState(){
 }
 function renderDash(){
   syncDashboardFilterState();
-  var all=DB.listings.slice();
+  var all=DB.listings.filter(function(l){return !isDemoListing(l)});
   renderDashboardLiveFeed();
   var q=F.q.toLowerCase();
   var list=all.filter(function(l){
@@ -8453,7 +8456,7 @@ function renderDash(){
   if(F.sort==='rich')list.sort(function(a,b){return goalOf(b)-goalOf(a)});
   var g=document.getElementById('dashGrid');g.innerHTML='';
   if(!list.length){
-    g.innerHTML='<div class="empty"><b>Nothing matches those filters</b>Loosen the filters, or be the first to post one.</div>';
+    g.innerHTML='<div class="empty"><b>'+(all.length?'Nothing matches those filters':'No live campaigns yet')+'</b>'+(all.length?'Loosen the filters, or be the first to post one.':'Real campaigns will appear here as soon as they are posted.')+'</div>';
     return;
   }
   list.forEach(function(l){
@@ -9734,7 +9737,7 @@ function totals(){
   var v=prices.reduce(function(a,b){return a+b},0);
   document.getElementById('totalOut').textContent=money(v);
 }
-function postListing(){
+async function postListing(){
   var name=document.getElementById('pName').value.trim();
   var mail=document.getElementById('pMail').value.trim();
   var address=document.getElementById('pAddress').value.trim();
@@ -9801,6 +9804,23 @@ function postListing(){
     l={id:uid(),type:B.type,owner:name,mail:mail,avatar:B.avatar,habs:B.habs.slice(),cities:B.cities.slice(),universities:B.universities.slice(),purpose:B.purpose.trim(),freq:B.freq,social:B.social,color:B.color,variantModel:B.variantModel,variantSize:B.variantSize,retail:variantRetail(B.type,B.variantSize),source:ITEMS[B.type].source,verified:ITEMS[B.type].verified,socialLinks:Object.assign({},B.socialLinks),slots:B.slots,
       prices:standardPrices,pricesIncludeMarkup:true,claims:standardPrices.map(function(){return null}),created:Date.now(),postedAt:Date.now(),unsoldTimeoutDays:60,
       termMonths:selectedTerm,checkinFrequency:B.checkinFrequency||'monthly',termLocked:false,brandingMode:selectedBranding,status:'live',shipping:{name:name,address:address}};
+  }
+  try{
+    var registerResponse=await fetch('/api/campaigns',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        id:l.id,
+        itemType:l.sourceType||l.type,
+        title:LBLL(l),
+        ownerName:l.owner,
+        pricesCents:l.prices.map(function(price){return Math.round(spotPurchaseTotal(l,price)*100)})
+      })
+    });
+    if(!registerResponse.ok)throw new Error('Campaign registration failed');
+  }catch(error){
+    toast('Could not publish this campaign. Please try again.');
+    return;
   }
   DB.listings.unshift(l);
   logAct('<b>'+name+'</b> posted a <b>'+LBLL(l)+'</b> — '+l.slots+' spot'+(l.slots>1?'s':''),
@@ -10644,26 +10664,72 @@ document.getElementById('mNext').onclick=function(){
   var mail=document.getElementById('mMail').value.trim();
   if(!brand||!mail){toast('Add your brand name and email');return}
   if(!logoData){toast('Upload your logo — it is the file the owner prints from');return}
-   completePurchase();
+   beginStripeCheckout();
 };
-function completePurchase(){
+async function beginStripeCheckout(){
   var brand=document.getElementById('mBrand').value.trim();
   var mail=document.getElementById('mMail').value.trim();
   if(CUR.claims[claimSlot]){toast('That spot just sold');closeBuyModal();return}
-  var price=CUR.prices[claimSlot],fee=CUR.pricesIncludeMarkup?0:feeFor(CUR,price),now=Date.now();
-  var subId='BMI-'+uid().toUpperCase().slice(0,6);
-  CUR.claims[claimSlot]={brand:brand,mail:mail,link:document.getElementById('mLink').value.trim(),logo:logoData,amt:price,fee:fee,
-    feeRate:feeRateOf(CUR),purchasedAt:now,subId:subId,itemId:CUR.id,ts:now};
-  if(!CUR.termLocked){CUR.termLocked=true;CUR.termLockedAt=now}
-  if(pctOf(CUR)>=100&&!CUR.fundedAt){CUR.fundedAt=now;CUR.status='funded';CUR.promisedDeliveryAt=now+deliveryDaysOf(CUR)*86400000}
-  logAct('<b>'+brand+'</b> bought a spot on '+CUR.owner+'&rsquo;s <b>'+LBLL(CUR)+'</b> — '+money(price)+' charged today');
+  if(isDemoListing(CUR)){toast('This is an example campaign and is not accepting payments.');return}
+  var button=document.getElementById('mNext'),link=document.getElementById('mLink').value.trim();
+  button.disabled=true;button.textContent='Opening Stripe…';
+  var pending={campaignId:CUR.id,spotIndex:claimSlot,brand:brand,mail:mail,link:link,logo:logoData};
+  try{
+    sessionStorage.setItem('bmi_pending_checkout',JSON.stringify(pending));
+    var response=await fetch('/api/checkout/sessions',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({campaignId:CUR.id,spotIndex:claimSlot,brandName:brand,email:mail,destinationUrl:link||undefined})
+    });
+    var result=await response.json();
+    if(!response.ok||!result.url)throw new Error(result.error||'Checkout could not be started');
+    location.assign(result.url);
+  }catch(error){
+    button.disabled=false;button.textContent='Continue to secure checkout';
+    toast(error&&error.message?error.message:'Could not open secure checkout');
+  }
+}
+function finalizePaidPurchase(order,pending){
+  var listing=DB.listings.find(function(entry){return entry.id===order.campaignId});
+  if(!listing||listing.claims[order.spotIndex])return;
+  var now=Date.now(),price=order.amountCents/100,subId='BMI-'+String(order.id).toUpperCase().slice(0,6);
+  listing.claims[order.spotIndex]={brand:pending.brand,mail:pending.mail,link:pending.link,logo:pending.logo,amt:price,fee:0,
+    feeRate:feeRateOf(listing),purchasedAt:now,subId:subId,itemId:listing.id,ts:now,stripeOrderId:order.id};
+  CUR=listing;
+  claimSlot=order.spotIndex;
+  if(!listing.termLocked){listing.termLocked=true;listing.termLockedAt=now}
+  if(pctOf(listing)>=100&&!listing.fundedAt){listing.fundedAt=now;listing.status='funded';listing.promisedDeliveryAt=now+deliveryDaysOf(listing)*86400000}
+  logAct('<b>'+pending.brand+'</b> bought a spot on '+listing.owner+'&rsquo;s <b>'+LBLL(listing)+'</b> — '+money(price)+' charged today');
   saveDB();
-  trackEvent('spot_purchase_completed',spotAnalyticsData(claimSlot,price));
+  trackEvent('spot_purchase_completed',spotAnalyticsData(order.spotIndex,price));
   drawItemMap();refreshItemCards();
+  document.getElementById('modalBg').classList.add('on');
   document.getElementById('mStep1').style.display='none';
   document.getElementById('mStep3').style.display='';
   document.getElementById('mSubId').textContent=subId;
-  document.getElementById('mSubMail').textContent=mail;
+  document.getElementById('mSubMail').textContent=pending.mail;
+}
+async function resumeStripeCheckout(){
+  var params=new URLSearchParams(location.search);
+  if(params.get('checkout')==='cancelled'){
+    history.replaceState(null,'',location.pathname+location.hash);
+    toast('Checkout cancelled. Your card was not charged.');
+    return;
+  }
+  var sessionId=params.get('session_id');
+  if(params.get('checkout')!=='success'||!sessionId)return;
+  try{
+    var pending=JSON.parse(sessionStorage.getItem('bmi_pending_checkout')||'null');
+    if(!pending)throw new Error('Checkout details are no longer available');
+    var response=await fetch('/api/checkout/sessions/'+encodeURIComponent(sessionId));
+    var order=await response.json();
+    if(!response.ok||order.status!=='paid')throw new Error('Payment is still being confirmed');
+    sessionStorage.removeItem('bmi_pending_checkout');
+    history.replaceState(null,'',location.pathname+location.hash);
+    finalizePaidPurchase(order,pending);
+  }catch(error){
+    toast(error&&error.message?error.message:'Could not confirm payment');
+  }
 }
 document.getElementById('mCopyId').onclick=function(){
   var id=document.getElementById('mSubId').textContent;
@@ -10944,6 +11010,7 @@ loadItemLogos();
 initHomeFeatureBento();
 startHeroWordCycle();
 route();
+resumeStripeCheckout();
 </script>
 </body>
 </html>
