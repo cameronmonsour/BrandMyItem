@@ -89,11 +89,13 @@ test('all bento artwork is contained away from copy on narrow screens', () => {
   assert.match(html, /@media\(max-width:600px\)\{/);
   assert.match(html, /\.fb-bagwrap\{right:22px;top:210px;height:200px\}/);
   assert.match(html, /\.fb-stage\{left:16px;right:16px;bottom:64px\}/);
-  assert.match(html, /\.fb-shot\{left:-22px;right:auto;height:190px\}/);
+  assert.match(html, /\.fb-shot\{left:-22px;right:auto;height:190px;width:calc\(190px \* \(406 \/ 560\)\)\}/);
+  assert.match(html, /\.fb-shot img\{width:100%;max-width:none\}/);
   assert.match(html, /\.fb-shot\{position:absolute;left:-30px;right:auto;top:var\(--fb-shot-top,250px\);height:236px;z-index:1/);
   assert.match(html, /checkinTile\.style\.setProperty\('--fb-shot-top',Math\.ceil\(proofRect\.bottom-tileRect\.top\+16\)\+'px'\)/);
   assert.match(html, /\.fb-price\{padding:26px 132px 48px 28px;min-height:260px\}/);
   assert.match(html, /\.fb-term \.fb-suit\{right:18px;top:34px;height:96px\}/);
+  assert.match(html, /\.fb-term \.fb-suit\{width:calc\(96px \* \(134 \/ 197\)\)\}/);
 });
 
 test('bento photos keep one white outline without doubling baked-in suitcase edges', () => {
@@ -108,8 +110,11 @@ test('bento photos keep one white outline without doubling baked-in suitcase edg
   assert.equal((html.match(/<figure><img class="fb-photo-frame" src="bento\/checkin-cycle-[1-4]\.webp"/g) || []).length, 4);
   assert.equal((html.match(/class="fb-proof-flight fb-photo-frame"/g) || []).length, 4);
   assert.match(html, /<div class="fb-shot"[^>]*><img class="fb-photo-cutout" src="bento\/checkin\.png"/);
+  assert.match(html, /\.fb-shot\{width:calc\(236px \* \(406 \/ 560\)\)\}/);
+  assert.match(html, /\.fb-shot img\{width:100%;max-width:none\}/);
   assert.match(html, /<img class="fb-price-phone fb-photo-cutout" src="bento\/cutout-iphone\.png"/);
   assert.match(html, /<img class="fb-suit fb-photo-cutout" src="bento\/suit\.png"/);
+  assert.match(html, /\.fb-term \.fb-suit\{width:calc\(116px \* \(134 \/ 197\)\)\}/);
 });
 
 test('the Next proof uses the supplied phone photo and the same flight animation as prior cycles', () => {
