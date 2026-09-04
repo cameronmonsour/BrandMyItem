@@ -9247,7 +9247,12 @@ function cuWriteEditorTile(index,local){
   var face=Math.floor(index/((typeof B!=='undefined'&&B.slots)||CU.tiles.length||1));
   var stored=CU.tiles[index];
   if(!stored)return;
-  if(count<2){Object.keys(stored).forEach(function(k){delete stored[k]});Object.assign(stored,local);return}
+  if(count<2){
+    if(stored===local)return;
+    Object.keys(stored).forEach(function(k){delete stored[k]});
+    Object.assign(stored,local);
+    return;
+  }
   stored.x=(face+local.x)/count;stored.y=local.y;stored.w=local.w/count;stored.h=local.h;
   stored.shape=local.shape;stored.color=local.color;
   if(local.pts)stored.pts=local.pts.map(function(p){return [(face+p[0])/count,p[1]]});
