@@ -74,7 +74,7 @@ test('headphone builder includes right and left product faces', () => {
   assert.match(html, /var rx=\(t\.x-t\.w\/2\)\*iw,ry=\(t\.y-t\.h\/2\)\*ih,rw=t\.w\*iw/);
   assert.match(html, /visibleTiles\.forEach\(function\(viewTile,viewIndex\)\{/);
   assert.match(html, /g\.fillText\(String\(viewIndex\+1\),t\.x\*iw,t\.y\*ih\)/);
-  assert.match(html, /Math\.max\(12,Math\.min\(18,iw\*\.018\)\)/);
+  assert.match(html, /Math\.max\(12,Math\.min\(48,iw\*\.018\)\)/);
   assert.match(html, /cuWriteEditorTile\(DRAG\.i,t\)/);
   assert.match(html, /if\(count<2\)\{\s*if\(stored===local\)return;/);
   assert.match(html, /split the composite editor coordinates back into each photographed face/);
