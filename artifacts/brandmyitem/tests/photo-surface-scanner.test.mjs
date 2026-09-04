@@ -83,7 +83,7 @@ test('headphone builder includes right and left product faces', () => {
 test('golf bag builder includes back, left, and right product faces', () => {
   assert.match(
     html,
-    /golfbag:\[\s*\['Back','campaign\/product-golfbag-back\.png'\],\s*\['Left','campaign\/product-golfbag-left\.png'\],\s*\['Right','campaign\/product-golfbag-right\.png'\]\s*\]/,
+    /golfbag:\[\s*\['Front','campaign\/product-golfbag\.png'\],\s*\['Back','campaign\/product-golfbag-back\.png'\],\s*\['Left','campaign\/product-golfbag-left\.png'\],\s*\['Right','campaign\/product-golfbag-right\.png'\]\s*\]/,
   );
   assert.match(html, /id="cuSideTools" role="group" aria-label="Edit item side"/);
 });
