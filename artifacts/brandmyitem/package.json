@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --config vite.config.ts --host 0.0.0.0",
-    "build": "node ./scripts/generate-og-image.mjs && vite build --config vite.config.ts",
+    "build": "node ./scripts/verify-brand-assets.mjs && node ./scripts/generate-og-image.mjs && vite build --config vite.config.ts",
     "serve": "vite preview --config vite.config.ts --host 0.0.0.0",
     "swap:iphone17": "node ./scripts/swap-iphone17-render.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",

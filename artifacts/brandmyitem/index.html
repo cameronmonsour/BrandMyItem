@@ -707,6 +707,19 @@ details.faq .fa b{color:var(--fg);font-weight:600}
 .spot-price-field label{font-size:12px;font-weight:650;white-space:nowrap}.spot-price-field span{color:var(--mfg);font-size:13px}
 .spot-price-field input{width:100%;min-width:0;border:0;outline:0;background:transparent;font:600 13px Inter,-apple-system,sans-serif}
 .spot-pricing-total.is-valid{color:#1F7A44;font-weight:650}
+.spot-price-readonly{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--border);border-radius:9px;padding:8px 10px;background:#fff;font-size:12px;font-weight:650}
+.spot-price-readonly b{font-variant-numeric:tabular-nums}
+.inline-error{color:#B23327;font-size:12px;line-height:1.4;margin:6px 0 0}
+.inline-error[hidden]{display:none}
+.address-grid{display:grid;grid-template-columns:2fr 1fr;gap:10px;margin-top:7px}
+.address-grid .address-wide{grid-column:1/-1}
+.address-grid .input{width:100%}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.w9-notice>b{display:block;font-size:13px;color:var(--fg);margin-bottom:5px}
+.w9-notice .gate-copy{display:block}
+.social-inline{display:flex;gap:7px;align-items:center;margin-top:7px;width:100%}
+.social-inline input{flex:1;min-width:0}
+.social-inline button{height:38px;padding:0 11px;border:1px solid var(--fg);border-radius:9px;background:var(--fg);color:#fff;font-size:12px;font-weight:650}
 @media(max-width:640px){.sizing-ready{align-items:flex-start;flex-direction:column}.spot-price-grid{grid-template-columns:1fr}}
 .icontool{display:flex;align-items:center;gap:6px;width:32px;height:32px;padding:0;border-radius:8px;border:1px solid transparent;background:transparent;color:var(--fg);cursor:pointer;transition:background .12s,border-color .12s;justify-content:center;flex-shrink:0}
 .icontool svg{width:16px;height:16px;stroke-width:1;flex-shrink:0}
@@ -1800,8 +1813,8 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
       <div class="tile" style="right:5%;top:19%;width:12vw;max-width:200px;aspect-ratio:1;animation-duration:9s;animation-delay:.3s" data-d="12"><img class="obj" data-item="golfbag" alt=""></div>
       <div class="tile" style="left:6%;bottom:20%;width:12vw;max-width:200px;aspect-ratio:5/6;animation-duration:8.6s;animation-delay:.9s" data-d="10"><img class="obj" data-item="case" alt=""></div>
       <div class="tile" style="left:23%;bottom:14%;width:8vw;max-width:135px;aspect-ratio:4/5;animation-duration:6.8s;animation-delay:1.5s" data-d="24"><img class="obj" data-item="bottle" alt=""></div>
-      <div class="tile" style="left:39%;bottom:10%;width:11vw;max-width:185px;aspect-ratio:3/2;animation-duration:7s;animation-delay:1.2s" data-d="26"><img class="obj" data-item="weekender" alt=""></div>
-      <div class="tile" style="left:58%;bottom:16%;width:10vw;max-width:170px;aspect-ratio:5/4;animation-duration:7.6s;animation-delay:.2s" data-d="18"><img class="obj" data-item="suit" alt=""></div>
+      <div class="tile" style="left:39%;bottom:10%;width:11vw;max-width:185px;aspect-ratio:3/2;animation-duration:7s;animation-delay:1.2s" data-d="26"><img class="obj" data-item="backpack" alt=""></div>
+      <div class="tile" style="left:58%;bottom:16%;width:10vw;max-width:170px;aspect-ratio:5/4;animation-duration:7.6s;animation-delay:.2s" data-d="18"><img class="obj" data-item="case" alt=""></div>
       <div class="tile" style="right:6%;bottom:21%;width:10vw;max-width:170px;aspect-ratio:5/6;animation-duration:8.2s;animation-delay:1.8s" data-d="16"><img class="obj" data-item="paddle" alt=""></div>
       <div class="herocenter">
         <h1 class="sr-only">BrandMyItem</h1>
@@ -2255,13 +2268,12 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
                 </div>
                 <div class="sizing-panel" id="cuSizingPanel">
                   <div class="sizing-ready" id="cuSizingReady">
-                    <div class="sizing-ready-copy"><b>Finished sizing the brand spots?</b><span>Lock the shapes, then set the price for every spot.</span></div>
+                    <div class="sizing-ready-copy"><b>Finished sizing the brand spots?</b><span>Lock the shapes to calculate each spot's price from its sized area.</span></div>
                     <button class="btn btn-primary" id="cuCompleteSizing" type="button">Complete sizing</button>
                   </div>
-                  <div id="cuSpotPricing" style="display:none">
-                    <div class="spot-pricing-head"><div><b>Price each brand spot</b><span style="display:block">Every spot must add up to the full purchase goal.</span></div><button class="btn btn-secondary" id="cuEditSizing" type="button">Edit sizing</button></div>
-                    <div class="spot-price-grid" id="cuSpotPriceGrid"></div>
-                    <div class="spot-pricing-total" id="cuSpotPriceTotal" role="status" aria-live="polite"></div>
+                   <div id="cuSpotPricing" style="display:none">
+                     <div class="spot-pricing-head"><div><b>Computed spot prices</b><span style="display:block">Each price is based on sized surface area.</span></div><button class="btn btn-secondary" id="cuEditSizing" type="button">Edit sizing</button></div>
+                     <div class="spot-price-grid" id="cuSpotComputed" role="status" aria-live="polite"></div>
                   </div>
                 </div>
               </div>
@@ -2281,7 +2293,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           <div class="lbl"><span id="slotLbl">1 spot</span><small id="slotSub">full brand</small></div>
           <button id="slotPlus" aria-label="More spots">+</button>
         </div>
-        <div class="mapcap" style="display:none">Prices are editable right on each spot.</div>
+         <div class="mapcap" style="display:none">Prices are computed from each spot's sized surface area.</div>
       </div>
       <div class="panel">
         <div class="card brand-profile-card"><div class="card-h"><div class="card-t">Why brands should brand this item</div></div>
@@ -2308,7 +2320,8 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           </div>
           <div class="field" style="margin:18px 0 0">
             <label class="label" for="purposeInput">Purpose of the item</label>
-            <textarea class="input profile-purpose" id="purposeInput" maxlength="500" placeholder="Daily work in coffee shops, client meetings, and travel."></textarea>
+             <textarea class="input profile-purpose" id="purposeInput" maxlength="500" placeholder="Daily work in coffee shops, client meetings, and travel." aria-describedby="purposeError"></textarea>
+             <p class="inline-error" id="purposeError" role="alert" hidden></p>
           </div>
           <div class="label">How often it is seen</div>
           <div class="habs" id="freqPills"></div>
@@ -2316,6 +2329,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           <div class="habs" id="socialPills"></div>
           <div class="label">Share your reach</div>
           <div class="social-connect" id="socialConnect"></div>
+           <p class="inline-error" id="socialError" role="alert" hidden></p>
           <div class="brand-deal-section">
             <div class="field" style="margin-top:14px"><div class="label">Check-in term</div>
               <div class="choice-grid term-choice-grid" id="termChoices" role="radiogroup" aria-label="Check-in term">
@@ -2351,17 +2365,26 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
              <div class="avatar-picker-head"><label class="label" for="avatarGrid">Choose your character</label></div>
              <div class="avatar-grid" id="avatarGrid" role="group" aria-label="Choose your character"></div>
            </div>
-           <div class="field"><label class="label" for="pName">Your name</label><input class="input" id="pName" placeholder="Your name"></div>
-           <div class="field"><label class="label" for="pMail">Email for updates and shipping</label><input class="input" id="pMail" type="email" placeholder="you@email.com"></div>
-          <div class="field"><label class="label" for="pAddress">Shipping address</label><input class="input" id="pAddress" type="text" autocomplete="street-address" placeholder="Street address, city, state, ZIP" aria-describedby="pAddressError"><p class="finetext" id="pAddressError" role="alert" style="display:none;color:#B23327;margin:6px 0 0"></p></div>
+           <p class="inline-error" id="avatarError" role="alert" hidden>Select a character before posting.</p>
+           <div class="field"><label class="label" for="pName">Your name</label><input class="input" id="pName" placeholder="Your name" aria-describedby="pNameError"><p class="inline-error" id="pNameError" role="alert" hidden></p></div>
+           <div class="field"><label class="label" for="pMail">Email for updates and shipping</label><input class="input" id="pMail" type="email" placeholder="you@email.com" aria-describedby="pMailError"><p class="inline-error" id="pMailError" role="alert" hidden></p></div>
+           <div class="field"><span class="label">Shipping address</span><div class="address-grid">
+             <div class="address-wide"><label class="sr-only" for="pStreet">Street</label><input class="input" id="pStreet" autocomplete="address-line1" placeholder="Street address" aria-describedby="pStreetError"><p class="inline-error" id="pStreetError" role="alert" hidden></p></div>
+             <div><label class="sr-only" for="pUnit">Unit</label><input class="input" id="pUnit" autocomplete="address-line2" placeholder="Unit (optional)"></div>
+             <div><label class="sr-only" for="pCity">City</label><input class="input" id="pCity" autocomplete="address-level2" placeholder="City"><p class="inline-error" id="pCityError" role="alert" hidden></p></div>
+             <div><label class="sr-only" for="pState">State</label><select class="input" id="pState" autocomplete="address-level1" aria-describedby="pStateError"><option value="">State</option><option>AL</option><option>AK</option><option>AZ</option><option>AR</option><option>CA</option><option>CO</option><option>CT</option><option>DE</option><option>FL</option><option>GA</option><option>HI</option><option>ID</option><option>IL</option><option>IN</option><option>IA</option><option>KS</option><option>KY</option><option>LA</option><option>ME</option><option>MD</option><option>MA</option><option>MI</option><option>MN</option><option>MS</option><option>MO</option><option>MT</option><option>NE</option><option>NV</option><option>NH</option><option>NJ</option><option>NM</option><option>NY</option><option>NC</option><option>ND</option><option>OH</option><option>OK</option><option>OR</option><option>PA</option><option>RI</option><option>SC</option><option>SD</option><option>TN</option><option>TX</option><option>UT</option><option>VT</option><option>VA</option><option>WA</option><option>WV</option><option>WI</option><option>WY</option><option>DC</option></select><p class="inline-error" id="pStateError" role="alert" hidden></p></div>
+             <div><label class="sr-only" for="pZip">ZIP code</label><input class="input" id="pZip" inputmode="numeric" maxlength="5" autocomplete="postal-code" placeholder="ZIP"><p class="inline-error" id="pZipError" role="alert" hidden></p></div>
+           </div><p class="inline-error" id="pAddressError" role="alert" hidden></p></div>
            <p class="finetext tax-note">Items are taxable compensation. If the value is $2,000 or more, a Form 1099 is issued.</p>
-           <div class="w9-notice" id="w9Notice" hidden>Because this campaign total is $2,000 or more, add a public social handle and submit a completed W-9 before publication.<div class="field" style="margin:10px 0 0"><label class="label" for="w9Input">Completed W-9 (PDF)</label><input class="input" id="w9Input" type="file" accept="application/pdf" style="padding:9px"></div><span id="w9Status" role="status"></span></div>
+            <div class="w9-notice" id="w9Notice" hidden><b>Required for listings of $2,000 or more</b><span class="gate-copy">Add at least one public social handle for a listing of $2,000 or more.</span><div class="field" style="margin:10px 0 0"><label class="label" for="w9Input">Completed W-9 (PDF)</label><input class="input" id="w9Input" type="file" accept="application/pdf" style="padding:9px" aria-describedby="w9Error"></div><p class="inline-error" id="w9Error" role="alert" hidden></p><span id="w9Status" role="status"></span></div>
             <div class="finetext" style="margin:14px 0 0;line-height:1.65">
               <div>The item is yours when it arrives.</div>
-              <div>During your term, don't sell it, and don't remove or cover the placements. If you do, you owe the campaign total.</div>
+      <div>During your term, don't sell it, and don't remove or cover the placements. If you do, you owe the campaign total.</div>
               <div>Stolen or lost? File a police report and you're done — no penalty.</div>
             </div>
             <label class="assent-row"><input type="checkbox" id="ownerAssent"><span>I&rsquo;m 18 or older and I agree to the <a href="legal.html#terms" target="_blank" rel="noopener">Terms of Use</a>, <a href="legal.html#content" target="_blank" rel="noopener">Content Standards</a>, and <a href="legal.html#checkins" target="_blank" rel="noopener">Check-in Policy</a>.</span></label>
+            <p class="inline-error" id="assentError" role="alert" hidden>Agree to the owner terms before posting.</p>
+            <p class="inline-error" id="sizingError" role="alert" hidden></p>
            <button class="btn btn-primary btn-full btn-lg" id="postBtn" disabled>Post my item live</button>
         </div></div>
       </div>
@@ -2471,11 +2494,11 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 
         <article class="ap-detail-panel">
           <h3>Proof &amp; protection</h3>
-          <p>BrandMyItem keeps the campaign legible from the first logo upload through recurring owner check-ins.</p>
+          <p>BrandMyItem keeps the listing legible from the first logo upload through recurring owner check-ins.</p>
           <div class="ap-fit-grid">
             <div class="ap-fit-box"><span>Branding &amp; delivery</span><b id="iBrandingWindow">Not provided</b></div>
             <div class="ap-fit-box"><span>Proof cadence</span><b id="iProofCadence">Not provided</b></div>
-           <div class="ap-fit-box ap-col-span-2"><span>Brand protection</span><b>No charge unless the campaign fully funds. Declined funding attempts get a 48-hour card-update window.</b></div>
+           <div class="ap-fit-box ap-col-span-2"><span>Brand protection</span><b>No charge unless the listing fully funds. Declined funding attempts get a 48-hour card-update window.</b></div>
           </div>
         </article>
       </div>
@@ -2513,7 +2536,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
     <div class="fine">
       <p>* Advertising spots are priced by surface share and always sum exactly to the listing's stated campaign total. A brand reserves a spot by saving a card, and no charge is made at reservation. If a listing is not fully funded within its 60-day funding window, reservations are released with no charge. Once a listing is fully funded, BrandMyItem buys the item new at retail, produces and professionally applies every placement, and delivers the finished item to the owner within 60 days of funding. Owners never receive or handle money, and never source or apply placement materials. Placements are permanent once applied. The owner selects the proof term (6, 12, or 18 months of check-ins) and check-in cadence (weekly, biweekly, or monthly) when posting; both are locked when the listing is published and cannot be changed. The owner's first check-in is due within 7 days of delivery. Missed check-ins result in a public flag and, if continued, restriction from posting new listings; there are no financial penalties. Items are new and carry the manufacturer's warranty. Spot availability is first come, first served, while spots last. Placements are paid advertising, not endorsements by the owner.</p>
       <p>Owners who post about their item on social media must clearly and conspicuously disclose their material connection to sponsoring brands in accordance with the FTC Endorsement Guides. Brands represent that they have rights to any mark they submit and grant IRLi LLC a limited license to reproduce it on the reserved spot and to display the owner's check-in photos publicly; no other use is licensed. Placements that are unlawful, infringing, or within restricted categories are declined. Before funding, the reservation is released with no charge. Receiving an item may constitute taxable income; each party is responsible for its own taxes, and required tax forms are issued where the law requires. Product and manufacturer names shown in listings identify the item only; BrandMyItem and its listings are not sponsored by, endorsed by, or affiliated with any item manufacturer, and all third-party marks belong to their respective owners. Use of the Service is governed by the Terms of Use, which include a binding individual arbitration agreement and class action waiver, with a 30-day opt-out.</p>
-      <p>BrandMyItem is operated by IRLi LLC, a California limited liability company, Newport Beach, California. BrandMyItem is a marketplace for physical advertising placements; it is not a bank, money transmitter, payment processor, crowdfunding platform, lender, or investment of any kind. Avatars by pack author, CC BY 4.0. Legal notices: legal@brandmyitem.com. Privacy requests: privacy@brandmyitem.com.</p>
+       <p>BrandMyItem is operated by IRLi LLC, a California limited liability company, Newport Beach, California. BrandMyItem is a marketplace for physical advertising placements; it is not a bank, money transmitter, payment processor, crowdfunding platform, lender, or investment of any kind. Avatars by <span id="avatarAuthorName">Kailash Saravanan</span>, CC BY 4.0. Legal notices: legal@brandmyitem.com. Privacy requests: privacy@brandmyitem.com.</p>
     </div>
 
     <hr>
@@ -2530,7 +2553,6 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           <li><a href="#dashboard">Golf</a></li>
           <li><a href="#dashboard">Coolers &amp; bottles</a></li>
           <li><a href="#dashboard">Sports</a></li>
-          <li><a href="#dashboard">Style</a></li>
         </ul>
       </div>
       <div>
@@ -2549,7 +2571,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           <li><a href="#dashboard">Open spots</a></li>
           <li><a href="#homeFeatureBento">Priced by surface</a></li>
           <li><a href="#dashboard">Submit a logo</a></li>
-          <li><a href="#home-faq">The 60-day refund</a></li>
+           <li><a href="#homeFeatureBento">Not funded? Never charged</a></li>
           <li><a href="#home-how">Proof &amp; check-ins</a></li>
         </ul>
       </div>
@@ -2595,13 +2617,13 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
   <div class="campaign-dialog" id="campaignDetailsDialog" role="dialog" aria-modal="true" aria-labelledby="campaignTitle" tabindex="-1">
     <div class="campaign-scroll">
       <div class="campaign-top">
-        <button class="campaign-close" id="campaignClose" type="button" aria-label="Close campaign preview">&times;</button>
+      <button class="campaign-close" id="campaignClose" type="button" aria-label="Close listing preview">&times;</button>
       </div>
       <div id="campaignDetails"></div>
     </div>
     <div class="campaign-footer">
       <div class="campaign-footer-note">See spot sizes, then choose an open spot.</div>
-      <button class="btn btn-primary campaign-continue" id="campaignContinue" type="button">View full listing <span aria-hidden="true">&rarr;</span></button>
+      <button class="btn btn-primary campaign-continue" id="campaignContinue" type="button">View item listing <span aria-hidden="true">&rarr;</span></button>
     </div>
   </div>
 </div>
@@ -6739,8 +6761,8 @@ function pad(n){return n<10?'0'+n:''+n}
 var AUCTION_DAYS=60;
 var CATS=[
   {id:'All',item:null},{id:'Tech',item:'macbook'},{id:'Audio',item:'headphones'},
-  {id:'Travel',item:'case'},{id:'Bags',item:'weekender'},{id:'Golf',item:'golfbag'},
-  {id:'Coolers',item:'cooler'},{id:'Sports',item:'paddle'},{id:'Style',item:'suit'}
+  {id:'Travel',item:'case'},{id:'Bags',item:'backpack'},{id:'Golf',item:'golfbag'},
+  {id:'Coolers',item:'cooler'},{id:'Sports',item:'paddle'}
 ];
 var ITEMS={
   macbook:{label:'MacBook Pro',brand:'Apple',color:'Silver',cat:'Tech',retail:1599,maxSlots:10,surf:[28,18],verified:'2026-08-29',source:'https://www.apple.com/macbook-pro/specs/',
@@ -6757,12 +6779,8 @@ var ITEMS={
     specs:[['Type','Wireless over-ear headphones'],['Color','Midnight'],['Audio','Active Noise Cancellation, Adaptive Audio, Transparency'],['Connection','USB-C, Bluetooth 5.3'],['Battery','Up to 20 hours'],['Controls','Digital Crown and noise control button'],['Dimensions','7.37 × 6.64 × 3.28 in'],['Weight','13.6 oz (386.2 g)'],['Case','Smart Case included']]},
   golfbag:{label:'Deluxe Carry Stand Bag',brand:'PXG',color:'White / Black',cat:'Golf',retail:325,maxSlots:5,surf:[60,25],verified:'2026-08-29',source:'https://www.pxg.com/products/deluxe-carry-stand-bag',
     specs:[['Type','Deluxe carry stand golf bag'],['Color','White / Black'],['Top','4-way top'],['Storage','13 total pockets'],['Base','Magnetic stand feet'],['Carry','Padded dual carry straps'],['Protection','Lined valuables and rangefinder pockets']]},
-  weekender:{label:'Keepall Bandoulière',brand:'Louis Vuitton',color:'Monogram Canvas',cat:'Bags',retail:2800,maxSlots:3,surf:[40,22],verified:'2026-08-29',source:'https://us.louisvuitton.com/eng-us/men/bags/all-bags/keepall/_/N-t1uezqf4-ak1bl19y8',
-    specs:[['Model','Keepall Bandoulière'],['Canvas','Monogram coated canvas'],['Trim','Cowhide-leather trim'],['Lining','Textile lining'],['Color','Monogram Canvas'],['Dimensions','Size-specific official dimensions'],['Hardware','Silver-color hardware'],['Carry','Removable, adjustable strap with shoulder patch'],['Origin','Made in France, Spain, Italy, or USA']]},
   paddle:{label:'Pro V Paddle',brand:'JOOLA',color:'Blaze Red (Ben Johns)',cat:'Sports',retail:299.95,maxSlots:2,surf:[20,25],verified:'2026-08-29',source:'https://joola.com/collections/pro-v',
     specs:[['Series','Pro V'],['Model','Perseus Pro V'],['Core thickness','16mm'],['Surface','Textured carbon-fiber face'],['Shape','Elongated'],['Color','Blaze Red (Ben Johns)'],['Dimensions','Model-specific official dimensions'],['Certification','USAP PBCoR .43 certified']]},
-  suit:{label:'Luxury Twill O’Connor Tuxedo',brand:'Tom Ford',color:'Black',cat:'Style',retail:7490,maxSlots:4,surf:[40,50],verified:'2026-08-29',source:'https://www.tomfordfashion.com/en-us/luxury-twill-oconnor-tuxedo/2EYPT1-WOS09X5N.html',
-    specs:[['Style','O’Connor tuxedo'],['Lapel','Peak lapel with satin trim'],['Fabric','15-micron luxury twill - 100% wool'],['Color','Black'],['Jacket','Single-breasted with double vent'],['Trousers','Matching trousers with satin side stripe'],['Jacket length','75.5 cm'],['Hem','19 cm'],['Origin','Made in Italy'],['Care','Professional dry clean']]},
   backpack:{label:'Search Backpack',brand:'TUMI',color:'Black',cat:'Bags',retail:850,maxSlots:4,surf:[35,45],verified:'2026-08-29',source:'https://www.tumi.com/p/search-backpack-01470531041/',
     specs:[['Collection','Alpha Bravo'],['Material','Smooth leather'],['Color','Black'],['Laptop','Padded compartment fits up to 15-inch screens'],['Storage','Main compartment, front zip pocket, side zip pockets'],['Carry','Top handle, padded mesh back panel, adjustable shoulder straps'],['Add-a-Bag','Sleeve for securing to luggage'],['Dimensions','43H × 21D × 35.5W cm'],['Weight','1.832 kg'],['Warranty','Limited five-year global warranty']]}
 };
@@ -6790,12 +6808,6 @@ var ITEM_VARIANTS={
   case:{colors:[['Silver','#C7C9CC'],['Black','#26262A'],['Titanium','#8B8D90']],sizeLabel:'Size',sizeQ:'Official Original Cabin configuration.',sizes:[['Cabin',0]]},
   headphones:{colors:[['Midnight','#252B35'],['Starlight','#E7E2D3'],['Blue','#8FB3C9'],['Purple','#766D91'],['Orange','#D97843']],sizeLabel:'Fit',sizeQ:'One size, made to fit.',sizes:[['Standard',0]]},
   golfbag:{colors:[['White / Black','#F2F2F2'],['Black','#26262A'],['Darkness','#202126'],['White','#F7F7F7']],sizeLabel:'Style',sizeQ:'Official one-size carry stand bag.',sizes:[['Standard',0]]},
-  weekender:{colors:[['Monogram Canvas','#8B5A3C'],['Monogram Eclipse','#26262A'],['Monogram Macassar','#4A2C22'],['Damier Graphite','#5C6066'],['Damier Azur','#D9E0E4']],sizeLabel:'Size',sizeQ:'Pick your Keepall size.',sizes:[
-    ['Keepall 45',-500,{Model:'Keepall Bandoulière 45',Dimensions:'17.7 × 10.6 × 8.3 in'}],
-    ['Keepall 50',-250,{Model:'Keepall Bandoulière 50',Dimensions:'19.7 × 11.4 × 8.7 in'}],
-    ['Keepall 55',0,{Model:'Keepall Bandoulière 55',Dimensions:'21.7 × 12.2 × 9.4 in'}],
-    ['Keepall 60',300,{Model:'Keepall Bandoulière 60',Dimensions:'23.6 × 13.0 × 9.8 in'}]
-  ]},
   paddle:{
     models:[
       ['Perseus Pro V',{Model:'Perseus Pro V',Shape:'Elongated'},['16mm','14mm']],
@@ -6814,17 +6826,19 @@ var ITEM_VARIANTS={
     sizeLabel:'Core thickness',sizeQ:'Pick an available thickness.',
     sizes:[['16mm',0,{'Core thickness':'16mm'}],['14mm',0,{'Core thickness':'14mm'}]]
   },
-  suit:{colors:[['Black','#1D1D1F']],sizeLabel:'Size',sizeQ:'Select an available Tom Ford jacket size.',sizes:[
-    ['44',0,{'Size':'44','Availability':'Available'},true],
-    ['46',0,{'Size':'46','Availability':'Out of stock'},false],
-    ['48',0,{'Size':'48','Availability':'Available'},true],
-    ['50',0,{'Size':'50','Availability':'Available'},true],
-    ['52',0,{'Size':'52','Availability':'Out of stock'},false]
-  ]},
   backpack:{colors:[['Black','#26262A']],sizeLabel:'Size',sizeQ:'One official 43 cm size.',sizes:[['43 cm',0]]}
 };
 /* One runtime registry keeps catalog identity, taxonomy, pricing, methods, options, and specs together. */
 var CATALOG={items:ITEMS,categories:CATS,methods:BRANDING_METHODS,variants:ITEM_VARIANTS};
+var MAX_CATALOG_CAMPAIGN_TOTAL=6250;
+Object.keys(ITEMS).forEach(function(key){
+  var total=markedUpRetail(ITEMS[key].retail);
+  if(total>MAX_CATALOG_CAMPAIGN_TOTAL){
+    console.error('Catalog item rejected: '+key+' campaign total '+total+' exceeds '+MAX_CATALOG_CAMPAIGN_TOTAL);
+    delete ITEMS[key];
+  }
+});
+CATALOG.items=ITEMS;
 var SIZE_TIERS=[[0.19,'Small'],[0.28,'Medium'],[1,'Large']];
 var HABITATS=['Campus','Coffee shops','Gym','Office','Airport','Events'];
 var FREQS=['Daily','Few times a week','Weekly','Occasionally'];
@@ -6872,7 +6886,7 @@ if(!DB){
       prices:[25,20],claims:[fakeSponsorClaim(6,25),fakeSponsorClaim(7,20)],created:now-1000*60*60*5},
     {id:'demo3',type:'case',owner:'Jordan',mail:'',habs:['Airport'],slots:4,
       prices:[140,140,70,70],claims:[null,null,null,fakeSponsorClaim(0,70)],created:now-1000*60*60*26},
-    {id:'demo4',type:'suit',owner:'Dre',mail:'',habs:['Events'],slots:1,
+    {id:'demo4',type:'backpack',owner:'Dre',mail:'',habs:['Events'],slots:1,
       prices:[750],claims:[null],created:now-1000*60*12},
     {id:'demo5',type:'iphone',owner:'Sofia',mail:'',habs:['Campus','Gym'],slots:5,
       prices:[167,233,233,233,233],claims:[fakeSponsorClaim(1,167),null,null,null,null],created:now-1000*60*60*2},
@@ -7389,15 +7403,19 @@ function suggest(type,count){
   var sd=(typeof SCANDATA!=='undefined')&&SCANDATA[type];
   if(sd&&sd.prices&&sd.prices[count]){
     var base=sd.prices[count],baseTotal=base.reduce(function(a,b){return a+b},0);
-    var scaled=base.map(function(p){return Math.max(1,Math.round(p*retail/baseTotal))});
-    scaled[0]+=Math.round(retail)-scaled.reduce(function(a,b){return a+b},0);
+    var goal=markedUpRetail(retail);
+    var scaled=base.map(function(p){return Math.max(1,Math.round(p*goal/baseTotal))});
+    var largest=base.reduce(function(best,p,i){return p>base[best]?i:best},0);
+    scaled[largest]+=goal-scaled.reduce(function(a,b){return a+b},0);
     return scaled;
   }
   var ws=ORDER[count].map(function(k){return(k==='t'||k==='b')?2:1});
   var tw=ws.reduce(function(a,b){return a+b},0);
-  var out=ws.map(function(w){return Math.max(5,Math.round(retail*w/tw/5)*5)});
-  var diff=retail-out.reduce(function(a,b){return a+b},0);
-  out[0]+=diff;
+  var goal=markedUpRetail(retail);
+  var out=ws.map(function(w){return Math.max(1,Math.round(goal*w/tw))});
+  var largest=ws.reduce(function(best,w,i){return w>ws[best]?i:best},0);
+  var diff=goal-out.reduce(function(a,b){return a+b},0);
+  out[largest]+=diff;
   return out;
 }
 
@@ -8303,11 +8321,10 @@ function route(){
   if(h==='feed')h='dashboard';
   if(h.indexOf('home-')===0||anchorId)h='home';
   if(h!=='item')LAST_PRODUCT_VIEW_KEY='';
-  var routeMeta={home:['BrandMyItem | Physical advertising placements','Post items as live advertising inventory or reserve a physical placement for your brand.'],dashboard:['Live items | BrandMyItem','Browse live physical advertising placements available for brands.'],build:['Post your item | BrandMyItem','Create a BrandMyItem campaign for an item from the catalog.'],item:['Listing | BrandMyItem','Review campaign details and reserve an available placement.'],track:['Track your item | BrandMyItem','Track a BrandMyItem campaign, fulfillment, and check-ins.']}[h]||[];
+  var routeMeta={home:['BrandMyItem | Physical advertising placements','Post items as live advertising inventory or reserve a physical placement for your brand.'],dashboard:['Live items | BrandMyItem','Browse live physical advertising placements available for brands.'],build:['Post your item | BrandMyItem','Create a BrandMyItem listing for an item from the catalog.'],item:['Listing | BrandMyItem','Review listing details and reserve an available placement.'],track:['Track your item | BrandMyItem','Track your BrandMyItem item, fulfillment, and check-ins.']}[h]||[];
   if(routeMeta.length){document.title=routeMeta[0];var routeDescription=document.querySelector('meta[name="description"]');if(routeDescription)routeDescription.content=routeMeta[1];}
   document.body.classList.toggle('track-page',h==='track');
   views.forEach(function(v){document.getElementById('v-'+v).classList.toggle('on',v===h)});
-  if(location.hash.indexOf('home-')<0&&!anchorId)window.scrollTo(0,0);
   if(h==='home')showHome();
   if(h==='dashboard')showDash();
   if(h==='build'){
@@ -8430,7 +8447,7 @@ function renderHomeCampaigns(){
   var list=topFundedCampaigns(DB.listings);
   host.innerHTML='';
   if(!list.length){
-    host.innerHTML='<div class="empty"><b>No campaigns live yet</b>Be the first to post an item.</div>';
+    host.innerHTML='<div class="empty"><b>No live items yet</b>Be the first to post an item.</div>';
     return;
   }
   list.forEach(function(l){
@@ -8538,7 +8555,7 @@ function drawHomeMap(f){
   var tap=function(i){if(f.preview){location.hash='build';return}location.hash='item/'+f.id;setTimeout(function(){openBid(i)},60)};
   if(homeMode==='auction'){
     renderFinal(el,f,{onTap:tap,showOpen:true,h:520,scan:true});
-    document.getElementById('homeCap').textContent='Open the campaign to choose an available spot. The '+brandingMethod(f.type)+' is made from your logo.';
+    document.getElementById('homeCap').textContent='Open the listing to choose an available spot. The '+brandingMethod(f.type)+' is made from your logo.';
   }else{
     renderFinal(el,f,{showOpen:false,h:520});
     document.getElementById('homeCap').textContent='Fully funded: download the logo pack, get the '+brandingMethod(f.type)+' made, apply, done. No messages, no coordination.';
@@ -8610,7 +8627,7 @@ function renderCampaignDetails(l){
         '<div class="campaign-facts">'+
           '<div class="campaign-fact"><span>Item ships</span><b>'+safeCardText(l.closed?'Closed - claims refunded':(l.shippedAt?'Shipped to owner':(pct>=100?'Funded - preparing shipment':'New at 100% funded')))+'</b></div>'+
           '<div class="campaign-fact"><span>Owner check-in</span><b>'+safeCardText(checkinCadenceText(l))+'</b></div>'+
-          '<div class="campaign-fact"><span>Campaign term</span><b>'+termOf(l)+' months'+(l.termLocked?' - locked':'')+'</b></div>'+
+          '<div class="campaign-fact"><span>Proof term</span><b>'+termOf(l)+' months'+(l.termLocked?' - locked':'')+'</b></div>'+
           '<div class="campaign-fact"><span>Branding method</span><b>'+safeCardText(brandingMaterial(l.type))+'</b></div>'+
         '</div>'+
       '</section>'+
@@ -8829,7 +8846,7 @@ function renderDash(){
   if(F.sort==='rich')list.sort(function(a,b){return goalOf(b)-goalOf(a)});
   var g=document.getElementById('dashGrid');g.innerHTML='';
   if(!list.length){
-    g.innerHTML='<div class="empty"><b>'+(all.length?'Nothing matches those filters':'No live campaigns yet')+'</b>'+(all.length?'Loosen the filters, or be the first to post one.':'Real campaigns will appear here as soon as they are posted.')+'</div>';
+    g.innerHTML='<div class="empty"><b>'+(all.length?'Nothing matches those filters':'No live items yet')+'</b>'+(all.length?'Loosen the filters, or be the first to post one.':'Live items will appear here as soon as they are posted.')+'</div>';
     return;
   }
   list.forEach(function(l){
@@ -8838,7 +8855,7 @@ function renderDash(){
     var card=document.createElement('button');card.type='button';card.className='lcard';
     card.setAttribute('data-listing-id',l.id);
     card.setAttribute('aria-haspopup','dialog');
-    card.setAttribute('aria-label','Preview campaign for '+it.label+' by '+(l.owner||'this owner'));
+    card.setAttribute('aria-label','Preview listing for '+it.label+' by '+(l.owner||'this owner'));
     card.innerHTML='<div class="thumb" id="th-'+safeCardText(l.id)+'"></div>'+
       '<div class="body">'+
       '<div class="who">'+ownerAvatarHtml(l)+'<span class="oname">'+safeCardText(l.owner)+'</span><span class="when">'+safeCardText(ago(l.created))+'</span><span class="catic"><img src="'+safeImageAttr(PHO(l))+'" alt=""></span></div>'+
@@ -8915,7 +8932,7 @@ function renderAvatarPicker(){
     b.className='avatar-option'+(B.avatar===src?' on':'');
     b.setAttribute('aria-label','Choose character '+i);
     b.setAttribute('aria-pressed',B.avatar===src?'true':'false');
-    b.innerHTML='<img src="'+src+'" alt="">';
+    b.innerHTML='<img src="'+src+'" alt="Character '+i+'">';
     b.onclick=function(){
       B.avatar=this.querySelector('img').getAttribute('src');
       renderAvatarPicker();
@@ -9021,15 +9038,30 @@ function renderSocialConnect(){
     chip.className='social-chip'+(linked?' linked':'');
     chip.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">'+p.icon+'</svg>'+
       (linked?('<span>'+p.label+'</span><span class="handle">@'+linked+'</span><span class="unlink" title="Remove">&times;</span>')
-             :('<span>Link '+p.label+'</span>'));
+             :('<button type="button" class="social-link-button">Link '+p.label+'</button>'));
     chip.onclick=function(e){
       if(linked){
         if(e.target.className==='unlink'){delete B.socialLinks[p.key];renderSocialConnect()}
         else window.open(p.url+linked,'_blank');
         return;
       }
-      var handle=prompt('Your '+p.label+' handle (without @):');
-      if(handle){handle=handle.trim().replace(/^@/,'');if(handle){B.socialLinks[p.key]=handle;renderSocialConnect()}}
+      if(e.target.closest('.social-inline'))return;
+      var existing=chip.querySelector('.social-inline');
+      if(existing)return;
+      var row=document.createElement('div');row.className='social-inline';
+      row.innerHTML='<input class="input" type="text" placeholder="@handle" aria-label="'+p.label+' handle"><button type="button">Add</button>';
+      chip.appendChild(row);
+      var input=row.querySelector('input'),error=document.getElementById('socialError');
+      row.querySelector('button').onclick=function(){
+        var handle=input.value.trim().replace(/^@/,'');
+        var valid=/^[A-Za-z0-9._-]{1,50}$/.test(handle);
+        if(p.key==='x'||p.key==='instagram'||p.key==='tiktok')valid=/^[A-Za-z0-9._]{1,30}$/.test(handle);
+        if(!valid){if(error){error.hidden=false;error.textContent='Enter a valid '+p.label+' handle.'}input.focus();return}
+        if(error)error.hidden=true;
+        B.socialLinks[p.key]=handle;renderSocialConnect();updatePostButton();
+      };
+      input.onkeydown=function(event){if(event.key==='Enter'){event.preventDefault();row.querySelector('button').click()}};
+      input.focus();
     };
     el.appendChild(chip);
   });
@@ -9274,12 +9306,18 @@ function showBuild(){
   document.getElementById('slotMinus').onclick=function(){if(B.slots>1){B.slots--;B.prices=suggest(B.type,B.slots);refreshBuild();cuRepart()}};
   document.getElementById('slotPlus').onclick=function(){var cap=CU.template?tmplMax(CU.template):(CU.closed?8:ITEMS[B.type].maxSlots);if(B.slots<cap){B.slots++;if(!CU.template)B.prices=suggest(B.type,B.slots);refreshBuild();cuRepart()}};
   var ownerAssent=document.getElementById('ownerAssent'),postBtn=document.getElementById('postBtn');
-  ownerAssent.onchange=function(){postBtn.disabled=!ownerAssent.checked};
-  var postingAddress=document.getElementById('pAddress');
-  postingAddress.onblur=function(){validatePostingAddress(true)};
-  postingAddress.oninput=function(){
-    if(document.getElementById('pAddressError').style.display!=='none')validatePostingAddress(true);
-  };
+  ownerAssent.onchange=updatePostButton;
+  ['pStreet','pCity','pState','pZip'].forEach(function(id){
+    var field=document.getElementById(id);
+    if(field){field.onblur=function(){validatePostingAddress(true)};field.oninput=function(){validatePostingAddress(true)}}
+  });
+  ['pName','pMail'].forEach(function(id){
+    var field=document.getElementById(id);
+    if(field)field.oninput=updatePostButton;
+  });
+  var purposeField=document.getElementById('purposeInput');
+  if(purposeField)purposeField.oninput=function(){B.purpose=this.value.slice(0,500);setInlineError('purposeError','',false);updatePostButton()};
+  var w9Input=document.getElementById('w9Input');if(w9Input)w9Input.onchange=updatePostButton;
   postBtn.onclick=postListing;cuInit();
   (function(){
     document.getElementById('itemPick').style.display='';
@@ -9299,11 +9337,11 @@ function refreshBuild(){
   B.brandingMode='assisted';
   var fulfillmentOut=document.getElementById('buildFulfillmentOut');if(fulfillmentOut)fulfillmentOut.textContent='BrandMyItem applies branding';
   var materialOut=document.getElementById('buildMaterialOut');if(materialOut)materialOut.textContent=brandingMaterial(B.type);
-  var w9Notice=document.getElementById('w9Notice');if(w9Notice)w9Notice.hidden=goalOf({prices:B.prices,pricesIncludeMarkup:true})<2000;
+   updatePostingGate();
   setBuildChoiceCards('term',B.termMonths||12);setBuildChoiceCards('checkinFrequency',B.checkinFrequency||'monthly');
   renderSpotMap(document.getElementById('buildMap'),{type:B.type,slots:B.slots,prices:B.prices,claims:null},
     {mode:'edit',onPrice:function(i,v){B.prices[i]=v;totals()}});
-  totals();
+   totals();updatePostButton();
 }
 function renderBuildSpecs(k){
   var sp=ITEMS[k]||ITEMS[B.type];
@@ -9403,9 +9441,9 @@ function poolPrices(faces,retail){
     f.tiles.forEach(function(t,i){all.push({fi:fi,i:i,wt:(t.w*t.h)/tot/faces.length})});
   });
   all.sort(function(a,b){return b.wt-a.wt});
-  var unit=retail<200?1:5;
-  var pr=all.map(function(a){return Math.max(unit,Math.round(retail*a.wt/unit)*unit)});
-  pr[0]+=retail-pr.reduce(function(a,b){return a+b},0);
+  var pr=all.map(function(a){return Math.max(1,Math.round(retail*a.wt))});
+  var largest=all.reduce(function(best,a,i){return a.wt>all[best].wt?i:best},0);
+  pr[largest]+=retail-pr.reduce(function(a,b){return a+b},0);
   return {order:all,prices:pr};
 }
 function cuKnockout(img){
@@ -9961,12 +9999,12 @@ function cuInit(){
     var sw=document.getElementById('cuColorSwatch');if(sw)sw.style.background=CU.color;
     if(CU.sel>=0&&CU.tiles[CU.sel]){CU.tiles[CU.sel].color=CU.color;cuDraw()}
   };
-  document.getElementById('cuRetail').onchange=function(){cuRepart()};
+  document.getElementById('cuRetail').onchange=function(){cuRepart();updatePostingGate()};
   document.getElementById('cuCompleteSizing').onclick=function(){
     if(CU.tracing||CU.poly.length){toast('Finish or cancel the current trace first');return}
     if(!CU.tiles.length){toast('Add at least one brand spot before completing sizing');return}
     CU.sizingComplete=true;CU.sel=-1;CU.prices=boxPrices();B.prices=CU.prices.slice();
-    selUI();cuPricingUI();cuDraw();totals();
+    selUI();cuPricingUI();cuDraw();totals();updatePostingGate();
   };
   document.getElementById('cuEditSizing').onclick=function(){
     CU.sizingComplete=false;cuPricingUI();traceUI();cuDraw();
@@ -10004,22 +10042,44 @@ function nudgeOff(t,k){
   return t;
 }
 var TEMPLATES=[
- {label:'Tech & Everyday',items:[['macbook','Laptop'],['iphone','Phone'],['headphones','Headphones'],['bottle','Bottle / Tumbler']]},
- {label:'Travel & Bags',items:[['case','Carry-on / Case'],['weekender','Weekender / Duffel']]},
- {label:'Sports & Outdoors',items:[['golfbag','Golf cart bag'],['cooler','Cooler'],['paddle','Pickleball paddle']]},
- {label:'Style',items:[['suit','Suit / Blazer']]}];
+  {label:'Tech & Everyday',items:[['macbook','Laptop'],['iphone','Phone'],['headphones','Headphones'],['bottle','Bottle / Tumbler']]},
+  {label:'Travel & Bags',items:[['case','Carry-on / Case'],['backpack','Backpack']]},
+  {label:'Sports & Outdoors',items:[['golfbag','Golf cart bag'],['cooler','Cooler'],['paddle','Pickleball paddle']]}];
 function scaleP(t,n,retail){
   var sd=SCANDATA[t],base=sd&&sd.prices&&sd.prices[n];
   if(!base)return [];
   var cat=ITEMS[t].retail;
-  var out=base.map(function(p){return Math.max(1,Math.round(p*retail/cat))});
-  out[0]+=retail-out.reduce(function(a,b){return a+b},0);
+  var goal=markedUpRetail(retail);
+  var out=base.map(function(p){return Math.max(1,Math.round(p*goal/cat))});
+  var largest=base.reduce(function(best,p,i){return p>base[best]?i:best},0);
+  out[largest]+=goal-out.reduce(function(a,b){return a+b},0);
   return out;
 }
 function tmplMax(t){
   var sd=SCANDATA[t],n=0;
   if(sd&&sd.tiles)for(var k in sd.tiles)if(+k>n&&sd.tiles[k].length===+k)n=+k;
   return n||1;
+}
+function postingGoal(){
+  if(CU.faces.length){
+    var retail=Math.max(1,parseFloat(document.getElementById('cuRetail').value||'100'));
+    return markedUpRetail(retail);
+  }
+  if(CU.tiles.length)return markedUpRetail(document.getElementById('cuRetail').value||'100');
+  return (B.prices||[]).reduce(function(sum,price){return sum+(Number(price)||0)},0);
+}
+function isHighValueListing(){return postingGoal()>=2000}
+function updatePostButton(){
+  var button=document.getElementById('postBtn'),assent=document.getElementById('ownerAssent');
+  if(!button||!assent)return;
+  var w9=document.getElementById('w9Input');
+  var blockedHigh=isHighValueListing()&&(!Object.keys(B.socialLinks||{}).length||!w9||!w9.files.length);
+  button.disabled=!assent.checked||blockedHigh;
+}
+function updatePostingGate(){
+  var notice=document.getElementById('w9Notice');
+  if(notice)notice.hidden=!isHighValueListing();
+  updatePostButton();
 }
 function cuApplyTemplate(){
   var t=CU.template;if(!t)return;
@@ -10058,7 +10118,7 @@ function cuApplyTemplate(){
   }
   B.prices=CU.prices.slice();
   CU.closed=true;CU.poly=[];
-  cuDraw();totals();cuPricingUI();if(CU.syncSelection)CU.syncSelection();if(CU.syncControls)CU.syncControls();
+  cuDraw();totals();cuPricingUI();updatePostingGate();if(CU.syncSelection)CU.syncSelection();if(CU.syncControls)CU.syncControls();
 }
 function cuAngleChips(){
   var el=document.getElementById('cuFaces');if(!el)return;
@@ -10171,38 +10231,22 @@ function boxPrices(){
   var purchaseGoal=markedUpRetail(retail);
   var tot=0;CU.tiles.forEach(function(t){tot+=t.w*t.h});
   if(!tot)return [];
-  var unit=retail<200?1:5;
-  var pr=CU.tiles.map(function(t){return Math.max(unit,Math.round(purchaseGoal*(t.w*t.h)/tot/unit)*unit)});
-  pr[0]+=purchaseGoal-pr.reduce(function(a,b){return a+b},0);
+  var areas=CU.tiles.map(function(t){return Math.max(0.000001,t.w*t.h)});
+  var largest=areas.reduce(function(best,area,i){return area>areas[best]?i:best},0);
+  var pr=areas.map(function(area){return Math.max(1,Math.round(purchaseGoal*area/tot))});
+  pr[largest]+=purchaseGoal-pr.reduce(function(a,b){return a+b},0);
   return pr;
 }
-function cuSpotPriceTotal(){
-  return (CU.prices||[]).reduce(function(sum,price){return sum+(Number(price)||0)},0);
-}
-function cuUpdateSpotPriceTotal(){
-  var el=document.getElementById('cuSpotPriceTotal');if(!el)return;
-  var purchaseGoal=markedUpRetail(document.getElementById('cuRetail').value||'100');
-  var total=cuSpotPriceTotal(),difference=purchaseGoal-total;
-  el.classList.toggle('is-valid',difference===0&&CU.prices.length===CU.tiles.length);
-  el.textContent=difference===0?'Spot total '+money(total)+' - matches full purchase goal':
-    'Spot total '+money(total)+' of '+money(purchaseGoal)+' - '+(difference>0?'add ':'remove ')+money(Math.abs(difference));
-}
 function cuRenderSpotPrices(){
-  var grid=document.getElementById('cuSpotPriceGrid');if(!grid)return;
+  var grid=document.getElementById('cuSpotComputed');if(!grid)return;
   grid.innerHTML='';
+  var prices=boxPrices();
+  CU.prices=prices.slice();B.prices=prices.slice();
   CU.tiles.forEach(function(tile,i){
-    var field=document.createElement('div');field.className='spot-price-field';
-    var label=document.createElement('label');label.htmlFor='cuSpotPrice'+i;label.textContent='Spot '+(i+1);
-    var dollar=document.createElement('span');dollar.textContent='$';
-    var input=document.createElement('input');input.id='cuSpotPrice'+i;input.type='number';input.min='1';input.step='1';input.value=CU.prices[i]||'';
-    input.setAttribute('aria-label','Price for ad spot '+(i+1));
-    input.oninput=function(){
-      CU.prices[i]=Math.max(0,Math.round(Number(this.value)||0));B.prices=CU.prices.slice();
-      cuUpdateSpotPriceTotal();totals();
-    };
-    field.appendChild(label);field.appendChild(dollar);field.appendChild(input);grid.appendChild(field);
+    var field=document.createElement('div');field.className='spot-price-readonly';
+    field.innerHTML='<span>Spot '+(i+1)+'</span><b>'+money(prices[i]||0)+'</b>';
+    grid.appendChild(field);
   });
-  cuUpdateSpotPriceTotal();
 }
 function cuPricingUI(){
   var ready=document.getElementById('cuSizingReady'),pricing=document.getElementById('cuSpotPricing');
@@ -10212,51 +10256,70 @@ function cuPricingUI(){
   pricing.style.display=CU.sizingComplete?'block':'none';
   if(toolbar)toolbar.classList.toggle('sizing-locked',CU.sizingComplete);
   if(complete)complete.disabled=!CU.tiles.length;
-  if(CU.sizingComplete)cuRenderSpotPrices();
+   if(CU.sizingComplete)cuRenderSpotPrices();
 }
 function totals(){
   var prices=CU.sizingComplete&&CU.prices.length===CU.tiles.length?CU.prices:(CU.tiles.length?boxPrices():B.prices);
   var v=prices.reduce(function(a,b){return a+b},0);
   document.getElementById('totalOut').textContent=money(v);
 }
+function postingAddress(){
+  return {
+    street:document.getElementById('pStreet').value.trim(),
+    unit:document.getElementById('pUnit').value.trim(),
+    city:document.getElementById('pCity').value.trim(),
+    state:document.getElementById('pState').value.trim().toUpperCase(),
+    zip:document.getElementById('pZip').value.trim()
+  };
+}
+function setInlineError(id,message,show){
+  var error=document.getElementById(id);if(!error)return;
+  error.textContent=message||'';error.hidden=!show||!message;
+}
 function validatePostingAddress(showError){
-  var field=document.getElementById('pAddress'),error=document.getElementById('pAddressError');
-  var address=field.value.trim(),message='';
-  if(/\bP(?:OST)?\.?\s*O(?:FFICE)?\.?\s*(?:BOX|B\.?\s*O\.?\s*X)\b/i.test(address)){
-    message='Please use a street address. We cannot deliver to a PO Box.';
-  }else if(address){
-    var parts=address.split(',').map(function(part){return part.trim()}).filter(Boolean);
-    var statePostal=parts.length>2?parts[parts.length-1].match(/^([A-Za-z]{2})\s+(\d{5}(?:-\d{4})?)$/):null;
-    if(parts.length<3||!statePostal)message='Enter a street address as street, city, two-letter state and ZIP.';
-  }
-  field.setAttribute('aria-invalid',message?'true':'false');
-  error.textContent=message;
-  error.style.display=showError&&message?'block':'none';
+  var a=postingAddress(),message='';
+  if(!a.street)message='Enter a street address.';
+  else if(/\bP\.?\s*O\.?\s*BOX\b/i.test(a.street))message="We can't ship to PO boxes.";
+  else if(!a.city)message='Enter a city.';
+  else if(!a.state)message='Select a state.';
+  else if(!/^\d{5}$/.test(a.zip))message='Enter a 5-digit ZIP code.';
+  setInlineError('pStreetError',message==='Enter a street address.'||message==="We can't ship to PO boxes."?message:'',showError);
+  setInlineError('pCityError',message==='Enter a city.'?message:'',showError);
+  setInlineError('pStateError',message==='Select a state.'?message:'',showError);
+  setInlineError('pZipError',message==='Enter a 5-digit ZIP code.'?message:'',showError);
+  setInlineError('pAddressError',message?'Check the highlighted shipping address fields.':'',showError&&!!message);
   return !message;
+}
+function focusPostingField(id){var field=document.getElementById(id);if(field){field.scrollIntoView({block:'center',behavior:'smooth'});field.focus()}}
+function validatePostingForm(){
+  var first=null,name=document.getElementById('pName').value.trim(),mail=document.getElementById('pMail').value.trim(),purpose=String(B.purpose||'').trim();
+  setInlineError('avatarError',B.avatar?'':'Select a character before posting.',true);if(!B.avatar)first=first||'avatarGrid';
+  setInlineError('pNameError',name?'':'Enter your name.',true);if(!name)first=first||'pName';
+  setInlineError('pMailError',mail&&/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)?'':'Enter a valid email.',true);if(!mail||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail))first=first||'pMail';
+  if(!validatePostingAddress(true))first=first||'pStreet';
+  setInlineError('purposeError',purpose.length<=500?'':'Purpose of the item must be 500 characters or fewer.',true);if(purpose.length>500)first=first||'purposeInput';
+  if(!CU.tiles.length||!CU.sizingComplete){setInlineError('sizingError','Complete sizing before posting.',true);first=first||'cuCompleteSizing'}else setInlineError('sizingError','',false);
+  if(!document.getElementById('ownerAssent').checked){setInlineError('assentError','Agree to the owner terms before posting.',true);first=first||'ownerAssent'}else setInlineError('assentError','',false);
+  if(isHighValueListing()){
+    var hasSocial=Object.keys(B.socialLinks||{}).length>0,hasW9=document.getElementById('w9Input').files.length>0;
+    setInlineError('socialError',hasSocial?'':'Add at least one public social handle for a listing of $2,000 or more.',true);
+    setInlineError('w9Error',hasW9?'':'Upload a completed W-9 PDF.',true);
+    if(!hasSocial)first=first||'socialConnect';if(!hasW9)first=first||'w9Input';
+  }
+  if(first)focusPostingField(first);
+  return !first;
 }
 async function postListing(){
   var name=document.getElementById('pName').value.trim();
   var mail=document.getElementById('pMail').value.trim();
-  var address=document.getElementById('pAddress').value.trim();
+  var a=postingAddress();
+  var address=[a.street,a.unit,a.city,a.state+' '+a.zip].filter(Boolean).join(', ');
   var purpose=String(B.purpose||'').trim();
-  if(!name||!mail||!address){toast('Add your name, email, and shipping address to post');return}
-  if(!validatePostingAddress(true)){toast(document.getElementById('pAddressError').textContent);return}
-  var addressParts=address.split(',').map(function(part){return part.trim()}).filter(Boolean);
-  var statePostal=addressParts.length>2?addressParts[addressParts.length-1].match(/^([A-Za-z]{2})\s+(\d{5}(?:-\d{4})?)$/):null;
-  if(addressParts.length<3||!statePostal){toast('Enter a street address as street, city, two-letter state and ZIP.');return}
-  if(!document.getElementById('ownerAssent').checked){toast('Agree to the owner terms before posting');return}
-  if(purpose.length>500){toast('Purpose of the item must be 500 characters or fewer');return}
-  if(!B.avatar){toast('Select a character before posting');return}
+  if(!validatePostingForm()){toast('Please fix the highlighted fields before posting.');return}
   if(DB.listings.some(function(existing){return existing.ownerRestricted&&existing.mail&&existing.mail.toLowerCase()===mail.toLowerCase()})){
     toast('This owner is restricted from posting after missed check-ins');return;
   }
-  if(CU.tiles.length&&!CU.sizingComplete){toast('Complete sizing and price every sponsor spot before posting');return}
-  if(CU.sizingComplete){
-    var pricingGoal=markedUpRetail(document.getElementById('cuRetail').value||'100');
-    if(CU.prices.length!==CU.tiles.length||CU.prices.some(function(price){return !price||price<1})||cuSpotPriceTotal()!==pricingGoal){
-      toast('Every spot needs a price and the spot total must match the full purchase goal');return;
-    }
-  }
+   if(CU.tiles.length){CU.prices=boxPrices();B.prices=CU.prices.slice()}
   var selectedTerm=termOf(B);
   var selectedBranding='assisted';
   var l;
@@ -10318,8 +10381,7 @@ async function postListing(){
       prices:standardPrices,pricesIncludeMarkup:true,claims:standardPrices.map(function(){return null}),created:Date.now(),postedAt:Date.now(),unsoldTimeoutDays:60,
        termMonths:selectedTerm,checkinFrequency:B.checkinFrequency||'monthly',termLocked:true,termLockedAt:Date.now(),brandingMode:selectedBranding,status:'live',shipping:{name:name,address:address}};
   }
-  var highValue=l.prices.reduce(function(sum,price){return sum+spotPurchaseTotal(l,price)},0)>=2000;
-  if(highValue&&(!Object.keys(B.socialLinks||{}).length||!document.getElementById('w9Input').files[0])){toast(!Object.keys(B.socialLinks||{}).length?'Add at least one public social handle for a campaign of $2,000 or more.':'Submit a completed W-9 PDF before publishing this campaign.');return}
+   var highValue=l.prices.reduce(function(sum,price){return sum+spotPurchaseTotal(l,price)},0)>=2000;
   try{
     var presentation=await durableCampaignPresentation(l);
     var draftResponse=await fetch('/api/campaign-drafts',{
@@ -10348,14 +10410,14 @@ async function postListing(){
     var shippingResponse=await fetch('/api/campaigns/'+encodeURIComponent(l.id)+'/shipping-address',{
       method:'PUT',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({recipientName:name,line1:addressParts.slice(0,-2).join(', '),city:addressParts[addressParts.length-2],state:statePostal[1].toUpperCase(),postalCode:statePostal[2],country:'US'})
+       body:JSON.stringify({recipientName:name,line1:[a.street,a.unit].filter(Boolean).join(', '),city:a.city,state:a.state,postalCode:a.zip,country:'US'})
     });
     var savedShipping=await apiResponse(shippingResponse,'Shipping address could not be saved.');
     registeredCampaign.ownerEmail=l.mail;
     l=campaignFromApi(registeredCampaign);
     l.shipping={name:savedShipping.recipientName,address:savedShipping.line1,city:savedShipping.city,state:savedShipping.state,postal:savedShipping.postalCode,country:savedShipping.country,validatedAt:savedShipping.validatedAt};
   }catch(error){
-    toast(error&&error.message?error.message:'Could not publish this campaign. Please try again.');
+    toast(error&&error.message?error.message:'Could not publish this item. Please try again.');
     return;
   }
   DB.listings.unshift(l);
@@ -10738,7 +10800,7 @@ function localTrackMatches(mail){
   DB.listings.forEach(function(l){
     var ownerMatch=(l.mail||'').toLowerCase()===mail;
     if(ownerMatch){
-      matches.push({l:l,c:{ownerView:true,brand:'Campaign owner',mail:mail,amt:0,fee:0,purchasedAt:l.created||Date.now(),subId:'CAM-'+String(l.id).toUpperCase().slice(0,8)}});
+      matches.push({l:l,c:{ownerView:true,brand:'Item owner',mail:mail,amt:0,fee:0,purchasedAt:l.created||Date.now(),subId:'CAM-'+String(l.id).toUpperCase().slice(0,8)}});
     }
     (l.claims||[]).forEach(function(c,spotIndex){
       if(!c)return;
@@ -10765,7 +10827,7 @@ function serverTrackingMatches(payload,mail){
      l.serverFundedPercent=l.slots?Math.min(100,reservedCount/l.slots*100):0;
      l.serverFundedCount=fundedCount;
     if(campaign.ownerMatch){
-      matches.push({l:l,c:{ownerView:true,remoteOnly:!DB.listings.some(function(item){return item.id===campaign.id}),brand:'Campaign owner',mail:mail,
+      matches.push({l:l,c:{ownerView:true,remoteOnly:!DB.listings.some(function(item){return item.id===campaign.id}),brand:'Item owner',mail:mail,
         amt:0,fee:0,purchasedAt:new Date(campaign.createdAt).getTime(),subId:'CAM-'+String(campaign.id).toUpperCase().slice(0,8)}});
     }
     (campaign.orders||[]).forEach(function(order){
@@ -11321,7 +11383,7 @@ function renderOwnerTools(){
     '<p class="finetext" style="margin:0 0 12px">The sale is settled. Check-ins are display-only trust signals; missed check-ins never trigger a refund.</p>';
   if(status.nonCompliant)prog+='<p class="finetext" style="margin:0 0 12px;color:#B23327"><b>Posting restricted:</b> two consecutive missed check-ins restrict this owner from new listings.</p>';
   if(status.missed||CUR.checkinStatus==='missed'){
-    prog+='<div class="track-submit"><div class="track-submit-title">Select a make-good</div><p class="track-submit-copy">A check-in was missed. Choose the available resolution for this campaign.</p><div class="mrow"><button class="btn btn-outline" type="button" onclick="selectOwnerMakeGood(&quot;extension&quot;)">Extend term</button><button class="btn btn-outline" type="button" onclick="selectOwnerMakeGood(&quot;credit&quot;)">Brand credit</button><button class="btn btn-outline" type="button" onclick="selectOwnerMakeGood(&quot;cancellation&quot;)">Cancel</button></div><p class="finetext" id="makeGoodStatus" role="status">'+safeCardText(CUR.makeGoodSelection?'Selected: '+CUR.makeGoodSelection:'')+'</p></div>';
+    prog+='<div class="track-submit"><div class="track-submit-title">Select a make-good</div><p class="track-submit-copy">A check-in was missed. Choose the available resolution for this item.</p><div class="mrow"><button class="btn btn-outline" type="button" onclick="selectOwnerMakeGood(&quot;extension&quot;)">Extend term</button><button class="btn btn-outline" type="button" onclick="selectOwnerMakeGood(&quot;credit&quot;)">Brand credit</button><button class="btn btn-outline" type="button" onclick="selectOwnerMakeGood(&quot;cancellation&quot;)">Cancel</button></div><p class="finetext" id="makeGoodStatus" role="status">'+safeCardText(CUR.makeGoodSelection?'Selected: '+CUR.makeGoodSelection:'')+'</p></div>';
   }
   if(!ownerCheckinIsDue(CUR)){
     cb.innerHTML=prog+'<p class="finetext" style="margin:0;color:#6e6e73">No check-in is due right now. This page will allow the next submission when the server due window opens.</p>';
@@ -11345,7 +11407,7 @@ function renderOwnerTools(){
       if(!receiptData){err.textContent='Upload your receipt.';err.style.display='block';return}
       if(!checkinData){err.textContent='Upload your check-in photo.';err.style.display='block';return}
       var receiptTime=new Date(dateVal+'T12:00:00').getTime();
-      if(CUR.fundedAt&&receiptTime<CUR.fundedAt-86400000){err.textContent='That date is before the campaign funded. Use the receipt from after funding.';err.style.display='block';return}
+      if(CUR.fundedAt&&receiptTime<CUR.fundedAt-86400000){err.textContent='That date is before funding. Use the receipt from after funding.';err.style.display='block';return}
       var button=this;button.disabled=true;button.textContent='Submitting…';
       try{
         var submitted=await submitOwnerCheckin(cinput.files[0],'First check-in. Receipt date: '+dateVal);

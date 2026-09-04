@@ -28,8 +28,6 @@ const ITEM_DISPLAY_NAMES: Record<string, string> = {
   iphone: "iPhone 17",
   macbook: "MacBook Pro",
   paddle: "Paddle",
-  suit: "Suit",
-  weekender: "Weekender",
 };
 
 export function campaignItemDisplayName(input: {

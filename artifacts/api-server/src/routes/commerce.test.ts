@@ -1,8 +1,16 @@
 import assert from "node:assert/strict";
 import test, { mock } from "node:test";
+import { randomUUID } from "node:crypto";
 import type { AddressInfo } from "node:net";
 import app from "../app.ts";
 import { isSafeCampaignPresentation } from "../lib/campaignPresentation.ts";
+import { eq } from "drizzle-orm";
+import {
+  campaignsTable,
+  db,
+  trackingMagicLinkRequestsTable,
+  trackingMagicLinksTable,
+} from "@workspace/db";
 
 test("campaign presentation accepts known bounded fields", () => {
   assert.equal(
@@ -47,6 +55,8 @@ test("tracking email failures keep the response generic and invalidate the link"
   process.env.RESEND_API_KEY = "re_test_key";
   process.env.RESEND_FROM = "BrandMyItem <test@example.com>";
   let requestBody = "";
+  const email = `tracking-test-${randomUUID()}@example.com`;
+  const campaignId = `tracking-test-${randomUUID()}`;
   const providerError = "provider outage details must stay server-side";
   const originalFetch = globalThis.fetch;
   const proxyMock = mock.method(
@@ -68,7 +78,15 @@ test("tracking email failures keep the response generic and invalidate the link"
       server.once("error", reject);
     });
     const address = server.address() as AddressInfo;
-    const email = "cameronmonsour@gmail.com";
+    await db.insert(campaignsTable).values({
+      id: campaignId,
+      itemType: "iphone",
+      title: "Tracking test item",
+      ownerName: "Tracking Test Owner",
+      ownerEmail: email,
+      pricesCents: [100],
+      presentation: {},
+    });
     const response = await fetch(
       `http://127.0.0.1:${address.port}/api/tracking/magic-link`,
       {
@@ -102,6 +120,9 @@ test("tracking email failures keep the response generic and invalidate the link"
       error: "Tracking link is invalid or expired",
     });
   } finally {
+    await db.delete(trackingMagicLinksTable).where(eq(trackingMagicLinksTable.email, email));
+    await db.delete(trackingMagicLinkRequestsTable).where(eq(trackingMagicLinkRequestsTable.normalizedEmail, email));
+    await db.delete(campaignsTable).where(eq(campaignsTable.id, campaignId));
     if (previousOrigin === undefined) delete process.env.BRANDMYITEM_PUBLIC_URL;
     else process.env.BRANDMYITEM_PUBLIC_URL = previousOrigin;
     if (previousOrigins === undefined) delete process.env.BRANDMYITEM_PUBLIC_ORIGINS;
