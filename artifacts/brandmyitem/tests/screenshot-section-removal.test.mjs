@@ -277,6 +277,7 @@ test('fulfillment copy enforces BrandMyItem-applied branding', () => {
 
 test('footer omits the legacy BrandMyMac attribution', () => {
   assert.doesNotMatch(html, /BrandMyMac by @vynsedev/);
+  assert.doesNotMatch(html, /The story, short version|BrandMyItem started with one laptop|Respect where it started/);
 });
 
 test('builder and campaign goals include the complete 40% purchase amount', () => {
