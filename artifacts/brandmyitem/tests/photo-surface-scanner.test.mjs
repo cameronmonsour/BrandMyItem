@@ -109,6 +109,13 @@ test('suit builder keeps the original image as Front and adds Back, Left, and Ri
   );
 });
 
+test('cooler builder keeps the original image as Front and provides Back, Top, and duplicated side views', () => {
+  assert.match(
+    html,
+    /cooler:\[\s*\['Front','campaign\/product-cooler\.png'\],\s*\['Back','campaign\/product-cooler-back\.png'\],\s*\['Top','campaign\/product-cooler-top\.png'\],\s*\['Left','campaign\/product-cooler-side\.png'\],\s*\['Right','campaign\/product-cooler-side\.png'\]\s*\]/,
+  );
+});
+
 test('polygon points and catalog identity survive template and detail rendering', () => {
   assert.match(html, /if\(tt\.pts\)out\.pts=tt\.pts\.map/);
   assert.match(html, /sourceType:CU\.template\|\|null/);
