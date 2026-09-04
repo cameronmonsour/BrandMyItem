@@ -616,7 +616,8 @@ details.faq .fa b{color:var(--fg);font-weight:600}
 .track-order-summary-copy{flex:1;min-width:0}
 .track-order-title{font-size:16px;font-weight:700;line-height:1.25}
 .track-order-meta{font-size:13px;color:#6e6e73;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:3px}
-.track-order-chevron{width:24px;height:24px;border-radius:50%;background:var(--wash);display:flex;align-items:center;justify-content:center;color:#6e6e73;font-size:18px;line-height:1;transition:transform .2s}
+.track-order-chevron{width:24px;height:24px;border-radius:50%;background:var(--wash);display:grid;place-items:center;position:relative;color:#6e6e73;font-size:0;line-height:1;transition:transform .2s}
+.track-order-chevron::before{content:"";width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translate(-1px,-1px)}
 .track-order[open] .track-order-chevron{transform:rotate(180deg)}
 .track-order-content{border-top:1px solid var(--border);padding:22px}
 .home-section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:20px}
