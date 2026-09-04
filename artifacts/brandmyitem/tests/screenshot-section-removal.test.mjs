@@ -132,6 +132,8 @@ test('dashboard keeps compact tracker cards without a duplicate left category bo
   assert.doesNotMatch(html, /id="dq"/);
   assert.doesNotMatch(html, /Search items, owners, habitats/);
   assert.match(html, /#v-dashboard \.catstrip\{margin-top:20px\}/);
+  assert.match(html, /\.cat\{[^}]*height:52px;[^}]*font-size:12\.5px/);
+  assert.match(html, /\.cat \.ic\{height:26px/);
   assert.doesNotMatch(html, /id="railCats"/);
   assert.doesNotMatch(html, /<h5>Category<\/h5>/);
   assert.doesNotMatch(html, /id="statRow"/);
