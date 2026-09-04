@@ -69,7 +69,7 @@ test('headphone builder includes right and left product faces', () => {
   assert.match(html, /CU\.img=CU\.angleImgs\[i\]/);
   assert.match(html, /sideButton\.onclick=function\(\)\{cuShowAngle\(i\)\}/);
   assert.match(html, /el\.style\.display='none'/);
-  assert.match(html, /id="cuSideTools" role="group" aria-label="Edit headphone side"/);
+  assert.match(html, /id="cuSideTools" role="group" aria-label="Edit item side"/);
   assert.match(html, /className='cu-side-button'/);
   assert.match(html, /var rx=\(t\.x-t\.w\/2\)\*iw,ry=\(t\.y-t\.h\/2\)\*ih,rw=t\.w\*iw/);
   assert.match(html, /visibleTiles\.forEach\(function\(viewTile,viewIndex\)\{/);
@@ -78,6 +78,14 @@ test('headphone builder includes right and left product faces', () => {
   assert.match(html, /cuWriteEditorTile\(DRAG\.i,t\)/);
   assert.match(html, /if\(count<2\)\{\s*if\(stored===local\)return;/);
   assert.match(html, /split the composite editor coordinates back into each photographed face/);
+});
+
+test('golf bag builder includes back, left, and right product faces', () => {
+  assert.match(
+    html,
+    /golfbag:\[\s*\['Back','campaign\/product-golfbag-back\.png'\],\s*\['Left','campaign\/product-golfbag-left\.png'\],\s*\['Right','campaign\/product-golfbag-right\.png'\]\s*\]/,
+  );
+  assert.match(html, /id="cuSideTools" role="group" aria-label="Edit item side"/);
 });
 
 test('polygon points and catalog identity survive template and detail rendering', () => {
