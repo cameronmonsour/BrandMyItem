@@ -65,12 +65,13 @@ test('headphones always use two full-width polygon placements', () => {
 test('headphone builder includes right and left product faces', () => {
   assert.match(html, /var PRODUCT_ANGLE_PHOTOS=\{\s*headphones:\[\s*\['Right','campaign\/product-headphones\.png'\],\s*\['Left','campaign\/product-headphones-left\.png'\]/);
   assert.match(html, /CU\.angles=\(PRODUCT_ANGLE_PHOTOS\[t\]\|\|\[\['Front',ITEM_PHOTOS\[t\]\]\]\)/);
-  assert.match(html, /var photos=\(CU\.angleImgs&&CU\.angleImgs\.length\)\?CU\.angleImgs:\[CU\.img\]/);
-  assert.match(html, /el\.style\.gridTemplateColumns='repeat\('\+CU\.angles\.length/);
+  assert.match(html, /CU\.img=CU\.angleImgs\[i\]/);
+  assert.match(html, /sideButton\.onclick=function\(\)\{cuShowAngle\(i\)\}/);
+  assert.match(html, /el\.style\.display='none'/);
   assert.match(html, /id="cuSideTools" role="group" aria-label="Edit headphone side"/);
   assert.match(html, /className='cu-side-button'/);
-  assert.match(html, /var rx=\(t\.x-t\.w\/2\)\*totalW,ry=\(t\.y-t\.h\/2\)\*ih,rw=t\.w\*totalW/);
-  assert.doesNotMatch(html, /cuWriteEditorTile\(DRAG\.i,t\)/);
+  assert.match(html, /var rx=\(t\.x-t\.w\/2\)\*iw,ry=\(t\.y-t\.h\/2\)\*ih,rw=t\.w\*iw/);
+  assert.match(html, /cuWriteEditorTile\(DRAG\.i,t\)/);
   assert.match(html, /split the composite editor coordinates back into each photographed face/);
 });
 
