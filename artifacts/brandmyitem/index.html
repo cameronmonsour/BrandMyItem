@@ -7302,6 +7302,12 @@ var LOCAL_PRODUCT_PHOTOS={
   paddle:'campaign/product-paddle.png',
   weekender:'campaign/product-weekender.png'
 };
+var PRODUCT_ANGLE_PHOTOS={
+  headphones:[
+    ['Right','campaign/product-headphones.png'],
+    ['Left','campaign/product-headphones-left.png']
+  ]
+};
 /* Campaign, listing, editor, tracking, and sharing surfaces use untouched source photos. */
 ITEM_PHOTOS=LOCAL_PRODUCT_PHOTOS;
 HERO_PHOTOS=LOCAL_PRODUCT_PHOTOS;
@@ -9188,7 +9194,9 @@ function cuDraw(){
        }
      });
   }
-  CU.tiles.forEach(function(t,i){
+  var visibleTiles=cuVisibleEditorTiles();
+  visibleTiles.forEach(function(viewTile){
+    var t=viewTile.tile,i=viewTile.index;
     var rx=(t.x-t.w/2)*iw,ry=(t.y-t.h/2)*ih,rw=t.w*iw,rh=t.h*ih;
     var seld=(i===CU.sel);
     /* Match the placement outline to the selected color control. */
@@ -9214,6 +9222,29 @@ function cuDraw(){
       g.stroke();
     }
   });
+}
+function cuVisibleEditorTiles(){
+  var count=(CU.angles&&CU.angles.length)||1;
+  var face=Math.max(0,Math.min(count-1,CU.angleIx||0));
+  var perFace=(typeof B!=='undefined'&&B.slots)||CU.tiles.length;
+  var start=face*perFace;
+  if(count<2)return CU.tiles.map(function(tile,index){return {tile:tile,index:index}});
+  return CU.tiles.slice(start,start+perFace).map(function(tile,index){
+    var local={x:tile.x*count-face,y:tile.y,w:tile.w*count,h:tile.h,shape:tile.shape,color:tile.color};
+    if(tile.pts)local.pts=tile.pts.map(function(p){return [p[0]*count-face,p[1]]});
+    return {tile:local,index:start+index};
+  });
+}
+function cuWriteEditorTile(index,local){
+  var count=(CU.angles&&CU.angles.length)||1;
+  var face=Math.floor(index/((typeof B!=='undefined'&&B.slots)||CU.tiles.length||1));
+  var stored=CU.tiles[index];
+  if(!stored)return;
+  if(count<2){Object.keys(stored).forEach(function(k){delete stored[k]});Object.assign(stored,local);return}
+  stored.x=(face+local.x)/count;stored.y=local.y;stored.w=local.w/count;stored.h=local.h;
+  stored.shape=local.shape;stored.color=local.color;
+  if(local.pts)stored.pts=local.pts.map(function(p){return [(face+p[0])/count,p[1]]});
+  else delete stored.pts;
 }
 function cuSetZoom(value){
   CU.zoom=Math.max(0.5,Math.min(3,Math.round(value*10)/10));
@@ -9467,8 +9498,9 @@ function cuInit(){
     }
     cv.focus();
     /* Boxes first: invisible corner hit areas, then body. */
-    for(var i=CU.tiles.length-1;i>=0;i--){
-      var t=CU.tiles[i];
+    var visible=cuVisibleEditorTiles();
+    for(var vi=visible.length-1;vi>=0;vi--){
+      var view=visible[vi],i=view.index,t=view.tile;
       if(t.shape!=='poly'&&i===CU.sel){
         var halfW=t.w/2,halfH=t.h/2;
         var corners=[
@@ -9510,7 +9542,10 @@ function cuInit(){
       CU.tracePointer=[x,y];cuDraw();return;
     }
     if(!DRAG)return;
-    var t=CU.tiles[DRAG.i];if(!t)return;
+    var stored=CU.tiles[DRAG.i];if(!stored)return;
+    var t=cuVisibleEditorTiles().filter(function(view){return view.index===DRAG.i})[0];
+    if(!t)return;
+    t=t.tile;
     if(DRAG.mode==='move'){
       var nx=Math.min(0.98-t.w/2,Math.max(0.02+t.w/2,x-DRAG.dx));
       var ny=Math.min(0.98-t.h/2,Math.max(0.02+t.h/2,y-DRAG.dy));
@@ -9532,6 +9567,7 @@ function cuInit(){
       t.w=Math.min(0.94,Math.max(0.05,(x-t.x)*2));
       t.h=Math.min(0.94,Math.max(0.04,(y-t.y)*2));
     }
+    cuWriteEditorTile(DRAG.i,t);
     cuDraw();
   });
    cv.addEventListener('pointerup',function(e){
@@ -9540,7 +9576,11 @@ function cuInit(){
        if(cv.hasPointerCapture(e.pointerId))cv.releasePointerCapture(e.pointerId);
        return;
      }
-    if(DRAG&&CU.tiles[DRAG.i]){nudgeOff(CU.tiles[DRAG.i],keepoutFor());cuDraw()}
+    if(DRAG&&CU.tiles[DRAG.i]){
+      var released=cuVisibleEditorTiles().filter(function(view){return view.index===DRAG.i})[0];
+      if(released){nudgeOff(released.tile,keepoutFor());cuWriteEditorTile(DRAG.i,released.tile)}
+      cuDraw();
+    }
     DRAG=null;
   });
    cv.addEventListener('pointercancel',function(e){
@@ -9559,14 +9599,14 @@ function cuInit(){
   });
   document.getElementById('cuAdd').onclick=function(){
     if(!CU.img){toast('Pick an item or upload a photo first');return}
-    if(CU.template==='headphones'&&CU.tiles.length>=2){toast('Headphones use exactly two full ear-cup placements');return}
+    if(CU.template==='headphones'&&CU.tiles.length>=B.slots*((CU.angles&&CU.angles.length)||1)){toast('Headphones use exactly two placements on each side');return}
     CU.tiles.push(nudgeOff({x:0.5,y:0.5,w:0.26,h:0.15,shape:CU.shape,color:CU.color},keepoutFor()));
     CU.sel=CU.tiles.length-1;CU.closed=true;
     selUI();traceUI();cuDraw();totals();
   };
   document.getElementById('cuCopy').onclick=function(){
     if(CU.sel<0||!CU.tiles[CU.sel]){toast('Select a shape first');return}
-    if(CU.template==='headphones'&&CU.tiles.length>=2){toast('Headphones use exactly two full ear-cup placements');return}
+    if(CU.template==='headphones'&&CU.tiles.length>=B.slots*((CU.angles&&CU.angles.length)||1)){toast('Headphones use exactly two placements on each side');return}
     var src=CU.tiles[CU.sel];
     var copy={x:Math.min(0.92,src.x+0.05),y:Math.min(0.92,src.y+0.05),w:src.w,h:src.h,shape:src.shape,color:src.color};
     if(src.pts)copy.pts=src.pts.map(function(p){return [Math.min(0.98,p[0]+0.05),Math.min(0.98,p[1]+0.05)]});
@@ -9685,6 +9725,11 @@ function cuApplyTemplate(){
   CU.tiles=all;
   CU.sel=CU.tiles.length?0:-1;
   CU.prices=scaleP(t,B.slots,retail);
+  if(n>1){
+    var perAnglePrices=CU.prices.slice();
+    CU.prices=[];
+    for(var priceFace=0;priceFace<n;priceFace++)CU.prices=CU.prices.concat(perAnglePrices);
+  }
   B.prices=CU.prices.slice();
   CU.closed=true;CU.poly=[];
   cuDraw();totals();cuPricingUI();if(CU.syncSelection)CU.syncSelection();if(CU.syncControls)CU.syncControls();
@@ -9741,8 +9786,9 @@ function cuComposeAngles(list,done){
 }
 function cuPickTemplate(t){
   CU.template=t;CU.faces=[];CU.angleIx=0;CU.tracing=false;CU.customized=false;CU.poly=[];CU.tracePointer=null;CU.sel=-1;CU.sizingComplete=false;
-  /* front photo only for now -- no side or back angles */
-  CU.angles=[['Front',ITEM_PHOTOS[t]]];
+  CU.angles=(PRODUCT_ANGLE_PHOTOS[t]||[['Front',ITEM_PHOTOS[t]]]).map(function(angle){
+    return [angle[0],angle[1]];
+  });
   document.getElementById('cuRetail').value=variantRetail(t,(typeof B!=='undefined'&&B.type===t)?B.variantSize:null);
   var im=new Image();
   im.onload=function(){
@@ -9750,6 +9796,7 @@ function cuPickTemplate(t){
     if(t==='headphones')B.slots=2;
     scanPhotoPlacements(im,t,B.slots);
     document.getElementById('cuWrap').style.display='block';
+    cuAngleChips();
     cuApplyTemplate();
   };
   im.src=CU.angles[0][1];
@@ -9843,19 +9890,28 @@ async function postListing(){
   if(CU.template==='headphones'){
     B.slots=2;
     var headphoneTiles=CU.tiles;
-    if(!headphoneTiles||headphoneTiles.length!==2){toast('Headphones require two complete ear-cup placements');return}
+    var headphoneFaces=(CU.angles&&CU.angles.length)||1;
+    if(!headphoneTiles||headphoneTiles.length!==B.slots*headphoneFaces){toast('Headphones require two complete placements on each side');return}
     CU.closed=true;CU.prices=boxPrices();B.prices=CU.prices.slice();
   }
+  var createdCatalogFaces=false;
   if(CU.template&&CU.angles&&CU.angles.length>1&&!CU.faces.length&&CU.tiles.length){
-    /* catalog item: same zone layout offered on each photographed face */
-    var retail0=Math.max(1,parseFloat(document.getElementById('cuRetail').value||'100'));
-    var perFace=CU.tiles.slice();
-    CU.faces=CU.angles.filter(function(a){return a[0]!=='Sides'}).map(function(a){
-      return {photo:a[1],tiles:perFace.map(function(t){return {x:t.x,y:t.y,w:t.w,h:t.h,shape:t.shape,color:t.color,pts:t.pts}}),label:a[0]};
+    /* catalog item: split the composite editor coordinates back into each photographed face */
+    var faceCount=CU.angles.length,spotsPerFace=B.slots;
+    function faceTiles(faceIndex){
+      return CU.tiles.slice(faceIndex*spotsPerFace,(faceIndex+1)*spotsPerFace).map(function(t){
+        var tile={x:t.x*faceCount-faceIndex,y:t.y,w:t.w*faceCount,h:t.h,shape:t.shape,color:t.color};
+        if(t.pts)tile.pts=t.pts.map(function(p){return [p[0]*faceCount-faceIndex,p[1]]});
+        return tile;
+      });
+    }
+    CU.faces=CU.angles.filter(function(a){return a[0]!=='Sides'}).map(function(a,faceIndex){
+      return {photo:a[1],tiles:faceTiles(faceIndex),label:a[0]};
     });
+    createdCatalogFaces=true;
   }
   if((CU.closed&&CU.tiles.length)||CU.faces.length){
-    if(CU.closed&&CU.tiles.length)cuSaveFace();
+    if(CU.closed&&CU.tiles.length&&!createdCatalogFaces)cuSaveFace();
     uniformFaceTileSizes(CU.faces);
     var retail=Math.max(1,parseFloat(document.getElementById('cuRetail').value||'100'));
     var pool=poolPrices(CU.faces,markedUpRetail(retail));

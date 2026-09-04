@@ -58,8 +58,14 @@ test('headphones always use two full-width polygon placements', () => {
   assert.match(html, /headphones:\{x0:0\.25,x1:0\.75,y0:0\.43,y1:0\.91,cols:1\}/);
   assert.match(html, /n=type==='headphones'\?2:/);
   assert.match(html, /if\(t==='headphones'\)B\.slots=2/);
-  assert.match(html, /Headphones use exactly two full ear-cup placements/);
+  assert.match(html, /Headphones use exactly two placements on each side/);
   assert.match(html, /if\(CU\.template==='headphones'\)\{\s*B\.slots=2;/);
+});
+
+test('headphone builder includes right and left product faces', () => {
+  assert.match(html, /var PRODUCT_ANGLE_PHOTOS=\{\s*headphones:\[\s*\['Right','campaign\/product-headphones\.png'\],\s*\['Left','campaign\/product-headphones-left\.png'\]/);
+  assert.match(html, /CU\.angles=\(PRODUCT_ANGLE_PHOTOS\[t\]\|\|\[\['Front',ITEM_PHOTOS\[t\]\]\]\)/);
+  assert.match(html, /split the composite editor coordinates back into each photographed face/);
 });
 
 test('polygon points and catalog identity survive template and detail rendering', () => {
@@ -70,7 +76,7 @@ test('polygon points and catalog identity survive template and detail rendering'
 });
 
 test('builder placement outlines use the locked 1.25px stroke', () => {
-  assert.match(html, /CU\.tiles\.forEach\(function\(t,i\)\{[\s\S]*?g\.strokeStyle=outlineColor;\s*g\.lineWidth=1\.25;/);
+  assert.match(html, /var visibleTiles=cuVisibleEditorTiles\(\);[\s\S]*?visibleTiles\.forEach\(function\(viewTile\)\{[\s\S]*?g\.strokeStyle=outlineColor;\s*g\.lineWidth=1\.25;/);
 });
 
 test('posting and rendering preserve adjusted polygon placement geometry', () => {
