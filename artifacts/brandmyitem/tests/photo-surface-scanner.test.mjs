@@ -105,7 +105,7 @@ test('Rimowa builder keeps the original image as Front and adds Back, Left, and 
 test('suit builder keeps the original image as Front and adds Back, Left, and Right views', () => {
   assert.match(
     html,
-    /suit:\[\s*\['Front','campaign\/product-suit\.png\?v=locked-tuxedo-20260904'\],\s*\['Back','campaign\/product-suit-back\.png'\],\s*\['Left','campaign\/product-suit-left\.png'\],\s*\['Right','campaign\/product-suit-right\.png'\]\s*\]/,
+    /suit:\[\s*\['Front','campaign\/product-suit\.png\?v=locked-tuxedo-20260904'\],\s*\['Back','campaign\/product-suit-right\.png'\],\s*\['Left','campaign\/product-suit-back\.png'\],\s*\['Right','campaign\/product-suit-left\.png'\]\s*\]/,
   );
 });
 
