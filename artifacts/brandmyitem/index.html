@@ -1209,22 +1209,19 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 .feature-bento .fb-done .fb-shipped{display:none}.feature-bento .fb-mac[data-phase="4"] .fb-done .fb-funded{display:none}.feature-bento .fb-mac[data-phase="4"] .fb-done .fb-shipped{display:inline}
 .feature-bento .fb-proof{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;width:min(100%,300px);margin-top:4px;position:relative;z-index:3}
 .feature-bento .fb-proof figure{display:grid;grid-template-rows:auto 16px;gap:5px;min-width:0;margin:0}
-.feature-bento .fb-proof img,.feature-bento .fb-proof .fb-next-proof{display:block;width:100%;aspect-ratio:4/3;height:auto;border-radius:11px;object-fit:cover;object-position:center 58%;border:2px solid #000;box-sizing:border-box}
-.feature-bento .fb-proof figure:nth-child(-n+3)>img{opacity:0;transition:opacity .12s linear}
+.feature-bento .fb-proof img{display:block;width:100%;aspect-ratio:4/3;height:auto;border-radius:11px;object-fit:cover;object-position:center 58%;border:2px solid #000;box-sizing:border-box}
+.feature-bento .fb-proof figure:nth-child(-n+4)>img{opacity:0;transition:opacity .12s linear}
 .feature-bento .fb-checkin[data-phase="3"] .fb-proof figure:nth-child(1)>img,.feature-bento .fb-checkin[data-phase="4"] .fb-proof figure:nth-child(1)>img{opacity:1;transition-delay:.62s}
 .feature-bento .fb-checkin[data-phase="3"] .fb-proof figure:nth-child(2)>img,.feature-bento .fb-checkin[data-phase="4"] .fb-proof figure:nth-child(2)>img{opacity:1;transition-delay:1.2s}
 .feature-bento .fb-checkin[data-phase="3"] .fb-proof figure:nth-child(3)>img,.feature-bento .fb-checkin[data-phase="4"] .fb-proof figure:nth-child(3)>img{opacity:1;transition-delay:1.78s}
-.feature-bento .fb-next-proof{position:relative;background:transparent;overflow:hidden}
-.feature-bento .fb-next-proof img{position:absolute;inset:0;opacity:0;transition:opacity .4s;border:none}
-.feature-bento .fb-next-proof svg{position:absolute;inset:0;width:100%;height:100%;transition:opacity .4s}
-.feature-bento .fb-checkin[data-phase="3"] .fb-next-proof img,.feature-bento .fb-checkin[data-phase="4"] .fb-next-proof img{opacity:1}
-.feature-bento .fb-checkin[data-phase="3"] .fb-next-proof svg,.feature-bento .fb-checkin[data-phase="4"] .fb-next-proof svg{opacity:0}
+.feature-bento .fb-checkin[data-phase="3"] .fb-proof figure:nth-child(4)>img,.feature-bento .fb-checkin[data-phase="4"] .fb-proof figure:nth-child(4)>img{opacity:1;transition-delay:2.36s}
 .feature-bento .fb-proof figcaption{font-size:11px;line-height:16px;color:var(--mfg);margin:0;text-align:center;white-space:nowrap}
 .feature-bento .fb-proof-flights{position:absolute;inset:0;z-index:4;pointer-events:none}
 .feature-bento .fb-proof-flight{position:absolute;left:var(--flight-x,0px);top:var(--flight-y,0px);width:var(--flight-w,72px);aspect-ratio:4/3;border:2px solid #000;border-radius:11px;box-sizing:border-box;object-fit:cover;object-position:center 58%;opacity:0;transform-origin:top left}
 .feature-bento .fb-checkin[data-phase="3"] .fb-proof-flight:nth-child(1){animation:fbProofFly .72s var(--fb-ease) 0s both}
 .feature-bento .fb-checkin[data-phase="3"] .fb-proof-flight:nth-child(2){animation:fbProofFly .72s var(--fb-ease) .58s both}
 .feature-bento .fb-checkin[data-phase="3"] .fb-proof-flight:nth-child(3){animation:fbProofFly .72s var(--fb-ease) 1.16s both}
+.feature-bento .fb-checkin[data-phase="3"] .fb-proof-flight:nth-child(4){animation:fbProofFly .72s var(--fb-ease) 1.74s both}
 @keyframes fbProofFly{0%{opacity:0;transform:translate3d(0,0,0) scale(1)}8%{opacity:1}82%{opacity:1;transform:translate3d(var(--flight-dx,0px),var(--flight-dy,0px),0) scale(var(--flight-scale,1))}100%{opacity:0;transform:translate3d(var(--flight-dx,0px),var(--flight-dy,0px),0) scale(var(--flight-scale,1))}}
 .feature-bento .fb-shot{position:absolute;left:-30px;right:auto;top:var(--fb-shot-top,250px);height:236px;z-index:1;pointer-events:none}.feature-bento .fb-shot img{height:100%;display:block}
 .feature-bento .fb-flash{position:absolute;inset:0;background:#fff;opacity:0;transition:opacity .12s}
@@ -1282,7 +1279,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
   .feature-bento .fb-fund{left:28px;right:28px}
   .feature-bento .fb-proof{gap:5px}
   .feature-bento .fb-proof figure{width:54px}
-  .feature-bento .fb-proof img,.feature-bento .fb-proof .fb-next-proof{width:54px;height:41px}
+  .feature-bento .fb-proof img{width:54px;height:41px}
    .feature-bento .fb-shot{left:-22px;right:auto;height:190px}
   .feature-bento .fb-due,.feature-bento .fb-verified{right:20px;bottom:24px}
   .feature-bento .fb-price{padding:26px 132px 48px 28px;min-height:260px}
@@ -1824,7 +1821,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           <h3>Your logo, actually on something.</h3>
           <p>Sticker, patch, embroidery, or engraving. Applied to a real item, carried in public for the whole term.</p>
           <div class="fb-bagwrap" aria-hidden="true">
-            <img class="fb-photo-cutout" src="bento/bag.png" alt="">
+            <img src="bento/bag.png" alt="">
             <svg viewBox="0 0 187 324">
               <rect class="fb-spotline" x="15" y="92" width="77.5" height="90.5" rx="6"/>
               <rect class="fb-spotline" x="94.5" y="92" width="77.5" height="90.5" rx="6"/>
@@ -1869,13 +1866,14 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
             <figure><img class="fb-photo-frame" src="bento/checkin-cycle-1.png" alt=""><figcaption>Cycle 1</figcaption></figure>
             <figure><img class="fb-photo-frame" src="bento/checkin-cycle-2.png" alt=""><figcaption>Cycle 2</figcaption></figure>
             <figure><img class="fb-photo-frame" src="bento/checkin-cycle-3.png" alt=""><figcaption>Cycle 3</figcaption></figure>
-            <figure><span class="fb-next-proof"></span><figcaption>Next</figcaption></figure>
+            <figure><img class="fb-photo-frame" src="bento/checkin-cycle-4.png" alt=""><figcaption>Next</figcaption></figure>
           </div>
           <div class="fb-shot" aria-hidden="true"><img class="fb-photo-cutout" src="bento/checkin.png" alt=""></div>
           <div class="fb-proof-flights" aria-hidden="true">
             <img class="fb-proof-flight fb-photo-frame" src="bento/checkin-cycle-1.png" alt="">
             <img class="fb-proof-flight fb-photo-frame" src="bento/checkin-cycle-2.png" alt="">
             <img class="fb-proof-flight fb-photo-frame" src="bento/checkin-cycle-3.png" alt="">
+            <img class="fb-proof-flight fb-photo-frame" src="bento/checkin-cycle-4.png" alt="">
           </div>
           <div class="fb-flash" aria-hidden="true"></div>
           <div class="fb-due">Next check-in due this cycle</div>
@@ -11156,7 +11154,7 @@ function initHomeFeatureBento(){
   var itemIndex=0,itemImg=document.getElementById('fbItemImg'),itemName=document.getElementById('fbItemName'),itemMeta=document.getElementById('fbItemMeta'),itemStage=document.querySelector('.fb-stage-inner'),itemLine=q('.fb-itemline'),itemTile=q('.fb-mac');
   var fundPct=document.getElementById('fbFundPct'),fundBar=document.getElementById('fbFundBar'),fundAmt=document.getElementById('fbFundAmt');
   var checkinTile=q('.fb-checkin'),proofRow=q('.fb-proof'),checkinShot=q('.fb-shot img');
-  var proofFlights=qa('.fb-proof-flight'),proofTargets=qa('.fb-proof figure:nth-child(-n+3)>img');
+  var proofFlights=qa('.fb-proof-flight'),proofTargets=qa('.fb-proof figure:nth-child(-n+4)>img');
   function syncItemStageTop(){
     if(!itemLine||!itemTile)return;
     itemTile.style.setProperty('--fb-stage-top',Math.ceil(itemLine.offsetTop+itemLine.offsetHeight+16)+'px');
@@ -11282,7 +11280,7 @@ function initHomeFeatureBento(){
   if(priceVisual) {
     priceVisual.insertAdjacentHTML('beforeend', buildOverlaySvg('iphone', 5, 'fb-ps', 'fb-price-map', parts));
   }
-  runTile('.fb-checkin',[[0,0],[.04,1],[.30,2],[.34,3],[.62,4],[.96,0]]);
+  runTile('.fb-checkin',[[0,0],[.04,1],[.30,2],[.34,3],[.74,4],[.96,0]]);
   var priceSpots=[],priceUnits=[],sumNum=document.getElementById('fbSumNum');
   runTile('.fb-price',[[0,0],[.06,1],[.28,2],[.50,3],[.72,4],[.94,0]],function(p,phase){
     var total=0;
