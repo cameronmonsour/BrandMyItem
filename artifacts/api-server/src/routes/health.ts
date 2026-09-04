@@ -1,10 +1,9 @@
 import { Router, type IRouter } from "express";
 import { GetHealthResponse, HealthCheckResponse } from "@workspace/api-zod";
-import { ReplitConnectors } from "@replit/connectors-sdk";
 import { stripeRequest } from "../stripeClient.ts";
+import { isResendConfigured } from "../emailDelivery.ts";
 
 const router: IRouter = Router();
-const connectors = new ReplitConnectors();
 
 type HealthDependencies = {
   getStripeBalance: () => Promise<{ livemode?: boolean }>;
@@ -13,12 +12,7 @@ type HealthDependencies = {
 
 const defaultDependencies: HealthDependencies = {
   getStripeBalance: () => stripeRequest<{ livemode?: boolean }>("/v1/balance"),
-  checkResend: async () => {
-    const response = await connectors.proxy("resend", "/domains?limit=1", {
-      method: "GET",
-    });
-    return response.ok;
-  },
+  checkResend: async () => isResendConfigured(),
 };
 
 export async function integrationHealth(

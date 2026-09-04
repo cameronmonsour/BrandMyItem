@@ -2628,7 +2628,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
     </div>
     <div id="mStep3" style="display:none">
       <h3>You&rsquo;re in. Save this ID.</h3>
-      <p class="mp">We sent a copy to <b id="mSubMail"></b>. Use this ID with that email any time to track your spot.</p>
+       <p class="mp" id="mEmailStatus">Save this ID — email confirmation is not available right now.</p>
       <div class="subid-box">
         <div class="subid-label">Submission ID</div>
         <div class="subid-val" id="mSubId"></div>
@@ -11535,7 +11535,19 @@ async function finalizeReservation(order,pending){
   document.getElementById('mStep3').style.display='';
    document.getElementById('mSubId').textContent=subId;
    document.getElementById('mSubId').dataset.orderId=order.id;
-  document.getElementById('mSubMail').textContent=pending.mail;
+   var emailStatus=document.getElementById('mEmailStatus');
+   if(emailStatus)emailStatus.textContent='Save this ID — email confirmation is not available right now.';
+   try{
+     var emailResponse=await fetch('/api/checkout/reservations/'+encodeURIComponent(order.id)+'/confirmation-email',{method:'POST'});
+     var emailPayload=await emailResponse.json().catch(function(){return {}});
+     if(!emailResponse.ok||!emailPayload.sent)throw new Error('confirmation_email_unavailable');
+     if(emailStatus){
+       emailStatus.innerHTML='We sent a copy to <b id="mSubMail"></b>. Use this ID with that email any time to track your spot.';
+       document.getElementById('mSubMail').textContent=pending.mail;
+     }
+   }catch(error){
+     if(emailStatus)emailStatus.textContent='Save this ID — email confirmation is not available right now.';
+   }
    var confirmation=document.querySelector('#mStep3 .finetext');
    if(confirmation)confirmation.textContent=order.status==='funded'?'The listing fully funded and your saved card was charged. Track fulfillment and check-ins any time from Track order.':'Your spot is reserved. Your saved card has not been charged. Track funding and fulfillment any time from Track order.';
 }

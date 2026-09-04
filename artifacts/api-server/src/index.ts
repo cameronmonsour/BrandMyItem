@@ -3,6 +3,7 @@ import { ensureCommerceSchema } from "./commerceSchema.ts";
 import { logger } from "./lib/logger.ts";
 import { startPaymentReconciliation } from "./paymentReconciliation.ts";
 import { getConfiguredStripeDiagnostics } from "./stripeClient.ts";
+import { isResendConfigured } from "./emailDelivery.ts";
 
 const rawPort = process.env["PORT"];
 
@@ -27,6 +28,7 @@ async function start(): Promise<void> {
     `Stripe publishable key: ${stripe.publishableKeyPrefix}... source=process.env.STRIPE_PUBLISHABLE_KEY`,
   );
   logger.info(`Stripe mode: ${stripe.mode}`);
+  logger.info(`Resend: ${isResendConfigured() ? "configured" : "missing"}`);
   await ensureCommerceSchema();
   app.listen(port, (err) => {
     if (err) {

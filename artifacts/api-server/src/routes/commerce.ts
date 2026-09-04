@@ -55,7 +55,10 @@ import {
 } from "../paymentFunding.ts";
 import { isSafeCampaignPresentation } from "../lib/campaignPresentation.ts";
 import { sendTransactionalEmail } from "../emailDelivery.ts";
-import { trackingMagicLinkEmail } from "../emailTemplates.ts";
+import {
+  reservationConfirmationEmail,
+  trackingMagicLinkEmail,
+} from "../emailTemplates.ts";
 import { logger } from "../lib/logger.ts";
 
 const router: IRouter = Router();
@@ -640,6 +643,47 @@ router.get("/checkout/sessions/:sessionId", async (req, res): Promise<void> => {
       status: reserved.status,
     }),
   );
+});
+
+router.post("/checkout/reservations/:orderId/confirmation-email", async (req, res): Promise<void> => {
+  const orderId = String(req.params.orderId);
+  const [order] = await db
+    .select()
+    .from(placementOrdersTable)
+    .where(eq(placementOrdersTable.id, orderId))
+    .limit(1);
+  const token = readAccessToken(req, "checkout", orderId);
+  if (!order || !accessTokenMatches(order.checkoutAccessTokenHash, token)) {
+    res.status(404).json({ error: "Reservation not found" });
+    return;
+  }
+  if (!["reserved", "funded"].includes(order.status)) {
+    res.status(409).json({ error: "Reservation is not confirmed" });
+    return;
+  }
+  const [campaign] = await db
+    .select({ title: campaignsTable.title })
+    .from(campaignsTable)
+    .where(eq(campaignsTable.id, order.campaignId))
+    .limit(1);
+  if (!campaign) {
+    res.status(404).json({ error: "Campaign not found" });
+    return;
+  }
+  try {
+    const delivery = await sendTransactionalEmail(
+      reservationConfirmationEmail({
+        email: order.email,
+        reservationId: `BMI-${order.id.toUpperCase().slice(0, 6)}`,
+        campaignTitle: campaign.title,
+        amountCents: order.amountCents,
+      }),
+    );
+    res.status(202).json({ sent: true, messageId: delivery.messageId });
+  } catch (error) {
+    req.log.error({ err: error, reservationId: order.id }, "Unable to deliver reservation confirmation");
+    res.status(502).json({ sent: false, error: "Reservation confirmation email is unavailable" });
+  }
 });
 
 router.post("/checkout/reservations/:orderId/update-card", async (req, res): Promise<void> => {
