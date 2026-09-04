@@ -280,7 +280,8 @@ test('tracking is launch ready for campaign owners and brand purchases', () => {
   assert.match(html, /await syncTrackingOwnerEmail\(mail\)/);
   assert.match(html, /No items found for that email yet\./);
   assert.match(html, /\.track-order-chevron\{[^}]*display:grid;place-items:center/);
-  assert.match(html, /\.track-order-chevron::before\{content:"";width:6px;height:6px/);
+  assert.match(html, /\.track-order-chevron svg\{display:block;width:14px;height:14px\}/);
+  assert.match(html, /track-order-chevron" aria-hidden="true"><svg viewBox="0 0 24 24"/);
 });
 
 test('every catalog item has an item-specific branding method', () => {
