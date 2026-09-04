@@ -314,6 +314,14 @@ test('builder separates placement sizing from per-spot pricing', () => {
   assert.match(html, /prices=CU\.faces\[0\]\.prices\.slice\(\)/);
 });
 
+test('item purpose is limited to 500 characters in the form and at submission', () => {
+  assert.match(html, /id="purposeInput" maxlength="500"/);
+  assert.match(html, /purposeInput\.value=String\(B\.purpose\|\|''\)\.slice\(0,500\)/);
+  assert.match(html, /purposeInput\.oninput=function\(\)\{B\.purpose=this\.value\.slice\(0,500\)\.trim\(\)\}/);
+  assert.match(html, /if\(purpose\.length>500\)\{toast\('Purpose of the item must be 500 characters or fewer'\);return\}/);
+  assert.equal((html.match(/purpose:purpose/g) || []).length, 2);
+});
+
 test('posting requires and saves the owner shipping address', () => {
   assert.match(html, /var address=document\.getElementById\('pAddress'\)\.value\.trim\(\)/);
   assert.match(html, /if\(!name\|\|!mail\|\|!address\)\{toast\('Add your name, email, and shipping address to post'\);return\}/);

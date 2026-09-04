@@ -2252,7 +2252,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           </div>
           <div class="field" style="margin:18px 0 0">
             <label class="label" for="purposeInput">Purpose of the item</label>
-            <textarea class="input profile-purpose" id="purposeInput" maxlength="180" placeholder="Daily work in coffee shops, client meetings, and travel."></textarea>
+            <textarea class="input profile-purpose" id="purposeInput" maxlength="500" placeholder="Daily work in coffee shops, client meetings, and travel."></textarea>
           </div>
           <div class="label">How often it is seen</div>
           <div class="habs" id="freqPills"></div>
@@ -8988,8 +8988,9 @@ function showBuild(){
   });
   var purposeInput=document.getElementById('purposeInput');
   if(purposeInput){
-    purposeInput.value=B.purpose||'';
-    purposeInput.oninput=function(){B.purpose=this.value.trim()};
+    purposeInput.value=String(B.purpose||'').slice(0,500);
+    B.purpose=purposeInput.value.trim();
+    purposeInput.oninput=function(){B.purpose=this.value.slice(0,500).trim()};
   }
   renderLocationPicker('cities');
   renderLocationPicker('universities');
@@ -9936,7 +9937,9 @@ async function postListing(){
   var name=document.getElementById('pName').value.trim();
   var mail=document.getElementById('pMail').value.trim();
   var address=document.getElementById('pAddress').value.trim();
+  var purpose=String(B.purpose||'').trim();
   if(!name||!mail||!address){toast('Add your name, email, and shipping address to post');return}
+  if(purpose.length>500){toast('Purpose of the item must be 500 characters or fewer');return}
   if(!B.avatar){toast('Select a character before posting');return}
   if(DB.listings.some(function(existing){return existing.ownerRestricted&&existing.mail&&existing.mail.toLowerCase()===mail.toLowerCase()})){
     toast('This owner is restricted from posting after missed check-ins');return;
@@ -9994,7 +9997,7 @@ async function postListing(){
     }
     var mdl=(document.getElementById('tModel')||{value:''}).value.trim();
     l={id:uid(),type:'custom',sourceType:CU.template||null,custom:true,photo:CU.faces[0].photo,faces:facesOut,tiles:CU.faces[0].tiles,
-      retail:retail,title:mdl||null,owner:name,mail:mail,avatar:B.avatar,habs:B.habs.slice(),cities:B.cities.slice(),universities:B.universities.slice(),purpose:B.purpose.trim(),freq:B.freq,social:B.social,color:B.color,socialLinks:Object.assign({},B.socialLinks),slots:flatTiles.length,
+      retail:retail,title:mdl||null,owner:name,mail:mail,avatar:B.avatar,habs:B.habs.slice(),cities:B.cities.slice(),universities:B.universities.slice(),purpose:purpose,freq:B.freq,social:B.social,color:B.color,socialLinks:Object.assign({},B.socialLinks),slots:flatTiles.length,
       prices:prices,pricesIncludeMarkup:true,claims:prices.map(function(){return null}),created:Date.now(),postedAt:Date.now(),unsoldTimeoutDays:60,
       termMonths:selectedTerm,checkinFrequency:B.checkinFrequency||'monthly',termLocked:false,brandingMode:selectedBranding,status:'live',shipping:{name:name,address:address}};
     CU.faces=[];cuFaceChips();
@@ -10005,7 +10008,7 @@ async function postListing(){
       standardPrices=standardPrices.map(function(price){return Math.max(1,Math.round(price*standardGoal/standardTotal))});
       standardPrices[0]+=standardGoal-standardPrices.reduce(function(a,b){return a+b},0);
     }
-    l={id:uid(),type:B.type,owner:name,mail:mail,avatar:B.avatar,habs:B.habs.slice(),cities:B.cities.slice(),universities:B.universities.slice(),purpose:B.purpose.trim(),freq:B.freq,social:B.social,color:B.color,variantModel:B.variantModel,variantSize:B.variantSize,retail:variantRetail(B.type,B.variantSize),source:ITEMS[B.type].source,verified:ITEMS[B.type].verified,socialLinks:Object.assign({},B.socialLinks),slots:B.slots,
+    l={id:uid(),type:B.type,owner:name,mail:mail,avatar:B.avatar,habs:B.habs.slice(),cities:B.cities.slice(),universities:B.universities.slice(),purpose:purpose,freq:B.freq,social:B.social,color:B.color,variantModel:B.variantModel,variantSize:B.variantSize,retail:variantRetail(B.type,B.variantSize),source:ITEMS[B.type].source,verified:ITEMS[B.type].verified,socialLinks:Object.assign({},B.socialLinks),slots:B.slots,
       prices:standardPrices,pricesIncludeMarkup:true,claims:standardPrices.map(function(){return null}),created:Date.now(),postedAt:Date.now(),unsoldTimeoutDays:60,
       termMonths:selectedTerm,checkinFrequency:B.checkinFrequency||'monthly',termLocked:false,brandingMode:selectedBranding,status:'live',shipping:{name:name,address:address}};
   }
