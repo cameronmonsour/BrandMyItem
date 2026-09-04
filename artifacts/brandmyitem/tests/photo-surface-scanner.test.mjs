@@ -95,6 +95,13 @@ test('Stanley builder keeps the original image as Front and adds the supplied Ba
   );
 });
 
+test('Rimowa builder keeps the original image as Front and adds Back, Left, and Right views', () => {
+  assert.match(
+    html,
+    /case:\[\s*\['Front','campaign\/product-case\.png'\],\s*\['Back','campaign\/product-case-back\.png'\],\s*\['Left','campaign\/product-case-left\.png'\],\s*\['Right','campaign\/product-case-right\.png'\]\s*\]/,
+  );
+});
+
 test('polygon points and catalog identity survive template and detail rendering', () => {
   assert.match(html, /if\(tt\.pts\)out\.pts=tt\.pts\.map/);
   assert.match(html, /sourceType:CU\.template\|\|null/);
