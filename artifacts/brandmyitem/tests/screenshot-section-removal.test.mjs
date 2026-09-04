@@ -331,6 +331,10 @@ test('customized catalog listings keep the real item name on campaign cards', ()
   assert.doesNotMatch(html, /function LBLL\(l\)\{[^}]*'Custom item'/);
 });
 
+test('FAQ owner and brand groups are separated so the second heading has spacing', () => {
+  assert.match(html, /Who owns the item\?<span class="x"><\/span><\/summary><div class="fa">[\s\S]*?<\/div><\/details>\s*<\/div>\s*<\/div>\s*<div class="faq-group">\s*<h3>For brands<\/h3>/);
+});
+
 test('posting requires and saves the owner shipping address', () => {
   assert.match(html, /var address=document\.getElementById\('pAddress'\)\.value\.trim\(\)/);
   assert.match(html, /if\(!name\|\|!mail\|\|!address\)\{toast\('Add your name, email, and shipping address to post'\);return\}/);
