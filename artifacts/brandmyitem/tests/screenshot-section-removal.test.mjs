@@ -51,7 +51,7 @@ test('keeps outlined hero art while referenced suit and backpack photos remain i
 test('dashboard filters use listing metadata and compose with displayed spot prices', () => {
   assert.match(html, /\{id:'Event',item:'cooler'\}/);
   assert.doesNotMatch(html, /\{id:'Custom',item:null\}/);
-  assert.match(html, /function listingCategory\(l\)\{\s+if\(l&&l\.type&&ITEMS\[l\.type\]\)return ITEMS\[l\.type\]\.cat;\s+return 'Custom';/);
+  assert.match(html, /function listingCategory\(l\)\{\s+var type=l&&\(l\.sourceType\|\|l\.type\);\s+if\(type&&ITEMS\[type\]\)return ITEMS\[type\]\.cat;\s+return 'Custom';/);
   assert.match(html, /var it=\{label:LBLL\(l\),cat:listingCategory\(l\)\}/);
   assert.match(html, /function syncDashboardFilterState\(\)/);
   assert.match(html, /function renderDash\(\)\{\s+syncDashboardFilterState\(\);/);
@@ -324,6 +324,10 @@ test('item purpose is limited to 500 characters in the form and at submission', 
 
 test('customized catalog listings keep the real item name on campaign cards', () => {
   assert.match(html, /if\(l\.sourceType&&ITEMS\[l\.sourceType\]\)return ITEMS\[l\.sourceType\]\.label/);
+  assert.match(html, /if\(l\.itemName&&String\(l\.itemName\)\.trim\(\)\)return String\(l\.itemName\)\.trim\(\)/);
+  assert.match(html, /itemName:\(CU\.template&&ITEMS\[CU\.template\]\?ITEMS\[CU\.template\]\.label:\(mdl\|\|'Item'\)\)/);
+  assert.match(html, /itemName:ITEMS\[B\.type\]\.label/);
+  assert.match(html, /if\(!presentation\.itemName&&apiSourceType&&ITEMS\[apiSourceType\]\)presentation\.itemName=ITEMS\[apiSourceType\]\.label/);
   assert.doesNotMatch(html, /function LBLL\(l\)\{[^}]*'Custom item'/);
 });
 
