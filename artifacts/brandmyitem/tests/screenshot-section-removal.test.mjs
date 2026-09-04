@@ -28,8 +28,10 @@ test('removes the screenshot-only homepage and page headers', () => {
   assert.match(html, /\.home-flow-step:nth-child\(2\),\.home-flow-step:nth-child\(3\),\.home-flow-step:nth-child\(4\)\{transform:none\}/);
   assert.match(html, /Choose the item, ad spots, term, and check-in frequency\./);
   assert.match(html, /Brands claim a spot, upload their logo, and pay in full upfront\./);
-  assert.match(html, /Once fully funded, BrandMyItem buys and ships the item to you\./);
-  assert.match(html, /<h3>We apply every brand<\/h3><p>BrandMyItem applies every approved sponsor mark before shipping to reduce fraud\./);
+  assert.match(html, /how-it-works-apply-brand\.png/);
+  assert.match(html, /home-flow-icon photo apply/);
+  assert.match(html, /<span class="home-flow-index">3<\/span><h3>We apply every brand<\/h3><p>BrandMyItem applies every approved sponsor mark before shipping to reduce fraud\./);
+  assert.match(html, /<span class="home-flow-index">4<\/span><h3>It arrives<\/h3><p>Your item arrives pre-branded and ready to use\./);
   assert.match(html, /Send weekly, biweekly, or monthly photos for your selected term\./);
 });
 
