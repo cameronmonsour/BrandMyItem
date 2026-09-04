@@ -60,6 +60,7 @@ test('headphones always use two full-width polygon placements', () => {
   assert.match(html, /if\(t==='headphones'\)B\.slots=2/);
   assert.match(html, /Headphones use exactly two placements on each side/);
   assert.match(html, /if\(CU\.template==='headphones'\)\{\s*B\.slots=2;/);
+  assert.match(html, /var base=\(t==='headphones'&&REFERENCE_PHOTO_TILES\.headphones&&REFERENCE_PHOTO_TILES\.headphones\[2\]\?/);
 });
 
 test('headphone builder includes right and left product faces', () => {

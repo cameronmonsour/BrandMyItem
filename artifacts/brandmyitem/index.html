@@ -9788,7 +9788,9 @@ function cuApplyTemplate(){
   if(B.slots>mx)B.slots=mx;
   var retail=Math.max(1,parseFloat(document.getElementById('cuRetail').value||ITEMS[t].retail));
   CU.retail=retail;
-  var base=(mapTiles(t,B.slots)||[]).map(function(tt){return nudgeOff(tt,KO)});
+  var base=(t==='headphones'&&REFERENCE_PHOTO_TILES.headphones&&REFERENCE_PHOTO_TILES.headphones[2]?
+    REFERENCE_PHOTO_TILES.headphones[2].map(copyPhotoTile):
+    (mapTiles(t,B.slots)||[])).map(function(tt){return nudgeOff(tt,KO)});
   var n=(CU.angles&&CU.angles.length)||1;
   var all=[];
   for(var fi=0;fi<n;fi++){
