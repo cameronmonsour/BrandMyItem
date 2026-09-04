@@ -565,6 +565,8 @@ details.faq .fa b{color:var(--fg);font-weight:600}
 .size-pills button.on{background:#1D1D1F;color:#fff;border-color:#1D1D1F}
 .size-pills button small{display:block;font-weight:400;font-size:11px;color:inherit;opacity:.7;margin-top:2px}
 .size-pills button.on small{opacity:.85}
+.size-pills button.unavailable{color:#86868b;background:#F2F2F2;border-color:#E5E5E7;cursor:not-allowed}
+.size-pills button.unavailable:hover{background:#F2F2F2}
 .social-connect{display:flex;gap:8px;flex-wrap:wrap}
 .social-chip{display:flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:12px;padding:8px 12px;font-size:13px;font-weight:600;background:var(--bg);cursor:pointer;transition:border-color .15s}
 .social-chip:hover{border-color:#1D1D1F}
@@ -6712,7 +6714,13 @@ var ITEM_VARIANTS={
     sizeLabel:'Core thickness',sizeQ:'Pick an available thickness.',
     sizes:[['16mm',0,{'Core thickness':'16mm'}],['14mm',0,{'Core thickness':'14mm'}]]
   },
-  suit:{colors:[['Black','#1D1D1F']],sizeLabel:'Size',sizeQ:'Choose your size on the official product page.',sizes:[['Tom Ford sizing',0]]},
+  suit:{colors:[['Black','#1D1D1F']],sizeLabel:'Size',sizeQ:'Select an available Tom Ford jacket size.',sizes:[
+    ['44',0,{'Size':'44','Availability':'Available'},true],
+    ['46',0,{'Size':'46','Availability':'Out of stock'},false],
+    ['48',0,{'Size':'48','Availability':'Available'},true],
+    ['50',0,{'Size':'50','Availability':'Available'},true],
+    ['52',0,{'Size':'52','Availability':'Out of stock'},false]
+  ]},
   backpack:{colors:[['Black','#26262A']],sizeLabel:'Size',sizeQ:'One official 43 cm size.',sizes:[['43 cm',0]]}
 };
 var SIZE_TIERS=[[0.19,'Small'],[0.28,'Medium'],[1,'Large']];
@@ -8745,7 +8753,8 @@ function renderVariants(k){
   B.color=v.colors[0][0];
   B.priceDelta=0;
   B.variantModel=v.models?v.models[0][0]:'';
-  B.variantSize=availableVariantSizes(k,B.variantModel)[0][0];
+  var initialSizes=availableVariantSizes(k,B.variantModel);
+  B.variantSize=(initialSizes.find(function(size){return size[3]!==false})||initialSizes[0])[0];
   var modelCol=document.getElementById('modelVariantCol');
   var modelPills=document.getElementById('modelPills');
   modelCol.style.display=v.models?'block':'none';
@@ -8784,14 +8793,18 @@ function renderVariants(k){
   }
   function drawSizes(){
     var sizes=availableVariantSizes(k,B.variantModel);
-    if(!sizes.some(function(size){return size[0]===B.variantSize}))B.variantSize=sizes[0][0];
+    if(!sizes.some(function(size){return size[0]===B.variantSize&&size[3]!==false}))B.variantSize=(sizes.find(function(size){return size[3]!==false})||sizes[0])[0];
     sp.innerHTML='';
     sizes.forEach(function(s,i){
       var b=document.createElement('button');
       b.type='button';
-      b.innerHTML=s[0]+(s[1]?'<small>'+(s[1]>0?'+':'')+money(s[1])+'</small>':(sizes.length>1?'<small>Included</small>':''));
-      b.className=s[0]===B.variantSize?'on':'';
+      var unavailable=s[3]===false;
+      b.innerHTML=s[0]+(unavailable?'<small>Out of stock</small>':(s[1]?'<small>'+(s[1]>0?'+':'')+money(s[1])+'</small>':(sizes.length>1?'<small>Included</small>':'')));
+      b.className=(s[0]===B.variantSize?'on ':'')+(unavailable?'unavailable':'');
+      b.disabled=unavailable;
+      if(unavailable)b.setAttribute('aria-label',s[0]+' out of stock');
       b.onclick=function(){
+        if(unavailable)return;
         sp.querySelectorAll('button').forEach(function(bb){bb.classList.remove('on')});
         b.classList.add('on');
         B.priceDelta=s[1];

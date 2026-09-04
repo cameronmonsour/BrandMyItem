@@ -80,6 +80,9 @@ test('official catalog data stores sources, verification dates, and exact option
   assert.match(html, /'Blaze Red \(Ben Johns\)'.*'Breeze Blue \(Simone Jardim\)'.*'Seaside Green'/s);
   assert.match(html, /suit:\{label:'Luxury Twill O’Connor Tuxedo',brand:'Tom Ford'.*retail:7490/);
   assert.match(html, /source:'https:\/\/www\.tomfordfashion\.com\/en-us\/luxury-twill-oconnor-tuxedo\/2EYPT1-WOS09X5N\.html'/);
+  assert.match(html, /suit:\{colors:\[\['Black','#1D1D1F'\]\],sizeLabel:'Size',sizeQ:'Select an available Tom Ford jacket size\.',sizes:\[\s*\['44',0,\{'Size':'44','Availability':'Available'\},true\],\s*\['46',0,\{'Size':'46','Availability':'Out of stock'\},false\],\s*\['48',0,\{'Size':'48','Availability':'Available'\},true\],\s*\['50',0,\{'Size':'50','Availability':'Available'\},true\],\s*\['52',0,\{'Size':'52','Availability':'Out of stock'\},false\]\s*\]\}/);
+  assert.match(html, /var unavailable=s\[3\]===false/);
+  assert.match(html, /b\.disabled=unavailable/);
   assert.match(html, /backpack:\{label:'Search Backpack',brand:'TUMI'.*retail:850/);
   assert.match(html, /source:'https:\/\/www\.tumi\.com\/p\/search-backpack-01470531041\//);
   assert.match(html, /weekender:\{label:'Keepall Bandoulière',brand:'Louis Vuitton'/);
