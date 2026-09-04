@@ -112,12 +112,19 @@ test('locked MacBook campaign prices follow the two visible surface sizes', () =
 
 test('funded campaign cards show a green funded state', () => {
   assert.match(html, /\.lcard \.countdown-badge\.funded\{background:#E8F5EC;color:#1F7A44\}/);
+  assert.match(html, /\.lcard \.example-badge\{position:absolute;top:10px;right:10px;z-index:3\}/);
   assert.match(html, /\.pbar\.funded i\{background:#1F7A44\}/);
   assert.match(html, /if\(pctOf\(l\)>=100\)return 'Funded'/);
   assert.doesNotMatch(html, /Funded, preparing shipment/);
   assert.match(html, /className='chipg sold-count countdown-badge'\+\(pct>=100\?' funded':''\)/);
   assert.match(html, /<div class="pbar'\+\(pct>=100\?' funded':''\)/);
   assert.match(html, /Math\.min\(100,pct\)/);
+});
+
+test('homepage campaign cards label locked campaigns as examples', () => {
+  assert.match(html, /example\.className='chipg sold-count example-badge'/);
+  assert.match(html, /example\.setAttribute\('aria-label','Example campaign'\)/);
+  assert.match(html, /example\.textContent='Example'/);
 });
 
 test('dashboard keeps compact tracker cards without a duplicate left category box', () => {
