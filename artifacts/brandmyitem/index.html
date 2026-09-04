@@ -8082,7 +8082,7 @@ function renderLiveFeed(feedId){
       '<span class="home-activity-name">'+brand+'</span>'+
       '<span class="home-activity-action">bought <b>'+money(row.c.amt||row.l.prices[0])+'</b></span>'+
       '<span class="home-activity-product">'+(photo?'<img src="'+photo+'" alt="">':'')+'<span>'+label+'</span></span>'+
-      '<span class="home-activity-time">— '+ago(row.ts)+'</span>'+
+      '<span class="home-activity-time">'+ago(row.ts)+'</span>'+
     '</a>';
   }
   var tickerRows=rows.map(itemHtml).join('');

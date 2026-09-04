@@ -68,6 +68,8 @@ test('dashboard activity uses the same live ticker as the homepage', () => {
   assert.match(html, /var brand='your brand here',photo=PHO\(row\.l\),label=LBLL\(row\.l\)/);
   assert.match(html, /var brandMark='<img src="brandmyitem-logo\.svg" alt="BrandMyItem logo">';/);
   assert.doesNotMatch(html, /var brand=\(row\.c&&row\.c\.brand\|\|'A brand'\)\.trim\(\)/);
+  assert.match(html, /<span class="home-activity-time">'\+ago\(row\.ts\)\+'<\/span>/);
+  assert.doesNotMatch(html, /home-activity-time">— /);
   assert.match(html, /function postActivityRows\(\)/);
   assert.match(html, /\{kind:'post',listingId:l\.id,owner:name,label:LBLL\(l\),spots:l\.slots\}/);
   assert.match(html, /\(DB\.activity\|\|\[\]\)\.forEach\(function\(a\)\{\s+if\(!a\.txt\)return;/);
