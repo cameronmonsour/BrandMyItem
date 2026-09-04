@@ -55,7 +55,7 @@ test('lead suitcase uses four rounded silver-shell boxes that avoid the halo and
   assert.match(html, /<rect class="fb-spotline" x="15" y="92" width="77\.5" height="90\.5" rx="6"\/>/);
   assert.match(html, /<rect class="fb-spotline" x="94\.5" y="184\.5" width="77\.5" height="90\.5" rx="6"\/>/);
   assert.match(html, /\.fb-spotline\{fill:none;stroke:#000;stroke-width:1;vector-effect:non-scaling-stroke;visibility:visible\}/);
-  assert.match(html, /class="fb-lead-price"><text[^>]*>\$542\.50<\/text><text[^>]*>\$542\.50<\/text><text[^>]*>\$542\.50<\/text><text[^>]*>\$542\.50<\/text>/);
+  assert.match(html, /class="fb-lead-price"><text[^>]*>\$543<\/text><text[^>]*>\$543<\/text><text[^>]*>\$542<\/text><text[^>]*>\$542<\/text>/);
   assert.match(html, /class="fb-lead-logo"(?:[\s\S]*?<use href="#fbLidMark"){4}/);
   assert.doesNotMatch(html, /class="fb-lead-(?:price|logo)"><rect/);
 });
@@ -69,7 +69,7 @@ test('price tile uses the transparent iPhone cutout with black priced tracker sp
   assert.match(html, /\.fb-price h3\{[^}]*max-width:10ch/);
   assert.match(html, /\.fb-price-visual\{[^}]*height:130px;width:calc\(130px \* \(952 \/ 1275\)\)/);
   assert.match(html, /\.fb-price-map \.fb-ps\{fill:none;stroke:#000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter/);
-  assert.match(html, /var parts=allocatePlacementPrices\(markedUpRetail\(1099\),new Array\(5\)\.fill\(1\)\)/);
+  assert.match(html, /var parts=\[307,308,308,308,308\]/);
   assert.match(html, /buildOverlaySvg\('iphone', 5, 'fb-ps', 'fb-price-map', parts\)/);
   assert.match(html, /priceUnits\[index\]\.classList\.toggle\('is-bought',fraction>\.92\)/);
 });
@@ -156,14 +156,9 @@ test('check-in proofs use a clean transparent four-column structure', () => {
   assert.doesNotMatch(html, /\.feature-bento \.fb-next-proof\{[^}]*background:#fff/);
 });
 
-test('equal placement boxes keep identical cent-level prices', () => {
-  assert.match(html, /function placementMoney\(n\)\{[\s\S]*?minimumFractionDigits:2,maximumFractionDigits:2/);
-  assert.match(html, /function allocatePlacementPrices\(total,weights\)/);
-  assert.match(html, /groups\[key\]=\{weight:weight,indices:\[\],unit:0,ideal:totalCents\*weight\/weightTotal\}/);
-  assert.match(html, /parts:allocatePlacementPrices\(markedUpRetail\(1550\),new Array\(4\)\.fill\(1\)\)/);
-  assert.match(html, /parts:allocatePlacementPrices\(markedUpRetail\(549\),new Array\(2\)\.fill\(1\)\)/);
-  assert.match(html, /var parts=allocatePlacementPrices\(markedUpRetail\(1099\),new Array\(5\)\.fill\(1\)\)/);
-  assert.match(html, /input\.step='0\.01';input\.value=Number\(CU\.prices\[i\]\|\|0\)\.toFixed\(2\)/);
-  assert.doesNotMatch(html, /parts:\[543,543,542,542\]/);
-  assert.doesNotMatch(html, /parts:\[385,384\]/);
+test('placement pricing stays in whole dollars', () => {
+  assert.doesNotMatch(html, /function placementMoney|function allocatePlacementPrices|input\.step='0\.01'|\.toFixed\(2\)/);
+  assert.match(html, /parts:\[543,543,542,542\]/);
+  assert.match(html, /parts:\[385,384\]/);
+  assert.match(html, /input\.step='1';input\.value=CU\.prices\[i\]\|\|''/);
 });

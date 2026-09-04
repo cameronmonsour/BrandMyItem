@@ -87,6 +87,6 @@ test('official catalog data stores sources, verification dates, and exact option
   assert.match(html, /verified:'2026-08-29',source:'https:\/\//);
   assert.match(html, /\['16"',900,\{Model:'16-inch MacBook Pro \(M5 Pro\)'/);
   assert.match(html, /retail:variantRetail\(B\.type,B\.variantSize\)/);
-  assert.match(html, /minimumFractionDigits:hasCents\?2:0/);
+  assert.match(html, /return '\$'\+Math\.round\(Number\(n\)\|\|0\)\.toLocaleString\('en-US'\)/);
   assert.doesNotMatch(html, /parseInt\(document\.getElementById\('cuRetail'\)/);
 });
