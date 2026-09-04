@@ -11,6 +11,7 @@ import {
 
 export const campaignsTable = pgTable("campaigns", {
   id: text("id").primaryKey(),
+  test: boolean("test").notNull().default(false),
   itemType: text("item_type").notNull(),
   title: text("title").notNull(),
   ownerName: text("owner_name").notNull(),

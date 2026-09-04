@@ -1,0 +1,67 @@
+# BrandMyItem — Audit fixes, round 3 (Replit prompt)
+
+Failures found by driving the live app. Fix every item. Verify each in a real browser and attach evidence. This document wins over earlier prompts where they conflict.
+
+---
+
+## 1. Reservation flow
+
+1.1 **Confirmation state is missing after Stripe returns.** After Checkout completes, the site lands on `#item/{id}` correctly but shows no confirmation. Restore the confirmation modal on that landing: "You're in." · **RESERVATION ID BMI-XXXXXX** (label is "RESERVATION ID", never "SUBMISSION ID") · "Your saved card has not been charged. You'll be charged $X only when this listing fully funds." · buttons **Copy ID**, **Cancel reservation**, **Done**. Trigger it from the Checkout success return (session id in the return URL), not from the dashboard route.
+
+1.2 **Reservations lost on listing rebuild.** Listing `djr99kx` was rebuilt and its reserved spots reset to open, while reservation BMI-73E690 still exists and shows RESERVED on the Track page. Spots and reservations must live in one transaction: a spot is `reserved` if and only if an active reservation references it. Rebuild/reseed operations must either carry reservations forward or delete them. Repair now: re-link BMI-73E690 to Spot 4 on `djr99kx` (or, if the reservation's SetupIntent is gone, mark it cancelled and email the brand).
+
+1.3 **Draft lock survives navigation.** A reservation draft holds the spot for ~10 minutes even when the tab navigates away (which the Stripe redirect always does). Fix both: (a) release the draft on `pagehide`/`beforeunload` via `navigator.sendBeacon` to `DELETE /api/sponsor-reservation-drafts/{id}`, and (b) cut draft TTL to 3 minutes, refreshed every 60 s while the modal is open. A draft that reached Checkout is exempt from (a) and holds until the session expires or completes.
+
+1.4 **Sticky nav paints mid-viewport when the modal opens** (white block above the header). Cause is the body scroll-lock. Lock scroll with `overflow: hidden` on `html` plus `scrollbar-gutter: stable`, or `position: fixed` with the current scroll offset preserved and restored. Verify at 700px, 1440px, 390px: header stays at y=0 with the modal open.
+
+1.5 Production build must not ship Vite's dev error overlay (`server.hmr.overlay`). Confirm `NODE_ENV=production` build has no `vite-error-overlay` element under any error.
+
+## 2. Copy and vocabulary
+
+2.1 Home-page listing card: "0/1 sold" → "0/1 reserved" while live; "Funded" badge once funded. Grep the client for user-facing "sold"; zero must remain.
+
+2.2 Listing page spot table: "Spot 1, Placement" → the sized placement description ("Lid, full") or plain "Spot 1".
+
+2.3 Listing page: "Delivery state — new, when fully reserved" → "new, when fully funded".
+
+2.4 Listing page: remove "Retail reference $1,599" from brand-facing view. Brands see only "Campaign total".
+
+2.5 Track view: "Owner campaign · CAM-RDGSM8X" → "Your listing · rdgsm8x". Remove the `CAM-` prefix everywhere. Listing IDs display as-is; reservations as `BMI-XXXXXX`. Grep user-facing text for "campaign"; only "campaign total" may remain.
+
+## 3. Data hygiene
+
+3.1 Delete listing `qr9t872` ("Launch Browser Owner c25afedc"). Automated tests are still writing live listings to the production store.
+
+3.2 Enforce: every listing/reservation created by an automated test carries `test: true`; excluded from `/api/campaigns`, Home, Live items, ticker, and emails; deleted by the test runner on completion. Add a startup sweep that deletes any `test: true` record older than 1 hour.
+
+3.3 Acceptance for this section: `/api/campaigns` returns only `rdgsm8x` and `djr99kx` (demo, hidden without `?demo=1`).
+
+## 4. Magic link and ticker
+
+4.1 After validating `?tracking_token=…`, redirect to `#track` with the tracking view open, and strip the token from the URL.
+
+4.2 Ticker is showing the empty-state line while listings are live. Feed it real events, newest first, max 30 days old: `MacBook Pro · listed by Audit Owner`, `$240 spot reserved · iPhone 17 · 512GB`, `iPhone 17 · 512GB · funded`. Empty-state copy only when there are zero events.
+
+## 5. Contrast (WCAG AA)
+
+Replace these colors site-wide (measured on white, 4.5:1 required for body text, 3:1 for ≥24px or ≥18.66px bold):
+
+- `#A6B0BA` (card goal text "/$2,239", 16px) — 2.2:1 → use `#6E6E73`.
+- `#8E8E93` (brand eyebrow "APPLE", 10px) — 3.26:1 → `#6E6E73`, and set eyebrow to 11px+ bold.
+- `#86868B` (section subheads "Pick your favorite.", 19px regular) — 3.62:1 → `#6E6E73`.
+
+Then run an automated contrast pass over every text node on Home, Live items, listing page, Build, Track, Legal at 1440 and 390; report any pair under threshold with its hex values.
+
+## 6. Acceptance checks (execute; attach screenshots and outputs)
+
+- [ ] Complete a test reservation with card `4242 4242 4242 4242`; on return, the confirmation modal shows "RESERVATION ID BMI-…", Copy ID, Cancel reservation, Done; Cancel reservation reopens the spot immediately.
+- [ ] `GET /api/campaigns` → only `rdgsm8x` and (with `?demo=1`) `djr99kx`; Spot 4 on `djr99kx` reflects BMI-73E690's state; Track for cameronmonsour@gmail.com and the listing agree.
+- [ ] Open the reserve modal, close the tab (or navigate away) before Checkout → the spot is reservable again within 5 seconds from another tab.
+- [ ] With the modal open at 700px and 1440px, the header's bounding box top is 0.
+- [ ] Home card reads "0/1 reserved"; `grep -ri "sold"` on user-facing strings returns zero.
+- [ ] Listing page shows no "Retail reference", "Placement" placeholder, or "fully reserved".
+- [ ] Track view shows "Your listing · rdgsm8x" and "BMI-73E690"; no "CAM-" or "campaign" outside "campaign total".
+- [ ] Visiting a fresh magic link lands on `#track` with the view open and no token in the URL.
+- [ ] Ticker shows the live listing events; empty-state text absent while listings exist.
+- [ ] Contrast report: zero failures on the six pages at both widths.
+- [ ] Screenshots: confirmation modal, listing page spot table, home card, track view, ticker, header-with-modal at 1440.

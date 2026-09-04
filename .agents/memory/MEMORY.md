@@ -27,3 +27,4 @@
 - [Resend delivery boundary](resend-delivery-boundary.md) — transactional mail uses direct Resend HTTPS with environment-configured sender and a fixed support Reply-To.
 - [Browser preview API boundary](browser-preview-api-boundary.md) — direct Vite-port browser checks do not include the API proxy; use the managed proxy or inject a controlled fixture.
 - [Campaign presentation contract](campaign-presentation-contract.md) — omit unavailable optional catalog strings, do not serialize them as null.
+- [Test listing isolation](test-listing-isolation.md) — automated listings carry a persisted test flag and never enter public listing, tracking, or activity surfaces.

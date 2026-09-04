@@ -683,6 +683,9 @@ components:
           type: string
           minLength: 1
           maxLength: 100
+        test:
+          type: boolean
+          description: Marks an automated test listing. Test listings are never public.
         itemType:
           type: string
           minLength: 1
@@ -755,6 +758,7 @@ components:
       required: [id, itemType, title, ownerName, ownerEmail, ownerAssent, presentation]
       properties:
         id: { type: string, minLength: 1, maxLength: 100 }
+        test: { type: boolean, description: Marks an automated test listing. Test listings are never public. }
         itemType: { type: string, minLength: 1, maxLength: 50 }
         title: { type: string, minLength: 1, maxLength: 200 }
         ownerName: { type: string, minLength: 1, maxLength: 120 }

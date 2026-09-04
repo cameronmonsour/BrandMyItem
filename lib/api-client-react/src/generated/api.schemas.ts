@@ -61,6 +61,8 @@ export interface CampaignInput {
      * @maxLength 100
      */
   id: string;
+  /** Marks an automated test listing. Test listings are never public. */
+  test?: boolean;
   /**
      * @minLength 1
      * @maxLength 50
@@ -99,6 +101,8 @@ export interface CampaignDraftInput {
      * @maxLength 100
      */
   id: string;
+  /** Marks an automated test listing. Test listings are never public. */
+  test?: boolean;
   /**
      * @minLength 1
      * @maxLength 50

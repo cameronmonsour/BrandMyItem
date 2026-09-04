@@ -34,8 +34,9 @@ async function ownerDraft(req: Request, campaignId: string) {
 router.post("/campaign-drafts", async (req, res): Promise<void> => {
   const parsed = CreateCampaignDraftBody.safeParse(req.body);
   const presentationSafe = parsed.success && isSafeCampaignPresentation(parsed.data.presentation);
-  const testIdentity = parsed.success && [parsed.data.id, parsed.data.itemType, parsed.data.title, parsed.data.ownerName]
-    .some((value) => /\btest\b/i.test(value));
+  const testIdentity = parsed.success && !parsed.data.test &&
+    [parsed.data.id, parsed.data.itemType, parsed.data.title, parsed.data.ownerName]
+      .some((value) => /\btest\b/i.test(value));
   if (!parsed.success || !presentationSafe || testIdentity) {
     req.log.warn({
       issues: parsed.success

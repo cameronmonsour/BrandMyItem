@@ -100,6 +100,7 @@ function publicClaim(order: typeof placementOrdersTable.$inferSelect) {
 async function publicCampaigns(
   campaigns: Array<typeof campaignsTable.$inferSelect>,
 ) {
+  campaigns = campaigns.filter((campaign) => !campaign.test);
   const ids = campaigns.map((campaign) => campaign.id);
   const orders = ids.length
     ? await db
@@ -225,7 +226,11 @@ router.get("/campaigns", async (_req, res): Promise<void> => {
   const campaigns = await db
     .select()
     .from(campaignsTable)
-    .where(and(eq(campaignsTable.active, true), ne(campaignsTable.lifecycleStatus, "draft")))
+    .where(and(
+      eq(campaignsTable.active, true),
+      ne(campaignsTable.lifecycleStatus, "draft"),
+      ne(campaignsTable.test, true),
+    ))
     .orderBy(desc(campaignsTable.createdAt));
   res.json(ListCampaignsResponse.parse(await publicCampaigns(campaigns)));
 });
@@ -250,12 +255,19 @@ router.post("/tracking/magic-link", async (req, res): Promise<void> => {
     db
       .select({ id: campaignsTable.id })
       .from(campaignsTable)
-      .where(sql`lower(${campaignsTable.ownerEmail}) = ${email}`)
+      .where(and(
+        sql`lower(${campaignsTable.ownerEmail}) = ${email}`,
+        ne(campaignsTable.test, true),
+      ))
       .limit(1),
     db
       .select({ id: placementOrdersTable.id })
       .from(placementOrdersTable)
-      .where(sql`lower(${placementOrdersTable.email}) = ${email}`)
+      .innerJoin(campaignsTable, eq(placementOrdersTable.campaignId, campaignsTable.id))
+      .where(and(
+        sql`lower(${placementOrdersTable.email}) = ${email}`,
+        ne(campaignsTable.test, true),
+      ))
       .limit(1),
   ]);
   if (!ownerMatch.length && !reservationMatch.length) {
@@ -353,6 +365,7 @@ router.get("/tracking", async (req, res): Promise<void> => {
         .from(campaignsTable)
         .where(
           and(
+            ne(campaignsTable.test, true),
             sql`lower(${campaignsTable.ownerEmail}) = ${email}`,
             magicLink
               ? sql`true`
@@ -397,7 +410,7 @@ router.get("/tracking", async (req, res): Promise<void> => {
     ? await db
         .select()
         .from(campaignsTable)
-        .where(inArray(campaignsTable.id, campaignIds))
+        .where(and(inArray(campaignsTable.id, campaignIds), ne(campaignsTable.test, true)))
         .orderBy(desc(campaignsTable.createdAt))
     : [];
 

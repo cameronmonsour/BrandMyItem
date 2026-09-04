@@ -140,9 +140,9 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;pointer-events:none}
 .spotcell .obpill{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(.94);background:#1D1D1F;color:#fff;font-size:14px;font-weight:500;padding:9px 20px;border-radius:999px;opacity:0;pointer-events:none;transition:opacity .15s,transform .15s;box-shadow:0 8px 22px rgba(0,0,0,.28)}
 .spotcell.open:hover .obpill{opacity:1;transform:translate(-50%,-50%) scale(1)}
 .spotcell.open:hover .slogo,.spotcell.open:hover .sname,.spotcell.open:hover .sprice{filter:blur(3px);opacity:.55}
-.spotcell.sold{cursor:default}
-.spotcell.sold:hover{border-color:rgba(60,60,67,.24);background:transparent}
-.soldchip{position:absolute;top:10px;right:10px;font-size:10.5px;font-weight:600;letter-spacing:.05em;background:#fff;color:var(--mfg);border:1px solid var(--border);padding:3px 8px;border-radius:999px;box-shadow:var(--sh-sm)}
+.spotcell.reserved{cursor:default}
+.spotcell.reserved:hover{border-color:rgba(60,60,67,.24);background:transparent}
+.reserved-chip{position:absolute;top:10px;right:10px;font-size:10.5px;font-weight:600;letter-spacing:.05em;background:#fff;color:var(--mfg);border:1px solid var(--border);padding:3px 8px;border-radius:999px;box-shadow:var(--sh-sm)}
 .spotcell .editprice{width:96px;text-align:center;font-weight:500;font-variant-numeric:tabular-nums;font-size:14px;height:34px;border-radius:10px;border:1px solid var(--border);background:#fff}
 .spotcell .editprice:focus{outline:none;border-color:var(--primary)}
 
@@ -547,7 +547,7 @@ details.faq .fa b{color:var(--fg);font-weight:600}
 .lcard .moneyrow .amts span{color:#A6B0BA;font-weight:500}
 .lcard .chips{display:flex;align-items:flex-end;gap:5px;flex:0 0 auto;min-width:0}
 .lcard .chipg{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;background:var(--wash);border-radius:999px;padding:3px 7px 3px 4px;line-height:1.2;font-variant-numeric:tabular-nums;white-space:nowrap}
-.lcard .chipg.sold-count{padding:3px 7px}
+.lcard .chipg.reserved-count{padding:3px 7px}
 .lcard .countdown-badge{position:absolute;top:10px;left:10px;z-index:3}
 .lcard .countdown-badge.funded{background:#E8F5EC;color:#1F7A44}
 .lcard .sponsor-price{position:relative;display:flex;flex-direction:column;align-items:flex-end;min-width:0}
@@ -1902,7 +1902,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 
         <article class="fb-tile fb-days" data-phase="0" data-loop="12000" style="--i:1">
           <h3>Not funded? Never charged.</h3>
-          <p>Your card is saved at reservation. If the listing is not fully funded by day 60, reservations are released and no charge is made.</p>
+          <p>Your card is saved at reservation. If the listing is not funded by day 60, reservations are released and no charge is made.</p>
           <div class="fb-num"><span id="fbDayNum">1</span><small id="fbDayUnit">day</small></div>
           <div class="fb-ruler" id="fbRuler" aria-hidden="true"></div>
           <div class="fb-rows">
@@ -1915,9 +1915,9 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 
         <article class="fb-tile fb-mac" data-phase="0" data-loop="11000" style="--i:2">
           <h3>Real items, not points.</h3>
-          <p>When the last spot funds, BrandMyItem buys the item new at retail and ships it straight to the owner.</p>
+          <p>When the last spot funds, BrandMyItem buys the item and ships it straight to the owner.</p>
           <div class="fb-itemline"><b id="fbItemName">MacBook Pro 14&quot;</b><span id="fbItemMeta">$1,599 retail, 10 spots</span></div>
-          <div class="fb-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg><span class="fb-funded">Fully funded. Purchase triggered.</span><span class="fb-shipped">Delivered pre-branded to the Owner</span></div>
+          <div class="fb-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg><span class="fb-funded">Funded. Purchase triggered.</span><span class="fb-shipped">Delivered pre-branded to the Owner</span></div>
           <div class="fb-stage" id="fbItemStage">
             <div class="fb-stage-inner">
               <img class="fb-photo-cutout" id="fbItemImg" src="bento/cutout-macbook.png" alt="">
@@ -1973,7 +1973,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
       <div class="faq-group">
         <h3>For owners</h3>
         <div class="faq-grid">
-          <details class="faq"><summary>How does BrandMyItem work?<span class="x"></span></summary><div class="fa">You post a catalog item you want, and its surface is divided into brand spots. Brands fund those spots at fixed prices that together equal the listing total. Once every spot is funded, BrandMyItem buys the item new at retail, produces and applies every mark, and ships the finished item directly to you. You never handle money at any point. Marks are permanent. Your side of the exchange is carrying the item in public and documenting it with check-in photos for the proof term you selected.</div></details>
+          <details class="faq"><summary>How does BrandMyItem work?<span class="x"></span></summary><div class="fa">You post a catalog item you want, and its surface is divided into brand spots. Brands fund those spots at fixed prices that together equal the listing total. Once every spot is funded, BrandMyItem buys the item, produces and applies every mark, and ships the finished item directly to you. You never handle money at any point. Marks are permanent. Your side of the exchange is carrying the item in public and documenting it with check-in photos for the proof term you selected.</div></details>
           <details class="faq"><summary>What do I agree to?<span class="x"></span></summary><div class="fa">Three things: keep every placement applied and unobstructed, use the item in ordinary public life, and submit one check-in photo per cycle for your proof term. The placements are permanent. The term, 6, 12, or 18 months, defines how long you document them. Term and cadence are chosen when you post and are locked from the moment the listing is published.</div></details>
           <details class="faq"><summary>When does my item arrive?<span class="x"></span></summary><div class="fa">Every item is delivered within 60 days of its listing fully funding, with every placement produced and professionally applied by BrandMyItem before shipment. The item arrives finished. Your first check-in is due within 7 days of delivery. Items are ordered new and carry the manufacturer's warranty.</div></details>
           <details class="faq"><summary>What happens if I miss check-ins?<span class="x"></span></summary><div class="fa">A missed cycle places a public flag on your listing, and repeated misses restrict you from posting new listings. There are no financial penalties and the item is never taken back. Your performance record is simply public.</div></details>
@@ -1985,7 +1985,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
         <h3>For brands</h3>
         <div class="faq-grid">
           <details class="faq"><summary>What does a brand receive?<span class="x"></span></summary><div class="fa">A permanent physical placement of your mark, applied as a sticker, patch, embroidery, or engraving, on a real item carried in public, plus a documented proof term: the purchase receipt, shipment confirmation, and every one of the owner's check-in photos for the term of the listing.</div></details>
-          <details class="faq"><summary>How are spots priced?<span class="x"></span></summary><div class="fa">Every spot is priced by surface area: its share of the item's usable surface, applied to the listing's campaign total. Spot prices always sum to the campaign total exactly. The campaign total is the item's retail price plus a flat 40% service charge, which covers material production, professional application, fulfillment, and administration of the listing. The price shown on each spot is all-in, with no additional fees at checkout.</div></details>
+          <details class="faq"><summary>How are spots priced?<span class="x"></span></summary><div class="fa">Every spot is priced by surface area: its share of the item's usable surface, applied to the listing's campaign total. Spot prices always sum to the campaign total exactly. The campaign total covers the item, material production, professional application, fulfillment, and administration of the listing. The price shown on each spot is all-in, with no additional fees at checkout.</div></details>
           <details class="faq"><summary>How does payment work?<span class="x"></span></summary><div class="fa">At reservation, Stripe securely saves your card through a SetupIntent. You are never charged at reservation. If every spot is reserved and the listing fully funds, BrandMyItem charges the saved card off-session for the exact all-in spot price. A decline opens a 48-hour update-card window.</div></details>
           <details class="faq"><summary>What happens if a listing doesn't fully fund?<span class="x"></span></summary><div class="fa">Every listing has a 60-day funding window. If any spot remains open at day 60, reservations are released and no card is charged. A listing with at least half its spots reserved may be relisted once for 30 more days.</div></details>
           <details class="faq"><summary>What are the content requirements?<span class="x"></span></summary><div class="fa">You must hold the rights to any mark you submit, and files must be production-ready. We decline placements that are unlawful, adult, hateful, or in restricted categories such as tobacco and vaping, and any declined purchase is refunded in full. The complete standards are published in our Content Standards.</div></details>
@@ -2351,7 +2351,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
         </div></div>
         <div class="card details-card"><div class="card-h"><div><div class="card-t">Details</div><p class="details-subheadline">Branding application, item sales tax, shipping, and handling are included.</p></div></div>
         <div class="card-c" style="padding-top:8px">
-          <div class="fact"><span>Item ships</span><b>new, when fully funded</b></div>
+           <div class="fact"><span>Item ships</span><b>new, when funded</b></div>
           <div class="fact"><span>Listing window</span><b>60 days, until funded or expired</b></div>
           <div class="fact"><span>Check-in</span><b id="cadOut">monthly photo</b></div>
           <div class="fact"><span>Check-in term</span><b id="buildTermOut">12 months</b></div>
@@ -2473,7 +2473,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           </div>
           <table class="ap-table">
             <tbody>
-              <tr><td>Retail reference</td><td id="iItemRetail">Not provided</td></tr>
+              <tr><td>Purchase total</td><td>All-in spot prices include the item and fulfillment.</td></tr>
               <tr><td>Delivery state</td><td id="iShips">new, waiting for full funding</td></tr>
               <tr><td>Branding material</td><td id="iMaterial">Item-specific branding</td></tr>
             </tbody>
@@ -2535,7 +2535,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 <footer class="site-footer">
   <div class="fwrap">
     <div class="fine">
-      <p>* Advertising spots are priced by surface share and always sum exactly to the listing's stated campaign total. A brand reserves a spot by saving a card, and no charge is made at reservation. If a listing is not fully funded within its 60-day funding window, reservations are released with no charge. Once a listing is fully funded, BrandMyItem buys the item new at retail, produces and professionally applies every placement, and delivers the finished item to the owner within 60 days of funding. Owners never receive or handle money, and never source or apply placement materials. Placements are permanent once applied. The owner selects the proof term (6, 12, or 18 months of check-ins) and check-in cadence (weekly, biweekly, or monthly) when posting; both are locked when the listing is published and cannot be changed. The owner's first check-in is due within 7 days of delivery. Missed check-ins result in a public flag and, if continued, restriction from posting new listings; there are no financial penalties. Items are new and carry the manufacturer's warranty. Spot availability is first come, first served, while spots last. Placements are paid advertising, not endorsements by the owner.</p>
+      <p>* Advertising spots are priced by surface share and always sum exactly to the listing's stated campaign total. A brand reserves a spot by saving a card, and no charge is made at reservation. If a listing is not funded within its 60-day funding window, reservations are released with no charge. Once a listing is funded, BrandMyItem buys the item, produces and professionally applies every placement, and delivers the finished item to the owner within 60 days of funding. Owners never receive or handle money, and never source or apply placement materials. Placements are permanent once applied. The owner selects the proof term (6, 12, or 18 months of check-ins) and check-in cadence (weekly, biweekly, or monthly) when posting; both are locked when the listing is published and cannot be changed. The owner's first check-in is due within 7 days of delivery. Missed check-ins result in a public flag and, if continued, restriction from posting new listings; there are no financial penalties. Items are new and carry the manufacturer's warranty. Spot availability is first come, first served, while spots last. Placements are paid advertising, not endorsements by the owner.</p>
       <p>Owners who post about their item on social media must clearly and conspicuously disclose their material connection to sponsoring brands in accordance with the FTC Endorsement Guides. Brands represent that they have rights to any mark they submit and grant IRLi LLC a limited license to reproduce it on the reserved spot and to display the owner's check-in photos publicly; no other use is licensed. Placements that are unlawful, infringing, or within restricted categories are declined. Before funding, the reservation is released with no charge. Receiving an item may constitute taxable income; each party is responsible for its own taxes, and required tax forms are issued where the law requires. Product and manufacturer names shown in listings identify the item only; BrandMyItem and its listings are not sponsored by, endorsed by, or affiliated with any item manufacturer, and all third-party marks belong to their respective owners. Use of the Service is governed by the Terms of Use, which include a binding individual arbitration agreement and class action waiver, with a 30-day opt-out.</p>
        <p>BrandMyItem is operated by IRLi LLC, a California limited liability company, Newport Beach, California. BrandMyItem is a marketplace for physical advertising placements; it is not a bank, money transmitter, payment processor, crowdfunding platform, lender, or investment of any kind. Avatars by <span id="avatarAuthorName">Kailash Saravanan</span>, CC BY 4.0. Legal notices: legal@brandmyitem.com. Privacy requests: privacy@brandmyitem.com.</p>
     </div>
@@ -6997,11 +6997,11 @@ function lockLaunchExamples(){
 lockLaunchExamples();
 var DEMO_VIEW=new URLSearchParams(location.search).get('demo')==='1';
 function isLaunchLiveCampaign(l){
-  return !!(l&&(!isDemoListing(l)||DEMO_VIEW));
+  return !!(l&&!l.test&&(!isDemoListing(l)||DEMO_VIEW));
 }
 function removePrelaunchTestCampaigns(){
   DB.listings=(DB.listings||[]).filter(function(l){
-    return LOCKED_LAUNCH_EXAMPLE_IDS.indexOf(l.id)>=0||isLaunchLiveCampaign(l);
+    return !l.test&&(LOCKED_LAUNCH_EXAMPLE_IDS.indexOf(l.id)>=0||isLaunchLiveCampaign(l));
   });
   var kept={};
   DB.listings.forEach(function(l){kept[l.id]=true});
@@ -7073,7 +7073,7 @@ function campaignFromApi(campaign){
   else delete presentation.faces;
   var created=new Date(campaign.createdAt).getTime();
   var listing=Object.assign(presentation,{
-    id:campaign.id,type:presentation.type||campaign.itemType,title:presentation.title||campaign.title,
+     id:campaign.id,test:!!campaign.test,type:presentation.type||campaign.itemType,title:presentation.title||campaign.title,
     owner:presentation.owner||campaign.ownerName,mail:campaign.ownerEmail||'',
     prices:(campaign.pricesCents||[]).map(function(cents){return cents/100}),pricesIncludeMarkup:true,
     slots:(campaign.pricesCents||[]).length,created:created,postedAt:presentation.postedAt||created,
@@ -7108,7 +7108,7 @@ async function hydratePublicCampaigns(){
   if(!response.ok)throw new Error('Campaigns could not be loaded');
   var campaigns=await response.json();
   DB.listings=DB.listings.filter(isDemoListing);
-  campaigns.filter(function(campaign){return !isDeletedCampaign(campaign)}).forEach(function(campaign){DB.listings.push(campaignFromApi(campaign))});
+  campaigns.filter(function(campaign){return !campaign.test&&!isDeletedCampaign(campaign)}).forEach(function(campaign){DB.listings.push(campaignFromApi(campaign))});
   DB.listings.sort(function(a,b){return (b.created||0)-(a.created||0)});
   store.set('bmi_db4',DB);
   return campaigns;
@@ -7121,7 +7121,7 @@ var CLOUD={on:false,busy:false,dirty:false,last:0};
 function slimDB(){
   /* strip catalog photos before upload; restore by reference on download */
   var out={listings:[],activity:(DB.activity||[]).slice(0,20)};
-  DB.listings.filter(function(l){return LOCKED_LAUNCH_EXAMPLE_IDS.indexOf(l.id)<0}).forEach(function(l){
+  DB.listings.filter(function(l){return !l.test&&LOCKED_LAUNCH_EXAMPLE_IDS.indexOf(l.id)<0}).forEach(function(l){
     var c={};Object.keys(l).forEach(function(k){c[k]=l[k]});
     if(c.photo&&typeof ITEM_PHOTOS!=='undefined'&&ITEM_PHOTOS[c.type]===c.photo){c.photo=null;c.photoRef=c.type}
     if(c.faces)c.faces=c.faces.map(function(f){
@@ -8316,6 +8316,8 @@ var views=['home','dashboard','build','item','track'];
 var LAST_PRODUCT_VIEW_KEY='';
 function route(){
   var h=location.hash.replace('#','')||'home';
+  var trackingToken=new URLSearchParams(location.search).get('tracking_token');
+  if(trackingToken&&(h==='home'||h===''))h='track';
   var anchorId=h==='homeFeatureBento'?h:'';
   var itemId=null;
   if(h.indexOf('item/')===0){itemId=h.split('/')[1];h='item'}
@@ -8363,36 +8365,28 @@ setTimeout(placeBuilder,0);
   }
 });
 window.addEventListener('hashchange',route);
-if(!location.hash||location.hash==='#')location.hash='home';
+if(!location.hash||location.hash==='#')location.hash=new URLSearchParams(location.search).get('tracking_token')?'track':'home';
 
 /* --- HOME --- */
 var homeMode='auction',homeType=null;
-function featured(){return DB.listings.slice().sort(function(a,b){return raisedOf(b)-raisedOf(a)})[0]}
+function featured(){return DB.listings.filter(isLaunchLiveCampaign).slice().sort(function(a,b){return raisedOf(b)-raisedOf(a)})[0]}
 function featuredOf(type){
-  var of=DB.listings.filter(function(l){return l.type===type}).sort(function(a,b){return raisedOf(b)-raisedOf(a)})[0];
+  var of=DB.listings.filter(function(l){return isLaunchLiveCampaign(l)&&l.type===type}).sort(function(a,b){return raisedOf(b)-raisedOf(a)})[0];
   if(of)return of;
   return {id:null,type:type,owner:'You, maybe',mail:'',habs:['Anywhere'],slots:Math.min(4,ITEMS[type].maxSlots),prices:suggest(type,Math.min(4,ITEMS[type].maxSlots)),claims:[null,null,null,null].slice(0,Math.min(4,ITEMS[type].maxSlots)),created:Date.now(),preview:true};
 }
 function homeLiveRows(){
-  var groups=[];
+  var since=Date.now()-30*86400000,rows=[];
   DB.listings.filter(isLaunchLiveCampaign).forEach(function(l){
-    var group=[];
+    var posted=l.postedAt||l.created;
+    if(posted&&posted>=since)rows.push({kind:'listing',l:l,ts:posted});
     (l.claims||[]).forEach(function(c,i){
-      if(!c)return;
-      group.push({l:l,c:c,ts:c.purchasedAt||((l.created||Date.now())+i*60000)});
+      var reserved=c&&(c.purchasedAt||c.reservedAt);
+      if(c&&reserved&&reserved>=since)rows.push({kind:'reservation',l:l,c:c,spotIndex:i,ts:reserved});
     });
-    if(group.length)groups.push(group.sort(function(a,b){return b.ts-a.ts}));
+    if(l.fundedAt&&l.fundedAt>=since)rows.push({kind:'funding',l:l,ts:l.fundedAt});
   });
-  groups.sort(function(a,b){return b[0].ts-a[0].ts});
-  var rows=[],seen={};
-  groups.forEach(function(group){
-    var row=group[0];
-    if(row&&!seen[row.l.id]&&rows.length<8){
-      seen[row.l.id]=true;
-      rows.push(row);
-    }
-  });
-  return rows;
+  return rows.sort(function(a,b){return b.ts-a.ts}).slice(0,12);
 }
 function renderLiveFeed(feedId){
   var feed=document.getElementById(feedId);
@@ -8403,14 +8397,21 @@ function renderLiveFeed(feedId){
     return;
   }
   function itemHtml(row){
-    var brand='Your Brand Here',photo=PHO(row.l),label=LBLL(row.l);
-    var brandMark=safeImageAttr(row.c.logo)?'<img src="'+safeImageAttr(row.c.logo)+'" alt="Your Brand Here logo">':'';
+    var photo=PHO(row.l),label=LBLL(row.l),brand=row.c&&row.c.brand||'A brand';
+    var brandMark=row.c&&safeImageAttr(row.c.logo)?'<img src="'+safeImageAttr(row.c.logo)+'" alt="'+safeCardText(brand)+' logo">':'';
+    var icon=row.kind==='funding'?'✓':(row.kind==='reservation'?'$':'↗');
+    var action=row.kind==='listing'
+      ? '<b>'+safeCardText(row.l.owner||'An owner')+'</b> posted <b>'+safeCardText(label)+'</b>'
+      : row.kind==='funding'
+        ? '<b>'+safeCardText(label)+'</b> is <b>Funded</b>'
+        : '<b>'+safeCardText(brand)+'</b> reserved a <b>'+money(row.c.amt||row.l.prices[row.spotIndex]||row.l.prices[0])+' spot</b>';
     return '<a class="home-activity-item" href="#item/'+encodeURIComponent(row.l.id)+'" title="'+safeCardText(label)+'">'+
       '<span class="home-activity-brand" aria-label="'+brand+'">'+brandMark+'</span>'+
-      '<span class="home-activity-name">'+brand+'</span>'+
-      '<span class="home-activity-action">funded <b>'+money(row.c.amt||row.l.prices[0])+' spot</b></span>'+
+      '<span class="home-activity-icon '+(row.kind==='funding'?'approved':(row.kind==='reservation'?'paid':''))+'">'+icon+'</span>'+
+      '<span class="home-activity-name">'+safeCardText(row.kind==='listing'?(row.l.owner||'An owner'):brand)+'</span>'+
+      '<span class="home-activity-action">'+action+'</span>'+
       '<span class="home-activity-product">'+(safeImageAttr(photo)?'<img src="'+safeImageAttr(photo)+'" alt="">':'')+'<span>'+safeCardText(label)+'</span></span>'+
-      '<span class="home-activity-static">Example activity</span>'+
+      '<span class="home-activity-time">'+safeCardText(ago(row.ts))+'</span>'+
     '</a>';
   }
   var tickerRows=rows.map(itemHtml).join('');
@@ -8452,21 +8453,21 @@ function renderHomeCampaigns(){
     return;
   }
   list.forEach(function(l){
-    var it={label:LBLL(l)},pct=pctOf(l),sold=l.slots-openSlots(l),init=(l.owner||'?').trim().slice(0,1).toUpperCase();
+    var it={label:LBLL(l)},pct=pctOf(l),reserved=l.slots-openSlots(l),init=(l.owner||'?').trim().slice(0,1).toUpperCase();
     var card=document.createElement('button');card.type='button';card.className='lcard home-campaign-card';
     card.innerHTML='<div class="thumb" id="home-th-'+safeCardText(l.id)+'"></div>'+
       '<div class="body">'+
       '<div class="who">'+ownerAvatarHtml(l)+'<span class="oname">'+safeCardText(l.owner)+'</span><span class="when">'+safeCardText(ago(l.created))+'</span><span class="catic"><img src="'+safeImageAttr(PHO(l))+'" alt=""></span></div>'+
       listingContextHtml(l)+'<div class="iname">'+safeCardText(it.label)+'</div>'+
        '<div class="moneyrow"><span class="amts">'+money(raisedOf(l))+'<span>/'+money(goalOf(l))+'</span></span>'+
-       '<span class="chips"><span class="chipg sold-count">'+sold+'/'+l.slots+' sold</span><span class="sponsor-price">'+sponsorLogoStack(l)+'<span class="chipb">from '+money(listingSpotPrice(l))+'</span></span></span></div>'+
+       '<span class="chips"><span class="chipg reserved-count">'+reserved+'/'+l.slots+' reserved</span><span class="sponsor-price">'+sponsorLogoStack(l)+'<span class="chipb">from '+money(listingSpotPrice(l))+'</span></span></span></div>'+
        '<div class="pbar'+(pct>=100?' funded':'')+'"><i style="width:'+Math.min(100,pct)+'%"></i></div>'+
       '</div>';
     card.onclick=function(){location.hash='item/'+l.id};
     host.appendChild(card);
     renderFinal(document.getElementById('home-th-'+l.id),l);
     var countdown=document.createElement('span');
-     countdown.className='chipg sold-count countdown-badge'+(pct>=100?' funded':'');
+     countdown.className='chipg reserved-count countdown-badge'+(pct>=100?' funded':'');
     countdown.setAttribute('data-countdown-listing',String(l.id));
     countdown.textContent=listingCountdownLabel(l);
     document.getElementById('home-th-'+l.id).appendChild(countdown);
@@ -8559,7 +8560,7 @@ function drawHomeMap(f){
     document.getElementById('homeCap').textContent='Open the listing to choose an available spot. The '+brandingMethod(f.type)+' is made from your logo.';
   }else{
     renderFinal(el,f,{showOpen:false,h:520});
-    document.getElementById('homeCap').textContent='Fully funded: download the logo pack, get the '+brandingMethod(f.type)+' made, apply, done. No messages, no coordination.';
+    document.getElementById('homeCap').textContent='Funded: download the logo pack, get the '+brandingMethod(f.type)+' made, apply, done. No messages, no coordination.';
   }
   renderSeg(document.getElementById('homeSeg'),homeMode,function(m){homeMode=m;drawHomeMap(f)});
 }
@@ -8852,7 +8853,7 @@ function renderDash(){
   }
   list.forEach(function(l){
     var it={label:LBLL(l)},pct=pctOf(l);
-    var sold=l.slots-openSlots(l);
+    var reserved=l.slots-openSlots(l);
     var card=document.createElement('button');card.type='button';card.className='lcard';
     card.setAttribute('data-listing-id',l.id);
     card.setAttribute('aria-haspopup','dialog');
@@ -8862,7 +8863,7 @@ function renderDash(){
       '<div class="who">'+ownerAvatarHtml(l)+'<span class="oname">'+safeCardText(l.owner)+'</span><span class="when">'+safeCardText(ago(l.created))+'</span><span class="catic"><img src="'+safeImageAttr(PHO(l))+'" alt=""></span></div>'+
       listingContextHtml(l)+'<div class="iname">'+safeCardText(it.label)+'</div>'+
       '<div class="moneyrow"><span class="amts">'+money(raisedOf(l))+'<span>/'+money(goalOf(l))+'</span></span>'+
-      '<span class="chips"><span class="chipg sold-count">'+sold+'/'+l.slots+' sold</span><span class="sponsor-price">'+sponsorLogoStack(l)+'<span class="chipb">from '+money(listingSpotPrice(l))+'</span></span></span></div>'+
+      '<span class="chips"><span class="chipg reserved-count">'+reserved+'/'+l.slots+' reserved</span><span class="sponsor-price">'+sponsorLogoStack(l)+'<span class="chipb">from '+money(listingSpotPrice(l))+'</span></span></span></div>'+
        '<div class="pbar'+(pct>=100?' funded':'')+'"><i style="width:'+Math.min(100,pct)+'%"></i></div>'+
       '</div>';
     card.onclick=function(){openCampaignDetails(l)};
@@ -8871,7 +8872,7 @@ function renderDash(){
     renderFinal(th,l);
     th.onmousemove=null;th.onmouseleave=null;
     var countdown=document.createElement('span');
-     countdown.className='chipg sold-count countdown-badge'+(pct>=100?' funded':'');
+     countdown.className='chipg reserved-count countdown-badge'+(pct>=100?' funded':'');
     countdown.setAttribute('data-countdown-listing',l.id);
     countdown.textContent=listingCountdownLabel(l);
     th.appendChild(countdown);
@@ -10800,10 +10801,10 @@ function renderTrackDemos(){
 }
 function localTrackMatches(mail){
   var matches=[];
-  DB.listings.forEach(function(l){
+  DB.listings.filter(isLaunchLiveCampaign).forEach(function(l){
     var ownerMatch=(l.mail||'').toLowerCase()===mail;
     if(ownerMatch){
-      matches.push({l:l,c:{ownerView:true,brand:'Item owner',mail:mail,amt:0,fee:0,purchasedAt:l.created||Date.now(),subId:'CAM-'+String(l.id).toUpperCase().slice(0,8)}});
+      matches.push({l:l,c:{ownerView:true,brand:'Item owner',mail:mail,amt:0,fee:0,purchasedAt:l.created||Date.now(),subId:String(l.id).toLowerCase()}});
     }
     (l.claims||[]).forEach(function(c,spotIndex){
       if(!c)return;
@@ -10816,7 +10817,7 @@ function localTrackMatches(mail){
 }
 function serverTrackingMatches(payload,mail){
   var matches=[];
-  (payload&&payload.campaigns||[]).forEach(function(campaign){
+  (payload&&payload.campaigns||[]).filter(function(campaign){return !campaign.test}).forEach(function(campaign){
     var l=DB.listings.filter(function(item){return item.id===campaign.id})[0];
     if(!l){
       l={id:campaign.id,type:campaign.itemType,title:campaign.title,owner:campaign.ownerName,mail:campaign.ownerMatch?mail:'',
@@ -10831,7 +10832,7 @@ function serverTrackingMatches(payload,mail){
      l.serverFundedCount=fundedCount;
     if(campaign.ownerMatch){
       matches.push({l:l,c:{ownerView:true,remoteOnly:!DB.listings.some(function(item){return item.id===campaign.id}),brand:'Item owner',mail:mail,
-        amt:0,fee:0,purchasedAt:new Date(campaign.createdAt).getTime(),subId:'CAM-'+String(campaign.id).toUpperCase().slice(0,8)}});
+         amt:0,fee:0,purchasedAt:new Date(campaign.createdAt).getTime(),subId:String(campaign.id).toLowerCase()}});
     }
     (campaign.orders||[]).forEach(function(order){
       var existing=(l.claims||[])[order.spotIndex];
@@ -10956,7 +10957,7 @@ function submitTrackProof(itemId,subId,key){
     if(!dateInput||!dateInput.value){fail('Enter the purchase date shown on your receipt.');return}
     if(!receiptInput||!receiptInput.files||!receiptInput.files[0]){fail('Upload your receipt.');return}
     var receiptTime=new Date(dateInput.value+'T12:00:00').getTime();
-    if(l.fundedAt&&receiptTime<l.fundedAt-86400000){fail('That receipt date is before the item was fully funded. Use a receipt from after funding.');return}
+    if(l.fundedAt&&receiptTime<l.fundedAt-86400000){fail('That receipt date is before the item was funded. Use a receipt from after funding.');return}
   }
   var photoFile=photoInput.files[0],receiptFile=first?receiptInput.files[0]:null;
   if(!isDemoListing(l)){
@@ -11046,7 +11047,7 @@ function trackCardHtml(l,c){
   else steps.push({done:!['pending','payment_failed'].includes(orderStatus),active:orderStatus==='pending',label:orderStatus==='pending'?'Reservation started':(orderStatus==='payment_failed'?'Payment needs an update':(orderStatus==='funded'?'Spot funded':'Spot reserved')),sub:new Date(c.purchasedAt).toLocaleDateString()+', '+money(c.amt+c.fee)+(orderStatus==='funded'?' charged at funding':' no charge yet')});
   var pct=l.serverFundedPercent!=null?l.serverFundedPercent:pctOf(l);
    var funded=l.serverFundedCount!=null?l.serverFundedCount>=l.slots:pct>=100;
-  steps.push({done:!!l.shippedAt,active:funded&&!l.shippedAt,label:'Item fully funded and shipped',sub:l.shippedAt?'All spots funded, item ordered and shipped to the owner':(funded?'All spots funded, shipment is being prepared':Math.round(pct)+'% funded so far')});
+   steps.push({done:!!l.shippedAt,active:funded&&!l.shippedAt,label:'Item funded and shipped',sub:l.shippedAt?'All spots funded, item ordered and shipped to the owner':(funded?'All spots funded, shipment is being prepared':Math.round(pct)+'% funded so far')});
   var checkins=l.checkins||[],checkState=checkinStatus(l);
   for(var i=0;i<termOf(l);i++){
     var ci=checkins[i];
@@ -11057,7 +11058,7 @@ function trackCardHtml(l,c){
   return '<details class="card track-order">'+
       '<summary class="track-order-summary">'+
         (safeImageAttr(photo)?'<img src="'+safeImageAttr(photo)+'" style="width:56px;height:56px;object-fit:contain;background:#fff;border:1px solid var(--border);border-radius:12px;flex-shrink:0" alt="">':'')+
-        '<div class="track-order-summary-copy"><div class="track-order-title">'+safeCardText(LBLL(l))+'</div><div class="track-order-meta">'+safeCardText(c.ownerView?'Owner campaign':(c.ownerOrder?'Brand order received':c.brand))+' \u00b7 '+safeCardText(c.subId)+'</div></div>'+
+        '<div class="track-order-summary-copy"><div class="track-order-title">'+safeCardText(LBLL(l))+'</div><div class="track-order-meta">'+safeCardText(c.ownerView?'Your listing':(c.ownerOrder?'Brand order received':c.brand))+' \u00b7 '+safeCardText(c.subId)+'</div></div>'+
         '<span class="status-badge '+(c.refunded||orderStatus==='refunded'||checkState.nonCompliant||checkState.overdue?'risk':'active')+'">'+safeCardText(badge)+'</span>'+
         '<span class="track-order-chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m7 9 5 5 5-5"/></svg></span>'+
       '</summary>'+
@@ -11068,7 +11069,7 @@ function trackCardHtml(l,c){
        trackSubmitHtml(l,c)+(c.ownerView?'':(orderStatus==='payment_failed'?'<div class="track-submit" style="margin-top:12px"><div class="track-submit-title">Payment failed</div><p class="track-submit-copy">No new charge was made. Update your card within 48 hours to keep this reservation.</p><button class="btn btn-primary" type="button" onclick="retryFailedReservation('+safeInlineArg(c.stripeOrderId)+','+safeInlineArg(l.id)+','+(c.spotIndex||0)+','+safeInlineArg(c.brand)+','+safeInlineArg(c.mail)+','+safeInlineArg(c.link)+')">Update card</button></div>':delayActionHtml(l,c)))+
       '<details style="margin-top:4px"><summary style="cursor:pointer;font-size:13px;font-weight:600;color:#6e6e73">Advanced details</summary>'+
         '<div style="margin-top:10px;font-size:13px;color:#3a3a3c;line-height:2">'+
-          '<div>'+(c.ownerView?'Campaign ID':'Submission ID')+' <b style="float:right">'+safeCardText(c.subId)+'</b></div>'+
+          '<div>'+(c.ownerView?'Listing ID':'Submission ID')+' <b style="float:right">'+safeCardText(c.subId)+'</b></div>'+
            (c.ownerView?'':'<div>Spot number <b style="float:right">'+((c.spotIndex||0)+1)+'</b></div><div>Spot price <b style="float:right">'+money(c.amt)+'</b></div><div>Charge timing <b style="float:right">'+(orderStatus==='funded'?'At funding':'Never charged yet')+'</b></div>')+
           '<div>Fulfillment status <b style="float:right">'+safeCardText(badge)+'</b></div>'+
           '<div>Check-ins on file <b style="float:right">'+checkins.length+' of '+termOf(l)+'</b></div>'+
@@ -11079,7 +11080,7 @@ function trackCardHtml(l,c){
 function showItem(id){
   CUR=DB.listings.filter(function(l){return l.id===id})[0];
   if(!CUR){location.hash='dashboard';return}
-  if(isDemoListing(CUR)&&!DEMO_VIEW){location.hash='dashboard';return}
+  if(CUR.test||(isDemoListing(CUR)&&!DEMO_VIEW)){location.hash='dashboard';return}
   CUR=normalizeListingPhoto(CUR);
   var viewKey=String(CUR.id);
   if(LAST_PRODUCT_VIEW_KEY!==viewKey){
@@ -11146,7 +11147,7 @@ function drawItemMap(){
     }
     renderFinal(el,CUR,{showOpen:false,h:560});
     var fundedItemCap=document.getElementById('itemCap');
-    if(fundedItemCap)fundedItemCap.textContent='Fully funded: download the logo pack, get the '+brandingMethod(CUR.type)+' made, apply, done. No messages, no coordination.';
+    if(fundedItemCap)fundedItemCap.textContent='Funded: download the logo pack, get the '+brandingMethod(CUR.type)+' made, apply, done. No messages, no coordination.';
   }
   renderSeg(document.getElementById('itemSeg'),itemMode,function(m){itemMode=m;drawItemMap()});
 }
@@ -11185,7 +11186,7 @@ function refreshItemCards(){
   if(itemBrandEl)itemBrandEl.textContent=itemInfo.brand||'Custom item';
   if(itemColorEl)itemColorEl.textContent=itemInfo.color||'As listed';
   if(itemCategoryEl)itemCategoryEl.textContent=itemInfo.cat||'Custom';
-  if(itemRetailEl)itemRetailEl.textContent=itemInfo.retail?money(itemInfo.retail):'Set by owner';
+   if(itemRetailEl)itemRetailEl.textContent='Included in the all-in spot prices';
   document.getElementById('iRaised').textContent=money(raised);
   document.getElementById('iGoal').textContent=money(goal);
   document.getElementById('iBar').style.width=pct+'%';
@@ -11226,18 +11227,18 @@ function refreshItemCards(){
   }
   document.getElementById('iCad').textContent=checkinCadenceText(CUR);
    var listingFunded=CUR.lifecycleStatus==='funded'||CUR.lifecycleStatus==='ordered'||CUR.lifecycleStatus==='branded'||CUR.lifecycleStatus==='shipped'||CUR.lifecycleStatus==='active'||CUR.lifecycleStatus==='complete'||(!CUR.serverCampaign&&pct>=100);
-   var shipEl=document.getElementById('iShips');if(shipEl)shipEl.textContent=CUR.closed?'expired, reservations released':(CUR.shippedAt?'shipped to owner':(listingFunded?'funded, preparing shipment':'new, when fully reserved'));
+   var shipEl=document.getElementById('iShips');if(shipEl)shipEl.textContent=CUR.closed?'expired, reservations released':(CUR.shippedAt?'shipped to owner':(listingFunded?'funded, preparing shipment':'new, waiting for funding'));
   var feeCopy=document.getElementById('iFeeCopy');if(feeCopy)feeCopy.textContent='Exact all-in prices, first come, first served. Your card is saved at reservation, then charged only if every spot is reserved and the listing funds.';
   var fulfillmentEl=document.getElementById('iFulfillment');if(fulfillmentEl)fulfillmentEl.textContent='BrandMyItem applies branding';
   var materialEl=document.getElementById('iMaterial');if(materialEl)materialEl.textContent=brandingMaterial(CUR.type);
   var termEl=document.getElementById('iTerm');if(termEl)termEl.textContent=termOf(CUR)+' months'+(CUR.termLocked?' - locked':'');
   var brandingWindowEl=document.getElementById('iBrandingWindow'),proofCadenceEl=document.getElementById('iProofCadence');
-  if(brandingWindowEl)brandingWindowEl.textContent='BrandMyItem applies and verifies branding - 60-day delivery window';
+   if(brandingWindowEl)brandingWindowEl.textContent='BrandMyItem applies and verifies branding - 60-day delivery window';
   if(proofCadenceEl)proofCadenceEl.textContent=checkinFrequencyLabel(CUR)+' check-ins';
   var reservedCount=CUR.slots-openSlots(CUR);
   var spotSummary=document.getElementById('spotSummary');
-  if(spotSummary)spotSummary.innerHTML=
-      reservedCount+' of '+CUR.slots+' spots reserved. Spots from '+money(Math.min.apply(null,CUR.prices))+' - larger surfaces carry a premium. Every brand submits their logo at reservation; the '+safeCardText(brandingMethod(CUR.type))+' is produced from that file.'+
+   if(spotSummary)spotSummary.innerHTML=
+       reservedCount+' of '+CUR.slots+' spots reserved. Larger surfaces carry a premium. Every brand submits their logo at reservation; the '+safeCardText(brandingMethod(CUR.type))+' is produced from that file.'+
      (listingFunded?' <a href="#" id="logoPackBtn" style="font-weight:600;text-decoration:underline">Download the logo pack</a> and have the '+safeCardText(brandingMethod(CUR.type))+' made.':'');
   renderItemSpotList();
   var lp=document.getElementById('logoPackBtn');
@@ -11545,7 +11546,7 @@ async function beginStripeCheckout(){
   var brand=document.getElementById('mBrand').value.trim();
   var mail=document.getElementById('mMail').value.trim();
   clearReservationError();
-  if(CUR.claims[claimSlot]){setReservationError('That spot just sold.');return}
+  if(CUR.claims[claimSlot]){setReservationError('That spot is already reserved.');return}
   var button=document.getElementById('mNext'),originalButtonText=button.textContent,link=document.getElementById('mLink').value.trim();
   var checkoutWindow=window.open('about:blank','_blank');
   if(checkoutWindow){
@@ -11619,7 +11620,7 @@ async function finalizeReservation(order,pending){
      if(emailStatus)emailStatus.textContent='Save this ID — email confirmation is not available right now.';
    }
    var confirmation=document.querySelector('#mStep3 .finetext');
-   if(confirmation)confirmation.textContent=order.status==='funded'?'The listing fully funded and your saved card was charged. Track fulfillment and check-ins any time from Track order.':'Your spot is reserved. Your saved card has not been charged. Track funding and fulfillment any time from Track order.';
+   if(confirmation)confirmation.textContent=order.status==='funded'?'The listing is funded and your saved card was charged. Track fulfillment and check-ins any time from Track order.':'Your spot is reserved. Your saved card has not been charged. Track funding and fulfillment any time from Track order.';
 }
 async function resumeStripeCheckout(){
   var params=new URLSearchParams(location.search);

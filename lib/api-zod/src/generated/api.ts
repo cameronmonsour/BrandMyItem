@@ -76,6 +76,7 @@ export const registerCampaignBodyW9ObjectPathRegExp = new RegExp('^/objects/uplo
 
 export const RegisterCampaignBody = zod.object({
   "id": zod.string().min(1).max(registerCampaignBodyIdMax),
+  "test": zod.boolean().optional().describe('Marks an automated test listing. Test listings are never public.'),
   "itemType": zod.string().min(1).max(registerCampaignBodyItemTypeMax),
   "title": zod.string().min(1).max(registerCampaignBodyTitleMax),
   "ownerName": zod.string().min(1).max(registerCampaignBodyOwnerNameMax),
@@ -166,6 +167,7 @@ export const createCampaignDraftBodyOwnerEmailMax = 320;
 
 export const CreateCampaignDraftBody = zod.object({
   "id": zod.string().min(1).max(createCampaignDraftBodyIdMax),
+  "test": zod.boolean().optional().describe('Marks an automated test listing. Test listings are never public.'),
   "itemType": zod.string().min(1).max(createCampaignDraftBodyItemTypeMax),
   "title": zod.string().min(1).max(createCampaignDraftBodyTitleMax),
   "ownerName": zod.string().min(1).max(createCampaignDraftBodyOwnerNameMax),
