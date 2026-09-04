@@ -61,6 +61,11 @@ test('finish and size choices update the details card', () => {
   assert.match(html, /B\.color=c\[0\];\s*sel\.textContent=c\[0\];\s*renderBuildSpecs\(k\)/);
   assert.match(html, /B\.variantSize=s\[0\]/);
   assert.match(html, /B\.variantModel=model\[0\];drawSizes\(\)/);
+  assert.match(html, /function syncVariantPricing\(\)\{\s*var retail=variantRetail\(k,B\.variantSize\);[\s\S]*?CU\.prices=CU\.tiles\.length\?boxPrices\(\):\[\];\s*B\.prices=CU\.prices\.slice\(\);\s*cuPricingUI\(\);cuDraw\(\);totals\(\)/);
+  assert.match(html, /B\.variantSize=s\[0\];\s*syncVariantPricing\(\);\s*renderBuildSpecs\(k\)/);
+  assert.match(html, /B\.variantModel=model\[0\];drawSizes\(\);\s*syncVariantPricing\(\);\s*renderBuildSpecs\(k\)/);
+  const variants = html.match(/function renderVariants\(k\)\{([\s\S]*?)\n\}/)?.[1] || '';
+  assert.doesNotMatch(variants, /cuApplyTemplate\(\)/);
   assert.match(html, /var selectedRetail=variantRetail\(k,selectedSize\)/);
   assert.match(html, /if\(r\[0\]==='Color'\)value=selectedColor/);
   assert.match(html, /if\(option&&option\[2\]&&Object\.prototype\.hasOwnProperty\.call\(option\[2\],r\[0\]\)\)value=option\[2\]\[r\[0\]\]/);

@@ -8689,6 +8689,19 @@ function renderVariants(k){
   document.getElementById('sizeLabel').textContent=v.sizeLabel+'.';
   document.getElementById('sizeQ').textContent=v.sizeQ;
   var sp=document.getElementById('sizePills');
+  function syncVariantPricing(){
+    var retail=variantRetail(k,B.variantSize);
+    var retailInput=document.getElementById('cuRetail');
+    if(retailInput)retailInput.value=retail;
+    if(CU.template){
+      CU.retail=retail;
+      CU.prices=CU.tiles.length?boxPrices():[];
+      B.prices=CU.prices.slice();
+      cuPricingUI();cuDraw();totals();
+      return;
+    }
+    B.prices=suggest(k,B.slots);refreshBuild();
+  }
   function drawSizes(){
     var sizes=availableVariantSizes(k,B.variantModel);
     if(!sizes.some(function(size){return size[0]===B.variantSize}))B.variantSize=sizes[0][0];
@@ -8703,12 +8716,7 @@ function renderVariants(k){
         b.classList.add('on');
         B.priceDelta=s[1];
         B.variantSize=s[0];
-        var retailInput=document.getElementById('cuRetail');
-        if(retailInput){
-          retailInput.value=variantRetail(k,B.variantSize);
-          if(CU.template)cuApplyTemplate();
-        }
-        if(!CU.template){B.prices=suggest(k,B.slots);refreshBuild()}
+        syncVariantPricing();
         renderBuildSpecs(k);
       };
       sp.appendChild(b);
@@ -8720,7 +8728,7 @@ function renderVariants(k){
     b.onclick=function(){
       modelPills.querySelectorAll('button').forEach(function(bb){bb.classList.remove('on')});
       b.classList.add('on');B.variantModel=model[0];drawSizes();
-      if(!CU.template){B.prices=suggest(k,B.slots);refreshBuild()}
+      syncVariantPricing();
       renderBuildSpecs(k);
     };
     modelPills.appendChild(b);
