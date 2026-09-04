@@ -24,3 +24,4 @@
 - [OpenAPI assent requirements](openapi-assent-requirements.md) — assent fields must be listed as required before codegen, and generated header normalization needs the workspace-compatible callback form.
 - [Active upload response policy](active-upload-response-policy.md) — user uploads must be raster-only inline; unknown or active formats download under sandboxed, non-cacheable responses.
 - [Pre-publication upload capabilities](prepublication-upload-capabilities.md) — sensitive uploads start from expiring resource drafts and are consumed once by the matching transition.
+- [Resend delivery boundary](resend-delivery-boundary.md) — transactional mail uses direct Resend HTTPS with environment-configured sender and a fixed support Reply-To.

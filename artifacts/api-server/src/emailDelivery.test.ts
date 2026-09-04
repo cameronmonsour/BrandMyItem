@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import test, { mock } from "node:test";
 import {
   isRetryableEmailStatus,
   sendTransactionalEmail,
@@ -11,6 +11,66 @@ const email = {
   text: "Use your one-time link.",
   html: "<p>Use your one-time link.</p>",
 };
+
+test("sends the configured Resend payload and returns its message ID", async () => {
+  const previousKey = process.env.RESEND_API_KEY;
+  const previousFrom = process.env.RESEND_FROM;
+  const originalFetch = globalThis.fetch;
+  let requestBody: Record<string, unknown> | undefined;
+  const fetchMock = mock.method(
+    globalThis,
+    "fetch",
+    async (input: Parameters<typeof fetch>[0], init?: Parameters<typeof fetch>[1]) => {
+      assert.equal(String(input), "https://api.resend.com/emails");
+      requestBody = JSON.parse(String(init?.body ?? "{}")) as Record<string, unknown>;
+      return new Response(JSON.stringify({ id: "resend-message-id" }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    },
+  );
+  process.env.RESEND_API_KEY = "re_test_key";
+  process.env.RESEND_FROM = "BrandMyItem <test@example.com>";
+
+  try {
+    const result = await sendTransactionalEmail(email, { maxAttempts: 1 });
+    assert.equal(result.messageId, "resend-message-id");
+    assert.deepEqual(requestBody, {
+      from: "BrandMyItem <test@example.com>",
+      to: ["brand@example.com"],
+      subject: "Tracking link",
+      text: "Use your one-time link.",
+      html: "<p>Use your one-time link.</p>",
+      reply_to: "support@brandmyitem.com",
+    });
+  } finally {
+    fetchMock.mock.restore();
+    if (previousKey === undefined) delete process.env.RESEND_API_KEY;
+    else process.env.RESEND_API_KEY = previousKey;
+    if (previousFrom === undefined) delete process.env.RESEND_FROM;
+    else process.env.RESEND_FROM = previousFrom;
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("requires RESEND_FROM even when the API key is configured", async () => {
+  const previousKey = process.env.RESEND_API_KEY;
+  const previousFrom = process.env.RESEND_FROM;
+  process.env.RESEND_API_KEY = "re_test_key";
+  delete process.env.RESEND_FROM;
+
+  try {
+    await assert.rejects(
+      sendTransactionalEmail(email, { maxAttempts: 1 }),
+      /RESEND_FROM is not configured/,
+    );
+  } finally {
+    if (previousKey === undefined) delete process.env.RESEND_API_KEY;
+    else process.env.RESEND_API_KEY = previousKey;
+    if (previousFrom === undefined) delete process.env.RESEND_FROM;
+    else process.env.RESEND_FROM = previousFrom;
+  }
+});
 
 test("only transient provider statuses are retryable", () => {
   assert.equal(isRetryableEmailStatus(400), false);
