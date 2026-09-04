@@ -13,5 +13,6 @@ export const PlacementOrderStatus = {
   pending: 'pending',
   paid: 'paid',
   expired: 'expired',
+  refunding: 'refunding',
   refunded: 'refunded',
 } as const;

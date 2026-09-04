@@ -230,7 +230,8 @@ components:
           type: string
     PlacementOrder:
       type: object
-      required: [id, campaignId, spotIndex, amountCents, brandName, email, status]
+      required:
+        [id, campaignId, spotIndex, amountCents, brandName, email, status]
       properties:
         id:
           type: string
@@ -248,7 +249,7 @@ components:
           type: ["string", "null"]
         status:
           type: string
-          enum: [pending, paid, expired, refunded]
+          enum: [pending, paid, expired, refunding, refunded]
         stripeCheckoutSessionId:
           type: ["string", "null"]
     TrackingOrder:
@@ -271,7 +272,7 @@ components:
           type: ["string", "null"]
         status:
           type: string
-          enum: [pending, paid, expired, refunded]
+          enum: [pending, paid, expired, refunding, refunded]
         createdAt:
           type: string
           format: date-time
@@ -312,4 +313,3 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/TrackingCampaign"
-

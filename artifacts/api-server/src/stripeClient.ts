@@ -4,13 +4,22 @@ const connectors = new ReplitConnectors();
 
 export async function stripeRequest<T>(
   path: string,
-  options?: { method?: string; body?: URLSearchParams },
+  options?: {
+    method?: string;
+    body?: URLSearchParams;
+    idempotencyKey?: string;
+  },
 ): Promise<T> {
   const response = await connectors.proxy("stripe", path, {
     method: options?.method,
-    headers: options?.body
-      ? { "Content-Type": "application/x-www-form-urlencoded" }
-      : undefined,
+    headers: {
+      ...(options?.body
+        ? { "Content-Type": "application/x-www-form-urlencoded" }
+        : {}),
+      ...(options?.idempotencyKey
+        ? { "Idempotency-Key": options.idempotencyKey }
+        : {}),
+    },
     body: options?.body?.toString(),
   });
   const data = (await response.json()) as T & {

@@ -16,8 +16,12 @@ export const campaignsTable = pgTable("campaigns", {
   ownerEmail: text("owner_email"),
   pricesCents: jsonb("prices_cents").$type<number[]>().notNull(),
   active: boolean("active").notNull().default(true),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
 });
 
 export const placementOrdersTable = pgTable(
@@ -35,9 +39,16 @@ export const placementOrdersTable = pgTable(
     destinationUrl: text("destination_url"),
     status: text("status").notNull().default("pending"),
     stripeCheckoutSessionId: text("stripe_checkout_session_id"),
+    stripeCheckoutIdempotencyKey: text("stripe_checkout_idempotency_key"),
     stripePaymentIntentId: text("stripe_payment_intent_id"),
-    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    stripeRefundId: text("stripe_refund_id"),
+    stripeRefundStatus: text("stripe_refund_status"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
   },
   (table) => [
     uniqueIndex("placement_orders_campaign_spot_unique").on(

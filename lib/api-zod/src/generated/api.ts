@@ -123,7 +123,7 @@ export const GetPlacementCheckoutResponse = zod.object({
   "brandName": zod.string(),
   "email": zod.string(),
   "destinationUrl": zod.string().nullish(),
-  "status": zod.enum(['pending', 'paid', 'expired', 'refunded']),
+  "status": zod.enum(['pending', 'paid', 'expired', 'refunding', 'refunded']),
   "stripeCheckoutSessionId": zod.string().nullish()
 })
 
@@ -158,8 +158,10 @@ export const GetTrackingResponse = zod.object({
   "brandName": zod.string(),
   "email": zod.string(),
   "destinationUrl": zod.string().nullish(),
-  "status": zod.enum(['pending', 'paid', 'expired', 'refunded']),
+  "status": zod.enum(['pending', 'paid', 'expired', 'refunding', 'refunded']),
   "createdAt": zod.coerce.date()
 }))
 }))
 })
+
+

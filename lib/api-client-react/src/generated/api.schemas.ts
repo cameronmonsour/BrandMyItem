@@ -88,6 +88,7 @@ export const PlacementOrderStatus = {
   pending: 'pending',
   paid: 'paid',
   expired: 'expired',
+  refunding: 'refunding',
   refunded: 'refunded',
 } as const;
 
@@ -112,6 +113,7 @@ export const TrackingOrderStatus = {
   pending: 'pending',
   paid: 'paid',
   expired: 'expired',
+  refunding: 'refunding',
   refunded: 'refunded',
 } as const;
 
@@ -151,3 +153,4 @@ export type GetTrackingParams = {
  */
 email: string;
 };
+

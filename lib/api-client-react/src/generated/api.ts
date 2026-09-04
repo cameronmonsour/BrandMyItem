@@ -128,6 +128,13 @@ export function useHealthCheck<TData = Awaited<ReturnType<typeof healthCheck>>, 
 
   return withQueryKey(query, queryOptions.queryKey);
 }
+
+
+
+
+
+
+
 export const getRegisterCampaignUrl = () => {
 
 
@@ -270,6 +277,12 @@ export function useListCampaigns<TData = Awaited<ReturnType<typeof listCampaigns
   return withQueryKey(query, queryOptions.queryKey);
 }
 
+
+
+
+
+
+
 export const getCreatePlacementCheckoutUrl = () => {
 
 
@@ -411,6 +424,13 @@ export function useGetPlacementCheckout<TData = Awaited<ReturnType<typeof getPla
 
   return withQueryKey(query, queryOptions.queryKey);
 }
+
+
+
+
+
+
+
 export const getGetTrackingUrl = (params: GetTrackingParams,) => {
   const normalizedParams = new URLSearchParams();
 
@@ -488,3 +508,10 @@ export function useGetTracking<TData = Awaited<ReturnType<typeof getTracking>>, 
 
   return withQueryKey(query, queryOptions.queryKey);
 }
+
+
+
+
+
+
+

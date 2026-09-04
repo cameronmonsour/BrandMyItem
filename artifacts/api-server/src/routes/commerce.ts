@@ -1,9 +1,5 @@
 import { randomUUID } from "node:crypto";
-import {
-  campaignsTable,
-  db,
-  placementOrdersTable,
-} from "@workspace/db";
+import { campaignsTable, db, placementOrdersTable } from "@workspace/db";
 import {
   CreatePlacementCheckoutBody,
   CreatePlacementCheckoutResponse,
@@ -18,6 +14,11 @@ import {
 import { and, desc, eq, inArray, sql } from "drizzle-orm";
 import { Router, type IRouter } from "express";
 import { stripeRequest } from "../stripeClient";
+import {
+  checkoutIdempotencyKey,
+  checkoutTransition,
+  type CheckoutSnapshot,
+} from "../paymentTransitions";
 
 const router: IRouter = Router();
 
@@ -37,7 +38,7 @@ router.post("/campaigns", async (req, res): Promise<void> => {
         itemType: input.itemType,
         title: input.title,
         ownerName: input.ownerName,
-        ownerEmail: input.ownerEmail.toLowerCase(),
+        ownerEmail: input.ownerEmail,
         pricesCents: input.pricesCents,
         active: true,
         updatedAt: new Date(),
@@ -183,12 +184,109 @@ router.post("/checkout/sessions", async (req, res): Promise<void> => {
       ),
     )
     .limit(1);
-  if (existing?.status === "paid" || existing?.status === "refunded") {
+  if (["paid", "refunding", "refunded"].includes(existing?.status ?? "")) {
     res.status(409).json({ error: "Placement has already been purchased" });
     return;
   }
 
   const orderId = existing?.id ?? randomUUID();
+  let previousExpiredSessionId =
+    existing?.status === "expired"
+      ? existing.stripeCheckoutSessionId
+      : null;
+  if (existing?.status === "pending" && existing.stripeCheckoutSessionId) {
+    const previousSession = await stripeRequest<
+      CheckoutSnapshot & { id: string; url: string | null }
+    >(
+      `/v1/checkout/sessions/${encodeURIComponent(existing.stripeCheckoutSessionId)}`,
+    );
+    const transition = checkoutTransition(existing.status, previousSession);
+    if (transition?.status === "paid") {
+      await db
+        .update(placementOrdersTable)
+        .set({
+          status: "paid",
+          stripePaymentIntentId: transition.paymentIntentId,
+          updatedAt: new Date(),
+        })
+        .where(
+          and(
+            eq(placementOrdersTable.id, existing.id),
+            eq(placementOrdersTable.status, "pending"),
+          ),
+        );
+      res.status(409).json({ error: "Placement has already been purchased" });
+      return;
+    }
+    if (transition?.status !== "expired") {
+      if (previousSession.url) {
+        res.status(200).json(
+          CreatePlacementCheckoutResponse.parse({
+            url: previousSession.url,
+            orderId,
+            sessionId: previousSession.id,
+          }),
+        );
+      } else {
+        res.status(409).json({
+          error: "Checkout payment is still processing",
+          orderId,
+          sessionId: previousSession.id,
+        });
+      }
+      return;
+    }
+    previousExpiredSessionId = existing.stripeCheckoutSessionId;
+  }
+
+  const idempotencyKey =
+    existing?.status === "pending" && !existing.stripeCheckoutSessionId
+      ? existing.stripeCheckoutIdempotencyKey
+      : checkoutIdempotencyKey(orderId, previousExpiredSessionId);
+  if (!idempotencyKey) {
+    throw new Error("Pending checkout is missing its idempotency key");
+  }
+  const reservationValues = {
+    campaignId: campaign.id,
+    spotIndex: input.spotIndex,
+    amountCents,
+    brandName: input.brandName,
+    email: input.email,
+    destinationUrl: input.destinationUrl || null,
+    status: "pending",
+    stripeCheckoutSessionId: null,
+    stripeCheckoutIdempotencyKey: idempotencyKey,
+    updatedAt: new Date(),
+  };
+  if (existing) {
+    if (existing.status !== "pending" || existing.stripeCheckoutSessionId) {
+      const claimed = await db
+        .update(placementOrdersTable)
+        .set(reservationValues)
+        .where(
+          and(
+            eq(placementOrdersTable.id, orderId),
+            eq(placementOrdersTable.status, existing.status),
+          ),
+        )
+        .returning({ id: placementOrdersTable.id });
+      if (claimed.length === 0) {
+        res.status(409).json({ error: "Checkout is already in progress" });
+        return;
+      }
+    }
+  } else {
+    const inserted = await db
+      .insert(placementOrdersTable)
+      .values({ id: orderId, ...reservationValues })
+      .onConflictDoNothing()
+      .returning({ id: placementOrdersTable.id });
+    if (inserted.length === 0) {
+      res.status(409).json({ error: "Checkout is already in progress" });
+      return;
+    }
+  }
+
   const forwardedProto = req.get("x-forwarded-proto")?.split(",")[0];
   const origin = `${forwardedProto ?? req.protocol}://${req.get("host")}`;
   const form = new URLSearchParams({
@@ -197,8 +295,7 @@ router.post("/checkout/sessions", async (req, res): Promise<void> => {
     "line_items[0][quantity]": "1",
     "line_items[0][price_data][currency]": "usd",
     "line_items[0][price_data][unit_amount]": String(amountCents),
-    "line_items[0][price_data][product_data][name]":
-      `${campaign.title} — Placement ${input.spotIndex + 1}`,
+    "line_items[0][price_data][product_data][name]": `${campaign.title} — Placement ${input.spotIndex + 1}`,
     "line_items[0][price_data][product_data][description]":
       "BrandMyItem sponsored placement service",
     "metadata[orderId]": orderId,
@@ -213,29 +310,20 @@ router.post("/checkout/sessions", async (req, res): Promise<void> => {
   });
   const session = await stripeRequest<{ id: string; url: string | null }>(
     "/v1/checkout/sessions",
-    { method: "POST", body: form },
+    { method: "POST", body: form, idempotencyKey },
   );
   if (!session.url) throw new Error("Stripe did not return a checkout URL");
 
-  const values = {
-    campaignId: campaign.id,
-    spotIndex: input.spotIndex,
-    amountCents,
-    brandName: input.brandName,
-    email: input.email,
-    destinationUrl: input.destinationUrl || null,
-    status: "pending",
-    stripeCheckoutSessionId: session.id,
-    updatedAt: new Date(),
-  };
-  if (existing) {
-    await db
-      .update(placementOrdersTable)
-      .set(values)
-      .where(eq(placementOrdersTable.id, orderId));
-  } else {
-    await db.insert(placementOrdersTable).values({ id: orderId, ...values });
-  }
+  await db
+    .update(placementOrdersTable)
+    .set({ stripeCheckoutSessionId: session.id, updatedAt: new Date() })
+    .where(
+      and(
+        eq(placementOrdersTable.id, orderId),
+        eq(placementOrdersTable.status, "pending"),
+        eq(placementOrdersTable.stripeCheckoutIdempotencyKey, idempotencyKey),
+      ),
+    );
 
   res.status(201).json(
     CreatePlacementCheckoutResponse.parse({
@@ -252,35 +340,39 @@ router.get("/checkout/sessions/:sessionId", async (req, res): Promise<void> => {
     res.status(400).json({ error: "Invalid checkout session" });
     return;
   }
-  const session = await stripeRequest<{
-    payment_status: string;
-    payment_intent: string | null;
-  }>(`/v1/checkout/sessions/${encodeURIComponent(params.data.sessionId)}`);
+  const session = await stripeRequest<CheckoutSnapshot>(
+    `/v1/checkout/sessions/${encodeURIComponent(params.data.sessionId)}`,
+  );
   const [order] = await db
     .select()
     .from(placementOrdersTable)
     .where(
-      eq(
-        placementOrdersTable.stripeCheckoutSessionId,
-        params.data.sessionId,
-      ),
+      eq(placementOrdersTable.stripeCheckoutSessionId, params.data.sessionId),
     )
     .limit(1);
   if (!order) {
     res.status(404).json({ error: "Checkout session not found" });
     return;
   }
-  if (session.payment_status === "paid" && order.status !== "paid") {
-    order.status = "paid";
-    order.stripePaymentIntentId = session.payment_intent;
+  const transition = checkoutTransition(order.status, session);
+  if (transition) {
+    order.status = transition.status;
+    if (transition.status === "paid") {
+      order.stripePaymentIntentId = transition.paymentIntentId;
+    }
     await db
       .update(placementOrdersTable)
       .set({
-        status: "paid",
+        status: transition.status,
         stripePaymentIntentId: order.stripePaymentIntentId,
         updatedAt: new Date(),
       })
-      .where(eq(placementOrdersTable.id, order.id));
+      .where(
+        and(
+          eq(placementOrdersTable.id, order.id),
+          eq(placementOrdersTable.status, "pending"),
+        ),
+      );
   }
   res.json(GetPlacementCheckoutResponse.parse(order));
 });
