@@ -10403,7 +10403,9 @@ function drawItemMap(){
         el.innerHTML='';el.appendChild(ftabs);
         host=document.createElement('div');el.appendChild(host);
       }
-      renderPhotoOnly(host,{type:CUR.type,sourceType:CUR.sourceType,photo:faces[fi].photo,title:LBLL(CUR)});
+      renderCustomStage(host,{type:CUR.type,sourceType:CUR.sourceType,slots:CUR.slots,photo:faces[fi].photo,tiles:faces[fi].tiles,
+        claims:CUR.claims.slice(faces[fi].off),prices:CUR.prices.slice(faces[fi].off)},
+        function(si){openBid(faces[fi].off+si)});
       return;
     }
     renderFinal(el,CUR,{onTap:function(i){openBid(i)},showOpen:true,h:560});
@@ -10412,7 +10414,8 @@ function drawItemMap(){
   }else{
     if(CUR.custom){
       var faces2=CUR.faces&&CUR.faces.length?CUR.faces:[{photo:CUR.photo,tiles:CUR.tiles,off:0}];
-      renderPhotoOnly(el,{type:CUR.type,sourceType:CUR.sourceType,photo:faces2[0].photo,title:LBLL(CUR)});
+      renderCustomStage(el,{type:CUR.type,sourceType:CUR.sourceType,slots:CUR.slots,photo:faces2[0].photo,tiles:faces2[0].tiles,
+        claims:CUR.claims,prices:CUR.prices},null);
       return;
     }
     renderFinal(el,CUR,{showOpen:false,h:560});
