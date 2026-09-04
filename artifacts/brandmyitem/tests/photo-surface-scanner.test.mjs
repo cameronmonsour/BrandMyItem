@@ -88,6 +88,13 @@ test('golf bag builder includes back, left, and right product faces', () => {
   assert.match(html, /id="cuSideTools" role="group" aria-label="Edit item side"/);
 });
 
+test('Stanley builder keeps the original image as Front and adds the supplied Back view', () => {
+  assert.match(
+    html,
+    /bottle:\[\s*\['Front','campaign\/product-bottle\.png'\],\s*\['Back','campaign\/product-bottle-back\.png'\]\s*\]/,
+  );
+});
+
 test('polygon points and catalog identity survive template and detail rendering', () => {
   assert.match(html, /if\(tt\.pts\)out\.pts=tt\.pts\.map/);
   assert.match(html, /sourceType:CU\.template\|\|null/);
