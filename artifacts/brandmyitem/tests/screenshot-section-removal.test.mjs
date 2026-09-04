@@ -65,6 +65,9 @@ test('dashboard activity uses the same live ticker as the homepage', () => {
   assert.match(html, /function renderHomeLiveFeed\(\)\{renderLiveFeed\('homeLiveFeed'\)\}/);
   assert.match(html, /function renderDashboardLiveFeed\(\)\{renderLiveFeed\('dashLiveFeed'\)\}/);
   assert.match(html, /renderDashboardLiveFeed\(\);/);
+  assert.match(html, /var brand='your brand here',photo=PHO\(row\.l\),label=LBLL\(row\.l\)/);
+  assert.match(html, /var brandMark='<img src="brandmyitem-logo\.svg" alt="BrandMyItem logo">';/);
+  assert.doesNotMatch(html, /var brand=\(row\.c&&row\.c\.brand\|\|'A brand'\)\.trim\(\)/);
   assert.match(html, /function postActivityRows\(\)/);
   assert.match(html, /\{kind:'post',listingId:l\.id,owner:name,label:LBLL\(l\),spots:l\.slots\}/);
   assert.match(html, /\(DB\.activity\|\|\[\]\)\.forEach\(function\(a\)\{\s+if\(!a\.txt\)return;/);

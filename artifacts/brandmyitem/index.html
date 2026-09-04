@@ -8075,8 +8075,8 @@ function renderLiveFeed(feedId){
     return;
   }
   function itemHtml(row){
-    var brand=(row.c&&row.c.brand||'A brand').trim(),photo=PHO(row.l),label=LBLL(row.l);
-    var brandMark=row.c&&row.c.logo?'<img src="'+row.c.logo+'" alt="'+brand+' logo">':monoTile(brand);
+    var brand='your brand here',photo=PHO(row.l),label=LBLL(row.l);
+    var brandMark='<img src="brandmyitem-logo.svg" alt="BrandMyItem logo">';
     return '<a class="home-activity-item" href="#item/'+row.l.id+'" title="'+label+'">'+
       '<span class="home-activity-brand" aria-label="'+brand+'">'+brandMark+'</span>'+
       '<span class="home-activity-name">'+brand+'</span>'+
