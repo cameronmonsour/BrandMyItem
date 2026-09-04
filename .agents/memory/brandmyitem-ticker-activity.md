@@ -7,4 +7,4 @@ The live activity strip should communicate a single bid event: company, bid amou
 
 **Why:** A rotating status sequence made the public activity strip ambiguous and showed operational states that the demo does not actually verify.
 
-**How to apply:** Keep the ticker copy anchored to the claim record and show the existing product thumbnail/name as the object of the bid.
+**How to apply:** Keep the ticker copy anchored to the claim record, show the existing product thumbnail/name as the object of the bid, and show only one recent claim per listing in each visible ticker cycle.

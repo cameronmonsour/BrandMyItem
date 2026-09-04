@@ -8139,11 +8139,14 @@ function homeLiveRows(){
     if(group.length)groups.push(group.sort(function(a,b){return b.ts-a.ts}));
   });
   groups.sort(function(a,b){return b[0].ts-a[0].ts});
-  var rows=[],round=0;
-  while(rows.length<8&&groups.some(function(group){return !!group[round]})){
-    groups.forEach(function(group){if(group[round]&&rows.length<8)rows.push(group[round])});
-    round++;
-  }
+  var rows=[],seen={};
+  groups.forEach(function(group){
+    var row=group[0];
+    if(row&&!seen[row.l.id]&&rows.length<8){
+      seen[row.l.id]=true;
+      rows.push(row);
+    }
+  });
   return rows;
 }
 function renderLiveFeed(feedId){
