@@ -243,6 +243,13 @@ test('homepage and Live Items cards use the same all-in spot pricing', () => {
   assert.match(html, /Math\.min\.apply\(null,l\.prices\.map\(function\(p\)\{return spotPurchaseTotal\(l,p\)\}\)\)/);
 });
 
+test('open example campaign spots use one centered SVG plus icon', () => {
+  assert.match(html, /\.ap-spot-plus\{display:block;width:18px;height:18px;fill:none;stroke:#0071E3;stroke-width:2\.4;stroke-linecap:round\}/);
+  assert.match(html, /'<svg class="ap-spot-plus" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"\/><\/svg>'/);
+  assert.doesNotMatch(html, /\.ap-spot-option\.open \.ap-spot-mark:before/);
+  assert.doesNotMatch(html, /'<span aria-hidden="true">\+<\/span>'/);
+});
+
 test('campaign cards keep sponsor logos and 1.25px placement outlines on product photos', () => {
   assert.match(html, /function renderFinal\(el,st\)\{[\s\S]*?var l=normalizeListingPhoto\(st\);[\s\S]*?renderCustomStage\(el,l,null\);return/);
   assert.match(html, /var compactCard=!!cv\.closest\('\.lcard'\);/);

@@ -1464,9 +1464,8 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
   width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
   overflow: hidden; flex-shrink: 0; background: #F2F2F7; color: #1D1D1F; font-size: 12px; font-weight: 700;
 }
-.ap-spot-option.open .ap-spot-mark { border: 1.5px solid #86868B; background: #FFFFFF; color: #0071E3; font-size: 0; font-weight: 400; position:relative; }
-.ap-spot-option.open .ap-spot-mark:before,.ap-spot-option.open .ap-spot-mark:after{content:'';position:absolute;left:50%;top:50%;width:14px;height:2px;background:#0071E3;transform:translate(-50%,-50%);border-radius:2px}
-.ap-spot-option.open .ap-spot-mark:after{transform:translate(-50%,-50%) rotate(90deg)}
+.ap-spot-option.open .ap-spot-mark { border: 1.5px solid #86868B; background: #FFFFFF; color: #0071E3; font-size: 0; font-weight: 400; }
+.ap-spot-plus{display:block;width:18px;height:18px;fill:none;stroke:#0071E3;stroke-width:2.4;stroke-linecap:round}
 .ap-spot-mark img { width: 100%; height: 100%; object-fit: contain; padding: 5px; background: #FFFFFF; }
 .ap-spot-copy { min-width: 0; }
 .ap-spot-copy strong { display: block; font-size: 14px; line-height: 1.2; font-weight: 600; color: #1D1D1F; }
@@ -10743,7 +10742,7 @@ function renderItemSpotList(){
     var brand=(claim&&claim.brand||'Sponsor').trim();
     var mark=claim?
       (claim.logo?'<img src="'+claim.logo+'" alt="'+safeCardText(brand)+' logo">':'<span>'+safeCardText(brand.slice(0,2).toUpperCase())+'</span>'):
-      '<span aria-hidden="true">+</span>';
+      '<svg class="ap-spot-plus" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>';
     button.innerHTML=
       '<span class="ap-spot-mark">'+mark+'</span>'+
       '<span class="ap-spot-copy"><strong>Spot '+(i+1)+'</strong><span>'+safeCardText(meta.pos)+' — '+safeCardText(meta.size)+'</span></span>'+
