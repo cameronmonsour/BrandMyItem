@@ -1798,7 +1798,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
           </li>
           <li class="home-flow-step">
             <span class="home-flow-icon photo apply" aria-hidden="true"><img src="how-it-works-apply-brand-outline.png" alt=""></span>
-            <span class="home-flow-index">3</span><h3>We apply every brand</h3><p>BrandMyItem applies every approved sponsor mark before shipping to reduce fraud.</p>
+            <span class="home-flow-index">3</span><h3>We apply every brand</h3><p>BrandMyItem applies every approved sponsor mark before shipping.</p>
           </li>
           <li class="home-flow-step">
             <span class="home-flow-icon photo house" aria-hidden="true"><img src="how-it-works-arrives-branded.png" alt=""></span>
@@ -6623,6 +6623,45 @@ function money(n){
   var value=Number(n)||0,hasCents=Math.abs(value-Math.round(value))>0.0001;
   return '$'+value.toLocaleString('en-US',{minimumFractionDigits:hasCents?2:0,maximumFractionDigits:2});
 }
+function placementMoney(n){
+  return '$'+(Number(n)||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function allocatePlacementPrices(total,weights){
+  var totalCents=Math.max(0,Math.round((Number(total)||0)*100));
+  var normalized=(weights||[]).map(function(weight){return Math.max(0,Number(weight)||0)});
+  var weightTotal=normalized.reduce(function(sum,weight){return sum+weight},0);
+  if(!normalized.length||!weightTotal)return normalized.map(function(){return 0});
+  var groups={},orderedGroups=[];
+  normalized.forEach(function(weight,index){
+    var key=weight.toFixed(6);
+    if(!groups[key]){
+      groups[key]={weight:weight,indices:[],unit:0,ideal:totalCents*weight/weightTotal};
+      orderedGroups.push(groups[key]);
+    }
+    groups[key].indices.push(index);
+  });
+  var assigned=0;
+  orderedGroups.forEach(function(group){
+    group.unit=Math.floor(group.ideal);
+    assigned+=group.unit*group.indices.length;
+  });
+  var remaining=totalCents-assigned;
+  while(remaining>0){
+    var eligible=orderedGroups.filter(function(group){return group.indices.length<=remaining});
+    if(!eligible.length)break;
+    eligible.sort(function(a,b){return (b.ideal-b.unit)-(a.ideal-a.unit)});
+    eligible[0].unit+=1;
+    remaining-=eligible[0].indices.length;
+  }
+  var cents=new Array(normalized.length);
+  orderedGroups.forEach(function(group){group.indices.forEach(function(index){cents[index]=group.unit})});
+  if(remaining>0){
+    normalized.map(function(weight,index){
+      return {index:index,remainder:(totalCents*weight/weightTotal)-cents[index]};
+    }).sort(function(a,b){return b.remainder-a.remainder}).slice(0,remaining).forEach(function(entry){cents[entry.index]+=1});
+  }
+  return cents.map(function(value){return value/100});
+}
 /* Replit injects the Umami tracker into published website HTML; keep development safe
    and never add a script, website ID, or analytics credential to the app. */
 function trackEvent(name,data){
@@ -7184,17 +7223,10 @@ function suggest(type,count){
   /* geometric pricing: each box costs its share of the certified surface */
   var sd=(typeof SCANDATA!=='undefined')&&SCANDATA[type];
   if(sd&&sd.prices&&sd.prices[count]){
-    var base=sd.prices[count],baseTotal=base.reduce(function(a,b){return a+b},0);
-    var scaled=base.map(function(p){return Math.max(1,Math.round(p*retail/baseTotal*100)/100)});
-    scaled[0]=Math.round((scaled[0]+retail-scaled.reduce(function(a,b){return a+b},0))*100)/100;
-    return scaled;
+    return allocatePlacementPrices(retail,sd.prices[count]);
   }
   var ws=ORDER[count].map(function(k){return(k==='t'||k==='b')?2:1});
-  var tw=ws.reduce(function(a,b){return a+b},0);
-  var out=ws.map(function(w){return Math.max(5,Math.round(retail*w/tw/5)*5)});
-  var diff=retail-out.reduce(function(a,b){return a+b},0);
-  out[0]+=diff; /* spots sum to exactly the retail price */
-  return out;
+  return allocatePlacementPrices(retail,ws);
 }
 
 /* --- SPOT MAP RENDER --- */
@@ -7794,7 +7826,7 @@ function stickerMesh(st,i,surf){
   }else if(surf.slots&&surf.slots[i]){px=surf.slots[i][0];py=surf.slots[i][1]}
   if(surf.sw&&!(surf.anch&&surf.anch[i])){sw=surf.sw;shh=sw*0.586}
   var ar=Math.max(0.8,Math.min(3.4,sw/shh));
-  var cv=stickerCanvas(c?{price:money(c.amt||st.prices[i])}:{open:true,price:money(st.prices[i]),pos:slotMeta(st.type,st.slots,i).pos},ar,4);
+  var cv=stickerCanvas(c?{price:placementMoney(c.amt||st.prices[i])}:{open:true,price:placementMoney(st.prices[i]),pos:slotMeta(st.type,st.slots,i).pos},ar,4);
   var tex=new T.CanvasTexture(cv);tex.anisotropy=8;
   /* real mesh present: project the card onto the surface like applied vinyl */
   var target=surf.target;
@@ -9338,7 +9370,7 @@ function renderCustomStage(el,l,onTap){
     var compactCard=!!cv.closest('.lcard');
     var placementStroke=(compactCard?1.25:2)*cv.width/cssWidth;
     (l.tiles||[]).forEach(function(t,i){
-      var c=l.claims&&l.claims[i],price=c?money(c.amt||l.prices[i]):money(l.prices[i]);
+      var c=l.claims&&l.claims[i],price=c?placementMoney(c.amt||l.prices[i]):placementMoney(l.prices[i]);
       drawPricePlacement(g,t,frame,price,c?logoImages[i]:null,c&&c.brand,placementStroke);
     });
   }
@@ -9725,10 +9757,7 @@ var TEMPLATES=[
 function scaleP(t,n,retail){
   var sd=SCANDATA[t],base=sd&&sd.prices&&sd.prices[n];
   if(!base)return [];
-  var cat=ITEMS[t].retail;
-  var out=base.map(function(p){return Math.max(1,Math.round(p*retail/cat))});
-  out[0]+=retail-out.reduce(function(a,b){return a+b},0);
-  return out;
+  return allocatePlacementPrices(retail,base);
 }
 function tmplMax(t){
   var sd=SCANDATA[t],n=0;
@@ -9876,12 +9905,7 @@ function cuRepart(){if(CU.template&&!CU.customized)cuApplyTemplate()}
 function boxPrices(){
   var retail=Math.max(1,parseFloat(document.getElementById('cuRetail').value||'100'));
   var purchaseGoal=markedUpRetail(retail);
-  var tot=0;CU.tiles.forEach(function(t){tot+=t.w*t.h});
-  if(!tot)return [];
-  var unit=retail<200?1:5;
-  var pr=CU.tiles.map(function(t){return Math.max(unit,Math.round(purchaseGoal*(t.w*t.h)/tot/unit)*unit)});
-  pr[0]+=purchaseGoal-pr.reduce(function(a,b){return a+b},0);
-  return pr;
+  return allocatePlacementPrices(purchaseGoal,CU.tiles.map(function(t){return t.w*t.h}));
 }
 function cuSpotPriceTotal(){
   return (CU.prices||[]).reduce(function(sum,price){return sum+(Number(price)||0)},0);
@@ -9889,7 +9913,7 @@ function cuSpotPriceTotal(){
 function cuUpdateSpotPriceTotal(){
   var el=document.getElementById('cuSpotPriceTotal');if(!el)return;
   var purchaseGoal=markedUpRetail(document.getElementById('cuRetail').value||'100');
-  var total=cuSpotPriceTotal(),difference=purchaseGoal-total;
+  var total=cuSpotPriceTotal(),difference=Math.round((purchaseGoal-total)*100)/100;
   el.classList.toggle('is-valid',difference===0&&CU.prices.length===CU.tiles.length);
   el.textContent=difference===0?'Spot total '+money(total)+' — matches full purchase goal':
     'Spot total '+money(total)+' of '+money(purchaseGoal)+' — '+(difference>0?'add ':'remove ')+money(Math.abs(difference));
@@ -9901,10 +9925,10 @@ function cuRenderSpotPrices(){
     var field=document.createElement('div');field.className='spot-price-field';
     var label=document.createElement('label');label.htmlFor='cuSpotPrice'+i;label.textContent='Spot '+(i+1);
     var dollar=document.createElement('span');dollar.textContent='$';
-    var input=document.createElement('input');input.id='cuSpotPrice'+i;input.type='number';input.min='1';input.step='1';input.value=CU.prices[i]||'';
+    var input=document.createElement('input');input.id='cuSpotPrice'+i;input.type='number';input.min='0.01';input.step='0.01';input.value=Number(CU.prices[i]||0).toFixed(2);
     input.setAttribute('aria-label','Price for ad spot '+(i+1));
     input.oninput=function(){
-      CU.prices[i]=Math.max(0,Math.round(Number(this.value)||0));B.prices=CU.prices.slice();
+      CU.prices[i]=Math.max(0,Math.round((Number(this.value)||0)*100)/100);B.prices=CU.prices.slice();
       cuUpdateSpotPriceTotal();totals();
     };
     field.appendChild(label);field.appendChild(dollar);field.appendChild(input);grid.appendChild(field);
@@ -9996,8 +10020,7 @@ async function postListing(){
     var standardRetail=variantRetail(B.type,B.variantSize),standardGoal=markedUpRetail(standardRetail);
     var standardPrices=B.prices.slice(),standardTotal=standardPrices.reduce(function(a,b){return a+b},0);
     if(standardPrices.length&&standardTotal!==standardGoal){
-      standardPrices=standardPrices.map(function(price){return Math.max(1,Math.round(price*standardGoal/standardTotal))});
-      standardPrices[0]+=standardGoal-standardPrices.reduce(function(a,b){return a+b},0);
+      standardPrices=allocatePlacementPrices(standardGoal,standardPrices);
     }
     l={id:uid(),type:B.type,owner:name,mail:mail,avatar:B.avatar,habs:B.habs.slice(),cities:B.cities.slice(),universities:B.universities.slice(),purpose:B.purpose.trim(),freq:B.freq,social:B.social,color:B.color,variantModel:B.variantModel,variantSize:B.variantSize,retail:variantRetail(B.type,B.variantSize),source:ITEMS[B.type].source,verified:ITEMS[B.type].verified,socialLinks:Object.assign({},B.socialLinks),slots:B.slots,
       prices:standardPrices,pricesIncludeMarkup:true,claims:standardPrices.map(function(){return null}),created:Date.now(),postedAt:Date.now(),unsoldTimeoutDays:60,
@@ -11136,10 +11159,10 @@ function initHomeFeatureBento(){
     if(dayNote)dayNote.textContent=phase===3?'Not funded by day 60. Refunds initiated.':(phase===4?'':(phase>=1?'3 of 5 spots purchased':''));
   });
   var items=[
-    {name:'MacBook Pro 14\"',price:1599,parts:[224,224,224,224,224,224,224,224,224,223],img:'bento/cutout-macbook.png',n:10,type:'macbook'},
-    {name:'iPhone 17 Pro',price:1099,parts:[307,308,308,308,308],img:'bento/cutout-iphone.png',n:5,type:'iphone'},
-    {name:'AirPods Max',price:549,parts:[385,384],img:'bento/cutout-headphones.png',n:2,type:'headphones'},
-    {name:'RIMOWA Original Cabin',price:1550,parts:[543,543,542,542],img:'bento/cutout-case.png',n:4,type:'case'}
+    {name:'MacBook Pro 14\"',price:1599,parts:allocatePlacementPrices(markedUpRetail(1599),new Array(10).fill(1)),img:'bento/cutout-macbook.png',n:10,type:'macbook'},
+    {name:'iPhone 17 Pro',price:1099,parts:allocatePlacementPrices(markedUpRetail(1099),new Array(5).fill(1)),img:'bento/cutout-iphone.png',n:5,type:'iphone'},
+    {name:'AirPods Max',price:549,parts:allocatePlacementPrices(markedUpRetail(549),new Array(2).fill(1)),img:'bento/cutout-headphones.png',n:2,type:'headphones'},
+    {name:'RIMOWA Original Cabin',price:1550,parts:allocatePlacementPrices(markedUpRetail(1550),new Array(4).fill(1)),img:'bento/cutout-case.png',n:4,type:'case'}
   ];
   var itemIndex=0,itemImg=document.getElementById('fbItemImg'),itemName=document.getElementById('fbItemName'),itemMeta=document.getElementById('fbItemMeta'),itemStage=document.querySelector('.fb-stage-inner'),itemLine=q('.fb-itemline'),itemTile=q('.fb-mac');
   var fundPct=document.getElementById('fbFundPct'),fundBar=document.getElementById('fbFundBar'),fundAmt=document.getElementById('fbFundAmt');
@@ -11222,8 +11245,8 @@ function initHomeFeatureBento(){
       var badgeW=Math.min(bounds.w*.74,d.size[0]*.15),badgeH=Math.min(bounds.h*.3,d.size[1]*.064);
       badgeW=Math.max(badgeW,d.size[0]*.075);badgeH=Math.max(badgeH,d.size[1]*.034);
       var fontSize=badgeH*.46,logoSize=badgeH*.72;
-      var amount=prices&&prices[i]!=null?prices[i]:'';
-      unitsSvg += '<g class="fb-spot-price"><text x="'+cx+'" y="'+cy+'" font-size="'+fontSize+'">$'+amount+'</text></g>';
+      var amount=prices&&prices[i]!=null?placementMoney(prices[i]):'';
+      unitsSvg += '<g class="fb-spot-price"><text x="'+cx+'" y="'+cy+'" font-size="'+fontSize+'">'+amount+'</text></g>';
       unitsSvg += '<g class="fb-spot-logo"><use href="#fbLidMark" x="'+(cx-logoSize/2)+'" y="'+(cy-logoSize/2)+'" width="'+logoSize+'" height="'+logoSize+'"/></g>';
       unitsSvg += '</g>';
     });
@@ -11264,7 +11287,7 @@ function initHomeFeatureBento(){
     if(fundAmt)fundAmt.textContent='$'+amount.toLocaleString()+' of $'+goal.toLocaleString();
   });
   var priceVisual = document.getElementById('fbPriceVisual');
-  var parts=[307,308,308,308,308];
+  var parts=allocatePlacementPrices(markedUpRetail(1099),new Array(5).fill(1));
   if(priceVisual) {
     priceVisual.insertAdjacentHTML('beforeend', buildOverlaySvg('iphone', 5, 'fb-ps', 'fb-price-map', parts));
   }

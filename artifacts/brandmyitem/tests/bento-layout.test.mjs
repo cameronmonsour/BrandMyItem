@@ -69,7 +69,7 @@ test('price tile uses the transparent iPhone cutout with black priced tracker sp
   assert.match(html, /\.fb-price h3\{[^}]*max-width:10ch/);
   assert.match(html, /\.fb-price-visual\{[^}]*height:130px;width:calc\(130px \* \(952 \/ 1275\)\)/);
   assert.match(html, /\.fb-price-map \.fb-ps\{fill:none;stroke:#000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter/);
-  assert.match(html, /parts=\[307,308,308,308,308\]/);
+  assert.match(html, /var parts=allocatePlacementPrices\(markedUpRetail\(1099\),new Array\(5\)\.fill\(1\)\)/);
   assert.match(html, /buildOverlaySvg\('iphone', 5, 'fb-ps', 'fb-price-map', parts\)/);
   assert.match(html, /priceUnits\[index\]\.classList\.toggle\('is-bought',fraction>\.92\)/);
 });
@@ -142,4 +142,16 @@ test('check-in proofs use a clean transparent four-column structure', () => {
   assert.match(html, /flight\.style\.setProperty\('--flight-dy'/);
   assert.match(html, /\.feature-bento \.fb-next-proof\{position:relative;background:transparent;overflow:hidden\}/);
   assert.doesNotMatch(html, /\.feature-bento \.fb-next-proof\{[^}]*background:#fff/);
+});
+
+test('equal placement boxes keep identical cent-level prices', () => {
+  assert.match(html, /function placementMoney\(n\)\{[\s\S]*?minimumFractionDigits:2,maximumFractionDigits:2/);
+  assert.match(html, /function allocatePlacementPrices\(total,weights\)/);
+  assert.match(html, /groups\[key\]=\{weight:weight,indices:\[\],unit:0,ideal:totalCents\*weight\/weightTotal\}/);
+  assert.match(html, /parts:allocatePlacementPrices\(markedUpRetail\(1550\),new Array\(4\)\.fill\(1\)\)/);
+  assert.match(html, /parts:allocatePlacementPrices\(markedUpRetail\(549\),new Array\(2\)\.fill\(1\)\)/);
+  assert.match(html, /var parts=allocatePlacementPrices\(markedUpRetail\(1099\),new Array\(5\)\.fill\(1\)\)/);
+  assert.match(html, /input\.step='0\.01';input\.value=Number\(CU\.prices\[i\]\|\|0\)\.toFixed\(2\)/);
+  assert.doesNotMatch(html, /parts:\[543,543,542,542\]/);
+  assert.doesNotMatch(html, /parts:\[385,384\]/);
 });
