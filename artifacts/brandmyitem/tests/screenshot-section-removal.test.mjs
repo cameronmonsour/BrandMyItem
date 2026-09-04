@@ -157,6 +157,17 @@ test('dashboard keeps compact tracker cards without a duplicate left category bo
   assert.match(html, /<span class="chipg sold-count">/);
 });
 
+test('every homepage and Live Items campaign card keeps the locked compact hierarchy', () => {
+  const ownerRows = html.match(/<div class="who">'\+ownerAvatarHtml\(l\)\+'<span class="oname">'\+l\.owner\+'<\/span><span class="when">'\+ago\(l\.created\)\+'<\/span><span class="catic"><img src="'\+PHO\(l\)\+'" alt=""><\/span><\/div>'\+/g) || [];
+  const detailRows = html.match(/listingContextHtml\(l\)\+'<div class="iname">'\+it\.label\+'<\/div>'\+/g) || [];
+
+  assert.equal(ownerRows.length, 2, 'homepage and Live Items must both keep the item icon in the owner row');
+  assert.equal(detailRows.length, 2, 'homepage and Live Items must both keep context above the product title');
+  assert.match(html, /\.lcard \.iname\{[^}]*margin:7px 0;/);
+  assert.match(html, /\.lcard \.moneyrow\{[^}]*min-height:21px/);
+  assert.match(html, /\.lcard \.sponsor-price \.sponsor-stack\{position:absolute;right:0;bottom:calc\(100% \+ 3px\)/);
+});
+
 test('fulfillment copy enforces BrandMyItem-applied branding', () => {
   assert.match(html, /purchase total includes 40% covering BrandMyItem-applied branding, item sales tax, shipping, and handling/i);
   assert.match(html, /delivers it pre-branded within 60 days/);
