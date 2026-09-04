@@ -1,5 +1,10 @@
 import { randomUUID } from "node:crypto";
-import { campaignsTable, db, placementOrdersTable } from "@workspace/db";
+import {
+  campaignsTable,
+  db,
+  placementOrdersTable,
+  trackingMagicLinksTable,
+} from "@workspace/db";
 import {
   CreatePlacementCheckoutBody,
   CreatePlacementCheckoutResponse,
@@ -12,7 +17,18 @@ import {
   RegisterCampaignResponse,
   RequestTrackingMagicLinkBody,
 } from "@workspace/api-zod";
-import { and, desc, eq, inArray, sql } from "drizzle-orm";
+import {
+  and,
+  desc,
+  eq,
+  gt,
+  inArray,
+  isNotNull,
+  isNull,
+  lte,
+  or,
+  sql,
+} from "drizzle-orm";
 import { Router, type IRouter } from "express";
 import { stripeRequest } from "../stripeClient";
 import {
@@ -38,10 +54,17 @@ import { logger } from "../lib/logger";
 
 const router: IRouter = Router();
 const TRACKING_LINK_TTL_MS = 15 * 60 * 1000;
-const trackingMagicLinks = new Map<
-  string,
-  { email: string; expiresAt: number; used: boolean }
->();
+
+async function cleanupTrackingMagicLinks(now = new Date()): Promise<void> {
+  await db
+    .delete(trackingMagicLinksTable)
+    .where(
+      or(
+        lte(trackingMagicLinksTable.expiresAt, now),
+        isNotNull(trackingMagicLinksTable.usedAt),
+      ),
+    );
+}
 
 function publicClaim(order: typeof placementOrdersTable.$inferSelect) {
   return {
@@ -182,15 +205,14 @@ router.post("/tracking/magic-link", async (req, res): Promise<void> => {
     return;
   }
   const email = parsed.data.email.trim().toLowerCase();
-  for (const [hash, link] of trackingMagicLinks) {
-    if (link.used || link.expiresAt <= Date.now()) trackingMagicLinks.delete(hash);
-  }
   const token = createAccessToken();
   const tokenHash = hashAccessToken(token);
-  trackingMagicLinks.set(tokenHash, {
+  const expiresAt = new Date(Date.now() + TRACKING_LINK_TTL_MS);
+  await cleanupTrackingMagicLinks();
+  await db.insert(trackingMagicLinksTable).values({
+    tokenHash,
     email,
-    expiresAt: Date.now() + TRACKING_LINK_TTL_MS,
-    used: false,
+    expiresAt,
   });
 
   try {
@@ -207,7 +229,9 @@ router.post("/tracking/magic-link", async (req, res): Promise<void> => {
       }),
     );
   } catch (error) {
-    trackingMagicLinks.delete(tokenHash);
+    await db
+      .delete(trackingMagicLinksTable)
+      .where(eq(trackingMagicLinksTable.tokenHash, tokenHash));
     logger.warn({ err: error }, "Tracking magic link delivery failed");
   }
 
@@ -221,24 +245,26 @@ router.post("/tracking/magic-link", async (req, res): Promise<void> => {
 
 router.get("/tracking", async (req, res): Promise<void> => {
   res.setHeader("Cache-Control", "no-store");
-  const token = typeof req.query.token === "string" ? req.query.token : "";
-  const magicLink = token
-    ? trackingMagicLinks.get(hashAccessToken(token))
-    : undefined;
-  if (magicLink && (magicLink.used || magicLink.expiresAt <= Date.now())) {
-    trackingMagicLinks.delete(hashAccessToken(token));
-    res.status(401).json({ error: "Tracking link is invalid or expired" });
-    return;
-  }
-  if (magicLink) {
-    magicLink.used = true;
-    trackingMagicLinks.delete(hashAccessToken(token));
-  }
   const parsed = GetTrackingQueryParams.safeParse(req.query);
   if (!parsed.success) {
     res.status(400).json({ error: "Invalid or expired tracking link" });
     return;
   }
+
+  const tokenHash = hashAccessToken(parsed.data.token);
+  const now = new Date();
+  await cleanupTrackingMagicLinks(now);
+  const [magicLink] = await db
+    .update(trackingMagicLinksTable)
+    .set({ usedAt: now })
+    .where(
+      and(
+        eq(trackingMagicLinksTable.tokenHash, tokenHash),
+        isNull(trackingMagicLinksTable.usedAt),
+        gt(trackingMagicLinksTable.expiresAt, now),
+      ),
+    )
+    .returning({ email: trackingMagicLinksTable.email });
 
   if (!magicLink) {
     res.status(401).json({ error: "Tracking link is invalid or expired" });
