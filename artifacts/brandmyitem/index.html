@@ -6730,6 +6730,20 @@ var UNIVERSITY_DIRECTORY=[
   ['UCLA','Los Angeles, CA'],['University of Southern California','Los Angeles, CA'],['Stanford University','Stanford, CA'],['University of California, Berkeley','Berkeley, CA'],['University of California, San Diego','San Diego, CA'],['University of California, Irvine','Irvine, CA'],['University of California, Davis','Davis, CA'],['Cal Poly San Luis Obispo','San Luis Obispo, CA'],['Arizona State University','Tempe, AZ'],['University of Washington','Seattle, WA'],['University of Oregon','Eugene, OR'],['University of Texas at Austin','Austin, TX'],['Texas A&M University','College Station, TX'],['University of Colorado Boulder','Boulder, CO'],['University of Chicago','Chicago, IL'],['Northwestern University','Evanston, IL'],['New York University','New York, NY'],['Columbia University','New York, NY'],['Harvard University','Cambridge, MA'],['Massachusetts Institute of Technology','Cambridge, MA'],['Yale University','New Haven, CT'],['Princeton University','Princeton, NJ'],['University of Pennsylvania','Philadelphia, PA'],['Cornell University','Ithaca, NY'],['Duke University','Durham, NC'],['Georgetown University','Washington, DC'],['Georgia Institute of Technology','Atlanta, GA'],['Vanderbilt University','Nashville, TN'],['University of Michigan','Ann Arbor, MI'],['Ohio State University','Columbus, OH'],['University of Toronto','Toronto, ON'],['University of British Columbia','Vancouver, BC'],['University of Oxford','Oxford, UK'],['University of Cambridge','Cambridge, UK'],['London School of Economics','London, UK'],['Imperial College London','London, UK'],['University of Sydney','Sydney, Australia'],['University of Melbourne','Melbourne, Australia'],['National University of Singapore','Singapore'],['University of Tokyo','Tokyo, Japan'],['Seoul National University','Seoul, South Korea']
 ];
 
+var FAKE_SPONSOR_LOGOS=[
+  'logos/fake/northloop.svg',
+  'logos/fake/flint.svg',
+  'logos/fake/meridian.svg',
+  'logos/fake/quarry.svg',
+  'logos/fake/hale.svg',
+  'logos/fake/arca.svg',
+  'logos/fake/kilo.svg',
+  'logos/fake/veldt.svg'
+];
+function fakeSponsorClaim(logoIndex,amt,subId){
+  return {brand:'Your Brand Here',link:'',logo:FAKE_SPONSOR_LOGOS[logoIndex%FAKE_SPONSOR_LOGOS.length],amt:amt,subId:subId};
+}
+
 var DB=store.get('bmi_db4');
 if(!DB){
   var now=Date.now();
@@ -6737,30 +6751,30 @@ if(!DB){
     {id:'demo1',type:'macbook',owner:'Cam',mail:'',habs:['Coffee shops','Events'],slots:10,
       prices:[250,250,165,500,165,225,225,225,219,219],
       claims:[
-        {brand:'Outraised',link:'https://outraised.lol',logo:null,amt:250},
-        {brand:'Northshore',link:'',logo:null,amt:250},
-        {brand:'Clipory',link:'',logo:null,amt:165},
+        fakeSponsorClaim(0,250),
+        fakeSponsorClaim(1,250),
+        fakeSponsorClaim(2,165),
         null,null,
-        {brand:'PingRoom',link:'',logo:null,amt:225},
-        {brand:'See.io',link:'',logo:null,amt:225},
+        fakeSponsorClaim(3,225),
+        fakeSponsorClaim(4,225),
         null,
-        {brand:'SoldAsap',link:'',logo:null,amt:219},
+        fakeSponsorClaim(5,219),
         null],
       created:now-1000*60*42},
     {id:'demo2',type:'bottle',owner:'Maya',mail:'',habs:['Gym'],slots:2,
-      prices:[25,20],claims:[{brand:'LiftClub',link:'',logo:null,amt:25},{brand:'Juicebox',link:'',logo:null,amt:20}],created:now-1000*60*60*5},
+      prices:[25,20],claims:[fakeSponsorClaim(6,25),fakeSponsorClaim(7,20)],created:now-1000*60*60*5},
     {id:'demo3',type:'case',owner:'Jordan',mail:'',habs:['Airport'],slots:4,
-      prices:[140,140,70,70],claims:[null,null,null,{brand:'Gateline',link:'',logo:null,amt:70}],created:now-1000*60*60*26},
+      prices:[140,140,70,70],claims:[null,null,null,fakeSponsorClaim(0,70)],created:now-1000*60*60*26},
     {id:'demo4',type:'suit',owner:'Dre',mail:'',habs:['Events'],slots:1,
       prices:[750],claims:[null],created:now-1000*60*12},
     {id:'demo5',type:'iphone',owner:'Sofia',mail:'',habs:['Campus','Gym'],slots:5,
-      prices:[167,233,233,233,233],claims:[{brand:'Loopwear',link:'',logo:null,amt:167},null,null,null,null],created:now-1000*60*60*2},
+      prices:[167,233,233,233,233],claims:[fakeSponsorClaim(1,167),null,null,null,null],created:now-1000*60*60*2},
     {id:'demo6',type:'headphones',owner:'Ken',mail:'',habs:['Commute','Office'],slots:2,
-      prices:[300,249],claims:[{brand:'Driftly',link:'',logo:null,amt:300},{brand:'Figma',link:'https://www.figma.com',logo:'logos/figma.svg',amt:249,subId:'BMI-DEMO02'}],created:now-1000*60*60*5},
+      prices:[300,249],claims:[fakeSponsorClaim(2,300,'BMI-DEMO01'),fakeSponsorClaim(3,249,'BMI-DEMO02')],created:now-1000*60*60*5},
     {id:'demo7',type:'paddle',owner:'Priya',mail:'',habs:['Courts','Events'],slots:2,
-      prices:[80,70],claims:[{brand:'Rallyhouse',link:'',logo:null,amt:80},{brand:'NetGain',link:'',logo:null,amt:70}],created:now-1000*60*60*30},
+      prices:[80,70],claims:[fakeSponsorClaim(4,80),fakeSponsorClaim(5,70)],created:now-1000*60*60*30},
     {id:'demo8',type:'golfbag',owner:'Marcus',mail:'',habs:['Club','Events'],slots:5,
-      prices:[130,90,90,45,45],claims:[{brand:'Fairway+',link:'',logo:null,amt:130},null,null,null,null],created:now-1000*60*60*8}
+      prices:[130,90,90,45,45],claims:[fakeSponsorClaim(6,130),null,null,null,null],created:now-1000*60*60*8}
   ],
   activity:[
     {kind:'post',listingId:'demo4',owner:'Dre',label:'Black Merino Wool Tuxedo Suit',spots:1,ts:now-1000*60*12},
@@ -6774,22 +6788,6 @@ if(!DB){
   ]};
   store.set('bmi_db4',DB);
 }
-var DEMO_BIDDERS={
-  'Outraised':{brand:'Nike',link:'https://www.nike.com',logo:'logos/nike.svg'},
-  'Northshore':{brand:'Adidas',link:'https://www.adidas.com',logo:'logos/adidas.svg'},
-  'Clipory':{brand:'Spotify',link:'https://www.spotify.com',logo:'logos/spotify.svg'},
-  'PingRoom':{brand:'GitHub',link:'https://github.com',logo:'logos/github.svg'},
-  'See.io':{brand:'Figma',link:'https://www.figma.com',logo:'logos/figma.svg'},
-  'SoldAsap':{brand:'Strava',link:'https://www.strava.com',logo:'logos/strava.svg'},
-  'LiftClub':{brand:'Airbnb',link:'https://www.airbnb.com',logo:'logos/airbnb.svg'},
-  'Juicebox':{brand:'Shopify',link:'https://www.shopify.com',logo:'logos/shopify.svg'},
-  'Gateline':{brand:'Notion',link:'https://www.notion.so',logo:'logos/notion.svg'},
-  'Loopwear':{brand:'Uber',link:'https://www.uber.com',logo:'logos/uber.svg'},
-  'Driftly':{brand:'Reddit',link:'https://www.reddit.com',logo:'logos/reddit.svg'},
-  'Rallyhouse':{brand:'Dropbox',link:'https://www.dropbox.com',logo:'logos/dropbox.svg'},
-  'NetGain':{brand:'PayPal',link:'https://www.paypal.com',logo:'logos/paypal.svg'},
-  'Fairway+':{brand:'Twitch',link:'https://www.twitch.tv',logo:'logos/twitch.svg'}
-};
 var DEMO_CONTEXT={
   demo1:{social:'10K\u2013100K',cities:['Los Angeles, CA'],universities:['UCLA'],avatar:'avatars/avatar-01.png'},
   demo2:{social:'1K\u201310K',cities:['Miami, FL'],avatar:'avatars/avatar-02.png'},
@@ -6800,37 +6798,6 @@ var DEMO_CONTEXT={
   demo7:{social:'10K\u2013100K',cities:['Austin, TX'],universities:['University of Texas at Austin'],avatar:'avatars/avatar-07.png'},
   demo8:{social:'1K\u201310K',cities:['Toronto, ON'],universities:['University of Toronto'],avatar:'avatars/avatar-08.png'}
 };
-(function upgradeDemoBidders(){
-  var changed=false,replacements={};
-  Object.keys(DEMO_BIDDERS).forEach(function(oldName){replacements[oldName]=DEMO_BIDDERS[oldName].brand});
-  (DB.listings||[]).forEach(function(l){
-    (l.claims||[]).forEach(function(c){
-      var next=c&&DEMO_BIDDERS[c.brand];
-      if(!next)return;
-      c.brand=next.brand;c.link=next.link;c.logo=next.logo;changed=true;
-    });
-  });
-  if(changed){
-    (DB.activity||[]).forEach(function(a){
-      if(!a.txt)return;
-      Object.keys(replacements).forEach(function(oldName){a.txt=a.txt.split(oldName).join(replacements[oldName])});
-    });
-    store.set('bmi_db4',DB);
-  }
-})();
-(function replaceAirPodsSecondDemoLogo(){
-  var listing=(DB.listings||[]).find(function(l){return l.id==='demo6'});
-  if(!listing)return;
-  if(!listing.claims)listing.claims=[];
-  listing.claims[1]={
-    brand:'Figma',
-    link:'https://www.figma.com',
-    logo:'logos/figma.svg',
-    amt:249,
-    subId:'BMI-DEMO02'
-  };
-  store.set('bmi_db4',DB);
-})();
 (function upgradeDemoContext(){
   var changed=false;
   Object.keys(DEMO_CONTEXT).forEach(function(id){
@@ -6845,17 +6812,14 @@ var DEMO_CONTEXT={
 })();
 var LOCKED_LAUNCH_EXAMPLE_IDS=['demo6','demo1','demo5'];
 var LIVE_CAMPAIGN_CUTOFF=Date.UTC(2026,8,4,0,0,0);
-function canonicalDemoClaim(brand,logo,link,amt,subId){
-  return {brand:brand,logo:logo,link:link,amt:amt,subId:subId};
-}
 function lockLaunchExamples(){
   var now=Date.now(),states={
     demo6:{
       created:now-1000*60*60*5,
       prices:[300,249],
       claims:[
-        canonicalDemoClaim('Reddit','logos/reddit.svg','https://www.reddit.com',300,'BMI-DEMO01'),
-        canonicalDemoClaim('Figma','logos/figma.svg','https://www.figma.com',249,'BMI-DEMO02')
+        fakeSponsorClaim(0,300,'BMI-DEMO01'),
+        fakeSponsorClaim(1,249,'BMI-DEMO02')
       ],
       status:'funded'
     },
@@ -6863,14 +6827,14 @@ function lockLaunchExamples(){
       created:now-1000*60*47,
       prices:[250,250,165,500,165,225,225,225,219,219],
       claims:[
-        canonicalDemoClaim('Nike','logos/nike.svg','https://www.nike.com',250,'BMI-DEMO11'),
-        canonicalDemoClaim('Adidas','logos/adidas.svg','https://www.adidas.com',250,'BMI-DEMO12'),
-        canonicalDemoClaim('Spotify','logos/spotify.svg','https://www.spotify.com',165,'BMI-DEMO13'),
+        fakeSponsorClaim(2,250,'BMI-DEMO11'),
+        fakeSponsorClaim(3,250,'BMI-DEMO12'),
+        fakeSponsorClaim(4,165,'BMI-DEMO13'),
         null,null,
-        canonicalDemoClaim('GitHub','logos/github.svg','https://github.com',225,'BMI-DEMO16'),
-        canonicalDemoClaim('Figma','logos/figma.svg','https://www.figma.com',225,'BMI-DEMO17'),
+        fakeSponsorClaim(5,225,'BMI-DEMO16'),
+        fakeSponsorClaim(6,225,'BMI-DEMO17'),
         null,
-        canonicalDemoClaim('Strava','logos/strava.svg','https://www.strava.com',219,'BMI-DEMO19'),
+        fakeSponsorClaim(7,219,'BMI-DEMO19'),
         null
       ],
       status:'live'
@@ -6878,7 +6842,7 @@ function lockLaunchExamples(){
     demo5:{
       created:now-1000*60*60*2,
       prices:[167,233,233,233,233],
-      claims:[canonicalDemoClaim('Uber','logos/uber.svg','https://www.uber.com',167,'BMI-DEMO51'),null,null,null,null],
+      claims:[fakeSponsorClaim(0,167,'BMI-DEMO51'),null,null,null,null],
       status:'live'
     }
   };
@@ -8075,8 +8039,8 @@ function renderLiveFeed(feedId){
     return;
   }
   function itemHtml(row){
-    var brand='your brand here',photo=PHO(row.l),label=LBLL(row.l);
-    var brandMark='<img src="brandmyitem-logo.svg" alt="BrandMyItem logo">';
+    var brand='Your Brand Here',photo=PHO(row.l),label=LBLL(row.l);
+    var brandMark='<img src="'+row.c.logo+'" alt="Your Brand Here logo">';
     return '<a class="home-activity-item" href="#item/'+row.l.id+'" title="'+label+'">'+
       '<span class="home-activity-brand" aria-label="'+brand+'">'+brandMark+'</span>'+
       '<span class="home-activity-name">'+brand+'</span>'+
@@ -10325,16 +10289,17 @@ var CUR=null,itemMode='auction',claimSlot=-1,logoData=null,buyReturnFocus=null;
 var TRACK_MATCHES=[];
 function demoTrackMatches(){
   var demoRows=[
-    {id:'demo1',subId:'BMI-DEMO01',brand:'Northstar Studio',days:9,slot:3},
-    {id:'demo2',subId:'BMI-DEMO02',brand:'LiftClub',days:4,slot:0},
-    {id:'demo5',subId:'BMI-DEMO03',brand:'Loopwear',days:2,slot:0}
+    {id:'demo1',subId:'BMI-DEMO01',logoIndex:2,days:9,slot:3},
+    {id:'demo6',subId:'BMI-DEMO02',logoIndex:1,days:4,slot:0},
+    {id:'demo5',subId:'BMI-DEMO03',logoIndex:0,days:2,slot:0}
   ];
   return demoRows.map(function(row){
     var listing=DB.listings.filter(function(l){return l.id===row.id})[0];
     if(!listing)return null;
     var amt=listing.prices[row.slot]||listing.prices[0]||0;
     return {l:listing,c:{
-      brand:row.brand,
+      brand:'Your Brand Here',
+      logo:FAKE_SPONSOR_LOGOS[row.logoIndex],
       mail:'demo@brandmyitem.com',
       amt:amt,
       fee:feeFor(listing,amt),

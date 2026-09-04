@@ -65,14 +65,15 @@ test('dashboard activity uses the same live ticker as the homepage', () => {
   assert.match(html, /function renderHomeLiveFeed\(\)\{renderLiveFeed\('homeLiveFeed'\)\}/);
   assert.match(html, /function renderDashboardLiveFeed\(\)\{renderLiveFeed\('dashLiveFeed'\)\}/);
   assert.match(html, /renderDashboardLiveFeed\(\);/);
-  assert.match(html, /var brand='your brand here',photo=PHO\(row\.l\),label=LBLL\(row\.l\)/);
-  assert.match(html, /var brandMark='<img src="brandmyitem-logo\.svg" alt="BrandMyItem logo">';/);
+  assert.match(html, /var brand='Your Brand Here',photo=PHO\(row\.l\),label=LBLL\(row\.l\)/);
+  assert.match(html, /var brandMark='<img src="'\+row\.c\.logo\+'" alt="Your Brand Here logo">';/);
   assert.doesNotMatch(html, /var brand=\(row\.c&&row\.c\.brand\|\|'A brand'\)\.trim\(\)/);
   assert.match(html, /<span class="home-activity-time">'\+ago\(row\.ts\)\+'<\/span>/);
   assert.doesNotMatch(html, /home-activity-time">— /);
   assert.match(html, /function postActivityRows\(\)/);
   assert.match(html, /\{kind:'post',listingId:l\.id,owner:name,label:LBLL\(l\),spots:l\.slots\}/);
-  assert.match(html, /\(DB\.activity\|\|\[\]\)\.forEach\(function\(a\)\{\s+if\(!a\.txt\)return;/);
+  assert.match(html, /brand:'Your Brand Here',\s*logo:FAKE_SPONSOR_LOGOS\[row\.logoIndex\]/);
+  assert.doesNotMatch(html, /DEMO_BIDDERS|upgradeDemoBidders|replaceAirPodsSecondDemoLogo/);
 });
 
 test('launch homepage keeps AirPods, MacBook, and iPhone examples locked', () => {
@@ -97,8 +98,11 @@ test('Live Items removes prelaunch tests and starts with the three locked exampl
   assert.match(html, /\.concat\(DB\.listings\.filter\(isLaunchLiveCampaign\)\)/);
 });
 
-test('funded AirPods example uses a clean second sponsor logo', () => {
-  assert.match(html, /listing\.claims\[1\]=\{\s*brand:'Figma',\s*link:'https:\/\/www\.figma\.com',\s*logo:'logos\/figma\.svg',\s*amt:249/);
+test('launch examples rotate through supplied fake sponsor logos', () => {
+  assert.match(html, /var FAKE_SPONSOR_LOGOS=\[[\s\S]*?'logos\/fake\/northloop\.svg'[\s\S]*?'logos\/fake\/veldt\.svg'[\s\S]*?\]/);
+  assert.match(html, /function fakeSponsorClaim\(logoIndex,amt,subId\)\{\s*return \{brand:'Your Brand Here',link:'',logo:FAKE_SPONSOR_LOGOS\[logoIndex%FAKE_SPONSOR_LOGOS\.length\]/);
+  assert.match(html, /demo6:\{[\s\S]*?fakeSponsorClaim\(0,300,'BMI-DEMO01'\)[\s\S]*?fakeSponsorClaim\(1,249,'BMI-DEMO02'\)/);
+  assert.doesNotMatch(html, /logos\/(?:nike|adidas|spotify|github|figma|strava|airbnb|shopify|notion|uber|reddit|dropbox|paypal|twitch)\.svg/);
   assert.match(html, /prices:\[300,249\]/);
 });
 
