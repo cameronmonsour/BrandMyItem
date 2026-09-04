@@ -116,13 +116,6 @@ export interface CampaignDraftInput {
   ownerName: string;
   /** @maxLength 320 */
   ownerEmail: string;
-  /**
-     * @minItems 1
-     * @maxItems 20
-     * @items.minimum 100
-     * @items.maximum 10000000
-     */
-  pricesCents: number[];
   ownerAssent: OwnerAssent;
   presentation: CampaignDraftInputPresentation;
 }

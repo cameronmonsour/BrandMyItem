@@ -162,11 +162,6 @@ export const createCampaignDraftBodyOwnerNameMax = 120;
 
 export const createCampaignDraftBodyOwnerEmailMax = 320;
 
-export const createCampaignDraftBodyPricesCentsItemMin = 100;
-export const createCampaignDraftBodyPricesCentsItemMax = 10000000;
-
-export const createCampaignDraftBodyPricesCentsMax = 20;
-
 
 
 export const CreateCampaignDraftBody = zod.object({
@@ -175,7 +170,6 @@ export const CreateCampaignDraftBody = zod.object({
   "title": zod.string().min(1).max(createCampaignDraftBodyTitleMax),
   "ownerName": zod.string().min(1).max(createCampaignDraftBodyOwnerNameMax),
   "ownerEmail": zod.email().max(createCampaignDraftBodyOwnerEmailMax),
-  "pricesCents": zod.array(zod.int().min(createCampaignDraftBodyPricesCentsItemMin).max(createCampaignDraftBodyPricesCentsItemMax)).min(1).max(createCampaignDraftBodyPricesCentsMax),
   "ownerAssent": zod.object({
   "accepted": zod.literal(true),
   "termsVersion": zod.string(),

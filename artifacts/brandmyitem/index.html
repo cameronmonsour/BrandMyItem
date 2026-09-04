@@ -1813,8 +1813,8 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
       <div class="tile" style="right:5%;top:19%;width:12vw;max-width:200px;aspect-ratio:1;animation-duration:9s;animation-delay:.3s" data-d="12"><img class="obj" data-item="golfbag" alt=""></div>
       <div class="tile" style="left:6%;bottom:20%;width:12vw;max-width:200px;aspect-ratio:5/6;animation-duration:8.6s;animation-delay:.9s" data-d="10"><img class="obj" data-item="case" alt=""></div>
       <div class="tile" style="left:23%;bottom:14%;width:8vw;max-width:135px;aspect-ratio:4/5;animation-duration:6.8s;animation-delay:1.5s" data-d="24"><img class="obj" data-item="bottle" alt=""></div>
-      <div class="tile" style="left:39%;bottom:10%;width:11vw;max-width:185px;aspect-ratio:3/2;animation-duration:7s;animation-delay:1.2s" data-d="26"><img class="obj" data-item="backpack" alt=""></div>
-      <div class="tile" style="left:58%;bottom:16%;width:10vw;max-width:170px;aspect-ratio:5/4;animation-duration:7.6s;animation-delay:.2s" data-d="18"><img class="obj" data-item="case" alt=""></div>
+      <div class="tile" style="left:39%;bottom:10%;width:9vw;max-width:150px;aspect-ratio:.72;animation-duration:7s;animation-delay:1.2s" data-d="26"><img class="obj" data-item="suit" alt=""></div>
+      <div class="tile" style="left:58%;bottom:16%;width:11vw;max-width:185px;aspect-ratio:3/2;animation-duration:7.6s;animation-delay:.2s" data-d="18"><img class="obj" data-item="weekender" alt=""></div>
       <div class="tile" style="right:6%;bottom:21%;width:10vw;max-width:170px;aspect-ratio:5/6;animation-duration:8.2s;animation-delay:1.8s" data-d="16"><img class="obj" data-item="paddle" alt=""></div>
       <div class="herocenter">
         <h1 class="sr-only">BrandMyItem</h1>
@@ -2385,7 +2385,8 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
             <label class="assent-row"><input type="checkbox" id="ownerAssent"><span>I&rsquo;m 18 or older and I agree to the <a href="legal.html#terms" target="_blank" rel="noopener">Terms of Use</a>, <a href="legal.html#content" target="_blank" rel="noopener">Content Standards</a>, and <a href="legal.html#checkins" target="_blank" rel="noopener">Check-in Policy</a>.</span></label>
             <p class="inline-error" id="assentError" role="alert" hidden>Agree to the owner terms before posting.</p>
             <p class="inline-error" id="sizingError" role="alert" hidden></p>
-           <button class="btn btn-primary btn-full btn-lg" id="postBtn" disabled>Post my item live</button>
+            <button class="btn btn-primary btn-full btn-lg" id="postBtn" disabled>Post my item live</button>
+            <p class="inline-error" id="postError" role="alert" hidden></p>
         </div></div>
       </div>
     </div>
@@ -9416,7 +9417,7 @@ function uniformFaceTileSizes(faces){
 function cuSaveFace(){
   if(!CU.tiles.length){toast('Add boxes or trace this angle first');return false}
   if(!CU.sizingComplete)CU.prices=boxPrices();
-  var saved={photo:CU.photo,tiles:CU.tiles.map(copyTileForFace),cells:CU.tiles.length,prices:CU.prices.slice()};
+  var saved={photo:CU.photo,tiles:CU.tiles.map(copyTileForFace),cells:CU.tiles.length};
   if(CU.faces.length){
     var reference=CU.faces[0].tiles||[];
     saved.tiles.forEach(function(tile,i){
@@ -10310,6 +10311,7 @@ function validatePostingForm(){
   return !first;
 }
 async function postListing(){
+  setInlineError('postError','',false);
   var name=document.getElementById('pName').value.trim();
   var mail=document.getElementById('pMail').value.trim();
   var a=postingAddress();
@@ -10366,10 +10368,9 @@ async function postListing(){
     }
     var mdl=(document.getElementById('tModel')||{value:''}).value.trim();
     l={id:uid(),type:'custom',sourceType:CU.template||null,custom:true,photo:CU.faces[0].photo,faces:facesOut,tiles:CU.faces[0].tiles,
-      retail:retail,itemName:(CU.template&&ITEMS[CU.template]?ITEMS[CU.template].label:(mdl||'Item')),title:mdl||null,owner:name,mail:mail,avatar:B.avatar,habs:B.habs.slice(),cities:B.cities.slice(),universities:B.universities.slice(),purpose:purpose,freq:B.freq,social:B.social,color:B.color,socialLinks:Object.assign({},B.socialLinks),slots:flatTiles.length,
+      retail:retail,itemName:(CU.template&&ITEMS[CU.template]?ITEMS[CU.template].label:(mdl||'Item')),title:mdl||undefined,owner:name,mail:mail,avatar:B.avatar,habs:B.habs.slice(),cities:B.cities.slice(),universities:B.universities.slice(),purpose:purpose,freq:B.freq,social:B.social,color:B.color,socialLinks:Object.assign({},B.socialLinks),slots:flatTiles.length,
       prices:prices,pricesIncludeMarkup:true,claims:prices.map(function(){return null}),created:Date.now(),postedAt:Date.now(),unsoldTimeoutDays:60,
        termMonths:selectedTerm,checkinFrequency:B.checkinFrequency||'monthly',termLocked:true,termLockedAt:Date.now(),brandingMode:selectedBranding,status:'live',shipping:{name:name,address:address}};
-    CU.faces=[];cuFaceChips();
   }else{
     var standardRetail=variantRetail(B.type,B.variantSize),standardGoal=markedUpRetail(standardRetail);
     var standardPrices=B.prices.slice(),standardTotal=standardPrices.reduce(function(a,b){return a+b},0);
@@ -10393,7 +10394,6 @@ async function postListing(){
         title:LBLL(l),
         ownerName:l.owner,
         ownerEmail:l.mail,
-        pricesCents:l.prices.map(function(price){return Math.round(spotPurchaseTotal(l,price)*100)}),
          ownerAssent:{accepted:true,termsVersion:'2026-09-04',contentVersion:'2026-09-04',checkinVersion:'2026-09-04'},
         presentation:presentation
       })
@@ -10416,8 +10416,11 @@ async function postListing(){
     registeredCampaign.ownerEmail=l.mail;
     l=campaignFromApi(registeredCampaign);
     l.shipping={name:savedShipping.recipientName,address:savedShipping.line1,city:savedShipping.city,state:savedShipping.state,postal:savedShipping.postalCode,country:savedShipping.country,validatedAt:savedShipping.validatedAt};
+    CU.faces=[];cuFaceChips();
   }catch(error){
-    toast(error&&error.message?error.message:'Could not publish this item. Please try again.');
+     var message=error&&error.message?error.message:'Could not publish this item. Please try again.';
+     setInlineError('postError',message,true);
+     toast(message);
     return;
   }
   DB.listings.unshift(l);

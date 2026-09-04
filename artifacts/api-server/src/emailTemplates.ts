@@ -146,3 +146,22 @@ export function trackingMagicLinkEmail(input: {
     ),
   };
 }
+
+export function ownerCampaignConfirmationEmail(input: {
+  email: string;
+  itemDisplayName: string;
+  campaignId: string;
+  totalCents: number;
+}): TransactionalEmail {
+  const itemDisplayName = escapeHtml(input.itemDisplayName);
+  const total = `$${(input.totalCents / 100).toFixed(2)}`;
+  return {
+    to: input.email,
+    subject: "Your BrandMyItem listing is live",
+    text: `Your ${input.itemDisplayName} listing is live. Its campaign total is ${total}. Listing ID: ${input.campaignId}.`,
+    html: wrap(
+      "Your listing is live",
+      `Your ${itemDisplayName} listing is live. Its campaign total is ${total}. Listing ID: ${escapeHtml(input.campaignId)}.`,
+    ),
+  };
+}

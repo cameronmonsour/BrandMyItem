@@ -15,6 +15,10 @@ import { accessTokenMatches, createAccessToken, hashAccessToken, readAccessToken
 import { createImageUploadURL, objectPathFromUploadUrl, verifyUploadIntentObject } from "../lib/objectStorage.ts";
 import { hashUploadCapability, toPublicUploadIntent, uploadCapabilityMatches } from "../lib/uploadIntents.ts";
 import { isSafeCampaignPresentation } from "../lib/campaignPresentation.ts";
+import { computeCampaignPricesCents } from "../lib/campaignPricing.ts";
+import { logger } from "../lib/logger.ts";
+import { ownerCampaignConfirmationEmail } from "../emailTemplates.ts";
+import { sendTransactionalEmail } from "../emailDelivery.ts";
 
 const router: IRouter = Router();
 const DRAFT_TTL = 24 * 60 * 60 * 1000;
@@ -29,17 +33,34 @@ async function ownerDraft(req: Request, campaignId: string) {
 
 router.post("/campaign-drafts", async (req, res): Promise<void> => {
   const parsed = CreateCampaignDraftBody.safeParse(req.body);
-  if (!parsed.success || parsed.data.id.startsWith("demo") || !isSafeCampaignPresentation(parsed.data.presentation)) {
+  const presentationSafe = parsed.success && isSafeCampaignPresentation(parsed.data.presentation);
+  const testIdentity = parsed.success && [parsed.data.id, parsed.data.itemType, parsed.data.title, parsed.data.ownerName]
+    .some((value) => /\btest\b/i.test(value));
+  if (!parsed.success || !presentationSafe || testIdentity) {
+    req.log.warn({
+      issues: parsed.success
+        ? [{ path: ["presentation"], message: presentationSafe ? "automated test campaign identities cannot be published" : "unsafe campaign presentation" }]
+        : parsed.error.issues.map((issue) => ({ path: issue.path, message: issue.message })),
+      bodyKeys: req.body && typeof req.body === "object" ? Object.keys(req.body) : [],
+    }, "Invalid campaign draft validation");
     res.status(400).json({ error: "Invalid campaign draft" }); return;
   }
   const input = parsed.data;
+  let pricesCents: number[];
+  try {
+    pricesCents = computeCampaignPricesCents(input.presentation);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "invalid sized placement areas";
+    req.log.warn({ issues: [{ path: ["presentation"], message }] }, "Invalid campaign draft validation");
+    res.status(400).json({ error: "Invalid campaign draft" }); return;
+  }
   const now = new Date();
   const expiresAt = new Date(now.getTime() + DRAFT_TTL);
-  const w9Required = input.pricesCents.reduce((total, value) => total + value, 0) >= 200000;
+  const w9Required = pricesCents.reduce((total, value) => total + value, 0) >= 200000;
   const token = createAccessToken();
   try {
     await db.insert(campaignsTable).values({
-      ...input, ownerAccessTokenHash: hashAccessToken(token), ownerAssentAt: now, ownerAssentIp: req.ip,
+      ...input, pricesCents, ownerAccessTokenHash: hashAccessToken(token), ownerAssentAt: now, ownerAssentIp: req.ip,
       ownerTermsVersion: input.ownerAssent.termsVersion, ownerContentVersion: input.ownerAssent.contentVersion,
       ownerCheckinVersion: input.ownerAssent.checkinVersion, active: false, lifecycleStatus: "draft",
       publishedAt: null, expiresAt, w9Required, w9Status: w9Required ? "required" : "not_required",
@@ -133,6 +154,16 @@ router.post("/campaign-drafts/:campaignId/publish", async (req, res): Promise<vo
     throw error;
   });
   if (!published) { res.status(409).json({ error: "Draft or W-9 intent is no longer valid" }); return; }
+  try {
+    await sendTransactionalEmail(ownerCampaignConfirmationEmail({
+      email: published.ownerEmail ?? "",
+      itemDisplayName: published.title,
+      campaignId: published.id,
+      totalCents: published.pricesCents.reduce((sum, cents) => sum + cents, 0),
+    }));
+  } catch (error) {
+    logger.warn({ err: error, campaignId: published.id }, "Owner confirmation email delivery failed");
+  }
   const { ownerEmail: _email, ownerAccessTokenHash: _hash, ...safe } = published;
   res.json(PublishCampaignDraftResponse.parse({ ...safe, claims: [], relistEligible: false }));
 });

@@ -3,6 +3,7 @@ import test from "node:test";
 import {
   campaignItemDisplayName,
   contactSupportEmail,
+  ownerCampaignConfirmationEmail,
   reservationConfirmationEmail,
   trackingMagicLinkEmail,
 } from "./emailTemplates.ts";
@@ -36,6 +37,19 @@ test("tracking magic link email contains the one-time URL and expiry", () => {
   assert.match(email.text, /expires in 15 minutes/);
   assert.match(email.text, /tracking_token=token-value/);
   assert.match(email.html, /href="https:\/\/brandmyitem\.com\/\?tracking_token=token-value"/);
+});
+
+test("owner confirmation email includes the listing total and ID", () => {
+  const email = ownerCampaignConfirmationEmail({
+    email: "owner@example.com",
+    itemDisplayName: "MacBook Pro 14",
+    campaignId: "owner-listing-123",
+    totalCents: 223900,
+  });
+  assert.equal(email.to, "owner@example.com");
+  assert.match(email.text, /listing is live/);
+  assert.match(email.text, /\$2239\.00/);
+  assert.match(email.text, /owner-listing-123/);
 });
 
 test("contact support email targets support and escapes submitted HTML", () => {
