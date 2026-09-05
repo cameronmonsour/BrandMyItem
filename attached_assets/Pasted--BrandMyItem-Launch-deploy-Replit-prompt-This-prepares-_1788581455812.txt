@@ -1,0 +1,84 @@
+# BrandMyItem — Launch & deploy (Replit prompt)
+
+This prepares the app for production on brandmyitem.com. Do every step, in order. Steps marked **OWNER** need Cameron to do something outside the code (Stripe dashboard, Porkbun, Publishing UI) — stop and tell him exactly what to do, then continue when he confirms. Never put a live key in code or in a chat message; secrets go in Replit Secrets only.
+
+---
+
+## 1. Data wipe (dev database and any store the published app will use)
+
+1.1 Delete every listing and its reservations, drafts, check-ins, reports, and uploaded objects where any of the following is true: id in (djr99kx, rdgsm8x); ownerEmail in (cameronmonsour@gmail.com, cam@irli.io); brandName matches /audit|fund test|repro|brand two|northwind|acme|launch browser/i; `test = true`; created before today.
+1.2 Delete the associated Stripe test-mode records the app references (customers/setup intents) — test mode only; never touch live mode.
+1.3 Delete the object-storage uploads that belonged to deleted rows (logos, W-9s, check-in photos, police reports).
+1.4 Verify: `GET /api/campaigns` → `[]`; `GET /api/campaigns?demo=1` → `[]`; admin queue empty; ticker shows the empty state; Track for cameronmonsour@gmail.com returns "0 tracking records."
+1.5 Remove the `?demo=1` code path and the `LOCKED_LAUNCH_EXAMPLE_IDS` list entirely. Production has no demo listings.
+
+## 2. Repo hygiene
+
+2.1 Fix the last layout item: Home listing cards render "1K–10K followers followers" — the value already contains the word; stop appending it (the listing page is already correct).
+2.2 Remove the `fix_*.js`, `patch_*.mjs`, `update_*.js` one-off scripts from the repo root and the `attached_assets/` folder from the build. Keep `verification/` and `docs/`.
+2.3 Confirm `grep -r "sk_live\|sk_test\|re_[A-Za-z0-9]\{20\}\|pk_live\|pk_test" --include=*.ts --include=*.js --include=*.html --include=*.json .` returns nothing outside `node_modules`.
+2.4 Production build: `pnpm run build` passes; `NODE_ENV=production` serves no Vite overlay, no source maps, no dev banner.
+2.5 Commit and push to GitHub (`git push subrepl-3rnulstr main`).
+
+## 3. Environment and secrets
+
+3.1 Read every secret from `process.env` only. On boot, log which of these are present (name only, never the value) and refuse to start in production if any is missing: `STRIPE_SECRET_KEY`, `STRIPE_PUBLISHABLE_KEY`, `STRIPE_WEBHOOK_SECRET`, `RESEND_API_KEY`, `RESEND_FROM`, `ADMIN_EMAIL`, `SESSION_SECRET`, `DATABASE_URL`, `PUBLIC_BASE_URL`.
+3.2 `PUBLIC_BASE_URL=https://brandmyitem.com` in Deployment secrets; every absolute URL the app builds (magic links, Stripe success/cancel URLs, email links, OG image, sitemap) derives from it. No hard-coded replit.dev or replit.app hosts anywhere.
+3.3 Production guard: if `STRIPE_SECRET_KEY` starts with `sk_test_` while `PUBLIC_BASE_URL` is brandmyitem.com, log a loud warning on boot and show `stripeMode: "test"` in `/api/health` (already does) — do not block, Cameron may want a test-mode smoke run first.
+3.4 **OWNER — Deployment secrets** (Publishing → Deployment secrets), values from the Stripe live dashboard and Resend:
+- `STRIPE_SECRET_KEY` = live `sk_live_…` (create a new restricted-scope live key named "brandmyitem-prod")
+- `STRIPE_PUBLISHABLE_KEY` = live `pk_live_…`
+- `STRIPE_WEBHOOK_SECRET` = from step 4.2
+- `RESEND_API_KEY` = production key (Resend → API Keys → "brandmyitem-prod", sending access, domain mail.brandmyitem.com)
+- `RESEND_FROM` = `BrandMyItem <hello@mail.brandmyitem.com>`
+- `ADMIN_EMAIL` = `cameronmonsour@gmail.com`
+- `SESSION_SECRET` = a new 64-char random value (generate with `openssl rand -hex 32`; do not reuse the dev value)
+- `PUBLIC_BASE_URL` = `https://brandmyitem.com`
+- `ADMIN_SWEEP_ENABLED` = `false` (run-sweeps endpoint disabled in production; the hourly job runs on its own)
+
+## 4. Stripe production
+
+4.1 The Checkout session must use `mode: "setup"`, `payment_method_types: ["card"]`, `success_url` and `cancel_url` built from `PUBLIC_BASE_URL`, and metadata `{campaignId, spotIndex, draftId}`.
+4.2 **OWNER — live webhook:** Stripe dashboard (live mode) → Developers → Webhooks → Add endpoint → `https://brandmyitem.com/api/stripe/webhook` → events: `checkout.session.completed`, `setup_intent.succeeded`, `payment_intent.succeeded`, `payment_intent.payment_failed`, `charge.refunded`. Copy the signing secret into `STRIPE_WEBHOOK_SECRET`.
+4.3 Webhook handler verifies the signature with `STRIPE_WEBHOOK_SECRET`, is idempotent on event id, and returns 200 within 5 s (do slow work after responding).
+4.4 **OWNER:** Stripe live → Settings → Payment methods → Link **off**. Confirm business profile, statement descriptor "BRANDMYITEM", and payout bank account are complete.
+
+## 5. Email production
+
+5.1 All templates send from `RESEND_FROM`, Reply-To `support@brandmyitem.com`, links built from `PUBLIC_BASE_URL`.
+5.2 **OWNER — Porkbun email forwarding:** Domain Management → brandmyitem.com → Email Forwarding: `support@`, `legal@`, `privacy@` → cameronmonsour@gmail.com. (The root MX to fwd1/fwd2.porkbun.com already exists.)
+
+## 6. Publishing configuration
+
+6.1 **OWNER — Publishing page:** deployment type **Autoscale**; "Enable analytics" **off**; "Enable app uptime email notifications" **on**; sharing **Public**.
+6.2 Build command and run command set for the production build (`pnpm run build`, then start the API serving the built client). Health check path `/api/health`.
+6.3 **OWNER — Add a domain:** `brandmyitem.com` and `www.brandmyitem.com`. Replit will show an A/TXT (or CNAME) record set.
+6.4 **OWNER — Porkbun DNS:** delete `ALIAS @ → uixie.porkbun.com` and `CNAME * → uixie.porkbun.com`; add the records Replit provides for `@` and `www`. Do NOT touch any `mail.*`, `_dmarc.mail`, `resend._domainkey.mail`, MX, or `_acme-challenge` records.
+6.5 Server: redirect `http://` → `https://` and `www` → apex; HSTS header; `X-Content-Type-Options: nosniff`; `Referrer-Policy: strict-origin-when-cross-origin`.
+6.6 `sitemap.xml` and `robots.txt` reference `https://brandmyitem.com`; `og:image` absolute `https://brandmyitem.com/og-default.png`.
+
+## 7. Scheduled job in production
+
+7.1 The hourly sweep runs via the deployment's scheduler (Replit Scheduled Deployment or an in-process cron), not via the admin endpoint. It must run at most once per hour, be idempotent, and log a one-line summary per run to the app log.
+7.2 Startup test-record cleanup: enabled, `test = true` rows only, hard cap 20, log every deletion.
+
+## 8. Publish
+
+8.1 **OWNER:** press **Publish**. Wait for the deployment to report healthy.
+
+## 9. Post-deploy verification (execute against https://brandmyitem.com, attach outputs)
+
+- [ ] `GET https://brandmyitem.com/api/health` → `{"ok":true,"stripeMode":"live","resend":true}`.
+- [ ] `curl -I http://brandmyitem.com` → 301 to https; `curl -I https://www.brandmyitem.com` → 301 to apex; HSTS header present.
+- [ ] `curl -I https://brandmyitem.com/no-such-page` → 404 with the branded page.
+- [ ] `GET /api/campaigns` → `[]`.
+- [ ] `https://brandmyitem.com/og-default.png` → 200 image/png; `sitemap.xml` and `robots.txt` → 200 with production URLs.
+- [ ] Legal, Contact, Accessibility pages render; footer shows IRLi LLC, legal@/privacy@, Avatars credit, "Not funded? Never charged."
+- [ ] Admin magic link to cameronmonsour@gmail.com arrives from hello@mail.brandmyitem.com (Inbox, not Spam) and signs in at `/admin`.
+- [ ] Owner flow smoke test with Cameron's own address on a throwaway listing (a $45 tumbler): post → "listing is live" email arrives → listing visible → delete it from admin afterwards.
+- [ ] Brand flow smoke test on that listing with Cameron's real card: Reserve → live Stripe Checkout (setup mode, no amount, `cs_live_`) → return → confirmation modal with RESERVATION ID → confirmation email → **Cancel reservation** → spot reopens → Stripe live dashboard shows the SetupIntent and **no** charge. Then delete the listing.
+- [ ] Webhook: Stripe dashboard shows the `checkout.session.completed` event delivered with 200.
+- [ ] Lighthouse (mobile) on Home: Performance ≥ 90, Accessibility ≥ 95, no third-party font requests.
+- [ ] Uptime monitor shows the site up; deployment logs show "Stripe mode: live", "Resend: configured", and the first hourly sweep summary.
+
+Report every checkbox with evidence. Do not mark anything done from reading code.
