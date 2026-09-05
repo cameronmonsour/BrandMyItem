@@ -224,3 +224,17 @@ mtime_ms = 1788574428893
 storage_uri = "gcs://replit-rams-assets-riker/rams/assets/repl:3f7c2cc8-f08b-4158-944b-09fd3b52c7cc/c0a82b6a-f40f-4a37-9ed4-be4963efee13/aa5d727d-4a0b-420c-9e12-45785b4b8fe2"
 storage_version_token = "1788574520981157"
 content_type = "image/jpeg"
+
+[[outputs]]
+id = "il_ZHgCr_Fr9MyV6LKsuR"
+uri = "file://verification/payment-pending-listing-full.jpg"
+type = "image"
+title = "Payment pending listing verification"
+description = "Desktop verification showing Spot 2 labeled Payment pending instead of Reserved."
+logical_id = "113937cc-9954-46bf-a17b-d8097e2c516e"
+content_hash = "sha256:638bcd37dc1afda6d92c0c93edd5b12179848f2b524fda54d4c4ac285caffd4c"
+size = 156978
+mtime_ms = 1788574979653
+storage_uri = "gcs://replit-rams-assets-riker/rams/assets/repl:3f7c2cc8-f08b-4158-944b-09fd3b52c7cc/113937cc-9954-46bf-a17b-d8097e2c516e/7ac9a405-392a-47b2-9fa3-4ff529e8014f"
+storage_version_token = "1788575060310272"
+content_type = "image/jpeg"

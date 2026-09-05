@@ -4,6 +4,7 @@ import {
   campaignItemDisplayName,
   contactSupportEmail,
   ownerCampaignConfirmationEmail,
+  paymentDeclinedEmail,
   reservationConfirmationEmail,
   trackingMagicLinkEmail,
 } from "./emailTemplates.ts";
@@ -50,6 +51,17 @@ test("owner confirmation email includes the listing total and ID", () => {
   assert.match(email.text, /listing is live/);
   assert.match(email.text, /\$2239\.00/);
   assert.match(email.text, /owner-listing-123/);
+});
+
+test("payment decline email deep-links to the reservation card-update flow", () => {
+  const email = paymentDeclinedEmail({
+    email: "brand@example.com",
+    reservationId: "BMI-775ACF",
+    updateCardUrl: "https://brandmyitem.com/?update_card=BMI-775ACF&token=capability-token",
+  });
+
+  assert.match(email.text, /update_card=BMI-775ACF&token=capability-token/);
+  assert.match(email.html, /href="https:\/\/brandmyitem\.com\/\?update_card=BMI-775ACF&token=capability-token"/);
 });
 
 test("contact support email targets support and escapes submitted HTML", () => {
