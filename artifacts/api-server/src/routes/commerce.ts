@@ -418,10 +418,14 @@ router.get("/tracking", async (req, res): Promise<void> => {
       campaigns: campaigns.map((campaign) => ({
         id: campaign.id,
         itemType: campaign.itemType,
-        title: campaign.title,
+         title: campaignItemDisplayName(campaign),
         ownerName: campaign.ownerName,
         pricesCents: campaign.pricesCents,
         active: campaign.active,
+         lifecycleStatus: campaign.lifecycleStatus,
+         deliveredAt: campaign.deliveredAt,
+         checkinDueAt: campaign.checkinDueAt,
+         checkinStatus: campaign.checkinStatus,
         ownerMatch: ownerIdSet.has(campaign.id),
         createdAt: campaign.createdAt,
         orders: Array.from(

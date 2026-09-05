@@ -107,8 +107,7 @@ export const RegisterCampaignResponse = zod.object({
   "logoObjectPath": zod.string().nullish(),
   "amountCents": zod.int(),
   "reservedAt": zod.coerce.date(),
-  "status": zod.enum(['reserved', 'funding', 'payment_failed', 'funded']),
-  "paymentFailureExpiresAt": zod.coerce.date().nullish()
+  "status": zod.enum(['reserved', 'funding', 'payment_failed', 'funded'])
 }),zod.null()])),
   "active": zod.boolean(),
   "lifecycleStatus": zod.enum(['live', 'funding', 'funded', 'ordered', 'branded', 'shipped', 'active', 'complete', 'expired']),
@@ -138,8 +137,7 @@ export const ListCampaignsResponseItem = zod.object({
   "logoObjectPath": zod.string().nullish(),
   "amountCents": zod.int(),
   "reservedAt": zod.coerce.date(),
-  "status": zod.enum(['reserved', 'funding', 'payment_failed', 'funded']),
-  "paymentFailureExpiresAt": zod.coerce.date().nullish()
+  "status": zod.enum(['reserved', 'funding', 'payment_failed', 'funded'])
 }),zod.null()])),
   "active": zod.boolean(),
   "lifecycleStatus": zod.enum(['live', 'funding', 'funded', 'ordered', 'branded', 'shipped', 'active', 'complete', 'expired']),
@@ -536,6 +534,10 @@ export const GetTrackingResponse = zod.object({
   "ownerName": zod.string(),
   "pricesCents": zod.array(zod.int()),
   "active": zod.boolean(),
+  "lifecycleStatus": zod.enum(['live', 'funding', 'funded', 'ordered', 'branded', 'shipped', 'active', 'complete', 'expired']).optional(),
+  "deliveredAt": zod.coerce.date().nullish(),
+  "checkinDueAt": zod.coerce.date().nullish(),
+  "checkinStatus": zod.string().optional(),
   "ownerMatch": zod.boolean(),
   "createdAt": zod.coerce.date(),
   "orders": zod.array(zod.object({
@@ -548,8 +550,7 @@ export const GetTrackingResponse = zod.object({
   "destinationUrl": zod.string().nullish(),
   "logoObjectPath": zod.string().nullish(),
   "status": zod.enum(['pending', 'reserved', 'funding', 'payment_failed', 'funded', 'cancelled', 'released', 'expired']),
-  "createdAt": zod.coerce.date(),
-  "paymentFailureExpiresAt": zod.coerce.date().nullish()
+  "createdAt": zod.coerce.date()
 }))
 }))
 })
@@ -884,6 +885,99 @@ export const SelectCampaignMakeGoodBody = zod.object({
 })
 
 export const SelectCampaignMakeGoodResponse = zod.unknown()
+
+
+/**
+ * @summary Issue an owner-bound police report upload intent
+ */
+export const requestCampaignConditionReportUploadPathCampaignIdMax = 100;
+
+
+
+export const RequestCampaignConditionReportUploadParams = zod.object({
+  "campaignId": zod.coerce.string().min(1).max(requestCampaignConditionReportUploadPathCampaignIdMax)
+})
+
+export const requestCampaignConditionReportUploadBodyNameMax = 255;
+
+export const requestCampaignConditionReportUploadBodySizeMax = 10000000;
+
+
+
+export const RequestCampaignConditionReportUploadBody = zod.object({
+  "name": zod.string().min(1).max(requestCampaignConditionReportUploadBodyNameMax),
+  "size": zod.int().min(1).max(requestCampaignConditionReportUploadBodySizeMax),
+  "contentType": zod.enum(['image/png', 'image/jpeg', 'image/webp', 'application/pdf'])
+})
+
+export const requestCampaignConditionReportUploadResponseObjectPathRegExp = new RegExp('^/objects/uploads/[A-Za-z0-9-]+$');
+
+
+export const RequestCampaignConditionReportUploadResponse = zod.object({
+  "id": zod.string(),
+  "purpose": zod.literal("owner_police_report"),
+  "objectPath": zod.string().regex(requestCampaignConditionReportUploadResponseObjectPathRegExp),
+  "expectedMimeType": zod.enum(['image/png', 'image/jpeg', 'image/webp', 'application/pdf']),
+  "expectedSizeBytes": zod.int(),
+  "expectedFileName": zod.string(),
+  "status": zod.enum(['issued', 'finalized', 'consumed', 'revoked']),
+  "expiresAt": zod.coerce.date(),
+  "uploadURL": zod.url().optional()
+})
+
+
+/**
+ * @summary Finalize an owner police report upload once
+ */
+export const finalizeCampaignConditionReportUploadPathCampaignIdMax = 100;
+
+
+
+
+export const FinalizeCampaignConditionReportUploadParams = zod.object({
+  "campaignId": zod.coerce.string().min(1).max(finalizeCampaignConditionReportUploadPathCampaignIdMax),
+  "intentId": zod.coerce.string().min(1)
+})
+
+export const finalizeCampaignConditionReportUploadResponseObjectPathRegExp = new RegExp('^/objects/uploads/[A-Za-z0-9-]+$');
+
+
+export const FinalizeCampaignConditionReportUploadResponse = zod.object({
+  "id": zod.string(),
+  "purpose": zod.literal("owner_police_report"),
+  "objectPath": zod.string().regex(finalizeCampaignConditionReportUploadResponseObjectPathRegExp),
+  "expectedMimeType": zod.enum(['image/png', 'image/jpeg', 'image/webp', 'application/pdf']),
+  "expectedSizeBytes": zod.int(),
+  "expectedFileName": zod.string(),
+  "status": zod.enum(['issued', 'finalized', 'consumed', 'revoked']),
+  "expiresAt": zod.coerce.date(),
+  "uploadURL": zod.url().optional()
+})
+
+
+/**
+ * @summary Report wear or theft/loss for an owned item
+ */
+export const submitCampaignConditionReportPathCampaignIdMax = 100;
+
+
+
+export const SubmitCampaignConditionReportParams = zod.object({
+  "campaignId": zod.coerce.string().min(1).max(submitCampaignConditionReportPathCampaignIdMax)
+})
+
+export const submitCampaignConditionReportBodyNoteMax = 2000;
+
+
+
+
+export const SubmitCampaignConditionReportBody = zod.object({
+  "type": zod.enum(['wear', 'theft_loss']),
+  "note": zod.string().max(submitCampaignConditionReportBodyNoteMax).optional(),
+  "policeReportIntentId": zod.string().min(1).optional()
+})
+
+export const SubmitCampaignConditionReportResponse = zod.void()
 
 
 /**

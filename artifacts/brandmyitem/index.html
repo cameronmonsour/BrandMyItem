@@ -7073,6 +7073,18 @@ async function requestFinalizedUpload(requestUrl,finalizeUrl,file,headers){
   var finalized=await fetch(finalizeUrl(upload.id),{method:'POST',headers:headers||{}});
   return apiResponse(finalized,'Upload verification failed.');
 }
+async function stripPhotoMetadata(file){
+  if(!file||!/^image\/(jpeg|png|webp)$/i.test(file.type))return file;
+  try{
+    var url=URL.createObjectURL(file),img=new Image();
+    await new Promise(function(resolve,reject){img.onload=resolve;img.onerror=reject;img.src=url});
+    var canvas=document.createElement('canvas'),scale=Math.min(1,2400/Math.max(img.naturalWidth,img.naturalHeight));
+    canvas.width=Math.max(1,Math.round(img.naturalWidth*scale));canvas.height=Math.max(1,Math.round(img.naturalHeight*scale));
+    canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);URL.revokeObjectURL(url);
+    var blob=await new Promise(function(resolve){canvas.toBlob(resolve,'image/jpeg',.92)});
+    return blob?new File([blob],(file.name||'check-in-photo').replace(/\.[^.]+$/i,'.jpg'),{type:'image/jpeg',lastModified:Date.now()}):file;
+  }catch(error){return file}
+}
 async function uploadImageAsset(source,name){
   if(String(source||'').indexOf('/api/storage/objects/')===0)return String(source).slice('/api/storage'.length);
   if(!source||(!String(source).startsWith('data:')&&!String(source).startsWith('blob:')))return source;
@@ -7274,21 +7286,22 @@ function endOf(l){return (l.postedAt||l.created)+((l.unsoldTimeoutDays||AUCTION_
 function checkinStatus(l){
   var shipped=l&&l.shippedAt,checkins=(l&&l.checkins)||[],submitted=checkins.length,now=Date.now(),month=30*86400000;
   if(!shipped)return {expected:0,missed:0,overdue:false,nonCompliant:!!(l&&l.nonCompliant),firstDueAt:null,firstOverdue:false};
-  var firstDueAt=shipped+month;
+  var firstDueAt=l&&l.deliveredAt?new Date(l.deliveredAt).getTime()+7*86400000:shipped+month;
   var expected=0;
   if(submitted){
     expected=Math.min(termOf(l),1+Math.max(0,Math.floor((now-checkins[0].date)/month)));
   }else if(now>=firstDueAt){
     expected=Math.min(termOf(l),1+Math.max(0,Math.floor((now-firstDueAt)/month)));
   }
-  var missed=Math.max(0,expected-submitted);
-  return {expected:expected,missed:missed,overdue:missed>=1&&missed<2,nonCompliant:missed>=2||!!(l&&l.nonCompliant),firstDueAt:firstDueAt,firstOverdue:submitted===0&&now>=firstDueAt};
+  var missed=Math.max(0,expected-submitted),grace=2*86400000;
+  var firstOverdue=submitted===0&&now>=firstDueAt&&now<firstDueAt+grace;
+  if(submitted===0&&now>=firstDueAt+grace)missed=Math.max(1,missed);
+  return {expected:expected,missed:missed,overdue:firstOverdue||missed>=1&&missed<2,nonCompliant:missed>=2||!!(l&&l.nonCompliant),firstDueAt:firstDueAt,firstOverdue:firstOverdue};
 }
 function ownerCheckinIsDue(l){
   if(isDemoListing(l))return true;
-  if(l&&['due','reminded'].indexOf(l.checkinStatus)>=0)return true;
-  if(l&&l.lifecycleStatus==='active'&&l.checkinStatus!=='submitted')return true;
-  var checkins=l&&l.checkins||[],base=checkins.length?checkins[checkins.length-1].date:l&&l.shippedAt;
+  if(l&&['due','reminded'].indexOf(l.checkinStatus)>=0)return !!l.checkinDueAt&&Date.now()>=new Date(l.checkinDueAt).getTime();
+  var checkins=l&&l.checkins||[],base=checkins.length?checkins[checkins.length-1].date:l&&l.deliveredAt;
   return !!base&&Date.now()>=base+30*86400000;
 }
 async function submitOwnerCheckin(file,note){
@@ -7303,11 +7316,34 @@ async function submitOwnerCheckin(file,note){
   }
   var body={note:note};
   if(file){
+    file=await stripPhotoMetadata(file);
     var uploaded=await requestFinalizedUpload('/api/campaigns/'+encodeURIComponent(CUR.id)+'/checkins/photo/request-url',function(intentId){return '/api/campaigns/'+encodeURIComponent(CUR.id)+'/checkins/photo/'+encodeURIComponent(intentId)+'/finalize'},file);
     body.photoIntentId=uploaded.id;
   }
   var response=await fetch('/api/campaigns/'+encodeURIComponent(CUR.id)+'/checkins',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
   return apiResponse(response,'Check-in could not be submitted.');
+}
+async function submitConditionReport(type){
+  var statusEl=document.getElementById('conditionReportStatus'),noteEl=document.getElementById('conditionReportNote'),fileEl=document.getElementById(type==='wear'?'wearPhotoInput':'policeReportInput');
+  if(!CUR||!statusEl)return;
+  var note=noteEl?noteEl.value.trim():'',intentId='';
+  if(type==='wear'||type==='theft_loss'){
+    if(!fileEl||!fileEl.files||!fileEl.files[0]){statusEl.textContent='Upload the police report before submitting a theft or loss report.';statusEl.style.color='#B23327';return}
+    try{
+      statusEl.textContent='Uploading evidence…';statusEl.style.color='#6e6e73';
+      var reportFile=type==='wear'?await stripPhotoMetadata(fileEl.files[0]):fileEl.files[0];
+      var report=await requestFinalizedUpload('/api/campaigns/'+encodeURIComponent(CUR.id)+'/condition-report/photo/request-url',function(id){return '/api/campaigns/'+encodeURIComponent(CUR.id)+'/condition-report/photo/'+encodeURIComponent(id)+'/finalize'},reportFile);
+      intentId=report.id;
+    }catch(error){statusEl.textContent=error&&error.message?error.message:'Police report upload failed.';statusEl.style.color='#B23327';return}
+  }
+  try{
+    var spots=Array.prototype.map.call(document.querySelectorAll('[data-condition-spot]:checked'),function(el){return Number(el.value)});
+    var reportNumber=(document.getElementById('policeReportNumber')||{}).value||'';
+    var response=await fetch('/api/campaigns/'+encodeURIComponent(CUR.id)+'/condition-report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:type,note:note,policeReportIntentId:intentId||undefined,spots:spots,reportNumber:reportNumber.trim()})});
+    var result=await apiResponse(response,'Condition report could not be saved.');
+    if(type==='theft_loss')CUR.makeGoodStatus='pending';
+    saveDB();statusEl.style.color='#1F7A44';statusEl.textContent=type==='wear'?'Wear report saved.':'Theft or loss report submitted for review.';
+  }catch(error){statusEl.style.color='#B23327';statusEl.textContent=error&&error.message?error.message:'Condition report could not be saved.'}
 }
 async function selectOwnerMakeGood(selection){
   var statusEl=document.getElementById('makeGoodStatus');
@@ -8423,6 +8459,7 @@ if(!location.hash||location.hash==='#')location.hash=new URLSearchParams(locatio
 var homeMode='auction',homeType=null;
 function featured(){return DB.listings.filter(isLaunchLiveCampaign).slice().sort(function(a,b){return raisedOf(b)-raisedOf(a)})[0]}
 function featuredOf(type){
+  type=type&&ITEMS[type]?type:Object.keys(ITEMS)[0];
   var of=DB.listings.filter(function(l){return isLaunchLiveCampaign(l)&&l.type===type}).sort(function(a,b){return raisedOf(b)-raisedOf(a)})[0];
   if(of)return of;
   return {id:null,type:type,owner:'You, maybe',mail:'',habs:['Anywhere'],slots:Math.min(4,ITEMS[type].maxSlots),prices:suggest(type,Math.min(4,ITEMS[type].maxSlots)),claims:[null,null,null,null].slice(0,Math.min(4,ITEMS[type].maxSlots)),created:Date.now(),preview:true};
@@ -8593,7 +8630,7 @@ function showHome(){
   var hl=document.getElementById('homeLive');if(hl)hl.textContent=money(totalRaised)+' raised live - '+open+' spots open';
   renderHomeLiveFeed();
   renderHomeCampaigns();
-  if(!homeType)homeType=featured().type;
+  if(!homeType){var initialFeatured=featured();homeType=initialFeatured&&initialFeatured.type&&ITEMS[initialFeatured.type]?initialFeatured.type:Object.keys(ITEMS)[0]}
   var f=featuredOf(homeType);
   var tabs=document.getElementById('itemTabs');tabs.innerHTML='';
   Object.keys(ITEMS).forEach(function(k){
@@ -10878,6 +10915,10 @@ function serverTrackingMatches(payload,mail){
         created:new Date(campaign.createdAt).getTime(),postedAt:new Date(campaign.createdAt).getTime(),
         status:campaign.active?'live':'closed',termMonths:12,checkins:[],serverFundedPercent:0};
     }
+    l.lifecycleStatus=campaign.lifecycleStatus||l.lifecycleStatus;
+    l.deliveredAt=campaign.deliveredAt?new Date(campaign.deliveredAt).getTime():l.deliveredAt;
+    l.checkinDueAt=campaign.checkinDueAt||l.checkinDueAt;
+    l.checkinStatus=campaign.checkinStatus||l.checkinStatus;
      var reservedCount=(campaign.orders||[]).filter(function(order){return ['reserved','funding','payment_failed','funded'].includes(order.status)}).length;
      var fundedCount=(campaign.orders||[]).filter(function(order){return order.status==='funded'}).length;
      l.serverFundedPercent=l.slots?Math.min(100,reservedCount/l.slots*100):0;
@@ -10968,24 +11009,15 @@ function trackSubmitKey(subId){
 function trackSubmitHtml(l,c){
   if(!c.ownerView)return '';
   var key=trackSubmitKey(c.subId);
-  var checkins=l.checkins||[];
-  var first=checkins.length===0;
-  var ready=!!c.demo||!!l.shippedAt||['shipped','active','complete'].indexOf(l.lifecycleStatus)>=0;
-  if(!ready){
-    return '<div class="track-submit">'+
-      '<div class="track-submit-title">Submit item proof</div>'+
-      '<p class="track-submit-copy">Proof submissions unlock after the item has shipped to the owner.</p>'+
-    '</div>';
-  }
+  if(!c.demo&&!l.deliveredAt)return '<div class="track-submit"><p class="track-submit-copy">Your item is on its way — check-ins start 7 days after delivery.</p></div>';
   if(!ownerCheckinIsDue(l))return '<div class="track-submit"><div class="track-submit-title">Check-in schedule</div><p class="track-submit-copy">No check-in is due right now. Return when the next server due window opens.</p></div>';
-  var status=checkinStatus(l);
   return '<div class="track-submit">'+
-    '<div class="track-submit-title">'+(first?'Submit your receipt and first photo':'Submit month '+(checkins.length+1)+' photo')+'</div>'+
-     '<p class="track-submit-copy">'+(first?'Your receipt confirms the item was ordered after funding. Add the first item photo to start the '+termOf(l)+'-month check-in timeline.':'Add the latest photo of the item to keep this month\\u2019s check-in on track.')+'</p>'+
-    (first?'<div class="track-submit-grid"><div class="field"><label class="label" for="trackDate_'+key+'">Purchase date on receipt</label><input class="input" id="trackDate_'+key+'" type="date"></div><div><label class="label" for="trackReceipt_'+key+'">Receipt</label><input id="trackReceipt_'+key+'" type="file" accept="image/*" class="input" style="padding:9px"></div></div>':'')+
-    '<div class="field" style="margin-top:12px"><label class="label" for="trackPhoto_'+key+'">'+(first?'First item photo':'Month '+(checkins.length+1)+' photo')+'</label><input id="trackPhoto_'+key+'" type="file" accept="image/*" class="input" style="padding:9px"></div>'+
+    '<div class="track-submit-title">Check-in due '+safeCardText(new Date(l.checkinDueAt).toLocaleDateString())+'</div>'+
+    '<p class="track-submit-copy">Upload a photo of the item in use with every placement visible. Location metadata is stripped before upload.</p>'+
+    '<div class="field"><label class="label" for="trackPhoto_'+key+'">Check-in photo</label><input id="trackPhoto_'+key+'" type="file" accept="image/*" class="input" style="padding:9px"></div>'+
+    '<div class="field" style="margin-top:12px"><label class="label" for="trackCaption_'+key+'">Caption (optional)</label><input id="trackCaption_'+key+'" class="input" maxlength="2000"></div>'+
     '<p class="finetext" id="trackSubmitErr_'+key+'" style="display:none;color:#B23327;margin:10px 0 0"></p>'+
-    '<button class="btn btn-primary btn-full" type="button" onclick="submitTrackProof('+safeInlineArg(l.id)+','+safeInlineArg(c.subId)+','+safeInlineArg(key)+')">'+(first?'Submit receipt + first photo':'Submit month '+(checkins.length+1)+' photo')+'</button>'+
+    '<button class="btn btn-primary btn-full" type="button" onclick="submitTrackProof('+safeInlineArg(l.id)+','+safeInlineArg(c.subId)+','+safeInlineArg(key)+')">Submit</button>'+
   '</div>';
 }
 function submitTrackProof(itemId,subId,key){
@@ -10999,27 +11031,20 @@ function submitTrackProof(itemId,subId,key){
    }
   if(!c)return;
   var err=document.getElementById('trackSubmitErr_'+key);
-  var first=(l.checkins||[]).length===0;
   var photoInput=document.getElementById('trackPhoto_'+key);
-  var receiptInput=document.getElementById('trackReceipt_'+key);
-  var dateInput=document.getElementById('trackDate_'+key);
+  var captionInput=document.getElementById('trackCaption_'+key);
   var fail=function(msg){if(err){err.textContent=msg;err.style.display='block'}};
   if(!photoInput||!photoInput.files||!photoInput.files[0]){fail('Upload the item photo for this check-in.');return}
-  if(first){
-    if(!dateInput||!dateInput.value){fail('Enter the purchase date shown on your receipt.');return}
-    if(!receiptInput||!receiptInput.files||!receiptInput.files[0]){fail('Upload your receipt.');return}
-    var receiptTime=new Date(dateInput.value+'T12:00:00').getTime();
-    if(l.fundedAt&&receiptTime<l.fundedAt-86400000){fail('That receipt date is before the item was funded. Use a receipt from after funding.');return}
-  }
-  var photoFile=photoInput.files[0],receiptFile=first?receiptInput.files[0]:null;
-  if(!isDemoListing(l)){
+  var photoFile=photoInput.files[0],caption=captionInput?captionInput.value.trim():'';
+   if(!isDemoListing(l)){
     if(!ownerCheckinIsDue(l)){fail('A check-in is not currently due.');return}
     var submitButton=err&&err.nextElementSibling;
     if(submitButton){submitButton.disabled=true;submitButton.textContent='Submitting…'}
     (async function(){
-      try{
+       try{
+         photoFile=await stripPhotoMetadata(photoFile);
         var checkinIntent=await requestFinalizedUpload('/api/campaigns/'+encodeURIComponent(l.id)+'/checkins/photo/request-url',function(intentId){return '/api/campaigns/'+encodeURIComponent(l.id)+'/checkins/photo/'+encodeURIComponent(intentId)+'/finalize'},photoFile);
-        var response=await fetch('/api/campaigns/'+encodeURIComponent(l.id)+'/checkins',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({note:first?'First check-in. Receipt date: '+dateInput.value:'Scheduled owner check-in',photoIntentId:checkinIntent.id})});
+        var response=await fetch('/api/campaigns/'+encodeURIComponent(l.id)+'/checkins',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({note:caption||'Owner check-in',photoIntentId:checkinIntent.id})});
         var submitted=await apiResponse(response,'Check-in could not be submitted.');
         l.checkins=l.checkins||[];
         l.checkins.push({date:new Date(submitted.submittedAt).getTime(),photo:storedAssetUrl(submitted.photoObjectPath),confirmId:submitted.id});
@@ -11027,23 +11052,17 @@ function submitTrackProof(itemId,subId,key){
         var found=TRACK_MATCHES.filter(function(m){return m.c&&m.c.subId===subId})[0];
         if(found)renderTrackResults(TRACK_MATCHES);
         toast('Check-in submitted - '+submitted.id);
-      }catch(error){fail(error&&error.message?error.message:'Check-in could not be submitted.');if(submitButton){submitButton.disabled=false;submitButton.textContent=first?'Submit receipt + first photo':'Submit check-in photo'}}
+      }catch(error){fail(error&&error.message?error.message:'Check-in could not be submitted.');if(submitButton){submitButton.disabled=false;submitButton.textContent='Submit'}}
     })();
     return;
   }
-  var photoReader=new FileReader(),receiptReader=first?new FileReader():null;
-  photoReader.onload=function(){
-    if(first){
-      receiptReader.onload=function(){finishTrackProof(photoReader.result,receiptReader.result,dateInput.value)};
-      receiptReader.readAsDataURL(receiptFile);
-    }else finishTrackProof(photoReader.result,null,null);
-  };
+  var photoReader=new FileReader();
+  photoReader.onload=function(){finishTrackProof(photoReader.result,null,null)};
   photoReader.readAsDataURL(photoFile);
-  function finishTrackProof(photo,receipt,date){
+  function finishTrackProof(photo){
     l.checkins=l.checkins||[];
     var cid='CI-'+uid().toUpperCase().slice(0,6);
     var entry={date:Date.now(),photo:photo,confirmId:cid};
-    if(first){entry.receipt=receipt;entry.receiptDate=new Date(date+'T12:00:00').getTime()}
     l.checkins.push(entry);
     saveDB();
     if(c.demo){
@@ -11148,7 +11167,8 @@ async function loadAdminListings(){
     var spots=campaign.orders.map(function(order){
       return '<div class="admin-spot"><div><div class="admin-spot-label">Spot '+(order.spotIndex+1)+' · '+safeCardText(order.brandName)+'</div><div class="admin-spot-sub">'+safeCardText(order.reservationId)+' · '+money(order.amountCents/100)+'</div></div><label class="admin-check"><input type="checkbox" data-admin-action="proof-sent" data-campaign="'+safeCardText(campaign.id)+'" data-order="'+safeCardText(order.id)+'" '+(order.proofSentAt?'checked':'')+'> Proof sent</label><label class="admin-check"><input type="checkbox" data-admin-action="proof-approved" data-campaign="'+safeCardText(campaign.id)+'" data-order="'+safeCardText(order.id)+'" '+(order.proofStatus==='approved'?'checked':'')+'> Approved</label></div>';
     }).join('');
-    return '<section class="admin-listing"><div class="admin-listing-head"><div><div class="admin-listing-title">'+safeCardText(campaign.title)+'</div><div class="admin-listing-meta">'+safeCardText(campaign.id)+' · '+safeCardText(campaign.ownerName)+' · '+safeCardText(campaign.lifecycleStatus)+'</div></div><span class="status-badge active">'+campaign.orders.length+' spots</span></div>'+spots+'<div class="admin-shipping"><input class="input" data-admin-carrier="'+safeCardText(campaign.id)+'" placeholder="Carrier" value="'+safeCardText(campaign.carrier||'')+'"><input class="input" data-admin-tracking="'+safeCardText(campaign.id)+'" placeholder="Tracking number" value="'+safeCardText(campaign.trackingNumber||'')+'"><label class="admin-check"><input type="checkbox" data-admin-delivered="'+safeCardText(campaign.id)+'" '+(campaign.deliveredAt?'checked':'')+'> Delivered</label><button class="btn btn-outline" data-admin-save="'+safeCardText(campaign.id)+'" type="button">Save fulfillment</button></div><p class="finetext" data-admin-status="'+safeCardText(campaign.id)+'"></p></section>';
+     var makeGood=campaign.makeGoodStatus==='pending'?'<div class="admin-shipping"><strong>Make-good pending</strong><input class="input" data-admin-mg-note="'+safeCardText(campaign.id)+'" placeholder="Required admin note"><button class="btn btn-outline" data-admin-mg-confirm="'+safeCardText(campaign.id)+'" type="button">Confirm make-good</button></div>':(campaign.makeGoodStatus==='confirmed'?'<div class="admin-shipping"><strong>Make-good confirmed</strong><button class="btn btn-outline" data-admin-mg-refund="'+safeCardText(campaign.id)+'" type="button">Issue approved refund</button></div>':'');
+     return '<section class="admin-listing"><div class="admin-listing-head"><div><div class="admin-listing-title">'+safeCardText(campaign.title)+'</div><div class="admin-listing-meta">'+safeCardText(campaign.id)+' · '+safeCardText(campaign.ownerName)+' · '+safeCardText(campaign.lifecycleStatus)+'</div></div><span class="status-badge active">'+campaign.orders.length+' spots</span></div>'+spots+'<div class="admin-shipping"><input class="input" data-admin-carrier="'+safeCardText(campaign.id)+'" placeholder="Carrier" value="'+safeCardText(campaign.carrier||'')+'"><input class="input" data-admin-tracking="'+safeCardText(campaign.id)+'" placeholder="Tracking number" value="'+safeCardText(campaign.trackingNumber||'')+'"><label class="admin-check"><input type="checkbox" data-admin-delivered="'+safeCardText(campaign.id)+'" '+(campaign.deliveredAt?'checked':'')+'> Delivered</label><button class="btn btn-outline" data-admin-save="'+safeCardText(campaign.id)+'" type="button">Save fulfillment</button></div><p class="finetext" data-admin-status="'+safeCardText(campaign.id)+'"></p>'+makeGood+'</section>';
   }).join(''):'<div class="card"><div class="card-c"><p class="finetext">No funded listings are in the queue.</p></div></div>';
   Array.prototype.forEach.call(host.querySelectorAll('input[data-admin-action]'),function(input){input.onchange=async function(){
     var body=input.dataset.adminAction==='proof-sent'?{proofSent:input.checked}:{proofApproved:input.checked};
@@ -11162,6 +11182,15 @@ async function loadAdminListings(){
     status.textContent=response.ok?'Saved. Delivered listings start the seven-day check-in clock.':'Could not save fulfillment.';
     if(response.ok)await loadAdminListings();
   }});
+   Array.prototype.forEach.call(host.querySelectorAll('[data-admin-mg-confirm]'),function(button){button.onclick=async function(){
+     var id=button.dataset.adminMgConfirm,note=document.querySelector('[data-admin-mg-note="'+id+'"]').value.trim();
+     var response=await fetch('/api/admin/campaigns/'+encodeURIComponent(id)+'/make-good',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({note:note})});
+     if(response.ok)await loadAdminListings();else toast('A note is required to confirm the make-good.');
+   }});
+   Array.prototype.forEach.call(host.querySelectorAll('[data-admin-mg-refund]'),function(button){button.onclick=async function(){
+     var id=button.dataset.adminMgRefund,response=await fetch('/api/admin/campaigns/'+encodeURIComponent(id)+'/make-good/refund',{method:'POST'});
+     if(response.ok){toast('Approved refund issued.');await loadAdminListings()}else toast('No approved refund is available.');
+   }});
 }
 function trackCardHtml(l,c){
   var photo=listingPhoto(l);
@@ -11173,12 +11202,13 @@ function trackCardHtml(l,c){
    var funded=l.serverFundedCount!=null?l.serverFundedCount>=l.slots:pct>=100;
    steps.push({done:!!l.shippedAt,active:funded&&!l.shippedAt,label:'Item funded and shipped',sub:l.shippedAt?'All spots funded, item ordered and shipped to the owner':(funded?'All spots funded, shipment is being prepared':Math.round(pct)+'% funded so far')});
   var checkins=l.checkins||[],checkState=checkinStatus(l);
-  for(var i=0;i<termOf(l);i++){
+   for(var i=0;l.deliveredAt&&i<termOf(l);i++){
     var ci=checkins[i];
     var dueCopy=i===0&&checkState.firstDueAt?((checkState.firstOverdue?'Overdue since ':'Due by ')+new Date(checkState.firstDueAt).toLocaleDateString()):'Not yet submitted';
     steps.push({done:!!ci,active:!ci&&funded&&i===checkins.length,label:'Month '+(i+1)+' check-in',sub:ci?('Photo received '+new Date(ci.date).toLocaleDateString()):dueCopy});
   }
-   var badge=c.ownerView?(funded?'Funded':'Launch ready'):(orderStatus==='pending'?'Pending':(orderStatus==='payment_failed'?'Payment failed':(orderStatus==='cancelled'||orderStatus==='released'?'Released':(orderStatus==='funded'?'Funded':(checkState.nonCompliant?'Non-compliant':(checkState.overdue?(checkState.firstOverdue?'First check-in overdue':'Check-in overdue'):(l.shippedAt?'Shipped':'Reserved')))))));
+    var lifecycleLabels={live:'Reserved',funding:'Reserved',funded:'Funded',ordered:'Funded',branded:'Branded',shipped:'Shipped',active:'Active',complete:'Complete',expired:'Expired'};
+    var badge=lifecycleLabels[l.lifecycleStatus]||'Reserved';
   return '<details class="card track-order">'+
       '<summary class="track-order-summary">'+
         (safeImageAttr(photo)?'<img src="'+safeImageAttr(photo)+'" style="width:56px;height:56px;object-fit:contain;background:#fff;border:1px solid var(--border);border-radius:12px;flex-shrink:0" alt="">':'')+
@@ -11517,57 +11547,25 @@ function renderOwnerTools(){
     '<div class="pbar" style="margin:8px 0 14px"><i style="display:block;height:100%;background:#1D1D1F;border-radius:99px;width:'+Math.min(100,Math.round(checkins.length/term*100))+'%"></i></div>'+
     '<p class="finetext" style="margin:0 0 12px">The sale is settled. Check-ins are display-only trust signals; missed check-ins never trigger a refund.</p>';
   if(status.nonCompliant)prog+='<p class="finetext" style="margin:0 0 12px;color:#B23327"><b>Posting restricted:</b> two consecutive missed check-ins restrict this owner from new listings.</p>';
-  if(status.missed||CUR.checkinStatus==='missed'){
-    prog+='<div class="track-submit"><div class="track-submit-title">Select a make-good</div><p class="track-submit-copy">A check-in was missed. Choose the available resolution for this item.</p><div class="mrow"><button class="btn btn-outline" type="button" onclick="selectOwnerMakeGood(&quot;extension&quot;)">Extend term</button><button class="btn btn-outline" type="button" onclick="selectOwnerMakeGood(&quot;credit&quot;)">Brand credit</button><button class="btn btn-outline" type="button" onclick="selectOwnerMakeGood(&quot;cancellation&quot;)">Cancel</button></div><p class="finetext" id="makeGoodStatus" role="status">'+safeCardText(CUR.makeGoodSelection?'Selected: '+CUR.makeGoodSelection:'')+'</p></div>';
-  }
+    var spotChoices=(CUR.prices||[]).map(function(_,i){return '<label class="admin-check"><input type="checkbox" data-condition-spot value="'+i+'"> Spot '+(i+1)+'</label>'}).join('');
+    var conditionHtml='<div class="track-submit" style="margin-top:12px"><div class="track-submit-title">Report item condition</div><div class="mrow">'+spotChoices+'</div><div class="field"><label class="label" for="conditionReportNote">Note</label><textarea class="input" id="conditionReportNote" maxlength="2000" rows="3"></textarea></div><label class="label">Wear photo</label><input id="wearPhotoInput" type="file" accept="image/png,image/jpeg,image/webp" class="input" style="padding:9px"><label class="label">Police report file</label><input id="policeReportInput" type="file" accept="image/png,image/jpeg,image/webp,application/pdf" class="input" style="padding:9px"><label class="label">Police report number</label><input id="policeReportNumber" class="input"><div class="mrow" style="margin-top:8px"><button class="btn btn-outline" id="reportWearBtn" type="button">Report wear</button><button class="btn btn-outline" id="reportLossBtn" type="button">Report theft or loss</button></div><p class="finetext" id="conditionReportStatus" role="status"></p></div>';
+   if(CUR.makeGoodStatus==='pending')conditionHtml+='<p class="finetext" style="margin:10px 0;color:#8A6D1D"><b>Make-good pending:</b> an operator must review this report before any refund can be issued.</p>';
+   prog+=conditionHtml;
   if(!ownerCheckinIsDue(CUR)){
-    cb.innerHTML=prog+'<p class="finetext" style="margin:0;color:#6e6e73">No check-in is due right now. This page will allow the next submission when the server due window opens.</p>';
+     cb.innerHTML=prog+'<p class="finetext" style="margin:0;color:#6e6e73">No check-in is due right now. This page will allow the next submission when the server due window opens.</p>';
+     document.getElementById('reportWearBtn').onclick=function(){submitConditionReport('wear')};
+     document.getElementById('reportLossBtn').onclick=function(){submitConditionReport('theft_loss')};
     return;
   }
-  var isFirst=checkins.length===0,fundedDate=CUR.fundedAt?new Date(CUR.fundedAt).toLocaleDateString():'the funding date';
-  if(isFirst){
-    cb.innerHTML=prog+'<p class="finetext" style="margin:0 0 12px">First check-in requires a receipt and purchase date on or after '+fundedDate+'.</p>'+
-      '<div class="field"><label class="label" for="receiptDate">Purchase date on receipt</label><input class="input" id="receiptDate" type="date"></div>'+
-      '<input type="file" id="receiptInput" accept="image/*" style="display:none"><div class="upl" id="receiptBox" style="margin-bottom:12px">Upload receipt - required</div>'+
-      '<input type="file" id="checkinInput" accept="image/*" style="display:none"><div class="upl" id="checkinBox">Upload check-in photo - required</div>'+
-      '<p class="finetext" id="receiptErr" style="display:none;color:#B23327;margin:10px 0 0"></p><button class="btn btn-primary btn-full" id="checkinBtn" type="button" style="margin-top:12px">Submit first check-in</button>';
-    var receiptData=null,checkinData=null,rbox=document.getElementById('receiptBox'),rinput=document.getElementById('receiptInput'),cbox=document.getElementById('checkinBox'),cinput=document.getElementById('checkinInput');
-    rbox.onclick=function(){rinput.click()};cbox.onclick=function(){cinput.click()};
-    rinput.onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){receiptData=r.result;rbox.innerHTML='<img src="'+receiptData+'" alt="receipt">'};r.readAsDataURL(f)};
-    cinput.onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){checkinData=r.result;cbox.innerHTML='<img src="'+checkinData+'" alt="check-in">'};r.readAsDataURL(f)};
-    document.getElementById('checkinBtn').onclick=async function(){
-      var err=document.getElementById('receiptErr'),dateVal=document.getElementById('receiptDate').value;
-      err.style.display='none';
-      if(!dateVal){err.textContent='Enter the purchase date shown on your receipt.';err.style.display='block';return}
-      if(!receiptData){err.textContent='Upload your receipt.';err.style.display='block';return}
-      if(!checkinData){err.textContent='Upload your check-in photo.';err.style.display='block';return}
-      var receiptTime=new Date(dateVal+'T12:00:00').getTime();
-      if(CUR.fundedAt&&receiptTime<CUR.fundedAt-86400000){err.textContent='That date is before funding. Use the receipt from after funding.';err.style.display='block';return}
-      var button=this;button.disabled=true;button.textContent='Submitting…';
-      try{
-        var submitted=await submitOwnerCheckin(cinput.files[0],'First check-in. Receipt date: '+dateVal);
-        CUR.checkins=[{date:new Date(submitted.submittedAt).getTime(),photo:storedAssetUrl(submitted.photoObjectPath),receipt:receiptData,receiptDate:receiptTime,confirmId:submitted.id}];
-        CUR.checkinStatus='submitted';refreshCheckinStatus(CUR);saveDB();refreshItemCards();openShare(checkinData,submitted.id);
-      }catch(error){err.textContent=error&&error.message?error.message:'Check-in could not be submitted.';err.style.display='block';button.disabled=false;button.textContent='Submit first check-in'}
-    };
-    return;
-  }
-  cb.innerHTML=prog+'<input type="file" id="checkinInput" accept="image/*" style="display:none"><div class="field"><label class="label" for="checkinNote">Check-in note</label><input class="input" id="checkinNote" maxlength="2000" placeholder="A text-only check-in is allowed"></div><button class="btn btn-primary btn-full" id="checkinBtn" type="button" style="margin-top:8px">Submit check-in</button><button class="btn btn-outline btn-full" id="checkinPhotoBtn" type="button" style="margin-top:8px">Add check-in photo</button>'+
+    cb.innerHTML=prog+'<p class="finetext" style="margin:0 0 12px"><b>Check-in due '+new Date(CUR.checkinDueAt).toLocaleDateString()+'</b></p><p class="finetext">Upload the item in use with all placements visible. GPS and other EXIF metadata is stripped before upload.</p><input type="file" id="checkinInput" accept="image/*" class="input" style="padding:9px"><div class="field"><label class="label" for="checkinNote">Caption (optional)</label><input class="input" id="checkinNote" maxlength="2000"></div><button class="btn btn-primary btn-full" id="checkinBtn" type="button" style="margin-top:8px">Submit</button>'+
     '<div style="margin-top:14px">'+checkins.slice().reverse().map(function(ci){return '<div class="checkin-item"><img src="'+ci.photo+'" alt=""><span class="ci-date">'+new Date(ci.date).toLocaleDateString()+'</span></div>'}).join('')+'</div>';
-  document.getElementById('checkinPhotoBtn').onclick=function(){document.getElementById('checkinInput').click()};
+   document.getElementById('reportWearBtn').onclick=function(){submitConditionReport('wear')};
+   document.getElementById('reportLossBtn').onclick=function(){submitConditionReport('theft_loss')};
   document.getElementById('checkinBtn').onclick=async function(){
     var button=this;button.disabled=true;button.textContent='Submitting…';
-    try{var submitted=await submitOwnerCheckin(null,document.getElementById('checkinNote').value.trim()||'Scheduled owner check-in');CUR.checkins.push({date:new Date(submitted.submittedAt).getTime(),photo:null,confirmId:submitted.id});CUR.checkinStatus='submitted';refreshCheckinStatus(CUR);saveDB();refreshItemCards();toast('Check-in submitted.')}
-    catch(error){toast(error&&error.message?error.message:'Check-in could not be submitted.');button.disabled=false;button.textContent='Submit check-in'}
-  };
-  document.getElementById('checkinInput').onchange=async function(e){
-    var f=e.target.files[0];if(!f)return;
-    var button=document.getElementById('checkinBtn');button.disabled=true;button.textContent='Submitting…';
-    try{
-      var submitted=await submitOwnerCheckin(f,'Scheduled owner check-in');
-      CUR.checkins.push({date:new Date(submitted.submittedAt).getTime(),photo:storedAssetUrl(submitted.photoObjectPath),confirmId:submitted.id});
-      CUR.checkinStatus='submitted';refreshCheckinStatus(CUR);saveDB();refreshItemCards();openShare(storedAssetUrl(submitted.photoObjectPath),submitted.id);
-    }catch(error){toast(error&&error.message?error.message:'Check-in could not be submitted.');button.disabled=false;button.textContent='Submit this month’s check-in photo'}
+     var f=document.getElementById('checkinInput').files[0];if(!f){toast('Upload a check-in photo.');button.disabled=false;return}
+     try{var submitted=await submitOwnerCheckin(f,document.getElementById('checkinNote').value.trim()||'Owner check-in');CUR.checkins.push({date:new Date(submitted.submittedAt).getTime(),photo:storedAssetUrl(submitted.photoObjectPath),confirmId:submitted.id});CUR.checkinStatus='submitted';refreshCheckinStatus(CUR);saveDB();refreshItemCards();openShare(storedAssetUrl(submitted.photoObjectPath),submitted.id)}
+     catch(error){toast(error&&error.message?error.message:'Check-in could not be submitted.');button.disabled=false;button.textContent='Submit'}
   };
 }
 var activeReservationDraftId=null;

@@ -1,0 +1,344 @@
+{
+  "plus5d": {
+    "now": "2026-09-10T03:09:21.888Z",
+    "emails": [
+      {
+        "template": "checkin_reminder_pre_due",
+        "recipient": "cameronmonsour@gmail.com",
+        "campaignId": "rdgsm8x",
+        "sentAt": "2026-09-10T03:09:21.888Z"
+      }
+    ],
+    "changes": [
+      {
+        "entity": "campaign",
+        "id": "rdgsm8x",
+        "before": {
+          "lifecycleStatus": "active",
+          "active": true,
+          "checkinStatus": "due",
+          "proofStatus": "not_submitted",
+          "deliveredAt": "2026-09-05T03:09:21.888Z",
+          "checkinDueAt": "2026-09-12T03:09:21.888Z",
+          "fundedEmailSentAt": null,
+          "reopenedEmailSentAt": null,
+          "recipient": "cameronmonsour@gmail.com",
+          "checkinPreDueEmailSentAt": null,
+          "checkinDueEmailSentAt": null,
+          "checkinMissedEmailSentAt": null,
+          "restrictionEmailSentAt": null,
+          "proofAutoApprovedEmailSentAt": null,
+          "expiredEmailSentAt": null
+        },
+        "after": {
+          "lifecycleStatus": "active",
+          "active": true,
+          "checkinStatus": "due",
+          "proofStatus": "not_submitted",
+          "deliveredAt": "2026-09-05T03:09:21.888Z",
+          "checkinDueAt": "2026-09-12T03:09:21.888Z",
+          "fundedEmailSentAt": null,
+          "reopenedEmailSentAt": null,
+          "recipient": "cameronmonsour@gmail.com",
+          "checkinPreDueEmailSentAt": "2026-09-10T03:09:21.888Z",
+          "checkinDueEmailSentAt": null,
+          "checkinMissedEmailSentAt": null,
+          "restrictionEmailSentAt": null,
+          "proofAutoApprovedEmailSentAt": null,
+          "expiredEmailSentAt": null
+        }
+      }
+    ]
+  },
+  "plus7d": {
+    "now": "2026-09-12T03:09:21.888Z",
+    "emails": [
+      {
+        "template": "checkin_reminder_due",
+        "recipient": "cameronmonsour@gmail.com",
+        "campaignId": "rdgsm8x",
+        "sentAt": "2026-09-12T03:09:21.888Z"
+      }
+    ],
+    "changes": [
+      {
+        "entity": "campaign",
+        "id": "rdgsm8x",
+        "before": {
+          "lifecycleStatus": "active",
+          "active": true,
+          "checkinStatus": "due",
+          "proofStatus": "not_submitted",
+          "deliveredAt": "2026-09-05T03:09:21.888Z",
+          "checkinDueAt": "2026-09-12T03:09:21.888Z",
+          "fundedEmailSentAt": null,
+          "reopenedEmailSentAt": null,
+          "recipient": "cameronmonsour@gmail.com",
+          "checkinPreDueEmailSentAt": "2026-09-10T03:09:21.888Z",
+          "checkinDueEmailSentAt": null,
+          "checkinMissedEmailSentAt": null,
+          "restrictionEmailSentAt": null,
+          "proofAutoApprovedEmailSentAt": null,
+          "expiredEmailSentAt": null
+        },
+        "after": {
+          "lifecycleStatus": "active",
+          "active": true,
+          "checkinStatus": "due",
+          "proofStatus": "not_submitted",
+          "deliveredAt": "2026-09-05T03:09:21.888Z",
+          "checkinDueAt": "2026-09-12T03:09:21.888Z",
+          "fundedEmailSentAt": null,
+          "reopenedEmailSentAt": null,
+          "recipient": "cameronmonsour@gmail.com",
+          "checkinPreDueEmailSentAt": "2026-09-10T03:09:21.888Z",
+          "checkinDueEmailSentAt": "2026-09-12T03:09:21.888Z",
+          "checkinMissedEmailSentAt": null,
+          "restrictionEmailSentAt": null,
+          "proofAutoApprovedEmailSentAt": null,
+          "expiredEmailSentAt": null
+        }
+      },
+      {
+        "entity": "campaign",
+        "id": "djr99kx",
+        "before": {
+          "lifecycleStatus": "active",
+          "active": true,
+          "checkinStatus": "missed",
+          "proofStatus": "not_submitted",
+          "deliveredAt": "2026-09-05T02:48:49.100Z",
+          "checkinDueAt": "2026-09-12T02:48:49.100Z",
+          "fundedEmailSentAt": "2026-09-05T02:44:56.217Z",
+          "reopenedEmailSentAt": "2026-09-07T02:58:34.045Z",
+          "recipient": "cam@irli.io",
+          "checkinPreDueEmailSentAt": "2026-09-09T03:00:38.543Z",
+          "checkinDueEmailSentAt": "2026-09-12T03:00:39.620Z",
+          "checkinMissedEmailSentAt": "2026-09-15T03:00:39.815Z",
+          "restrictionEmailSentAt": null,
+          "proofAutoApprovedEmailSentAt": null,
+          "expiredEmailSentAt": null
+        },
+        "after": {
+          "lifecycleStatus": "active",
+          "active": true,
+          "checkinStatus": "due",
+          "proofStatus": "not_submitted",
+          "deliveredAt": "2026-09-05T02:48:49.100Z",
+          "checkinDueAt": "2026-09-12T02:48:49.100Z",
+          "fundedEmailSentAt": "2026-09-05T02:44:56.217Z",
+          "reopenedEmailSentAt": "2026-09-07T02:58:34.045Z",
+          "recipient": "cam@irli.io",
+          "checkinPreDueEmailSentAt": "2026-09-09T03:00:38.543Z",
+          "checkinDueEmailSentAt": "2026-09-12T03:00:39.620Z",
+          "checkinMissedEmailSentAt": "2026-09-15T03:00:39.815Z",
+          "restrictionEmailSentAt": null,
+          "proofAutoApprovedEmailSentAt": null,
+          "expiredEmailSentAt": null
+        }
+      }
+    ]
+  },
+  "plus9d": {
+    "now": "2026-09-14T03:09:21.888Z",
+    "emails": [
+      {
+        "template": "checkin_missed",
+        "recipient": "cameronmonsour@gmail.com",
+        "campaignId": "rdgsm8x",
+        "sentAt": "2026-09-14T03:09:21.888Z"
+      },
+      {
+        "template": "checkin_missed",
+        "recipient": "cam@irli.io",
+        "campaignId": "djr99kx",
+        "sentAt": "2026-09-14T03:09:21.888Z"
+      },
+      {
+        "template": "owner_restricted",
+        "recipient": "cam@irli.io",
+        "campaignId": "djr99kx",
+        "sentAt": "2026-09-14T03:09:21.888Z"
+      }
+    ],
+    "changes": [
+      {
+        "entity": "campaign",
+        "id": "rdgsm8x",
+        "before": {
+          "lifecycleStatus": "active",
+          "active": true,
+          "checkinStatus": "due",
+          "proofStatus": "not_submitted",
+          "deliveredAt": "2026-09-05T03:09:21.888Z",
+          "checkinDueAt": "2026-09-12T03:09:21.888Z",
+          "fundedEmailSentAt": null,
+          "reopenedEmailSentAt": null,
+          "recipient": "cameronmonsour@gmail.com",
+          "checkinPreDueEmailSentAt": "2026-09-10T03:09:21.888Z",
+          "checkinDueEmailSentAt": "2026-09-12T03:09:21.888Z",
+          "checkinMissedEmailSentAt": null,
+          "restrictionEmailSentAt": null,
+          "proofAutoApprovedEmailSentAt": null,
+          "expiredEmailSentAt": null
+        },
+        "after": {
+          "lifecycleStatus": "active",
+          "active": true,
+          "checkinStatus": "missed",
+          "proofStatus": "not_submitted",
+          "deliveredAt": "2026-09-05T03:09:21.888Z",
+          "checkinDueAt": "2026-10-12T03:09:21.888Z",
+          "fundedEmailSentAt": null,
+          "reopenedEmailSentAt": null,
+          "recipient": "cameronmonsour@gmail.com",
+          "checkinPreDueEmailSentAt": null,
+          "checkinDueEmailSentAt": null,
+          "checkinMissedEmailSentAt": "2026-09-14T03:09:21.888Z",
+          "restrictionEmailSentAt": null,
+          "proofAutoApprovedEmailSentAt": null,
+          "expiredEmailSentAt": null
+        }
+      },
+      {
+        "entity": "campaign",
+        "id": "djr99kx",
+        "before": {
+          "lifecycleStatus": "active",
+          "active": true,
+          "checkinStatus": "due",
+          "proofStatus": "not_submitted",
+          "deliveredAt": "2026-09-05T02:48:49.100Z",
+          "checkinDueAt": "2026-09-12T02:48:49.100Z",
+          "fundedEmailSentAt": "2026-09-05T02:44:56.217Z",
+          "reopenedEmailSentAt": "2026-09-07T02:58:34.045Z",
+          "recipient": "cam@irli.io",
+          "checkinPreDueEmailSentAt": "2026-09-09T03:00:38.543Z",
+          "checkinDueEmailSentAt": "2026-09-12T03:00:39.620Z",
+          "checkinMissedEmailSentAt": "2026-09-15T03:00:39.815Z",
+          "restrictionEmailSentAt": null,
+          "proofAutoApprovedEmailSentAt": null,
+          "expiredEmailSentAt": null
+        },
+        "after": {
+          "lifecycleStatus": "active",
+          "active": true,
+          "checkinStatus": "missed",
+          "proofStatus": "not_submitted",
+          "deliveredAt": "2026-09-05T02:48:49.100Z",
+          "checkinDueAt": "2026-10-12T02:48:49.100Z",
+          "fundedEmailSentAt": "2026-09-05T02:44:56.217Z",
+          "reopenedEmailSentAt": "2026-09-07T02:58:34.045Z",
+          "recipient": "cam@irli.io",
+          "checkinPreDueEmailSentAt": null,
+          "checkinDueEmailSentAt": null,
+          "checkinMissedEmailSentAt": "2026-09-14T03:09:21.888Z",
+          "restrictionEmailSentAt": "2026-09-14T03:09:21.888Z",
+          "proofAutoApprovedEmailSentAt": null,
+          "expiredEmailSentAt": null
+        }
+      }
+    ]
+  },
+  "plus61d": {
+    "now": "2026-11-05T03:09:21.888Z",
+    "emails": [
+      {
+        "template": "checkin_missed",
+        "recipient": "cameronmonsour@gmail.com",
+        "campaignId": "rdgsm8x",
+        "sentAt": "2026-11-05T03:09:21.888Z"
+      },
+      {
+        "template": "owner_restricted",
+        "recipient": "cameronmonsour@gmail.com",
+        "campaignId": "rdgsm8x",
+        "sentAt": "2026-11-05T03:09:21.888Z"
+      },
+      {
+        "template": "checkin_missed",
+        "recipient": "cam@irli.io",
+        "campaignId": "djr99kx",
+        "sentAt": "2026-11-05T03:09:21.888Z"
+      }
+    ],
+    "changes": [
+      {
+        "entity": "campaign",
+        "id": "rdgsm8x",
+        "before": {
+          "lifecycleStatus": "active",
+          "active": true,
+          "checkinStatus": "missed",
+          "proofStatus": "not_submitted",
+          "deliveredAt": "2026-09-05T03:09:21.888Z",
+          "checkinDueAt": "2026-10-12T03:09:21.888Z",
+          "fundedEmailSentAt": null,
+          "reopenedEmailSentAt": null,
+          "recipient": "cameronmonsour@gmail.com",
+          "checkinPreDueEmailSentAt": null,
+          "checkinDueEmailSentAt": null,
+          "checkinMissedEmailSentAt": "2026-09-14T03:09:21.888Z",
+          "restrictionEmailSentAt": null,
+          "proofAutoApprovedEmailSentAt": null,
+          "expiredEmailSentAt": null
+        },
+        "after": {
+          "lifecycleStatus": "active",
+          "active": true,
+          "checkinStatus": "missed",
+          "proofStatus": "not_submitted",
+          "deliveredAt": "2026-09-05T03:09:21.888Z",
+          "checkinDueAt": "2026-11-11T03:09:21.888Z",
+          "fundedEmailSentAt": null,
+          "reopenedEmailSentAt": null,
+          "recipient": "cameronmonsour@gmail.com",
+          "checkinPreDueEmailSentAt": null,
+          "checkinDueEmailSentAt": null,
+          "checkinMissedEmailSentAt": "2026-11-05T03:09:21.888Z",
+          "restrictionEmailSentAt": "2026-11-05T03:09:21.888Z",
+          "proofAutoApprovedEmailSentAt": null,
+          "expiredEmailSentAt": null
+        }
+      },
+      {
+        "entity": "campaign",
+        "id": "djr99kx",
+        "before": {
+          "lifecycleStatus": "active",
+          "active": true,
+          "checkinStatus": "missed",
+          "proofStatus": "not_submitted",
+          "deliveredAt": "2026-09-05T02:48:49.100Z",
+          "checkinDueAt": "2026-10-12T02:48:49.100Z",
+          "fundedEmailSentAt": "2026-09-05T02:44:56.217Z",
+          "reopenedEmailSentAt": "2026-09-07T02:58:34.045Z",
+          "recipient": "cam@irli.io",
+          "checkinPreDueEmailSentAt": null,
+          "checkinDueEmailSentAt": null,
+          "checkinMissedEmailSentAt": "2026-09-14T03:09:21.888Z",
+          "restrictionEmailSentAt": "2026-09-14T03:09:21.888Z",
+          "proofAutoApprovedEmailSentAt": null,
+          "expiredEmailSentAt": null
+        },
+        "after": {
+          "lifecycleStatus": "active",
+          "active": true,
+          "checkinStatus": "missed",
+          "proofStatus": "not_submitted",
+          "deliveredAt": "2026-09-05T02:48:49.100Z",
+          "checkinDueAt": "2026-11-11T02:48:49.100Z",
+          "fundedEmailSentAt": "2026-09-05T02:44:56.217Z",
+          "reopenedEmailSentAt": "2026-09-07T02:58:34.045Z",
+          "recipient": "cam@irli.io",
+          "checkinPreDueEmailSentAt": null,
+          "checkinDueEmailSentAt": null,
+          "checkinMissedEmailSentAt": "2026-11-05T03:09:21.888Z",
+          "restrictionEmailSentAt": "2026-09-14T03:09:21.888Z",
+          "proofAutoApprovedEmailSentAt": null,
+          "expiredEmailSentAt": null
+        }
+      }
+    ]
+  }
+}

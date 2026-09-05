@@ -6,11 +6,17 @@ import { sendTransactionalEmail } from "./emailDelivery.ts";
 import { createAccessToken, hashAccessToken } from "./lib/accessControl.ts";
 import {
   campaignItemDisplayName,
+  checkinReminderEmail,
   fundingConfirmationEmail,
+  listingExpiredEmail,
+  makeGoodRefundEmail,
   ownerCampaignFundedEmail,
   ownerCampaignReopenedEmail,
+  ownerRestrictedEmail,
   paymentDeclinedEmail,
   paymentReopenedEmail,
+  proofAutoApprovedEmail,
+  reservationReleaseEmail,
 } from "./emailTemplates.ts";
 import {
   fundingChargeIdempotencyKey,
@@ -482,8 +488,25 @@ export async function expireUnfundedCampaigns(now = new Date()): Promise<void> {
           inArray(campaignsTable.lifecycleStatus, ["live", "funding"]),
         ),
       );
+    const expiredCampaign = await db.select().from(campaignsTable).where(eq(campaignsTable.id, campaign.id)).limit(1);
+    if (expiredCampaign[0]?.ownerEmail && !expiredCampaign[0].expiredEmailSentAt) {
+      try {
+        const delivery = await sendTransactionalEmail(listingExpiredEmail({
+          email: expiredCampaign[0].ownerEmail,
+          itemDisplayName: campaignItemDisplayName(expiredCampaign[0]),
+          campaignId: expiredCampaign[0].id,
+        }));
+        await db.update(campaignsTable).set({
+          expiredEmailSentAt: now,
+          updatedAt: now,
+        }).where(and(eq(campaignsTable.id, campaign.id), isNull(campaignsTable.expiredEmailSentAt)));
+        logger.info({ messageId: delivery.messageId, campaignId: campaign.id }, "Listing expiry email sent");
+      } catch (error) {
+        logger.warn({ err: error, campaignId: campaign.id }, "Listing expiry email delivery failed");
+      }
+    }
     if (!relistEligible) {
-      await db
+      const released = await db
         .update(placementOrdersTable)
         .set({ status: "released", updatedAt: now })
         .where(
@@ -495,43 +518,124 @@ export async function expireUnfundedCampaigns(now = new Date()): Promise<void> {
               "payment_failed",
             ]),
           ),
-        );
+        ).returning();
+      for (const order of released) {
+        try {
+          const delivery = await sendTransactionalEmail(reservationReleaseEmail({
+            email: order.email,
+            itemDisplayName: campaignItemDisplayName(campaign),
+            reservationId: `BMI-${order.id.toUpperCase().slice(0, 6)}`,
+          }));
+          await db.update(placementOrdersTable).set({ releaseEmailSentAt: now, releaseEmailMessageId: delivery.messageId, updatedAt: now })
+            .where(and(eq(placementOrdersTable.id, order.id), isNull(placementOrdersTable.releaseEmailSentAt)));
+        } catch (error) {
+          logger.warn({ err: error, reservationId: order.id }, "Reservation release email delivery failed");
+        }
+      }
     }
   }
 }
 
-/**
- * Advances check-ins exactly once through due -> reminded -> missed. Email
- * dispatch is intentionally separate from this durable transition so a
- * delivery outage cannot cause duplicate reminders on the next sweep.
- */
 export async function advanceCheckinLifecycle(now = new Date()): Promise<void> {
-  const reminderCutoff = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-  await db
-    .update(campaignsTable)
-    .set({ checkinStatus: "reminded", checkinReminderSentAt: now, updatedAt: now })
-    .where(
-      and(
-        isNotNull(campaignsTable.deliveredAt),
-        eq(campaignsTable.checkinStatus, "due"),
-        lte(campaignsTable.checkinDueAt, now),
-      ),
-    );
-  await db
-    .update(campaignsTable)
-    .set({ checkinStatus: "missed", updatedAt: now })
-    .where(
-      and(
-        isNotNull(campaignsTable.deliveredAt),
-        eq(campaignsTable.checkinStatus, "reminded"),
-        lte(campaignsTable.checkinReminderSentAt, reminderCutoff),
-      ),
-    );
+  const campaigns = await db.select().from(campaignsTable).where(isNotNull(campaignsTable.deliveredAt));
+  for (const campaign of campaigns) {
+    const dueAt = campaign.checkinDueAt;
+    if (!dueAt || ["not_started"].includes(campaign.checkinStatus)) continue;
+    const preDueAt = new Date(dueAt.getTime() - 3 * 24 * 60 * 60 * 1000);
+    if (now >= preDueAt && !campaign.checkinPreDueEmailSentAt && campaign.ownerEmail) {
+      try {
+        await sendTransactionalEmail(checkinReminderEmail({
+          email: campaign.ownerEmail,
+          itemDisplayName: campaignItemDisplayName(campaign),
+          campaignId: campaign.id,
+          timing: "pre_due",
+          dueAt,
+        }));
+        await db.update(campaignsTable).set({
+          checkinPreDueEmailSentAt: now,
+          checkinReminderSentAt: now,
+          updatedAt: now,
+        }).where(and(eq(campaignsTable.id, campaign.id), isNull(campaignsTable.checkinPreDueEmailSentAt)));
+      } catch (error) {
+        logger.warn({ err: error, campaignId: campaign.id }, "Pre-due check-in email delivery failed");
+      }
+    }
+    if (now >= dueAt && ["submitted", "missed"].includes(campaign.checkinStatus)) {
+      await db.update(campaignsTable).set({ checkinStatus: "due", updatedAt: now })
+        .where(and(eq(campaignsTable.id, campaign.id), inArray(campaignsTable.checkinStatus, ["submitted", "missed"])));
+    }
+    if (now >= dueAt && !campaign.checkinDueEmailSentAt && campaign.ownerEmail) {
+      try {
+        await sendTransactionalEmail(checkinReminderEmail({
+          email: campaign.ownerEmail,
+          itemDisplayName: campaignItemDisplayName(campaign),
+          campaignId: campaign.id,
+          timing: "due",
+          dueAt,
+        }));
+        await db.update(campaignsTable).set({
+          checkinStatus: "due",
+          checkinDueEmailSentAt: now,
+          checkinReminderSentAt: now,
+          updatedAt: now,
+        }).where(and(eq(campaignsTable.id, campaign.id), isNull(campaignsTable.checkinDueEmailSentAt)));
+      } catch (error) {
+        logger.warn({ err: error, campaignId: campaign.id }, "Due check-in email delivery failed");
+      }
+    }
+    if (now < new Date(dueAt.getTime() + 2 * 24 * 60 * 60 * 1000)) continue;
+    const [missed] = await db.update(campaignsTable).set({
+      checkinStatus: "missed",
+      checkinDueAt: new Date(dueAt.getTime() + THIRTY_DAYS_MS),
+      checkinPreDueEmailSentAt: null,
+      checkinDueEmailSentAt: null,
+      checkinMissedEmailSentAt: null,
+      checkinReminderSentAt: null,
+      consecutiveMissedCheckins: (campaign.consecutiveMissedCheckins ?? 0) + 1,
+      ownerRestricted: (campaign.consecutiveMissedCheckins ?? 0) + 1 >= 2 ? true : campaign.ownerRestricted,
+      makeGoodStatus: (campaign.consecutiveMissedCheckins ?? 0) + 1 >= 2 && campaign.makeGoodStatus === "none" ? "pending" : campaign.makeGoodStatus,
+      makeGoodSource: (campaign.consecutiveMissedCheckins ?? 0) + 1 >= 2 && campaign.makeGoodStatus === "none" ? "restriction" : campaign.makeGoodSource,
+      makeGoodFlaggedAt: (campaign.consecutiveMissedCheckins ?? 0) + 1 >= 2 && campaign.makeGoodStatus === "none" ? now : campaign.makeGoodFlaggedAt,
+      updatedAt: now,
+    }).where(and(
+      eq(campaignsTable.id, campaign.id),
+      inArray(campaignsTable.checkinStatus, ["due", "reminded"]),
+    )).returning();
+    if (!missed) continue;
+    if (campaign.ownerEmail) {
+      try {
+        await sendTransactionalEmail(checkinReminderEmail({
+          email: campaign.ownerEmail,
+          itemDisplayName: campaignItemDisplayName(campaign),
+          campaignId: campaign.id,
+          timing: "missed",
+          dueAt,
+        }));
+        await db.update(campaignsTable).set({ checkinMissedEmailSentAt: now, updatedAt: now })
+          .where(and(eq(campaignsTable.id, campaign.id), isNull(campaignsTable.checkinMissedEmailSentAt)));
+      } catch (error) {
+        logger.warn({ err: error, campaignId: campaign.id }, "Missed check-in email delivery failed");
+      }
+    }
+    if ((missed.consecutiveMissedCheckins ?? 0) >= 2 && missed.ownerEmail && !missed.restrictionEmailSentAt) {
+      try {
+        await sendTransactionalEmail(ownerRestrictedEmail({
+          email: missed.ownerEmail,
+          itemDisplayName: campaignItemDisplayName(missed),
+          campaignId: missed.id,
+        }));
+        await db.update(campaignsTable).set({ restrictionEmailSentAt: now, updatedAt: now })
+          .where(and(eq(campaignsTable.id, missed.id), isNull(campaignsTable.restrictionEmailSentAt)));
+      } catch (error) {
+        logger.warn({ err: error, campaignId: missed.id }, "Restriction email delivery failed");
+      }
+    }
+  }
 }
 
 export async function autoApprovePlacementProofs(now = new Date()): Promise<void> {
   const cutoff = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-  await db
+  const updated = await db
     .update(placementOrdersTable)
     .set({ proofStatus: "approved", proofApprovedAt: now, updatedAt: now })
     .where(
@@ -541,17 +645,32 @@ export async function autoApprovePlacementProofs(now = new Date()): Promise<void
         inArray(placementOrdersTable.status, ["funded"]),
         lte(placementOrdersTable.proofSentAt, cutoff),
       ),
-    );
+    ).returning();
+  for (const order of updated) {
+    const [campaign] = await db.select().from(campaignsTable).where(eq(campaignsTable.id, order.campaignId)).limit(1);
+    if (!campaign?.ownerEmail || campaign.proofAutoApprovedEmailSentAt) continue;
+    try {
+      await sendTransactionalEmail(proofAutoApprovedEmail({
+        email: campaign.ownerEmail,
+        itemDisplayName: campaignItemDisplayName(campaign),
+        campaignId: campaign.id,
+      }));
+      await db.update(campaignsTable).set({ proofAutoApprovedEmailSentAt: now, updatedAt: now })
+        .where(and(eq(campaignsTable.id, campaign.id), isNull(campaignsTable.proofAutoApprovedEmailSentAt)));
+    } catch (error) {
+      logger.warn({ err: error, campaignId: campaign.id }, "Proof auto-approval email delivery failed");
+    }
+  }
 }
 
-export async function refundPendingMakeGoods(now = new Date()): Promise<void> {
-  const cutoff = new Date(now.getTime() - 31 * 24 * 60 * 60 * 1000);
-  const campaigns = await db.select().from(campaignsTable).where(and(
-    eq(campaignsTable.checkinStatus, "missed"),
-    eq(campaignsTable.makeGoodSelection, "cancellation"),
-    lte(campaignsTable.makeGoodSelectedAt, cutoff),
-  ));
-  for (const campaign of campaigns) {
+export async function issueApprovedMakeGoodRefund(campaignId: string, now = new Date()): Promise<number> {
+  const [campaign] = await db.select().from(campaignsTable).where(and(
+    eq(campaignsTable.id, campaignId),
+    eq(campaignsTable.makeGoodStatus, "confirmed"),
+  )).limit(1);
+  if (!campaign) return 0;
+  let refundedCents = 0;
+  {
     const termValue = campaign.presentation?.termMonths;
     const termMonths = typeof termValue === "number" && [6, 12, 18].includes(termValue) ? termValue : 12;
     const monthsRemaining = Math.max(0, termMonths - 1);
@@ -581,11 +700,28 @@ export async function refundPendingMakeGoods(now = new Date()): Promise<void> {
           eq(placementOrdersTable.id, order.id),
           eq(placementOrdersTable.status, "funded"),
         ));
+        refundedCents += refundCents;
+        if (campaign.ownerEmail) {
+          try {
+            await sendTransactionalEmail(makeGoodRefundEmail({
+              email: order.email,
+              itemDisplayName: campaignItemDisplayName(campaign),
+              refundCents,
+            }));
+          } catch (error) {
+            logger.warn({ err: error, reservationId: order.id }, "Make-good refund email delivery failed");
+          }
+        }
       } catch (error) {
         logger.warn({ err: error, reservationId: order.id }, "Make-good refund failed");
       }
     }
   }
+  if (refundedCents > 0) {
+    await db.update(campaignsTable).set({ makeGoodStatus: "refunded", makeGoodRefundedAt: now, updatedAt: now })
+      .where(and(eq(campaignsTable.id, campaign.id), eq(campaignsTable.makeGoodStatus, "confirmed")));
+  }
+  return refundedCents;
 }
 
 export async function relistCampaign(

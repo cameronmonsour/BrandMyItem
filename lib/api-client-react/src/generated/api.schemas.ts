@@ -427,6 +427,21 @@ export interface TrackingOrder {
   createdAt: string;
 }
 
+export type TrackingCampaignLifecycleStatus = typeof TrackingCampaignLifecycleStatus[keyof typeof TrackingCampaignLifecycleStatus];
+
+
+export const TrackingCampaignLifecycleStatus = {
+  live: 'live',
+  funding: 'funding',
+  funded: 'funded',
+  ordered: 'ordered',
+  branded: 'branded',
+  shipped: 'shipped',
+  active: 'active',
+  complete: 'complete',
+  expired: 'expired',
+} as const;
+
 export interface TrackingCampaign {
   id: string;
   itemType: string;
@@ -434,6 +449,12 @@ export interface TrackingCampaign {
   ownerName: string;
   pricesCents: number[];
   active: boolean;
+  lifecycleStatus?: TrackingCampaignLifecycleStatus;
+  /** @nullable */
+  deliveredAt?: string | null;
+  /** @nullable */
+  checkinDueAt?: string | null;
+  checkinStatus?: string;
   ownerMatch: boolean;
   createdAt: string;
   orders: TrackingOrder[];
@@ -733,6 +754,79 @@ export const MakeGoodInputSelection = {
 
 export interface MakeGoodInput {
   selection: MakeGoodInputSelection;
+}
+
+export type ConditionReportUploadRequestContentType = typeof ConditionReportUploadRequestContentType[keyof typeof ConditionReportUploadRequestContentType];
+
+
+export const ConditionReportUploadRequestContentType = {
+  'image/png': 'image/png',
+  'image/jpeg': 'image/jpeg',
+  'image/webp': 'image/webp',
+  'application/pdf': 'application/pdf',
+} as const;
+
+export interface ConditionReportUploadRequest {
+  /**
+     * @minLength 1
+     * @maxLength 255
+     */
+  name: string;
+  /**
+     * @minimum 1
+     * @maximum 10000000
+     */
+  size: number;
+  contentType: ConditionReportUploadRequestContentType;
+}
+
+export type PoliceReportUploadIntentExpectedMimeType = typeof PoliceReportUploadIntentExpectedMimeType[keyof typeof PoliceReportUploadIntentExpectedMimeType];
+
+
+export const PoliceReportUploadIntentExpectedMimeType = {
+  'image/png': 'image/png',
+  'image/jpeg': 'image/jpeg',
+  'image/webp': 'image/webp',
+  'application/pdf': 'application/pdf',
+} as const;
+
+export type PoliceReportUploadIntentStatus = typeof PoliceReportUploadIntentStatus[keyof typeof PoliceReportUploadIntentStatus];
+
+
+export const PoliceReportUploadIntentStatus = {
+  issued: 'issued',
+  finalized: 'finalized',
+  consumed: 'consumed',
+  revoked: 'revoked',
+} as const;
+
+export interface PoliceReportUploadIntent {
+  id: string;
+  purpose: 'owner_police_report';
+  /** @pattern ^/objects/uploads/[A-Za-z0-9-]+$ */
+  objectPath: string;
+  expectedMimeType: PoliceReportUploadIntentExpectedMimeType;
+  expectedSizeBytes: number;
+  expectedFileName: string;
+  status: PoliceReportUploadIntentStatus;
+  expiresAt: string;
+  uploadURL?: string;
+}
+
+export type ConditionReportInputType = typeof ConditionReportInputType[keyof typeof ConditionReportInputType];
+
+
+export const ConditionReportInputType = {
+  wear: 'wear',
+  theft_loss: 'theft_loss',
+} as const;
+
+export interface ConditionReportInput {
+  type: ConditionReportInputType;
+  /** @maxLength 2000 */
+  note?: string;
+  /** @minLength 1 */
+  policeReportIntentId?: string;
 }
 
 export type GetTrackingParams = {

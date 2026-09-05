@@ -28,6 +28,8 @@ import type {
   CheckinPhotoUploadIntent,
   CheckinPhotoUploadRequest,
   CheckinSubmissionInput,
+  ConditionReportInput,
+  ConditionReportUploadRequest,
   ContactMessageInput,
   ContactMessageReceipt,
   Delivery,
@@ -38,6 +40,7 @@ import type {
   PlacementCheckoutInput,
   PlacementCheckoutSession,
   PlacementOrder,
+  PoliceReportUploadIntent,
   Proof,
   ProofApprovalInput,
   ProofSubmissionInput,
@@ -2451,6 +2454,244 @@ export const useSelectCampaignMakeGood = <TError = ErrorType<void>,
         TContext
       > => {
       return useMutation(getSelectCampaignMakeGoodMutationOptions(options));
+    }
+
+export const getRequestCampaignConditionReportUploadUrl = (campaignId: string,) => {
+
+
+
+
+  return `/api/campaigns/${campaignId}/condition-report/photo/request-url`
+}
+
+/**
+ * @summary Issue an owner-bound police report upload intent
+ */
+export const requestCampaignConditionReportUpload = async (campaignId: string,
+    conditionReportUploadRequest: ConditionReportUploadRequest, options?: Parameters<typeof customFetch>[1]): Promise<PoliceReportUploadIntent> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Array.isArray(h)) return Object.fromEntries(h);
+    return h;
+  };
+return customFetch<PoliceReportUploadIntent>(getRequestCampaignConditionReportUploadUrl(campaignId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(conditionReportUploadRequest)
+  }
+);}
+
+
+
+
+
+export const getRequestCampaignConditionReportUploadMutationKey = () => ['requestCampaignConditionReportUpload'] as const;
+
+export const getRequestCampaignConditionReportUploadMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof requestCampaignConditionReportUpload>>, TError,RequestCampaignConditionReportUploadMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof requestCampaignConditionReportUpload>>, TError,RequestCampaignConditionReportUploadMutationVariables, TContext> => {
+
+const mutationKey = getRequestCampaignConditionReportUploadMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof requestCampaignConditionReportUpload>>, RequestCampaignConditionReportUploadMutationVariables> = (props) => {
+          const {campaignId,data} = props ?? {};
+
+          return  requestCampaignConditionReportUpload(campaignId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RequestCampaignConditionReportUploadMutationResult = NonNullable<Awaited<ReturnType<typeof requestCampaignConditionReportUpload>>>
+    export type RequestCampaignConditionReportUploadMutationBody = BodyType<ConditionReportUploadRequest>
+    export type RequestCampaignConditionReportUploadMutationError = ErrorType<void>
+    export type RequestCampaignConditionReportUploadMutationVariables = {campaignId: string;data: BodyType<ConditionReportUploadRequest>}
+
+    /**
+ * @summary Issue an owner-bound police report upload intent
+ */
+export const useRequestCampaignConditionReportUpload = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof requestCampaignConditionReportUpload>>, TError,RequestCampaignConditionReportUploadMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof requestCampaignConditionReportUpload>>,
+        TError,
+        RequestCampaignConditionReportUploadMutationVariables,
+        TContext
+      > => {
+      return useMutation(getRequestCampaignConditionReportUploadMutationOptions(options));
+    }
+
+export const getFinalizeCampaignConditionReportUploadUrl = (campaignId: string,
+    intentId: string,) => {
+
+
+
+
+  return `/api/campaigns/${campaignId}/condition-report/photo/${intentId}/finalize`
+}
+
+/**
+ * @summary Finalize an owner police report upload once
+ */
+export const finalizeCampaignConditionReportUpload = async (campaignId: string,
+    intentId: string, options?: Parameters<typeof customFetch>[1]): Promise<PoliceReportUploadIntent> => {
+
+  return customFetch<PoliceReportUploadIntent>(getFinalizeCampaignConditionReportUploadUrl(campaignId,intentId),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getFinalizeCampaignConditionReportUploadMutationKey = () => ['finalizeCampaignConditionReportUpload'] as const;
+
+export const getFinalizeCampaignConditionReportUploadMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof finalizeCampaignConditionReportUpload>>, TError,FinalizeCampaignConditionReportUploadMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof finalizeCampaignConditionReportUpload>>, TError,FinalizeCampaignConditionReportUploadMutationVariables, TContext> => {
+
+const mutationKey = getFinalizeCampaignConditionReportUploadMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof finalizeCampaignConditionReportUpload>>, FinalizeCampaignConditionReportUploadMutationVariables> = (props) => {
+          const {campaignId,intentId} = props ?? {};
+
+          return  finalizeCampaignConditionReportUpload(campaignId,intentId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type FinalizeCampaignConditionReportUploadMutationResult = NonNullable<Awaited<ReturnType<typeof finalizeCampaignConditionReportUpload>>>
+
+    export type FinalizeCampaignConditionReportUploadMutationError = ErrorType<void>
+    export type FinalizeCampaignConditionReportUploadMutationVariables = {campaignId: string;intentId: string}
+
+    /**
+ * @summary Finalize an owner police report upload once
+ */
+export const useFinalizeCampaignConditionReportUpload = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof finalizeCampaignConditionReportUpload>>, TError,FinalizeCampaignConditionReportUploadMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof finalizeCampaignConditionReportUpload>>,
+        TError,
+        FinalizeCampaignConditionReportUploadMutationVariables,
+        TContext
+      > => {
+      return useMutation(getFinalizeCampaignConditionReportUploadMutationOptions(options));
+    }
+
+export const getSubmitCampaignConditionReportUrl = (campaignId: string,) => {
+
+
+
+
+  return `/api/campaigns/${campaignId}/condition-report`
+}
+
+/**
+ * @summary Report wear or theft/loss for an owned item
+ */
+export const submitCampaignConditionReport = async (campaignId: string,
+    conditionReportInput: ConditionReportInput, options?: Parameters<typeof customFetch>[1]): Promise<void> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Array.isArray(h)) return Object.fromEntries(h);
+    return h;
+  };
+return customFetch<void>(getSubmitCampaignConditionReportUrl(campaignId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(conditionReportInput)
+  }
+);}
+
+
+
+
+
+export const getSubmitCampaignConditionReportMutationKey = () => ['submitCampaignConditionReport'] as const;
+
+export const getSubmitCampaignConditionReportMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof submitCampaignConditionReport>>, TError,SubmitCampaignConditionReportMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof submitCampaignConditionReport>>, TError,SubmitCampaignConditionReportMutationVariables, TContext> => {
+
+const mutationKey = getSubmitCampaignConditionReportMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof submitCampaignConditionReport>>, SubmitCampaignConditionReportMutationVariables> = (props) => {
+          const {campaignId,data} = props ?? {};
+
+          return  submitCampaignConditionReport(campaignId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SubmitCampaignConditionReportMutationResult = NonNullable<Awaited<ReturnType<typeof submitCampaignConditionReport>>>
+    export type SubmitCampaignConditionReportMutationBody = BodyType<ConditionReportInput>
+    export type SubmitCampaignConditionReportMutationError = ErrorType<void>
+    export type SubmitCampaignConditionReportMutationVariables = {campaignId: string;data: BodyType<ConditionReportInput>}
+
+    /**
+ * @summary Report wear or theft/loss for an owned item
+ */
+export const useSubmitCampaignConditionReport = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof submitCampaignConditionReport>>, TError,SubmitCampaignConditionReportMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof submitCampaignConditionReport>>,
+        TError,
+        SubmitCampaignConditionReportMutationVariables,
+        TContext
+      > => {
+      return useMutation(getSubmitCampaignConditionReportMutationOptions(options));
     }
 
 export const getApproveCampaignProofUrl = (campaignId: string,) => {

@@ -6,6 +6,9 @@ import {
   placementOrdersTable,
 } from "@workspace/db";
 import {
+  campaignItemDisplayName,
+} from "../emailTemplates.ts";
+import {
   consumeAdminMagicLink,
   issueAdminMagicLink,
   readAdminIdentity,
@@ -13,8 +16,17 @@ import {
 import { recordAuditEvent } from "../lib/audit.ts";
 import { runLifecycleSweeps } from "../paymentReconciliation.ts";
 import { cleanupTestRecords } from "../testRecordCleanup.ts";
+import { issueApprovedMakeGoodRefund } from "../paymentFunding.ts";
 
 const router: IRouter = Router();
+
+function sanitizeAdminPayload(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(sanitizeAdminPayload);
+  if (!value || typeof value !== "object") return value;
+  return Object.fromEntries(Object.entries(value as Record<string, unknown>)
+    .filter(([key]) => key !== "ownerAccessTokenHash" && key !== "adminTokenHash" && !/hash$/i.test(key) && !/secret$/i.test(key))
+    .map(([key, child]) => [key, sanitizeAdminPayload(child)]));
+}
 
 async function requireAdmin(req: import("express").Request, res: import("express").Response): Promise<string | null> {
   const email = await readAdminIdentity(req);
@@ -67,7 +79,7 @@ router.post("/admin/run-sweeps", async (req, res): Promise<void> => {
     return;
   }
   const report = await runLifecycleSweeps(now);
-  res.json({ now: now.toISOString(), ...report });
+  res.json(sanitizeAdminPayload({ now: now.toISOString(), ...report }));
 });
 
 router.post("/admin/cleanup-test-records", async (req, res): Promise<void> => {
@@ -99,7 +111,8 @@ router.get("/admin/campaigns", async (req, res): Promise<void> => {
     );
     result.push({
       id: campaign.id,
-      title: campaign.title,
+      title: campaignItemDisplayName(campaign),
+      itemDisplayName: campaignItemDisplayName(campaign),
       itemType: campaign.itemType,
       ownerName: campaign.ownerName,
       ownerEmail: campaign.ownerEmail,
@@ -109,6 +122,11 @@ router.get("/admin/campaigns", async (req, res): Promise<void> => {
       shipmentStatus: campaign.shipmentStatus,
       deliveredAt: campaign.deliveredAt,
       checkinDueAt: campaign.checkinDueAt,
+      checkinStatus: campaign.checkinStatus,
+      ownerRestricted: campaign.ownerRestricted,
+      makeGoodStatus: campaign.makeGoodStatus,
+      makeGoodSource: campaign.makeGoodSource,
+      makeGoodNote: campaign.makeGoodNote,
       orders: orders.map((order) => ({
         id: order.id,
         reservationId: `BMI-${order.id.toUpperCase().slice(0, 6)}`,
@@ -122,7 +140,7 @@ router.get("/admin/campaigns", async (req, res): Promise<void> => {
       })),
     });
   }
-  res.json({ campaigns: result });
+  res.json(sanitizeAdminPayload({ campaigns: result }));
 });
 
 router.patch("/admin/campaigns/:campaignId/orders/:orderId", async (req, res): Promise<void> => {
@@ -160,7 +178,7 @@ router.patch("/admin/campaigns/:campaignId/orders/:orderId", async (req, res): P
     requestIp: req.ip,
     metadata: { proofSent, proofApproved },
   });
-  res.json({ order: updated });
+  res.json(sanitizeAdminPayload({ order: updated }));
 });
 
 router.patch("/admin/campaigns/:campaignId/fulfillment", async (req, res): Promise<void> => {
@@ -192,7 +210,38 @@ router.patch("/admin/campaigns/:campaignId/fulfillment", async (req, res): Promi
     entityId: campaignId,
     requestIp: req.ip,
   });
-  res.json({ campaign: updated });
+   res.json(sanitizeAdminPayload({ campaign: updated }));
+});
+
+router.post("/admin/campaigns/:campaignId/make-good", async (req, res): Promise<void> => {
+  const admin = await requireAdmin(req, res);
+  if (!admin) return;
+  const campaignId = String(req.params.campaignId);
+  const note = typeof req.body?.note === "string" ? req.body.note.trim().slice(0, 2000) : "";
+  if (!note) { res.status(400).json({ error: "An admin note is required." }); return; }
+  const now = new Date();
+  const [updated] = await db.update(campaignsTable).set({
+    makeGoodStatus: "confirmed",
+    makeGoodSource: "admin",
+    makeGoodNote: note,
+    makeGoodFlaggedAt: now,
+    makeGoodAdminConfirmedAt: now,
+    makeGoodAdminConfirmedBy: admin,
+    updatedAt: now,
+  }).where(eq(campaignsTable.id, campaignId)).returning();
+  if (!updated) { res.status(404).json({ error: "Campaign not found" }); return; }
+  await recordAuditEvent({ actorType: "operator", actorId: admin, action: "make_good_confirmed", entityType: "campaign", entityId: campaignId, requestIp: req.ip, metadata: { note } });
+  res.status(201).json(sanitizeAdminPayload({ campaign: updated }));
+});
+
+router.post("/admin/campaigns/:campaignId/make-good/refund", async (req, res): Promise<void> => {
+  const admin = await requireAdmin(req, res);
+  if (!admin) return;
+  const campaignId = String(req.params.campaignId);
+  const refundedCents = await issueApprovedMakeGoodRefund(campaignId);
+  if (!refundedCents) { res.status(409).json({ error: "No approved make-good refund is available." }); return; }
+  await recordAuditEvent({ actorType: "operator", actorId: admin, action: "make_good_refund_issued", entityType: "campaign", entityId: campaignId, requestIp: req.ip, metadata: { refundedCents } });
+  res.json(sanitizeAdminPayload({ campaignId, refundedCents, status: "refunded" }));
 });
 
 export default router;

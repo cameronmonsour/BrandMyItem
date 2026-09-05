@@ -5,6 +5,7 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { TrackingCampaignLifecycleStatus } from './trackingCampaignLifecycleStatus';
 import type { TrackingOrder } from './trackingOrder';
 
 export interface TrackingCampaign {
@@ -14,6 +15,12 @@ export interface TrackingCampaign {
   ownerName: string;
   pricesCents: number[];
   active: boolean;
+  lifecycleStatus?: TrackingCampaignLifecycleStatus;
+  /** @nullable */
+  deliveredAt?: Date | null;
+  /** @nullable */
+  checkinDueAt?: Date | null;
+  checkinStatus?: string;
   ownerMatch: boolean;
   createdAt: Date;
   orders: TrackingOrder[];

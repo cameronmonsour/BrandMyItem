@@ -238,3 +238,17 @@ mtime_ms = 1788574979653
 storage_uri = "gcs://replit-rams-assets-riker/rams/assets/repl:3f7c2cc8-f08b-4158-944b-09fd3b52c7cc/113937cc-9954-46bf-a17b-d8097e2c516e/7ac9a405-392a-47b2-9fa3-4ff529e8014f"
 storage_version_token = "1788575060310272"
 content_type = "image/jpeg"
+
+[[outputs]]
+id = "uJYrHgPm9V8lNfS1Y5Kf3"
+uri = "file://verification/sweep-email-arrays.json"
+type = "unspecified"
+title = "Lifecycle sweep email arrays"
+description = "Email and state-change arrays from the requested +5d, +7d, +9d, and +61d sweep checkpoints."
+logical_id = "a7cca434-2566-417c-89f2-d5e22fcf618f"
+content_hash = "sha256:c36234201bdd05bd0dc8bb4698943e7210e615d9b355ed651526f290b861ad6e"
+size = 12364
+mtime_ms = 1788577795274
+storage_uri = "gcs://replit-rams-assets-riker/rams/assets/repl:3f7c2cc8-f08b-4158-944b-09fd3b52c7cc/a7cca434-2566-417c-89f2-d5e22fcf618f/65dfc87a-2732-44b1-8394-42efa8d5239c"
+storage_version_token = "1788577814663183"
+content_type = "application/octet-stream"

@@ -6,7 +6,6 @@ import {
   reconcileReservationPayments,
   advanceCheckinLifecycle,
   autoApprovePlacementProofs,
-  refundPendingMakeGoods,
 } from "./paymentFunding.ts";
 
 const DEFAULT_INTERVAL_MS = 5 * 60 * 1000;
@@ -24,7 +23,6 @@ export async function reconcilePayments(now = new Date()): Promise<void> {
       await expireUnfundedCampaigns(now);
       await advanceCheckinLifecycle(now);
       await autoApprovePlacementProofs(now);
-      await refundPendingMakeGoods(now);
     } finally {
       await client.query("SELECT pg_advisory_unlock(hashtext('brandmyitem-lifecycle-sweep'))");
     }
@@ -53,6 +51,13 @@ async function snapshotSweeps(): Promise<SweepSnapshot> {
       checkinDueAt: campaign.checkinDueAt?.toISOString() ?? null,
       fundedEmailSentAt: campaign.fundedEmailSentAt?.toISOString() ?? null,
       reopenedEmailSentAt: campaign.reopenedEmailSentAt?.toISOString() ?? null,
+      recipient: campaign.ownerEmail,
+      checkinPreDueEmailSentAt: campaign.checkinPreDueEmailSentAt?.toISOString() ?? null,
+      checkinDueEmailSentAt: campaign.checkinDueEmailSentAt?.toISOString() ?? null,
+      checkinMissedEmailSentAt: campaign.checkinMissedEmailSentAt?.toISOString() ?? null,
+      restrictionEmailSentAt: campaign.restrictionEmailSentAt?.toISOString() ?? null,
+      proofAutoApprovedEmailSentAt: campaign.proofAutoApprovedEmailSentAt?.toISOString() ?? null,
+      expiredEmailSentAt: campaign.expiredEmailSentAt?.toISOString() ?? null,
     }])),
     orders: new Map(orders.map((order) => [order.id, {
       status: order.status,
@@ -63,6 +68,8 @@ async function snapshotSweeps(): Promise<SweepSnapshot> {
       paymentDeclineEmailSentAt: order.paymentDeclineEmailSentAt?.toISOString() ?? null,
       paymentReopenedEmailSentAt: order.paymentReopenedEmailSentAt?.toISOString() ?? null,
       stripeRefundStatus: order.stripeRefundStatus,
+      recipient: order.email,
+      releaseEmailSentAt: order.releaseEmailSentAt?.toISOString() ?? null,
     }])),
   };
 }
@@ -85,7 +92,6 @@ export async function runLifecycleSweeps(now = new Date()): Promise<{
       await expireUnfundedCampaigns(now);
       await advanceCheckinLifecycle(now);
       await autoApprovePlacementProofs(now);
-      await refundPendingMakeGoods(now);
       const after = await snapshotSweeps();
       const changes: Array<Record<string, unknown>> = [];
       const emails: Array<Record<string, unknown>> = [];
@@ -100,6 +106,9 @@ export async function runLifecycleSweeps(now = new Date()): Promise<{
         if (previous?.reopenedEmailSentAt !== next.reopenedEmailSentAt && next.reopenedEmailSentAt) {
           emails.push({ kind: "owner_reopened", campaignId: id, sentAt: next.reopenedEmailSentAt });
         }
+         for (const [field, template] of [["checkinPreDueEmailSentAt", "checkin_reminder_pre_due"], ["checkinDueEmailSentAt", "checkin_reminder_due"], ["checkinMissedEmailSentAt", "checkin_missed"], ["restrictionEmailSentAt", "owner_restricted"], ["proofAutoApprovedEmailSentAt", "proof_auto_approved"], ["expiredEmailSentAt", "listing_expired"]] as const) {
+           if (previous?.[field] !== next[field] && next[field]) emails.push({ template, recipient: next.recipient, campaignId: id, sentAt: next[field] });
+         }
       }
       for (const [id, next] of after.orders) {
         const previous = before.orders.get(id);
@@ -115,6 +124,9 @@ export async function runLifecycleSweeps(now = new Date()): Promise<{
         if (previous?.paymentReopenedEmailSentAt !== next.paymentReopenedEmailSentAt && next.paymentReopenedEmailSentAt) {
           emails.push({ kind: "brand_reopened", reservationId: id, sentAt: next.paymentReopenedEmailSentAt });
         }
+         if (previous?.releaseEmailSentAt !== next.releaseEmailSentAt && next.releaseEmailSentAt) {
+           emails.push({ template: "reservation_released", recipient: next.recipient, reservationId: id, sentAt: next.releaseEmailSentAt });
+         }
       }
       return { locked: true, changes, emails };
     } finally {

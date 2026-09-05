@@ -570,6 +570,50 @@ paths:
       responses:
         "200": { description: Make-good selected }
         "409": { description: A check-in has not been missed }
+  /campaigns/{campaignId}/condition-report/photo/request-url:
+    post:
+      operationId: requestCampaignConditionReportUpload
+      tags: [fulfillment, storage]
+      summary: Issue an owner-bound police report upload intent
+      parameters:
+        - $ref: "#/components/parameters/CampaignId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConditionReportUploadRequest"
+      responses:
+        "201": { description: Upload intent issued, content: { application/json: { schema: { $ref: "#/components/schemas/PoliceReportUploadIntent" } } } }
+        "400": { description: Unsupported police report format }
+  /campaigns/{campaignId}/condition-report/photo/{intentId}/finalize:
+    post:
+      operationId: finalizeCampaignConditionReportUpload
+      tags: [fulfillment, storage]
+      summary: Finalize an owner police report upload once
+      parameters:
+        - $ref: "#/components/parameters/CampaignId"
+        - $ref: "#/components/parameters/UploadIntentId"
+      responses:
+        "200": { description: Upload intent finalized, content: { application/json: { schema: { $ref: "#/components/schemas/PoliceReportUploadIntent" } } } }
+        "409": { description: Intent expired or already finalized }
+  /campaigns/{campaignId}/condition-report:
+    post:
+      operationId: submitCampaignConditionReport
+      tags: [fulfillment]
+      summary: Report wear or theft/loss for an owned item
+      parameters:
+        - $ref: "#/components/parameters/CampaignId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConditionReportInput"
+      responses:
+        "201": { description: Condition report recorded }
+        "400": { description: Invalid report or missing police report }
+        "409": { description: Police report upload is not valid }
   /operator/campaigns/{campaignId}/proofs/approve:
     post:
       operationId: approveCampaignProof
@@ -1026,6 +1070,17 @@ components:
             type: integer
         active:
           type: boolean
+        lifecycleStatus:
+          type: string
+          enum: [live, funding, funded, ordered, branded, shipped, active, complete, expired]
+        deliveredAt:
+          type: ["string", "null"]
+          format: date-time
+        checkinDueAt:
+          type: ["string", "null"]
+          format: date-time
+        checkinStatus:
+          type: string
         ownerMatch:
           type: boolean
         createdAt:
@@ -1219,3 +1274,32 @@ components:
       required: [selection]
       properties:
         selection: { type: string, enum: [extension, credit, cancellation] }
+    ConditionReportUploadRequest:
+      type: object
+      additionalProperties: false
+      required: [name, size, contentType]
+      properties:
+        name: { type: string, minLength: 1, maxLength: 255 }
+        size: { type: integer, minimum: 1, maximum: 10000000 }
+        contentType: { type: string, enum: [image/png, image/jpeg, image/webp, application/pdf] }
+    PoliceReportUploadIntent:
+      type: object
+      required: [id, purpose, objectPath, expectedMimeType, expectedSizeBytes, expectedFileName, status, expiresAt]
+      properties:
+        id: { type: string }
+        purpose: { type: string, const: owner_police_report }
+        objectPath: { type: string, pattern: "^/objects/uploads/[A-Za-z0-9-]+$" }
+        expectedMimeType: { type: string, enum: [image/png, image/jpeg, image/webp, application/pdf] }
+        expectedSizeBytes: { type: integer }
+        expectedFileName: { type: string }
+        status: { type: string, enum: [issued, finalized, consumed, revoked] }
+        expiresAt: { type: string, format: date-time }
+        uploadURL: { type: string, format: uri }
+    ConditionReportInput:
+      type: object
+      additionalProperties: false
+      required: [type]
+      properties:
+        type: { type: string, enum: [wear, theft_loss] }
+        note: { type: string, maxLength: 2000 }
+        policeReportIntentId: { type: string, minLength: 1 }

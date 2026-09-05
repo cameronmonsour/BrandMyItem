@@ -236,3 +236,81 @@ export function ownerCampaignConfirmationEmail(input: {
     ),
   };
 }
+
+export function checkinReminderEmail(input: {
+  email: string;
+  itemDisplayName: string;
+  campaignId: string;
+  timing: "pre_due" | "due" | "missed";
+  dueAt: Date;
+}): TransactionalEmail {
+  const item = escapeHtml(input.itemDisplayName);
+  const due = input.dueAt.toLocaleDateString("en-US", { timeZone: "UTC" });
+  const copy = input.timing === "pre_due"
+    ? `Your next ${input.itemDisplayName} check-in is due on ${due}. You can submit a current photo from your owner tracking page.`
+    : input.timing === "due"
+      ? `Your ${input.itemDisplayName} check-in is due today. Submit a current photo from your owner tracking page.`
+      : `Your ${input.itemDisplayName} check-in was not received by the two-day grace period. The sale remains settled, and you can contact support about a make-good.`;
+  return {
+    to: input.email,
+    subject: input.timing === "missed" ? `Your ${input.itemDisplayName} check-in was missed` : `Your ${input.itemDisplayName} check-in`,
+    text: `${copy} Listing ID: ${input.campaignId}.`,
+    html: wrap(
+      input.timing === "missed" ? "Check-in missed" : "Check-in reminder",
+      `${escapeHtml(copy)} Listing ID: ${escapeHtml(input.campaignId)}.`,
+    ),
+  };
+}
+
+export function listingExpiredEmail(input: {
+  email: string;
+  itemDisplayName: string;
+  campaignId: string;
+}): TransactionalEmail {
+  return {
+    to: input.email,
+    subject: `Your ${input.itemDisplayName} listing expired`,
+    text: `Your ${input.itemDisplayName} listing expired without fully funding. No new charge was made. Listing ID: ${input.campaignId}.`,
+    html: wrap("Listing expired", `Your ${escapeHtml(input.itemDisplayName)} listing expired without fully funding. No new charge was made. Listing ID: ${escapeHtml(input.campaignId)}.`),
+  };
+}
+
+export function proofAutoApprovedEmail(input: {
+  email: string;
+  itemDisplayName: string;
+  campaignId: string;
+}): TransactionalEmail {
+  return {
+    to: input.email,
+    subject: `Your ${input.itemDisplayName} proof was auto-approved`,
+    text: `A production proof for your ${input.itemDisplayName} listing was auto-approved after seven days without an owner response. Listing ID: ${input.campaignId}.`,
+    html: wrap("Production proof auto-approved", `A production proof for your ${escapeHtml(input.itemDisplayName)} listing was auto-approved after seven days without an owner response. Listing ID: ${escapeHtml(input.campaignId)}.`),
+  };
+}
+
+export function ownerRestrictedEmail(input: {
+  email: string;
+  itemDisplayName: string;
+  campaignId: string;
+}): TransactionalEmail {
+  return {
+    to: input.email,
+    subject: `Posting is restricted for your ${input.itemDisplayName} listing`,
+    text: `Two consecutive missed check-ins restricted new listing creation for this owner. Contact support if this is incorrect. Listing ID: ${input.campaignId}.`,
+    html: wrap("Posting restricted", `Two consecutive missed check-ins restricted new listing creation for this owner. Contact support if this is incorrect. Listing ID: ${escapeHtml(input.campaignId)}.`),
+  };
+}
+
+export function makeGoodRefundEmail(input: {
+  email: string;
+  itemDisplayName: string;
+  refundCents: number;
+}): TransactionalEmail {
+  const amount = `$${(input.refundCents / 100).toFixed(2)}`;
+  return {
+    to: input.email,
+    subject: `Your BrandMyItem make-good refund was approved`,
+    text: `An approved make-good refund of ${amount} was issued for your ${input.itemDisplayName} reservation. Stripe may take several business days to show it.`,
+    html: wrap("Make-good refund approved", `An approved make-good refund of ${amount} was issued for your ${escapeHtml(input.itemDisplayName)} reservation. Stripe may take several business days to show it.`),
+  };
+}
