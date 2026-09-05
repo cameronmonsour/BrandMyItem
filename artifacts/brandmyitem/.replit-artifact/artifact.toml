@@ -21,6 +21,7 @@ args = [ "pnpm", "run", "build" ]
 
 [services.production.build.env]
 NODE_ENV = "production"
+PUBLIC_BASE_URL = "https://brandmyitem.com"
 
 [services.production.run]
 args = [ "node", "artifacts/api-server/dist/index.mjs" ]
