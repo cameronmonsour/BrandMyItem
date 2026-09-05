@@ -36,9 +36,18 @@
     }catch(error){}
   })();
 </script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="preload" href="fonts/inter-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/cormorant-garamond-500-normal.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+@font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url('fonts/inter-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url('fonts/inter-500-normal.woff2') format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url('fonts/inter-600-normal.woff2') format('woff2')}
+@font-face{font-family:'Cormorant Garamond';font-style:normal;font-weight:400;font-display:swap;src:url('fonts/cormorant-garamond-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Cormorant Garamond';font-style:normal;font-weight:500;font-display:swap;src:url('fonts/cormorant-garamond-500-normal.woff2') format('woff2')}
+@font-face{font-family:'Cormorant Garamond';font-style:normal;font-weight:600;font-display:swap;src:url('fonts/cormorant-garamond-600-normal.woff2') format('woff2')}
+@font-face{font-family:'Cormorant Garamond';font-style:italic;font-weight:400;font-display:swap;src:url('fonts/cormorant-garamond-400-italic.woff2') format('woff2')}
+@font-face{font-family:'Cormorant Garamond';font-style:italic;font-weight:500;font-display:swap;src:url('fonts/cormorant-garamond-500-italic.woff2') format('woff2')}
+@font-face{font-family:'Cormorant Garamond';font-style:italic;font-weight:600;font-display:swap;src:url('fonts/cormorant-garamond-600-italic.woff2') format('woff2')}
 :root{
   --bg:#FFFFFF; --wash:#F5F5F7; --wash2:#FAFAFA; --fg:#1D1D1F; --mfg:#6E6E73;
   --border:#E5E5EA; --dash:#C7C7CC; --ring:rgba(29,29,31,.35);
@@ -113,6 +122,10 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;pointer-events:none}
 .navicon:hover{opacity:1}
 .nav .navchip{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:500;color:rgba(255,255,255,.85);background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:6px 12px;font-variant-numeric:tabular-nums}
 .nav .navchip .pulse{width:6px;height:6px;border-radius:50%;background:#fff;animation:pulse 1.6s infinite}
+.nav-sponsor{margin-left:auto;display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:0 15px!important;border-radius:999px;background:#1D1D1F;color:#fff!important;opacity:1!important;white-space:nowrap}
+.menu-toggle{display:none;width:44px;height:44px;align-items:center;justify-content:center;border-radius:10px}
+.menu-toggle svg{width:21px;height:21px}
+.mobile-menu{display:none}
 .spacer{flex:1}
 .view{display:none;min-height:100vh;padding-top:48px}
 .view.on{display:block}
@@ -678,7 +691,7 @@ details.faq .fa b{color:var(--fg);font-weight:600}
 .home-activity-brand img{width:100%;height:100%;object-fit:contain;padding:3px}
 .home-activity-brand .mono{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--fg);color:#fff;font-size:9px;font-weight:700}
 .home-activity-name{font-size:13px;font-weight:700;white-space:nowrap}
-.home-activity-icon{width:16px;height:16px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+.home-activity-icon{width:16px;height:16px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
 .home-activity-icon.paid{background:#D9E8FF;color:#3766B1}
 .home-activity-icon.delivered{background:#E5F4D8;color:#4D8B35}
 .home-activity-icon.approved{background:#DDF2E4;color:#1F7A44}
@@ -923,8 +936,8 @@ details.faq .fa b{color:var(--fg);font-weight:600}
 .mrow{display:flex;gap:10px;margin-top:16px}
 .mrow .btn{flex:1}
 .finetext{font-size:12px;color:var(--mfg);line-height:1.55;margin-top:12px}
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--fg);color:#fff;font-size:14px;font-weight:600;padding:13px 22px;border-radius:999px;z-index:99;transition:transform .25s;box-shadow:var(--sh-lg);max-width:92vw;text-align:center}
-.toast.on{transform:translateX(-50%) translateY(0)}
+.toast{display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--fg);color:#fff;font-size:14px;font-weight:600;padding:13px 22px;border-radius:999px;z-index:99;box-shadow:var(--sh-lg);max-width:92vw;text-align:center}
+.toast.on{display:block}
 
 footer.site-footer{border-top:1px solid var(--border);background:var(--wash);color:var(--mfg);font-size:12px;line-height:1.55}
 .track-page .site-footer{display:none}
@@ -1700,7 +1713,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
 }
 .ap-spot-price span {
   grid-column: 5; justify-self: end; min-width: 68px; padding: 6px 10px;
-  border-radius: 999px; text-align: center; font-size: 10px; line-height: 1;
+  border-radius: 999px; text-align: center; font-size: 12px; line-height: 1;
   font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
   color: #6E6E73; background: #F5F5F7;
 }
@@ -1756,7 +1769,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
   .ap-section-lede { max-width: 560px; margin-top: 12px; }
 }
 @media(max-width: 640px) {
-  .ap-reframe-shell { padding: 0 14px 54px; }
+  .ap-reframe-shell { padding: 54px 14px 54px; }
   .ap-campaign-lead { padding: 0 0 23px; }
   .ap-campaign-lead .ap-funding-top { gap: 8px; }
   .ap-campaign-lead .ap-raised { font-size: 35px; }
@@ -1788,12 +1801,32 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
   .ap-detail-panel { padding: 23px 18px 25px; }
   .ap-item-meta { gap: 7px; }
   .ap-item-meta div { padding: 10px 9px; }
-  .ap-item-meta span { font-size: 9px; }
+  .ap-item-meta span { font-size: 11px; }
   .ap-item-meta b { font-size: 12px; }
   .ap-detail-panel .ap-fit-grid { grid-template-columns: 1fr; }
   .ap-detail-panel .ap-col-span-2 { grid-column: auto; }
   .ap-owner-tools .ap-card-header { padding: 20px 18px 12px; }
   .ap-owner-tools .ap-card-body { padding: 17px 18px 21px; }
+}
+
+@media(max-width:430px){
+  .nav-inner{position:relative;justify-content:flex-start;gap:6px;padding:0 10px}
+  .nav-inner>.lnk:not(.nav-sponsor){display:none}
+  .logo{width:44px;height:44px;flex-basis:44px;padding-right:18px}
+  .menu-toggle{display:flex;margin-left:auto}
+  .nav-sponsor{margin-left:0;min-height:44px;padding:0 13px!important;font-size:12px}
+  .mobile-menu{position:absolute;left:0;right:0;top:48px;padding:8px 14px 12px;background:#fff;border-bottom:1px solid var(--border);box-shadow:0 12px 22px rgba(0,0,0,.08)}
+  .mobile-menu.on{display:grid}
+  .mobile-menu a{min-height:44px;display:flex;align-items:center;color:var(--fg);font-size:14px;font-weight:600;white-space:nowrap;border-bottom:1px solid var(--border)}
+  .mobile-menu a:last-child{border-bottom:0}
+  .cu-viewport{height:auto;min-height:0;aspect-ratio:var(--cu-aspect,4/3);overflow:hidden}
+  .build-product-layout{padding:14px}
+  .item-request-link{min-height:44px;display:inline-flex;align-items:center}
+  select,.select,.filters select{min-height:44px}
+  .site-footer a{min-height:44px;display:flex;align-items:center}
+  .site-footer .fine a{display:inline-flex}
+  .ap-back{min-height:44px;display:inline-flex;align-items:center}
+  .ap-spot-price span{font-size:12px}
 }
 
 </style>
@@ -1809,7 +1842,17 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
       <a href="#home-faq" class="lnk hidemob">FAQ</a>
       <a href="#build" class="lnk">Build your item</a>
       <a href="#track" class="lnk">Track my item</a>
+      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="mobileMenu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
       <a href="#dashboard" class="lnk nav-sponsor">Brand an item</a>
+      <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile navigation">
+        <a href="#home-how">How it works</a>
+        <a href="#dashboard">Live items</a>
+        <a href="#home-faq">FAQ</a>
+        <a href="#build">Build your item</a>
+        <a href="#track">Track my item</a>
+      </nav>
     </div>
   </div>
 </header>
@@ -8453,6 +8496,24 @@ setTimeout(placeBuilder,0);
   }
 });
 window.addEventListener('hashchange',route);
+var menuToggle=document.getElementById('menuToggle'),mobileMenu=document.getElementById('mobileMenu');
+function closeMobileMenu(){
+  if(!menuToggle||!mobileMenu)return;
+  mobileMenu.classList.remove('on');
+  menuToggle.setAttribute('aria-expanded','false');
+  menuToggle.setAttribute('aria-label','Open navigation');
+}
+if(menuToggle&&mobileMenu){
+  menuToggle.onclick=function(){
+    var opening=!mobileMenu.classList.contains('on');
+    mobileMenu.classList.toggle('on',opening);
+    menuToggle.setAttribute('aria-expanded',opening?'true':'false');
+    menuToggle.setAttribute('aria-label',opening?'Close navigation':'Open navigation');
+  };
+  mobileMenu.addEventListener('click',function(e){if(e.target.closest('a'))closeMobileMenu()});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeMobileMenu()});
+  window.addEventListener('resize',function(){if(window.innerWidth>430)closeMobileMenu()});
+}
 if(!location.hash||location.hash==='#')location.hash=new URLSearchParams(location.search).get('tracking_token')?'track':'home';
 
 /* --- HOME --- */
@@ -8494,7 +8555,7 @@ function renderLiveFeed(feedId){
     var brandMark=row.c&&safeImageAttr(row.c.logo)?'<img src="'+safeImageAttr(row.c.logo)+'" alt="'+safeCardText(brand)+' logo">':'';
     var icon=row.kind==='funding'?'✓':(row.kind==='reservation'?'$':'↗');
     var action=row.kind==='listing'
-      ? '<b>'+safeCardText(row.l.owner||'An owner')+'</b> posted <b>'+safeCardText(label)+'</b>'
+      ? 'posted <b>'+safeCardText(label)+'</b>'
       : row.kind==='funding'
         ? '<b>'+safeCardText(label)+'</b> is <b>Funded</b>'
         : '<b>'+safeCardText(brand)+'</b> reserved a <b>'+money(row.c.amt||row.l.prices[row.spotIndex]||row.l.prices[0])+' spot</b>';
@@ -9596,7 +9657,10 @@ function cuDraw(){
   cv.width=iw;cv.height=ih;
   var viewport=document.getElementById('cuViewport');
   var availableWidth=viewport?Math.max(280,viewport.clientWidth):760;
-  var fit=Math.min(1,availableWidth/iw,460/ih);
+  var mobileFrame=window.innerWidth<=430;
+  var frameHeight=mobileFrame?availableWidth*(ih/iw):460;
+  if(viewport)viewport.style.setProperty('--cu-aspect',iw+' / '+ih);
+  var fit=Math.min(1,availableWidth/iw,frameHeight/ih);
   var viewScale=fit*Math.max(0.5,Math.min(3,CU.zoom||1));
   cv.style.width=Math.max(1,Math.round(iw*viewScale))+'px';
    cv.style.height=Math.max(1,Math.round(ih*viewScale))+'px';
@@ -11423,11 +11487,15 @@ function refreshItemCards(){
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">'+p.icon+'</svg><span>'+p.label+'</span></a>';
     }).join('');
   }
-  document.getElementById('iHab').textContent=[CUR.freq,CUR.social&&(CUR.social+' followers')].filter(Boolean).join(' \u00b7 ');
+  var followerLabel=function(value){
+    value=String(value||'').trim();
+    return /\bfollowers?\b/i.test(value)?value:value+' followers';
+  };
+  document.getElementById('iHab').textContent=[CUR.freq,CUR.social&&followerLabel(CUR.social)].filter(Boolean).join(' \u00b7 ');
   var locEl=document.getElementById('iBrandLocations'),purposeEl=document.getElementById('iPurpose'),socialEl=document.getElementById('iSocial'),linksEl=document.getElementById('iSocialLinks');
    if(locEl)locEl.textContent=listingLocationLine(CUR)||'Not provided';
   if(purposeEl)purposeEl.textContent=CUR.purpose||'The owner has not added a purpose statement yet.';
-  if(socialEl)socialEl.textContent=CUR.social?CUR.social+' followers':'Not provided';
+  if(socialEl)socialEl.textContent=CUR.social?followerLabel(CUR.social):'Not provided';
   var citiesEl=document.getElementById('iCities'),universitiesEl=document.getElementById('iUniversities');
   if(citiesEl)citiesEl.textContent=campaignValues(CUR.cities);
   if(universitiesEl)universitiesEl.textContent=campaignValues(CUR.universities);
@@ -11920,8 +11988,11 @@ document.getElementById('shareIG').onclick=function(){
 
 var toastT;
 function toast(msg){
-  var t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');
-  clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove('on')},3200);
+  var t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('on');
+  clearTimeout(toastT);
+  toastT=setTimeout(function(){t.classList.remove('on');t.textContent=''},3200);
 }
 
 var _hpx=false;
