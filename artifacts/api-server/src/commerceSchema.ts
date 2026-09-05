@@ -154,6 +154,17 @@ export async function ensureCommerceSchema(): Promise<void> {
     );
     CREATE INDEX IF NOT EXISTS admin_sessions_expires_idx
       ON admin_sessions (expires_at);
+    CREATE TABLE IF NOT EXISTS stripe_webhook_events (
+      event_id text PRIMARY KEY,
+      event_type text NOT NULL,
+      object_id text,
+      status text NOT NULL DEFAULT 'received',
+      error text,
+      received_at timestamptz NOT NULL DEFAULT now(),
+      processed_at timestamptz
+    );
+    CREATE INDEX IF NOT EXISTS stripe_webhook_events_received_idx
+      ON stripe_webhook_events (received_at);
     CREATE TABLE IF NOT EXISTS upload_intents (
       id text PRIMARY KEY,
       capability_digest text NOT NULL,
