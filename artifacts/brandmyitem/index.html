@@ -11593,7 +11593,7 @@ async function beginStripeCheckout(){
     var response=await fetch('/api/checkout/sessions',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({campaignId:CUR.id,spotIndex:claimSlot,reservationDraftId:reservationDraft.id,logoIntentId:logoIntent.id,brandName:brand,email:mail,destinationUrl:link||undefined,brandAssent:{accepted:true,termsVersion:'2026-09-04',contentVersion:'2026-09-04'}})
+      body:JSON.stringify({campaignId:CUR.id,spotIndex:claimSlot,reservationDraftId:reservationDraft.id,logoIntentId:logoIntent.id,brandName:brand,email:mail,destinationUrl:link||undefined,demo:DEMO_VIEW,brandAssent:{accepted:true,termsVersion:'2026-09-04',contentVersion:'2026-09-04'}})
     });
     var result={};
     var contentType=response.headers.get('content-type')||'';
@@ -11618,6 +11618,7 @@ async function beginStripeCheckout(){
   }
 }
 async function finalizeReservation(order,pending){
+  pending=pending||{};
   await hydratePublicCampaigns();
   route();
   var listing=DB.listings.find(function(entry){return entry.id===order.campaignId});
@@ -11625,7 +11626,8 @@ async function finalizeReservation(order,pending){
    var now=Date.now(),price=order.amountCents/100,subId='BMI-'+String(order.id).toUpperCase().slice(0,6);
   if(!listing.claims[order.spotIndex]){
     listing.claims[order.spotIndex]={
-      brand:pending.brand,link:pending.link||'',logo:'',amt:price,fee:0,
+      brand:order.brandName||pending.brand||'Brand sponsor',link:order.destinationUrl||pending.link||'',
+      logo:storedAssetUrl(order.logoObjectPath||''),amt:price,fee:0,
       purchasedAt:now,orderStatus:order.status,subId:subId,
       stripeOrderId:order.id,itemId:order.campaignId,ts:now
     };
@@ -11633,7 +11635,7 @@ async function finalizeReservation(order,pending){
   CUR=listing;
   claimSlot=order.spotIndex;
    if(order.status==='funded'&&!listing.fundedAt){listing.fundedAt=now;listing.status='funded';listing.promisedDeliveryAt=now+deliveryDaysOf(listing)*86400000}
-   logAct('<b>'+pending.brand+'</b> reserved a spot on '+listing.owner+'&rsquo;s <b>'+LBLL(listing)+'</b> - no charge until the listing fully funds');
+   logAct('<b>'+(order.brandName||pending.brand||'Brand sponsor')+'</b> reserved a spot on '+listing.owner+'&rsquo;s <b>'+LBLL(listing)+'</b> - no charge until the listing fully funds');
   store.set('bmi_db4',DB);
    trackEvent('spot_reserved',spotAnalyticsData(order.spotIndex,price));
   drawItemMap();refreshItemCards();
@@ -11650,7 +11652,7 @@ async function finalizeReservation(order,pending){
      if(!emailResponse.ok||!emailPayload.sent)throw new Error('confirmation_email_unavailable');
      if(emailStatus){
        emailStatus.innerHTML='We sent a copy to <b id="mSubMail"></b>. Use this ID with that email any time to track your spot.';
-       document.getElementById('mSubMail').textContent=pending.mail;
+       document.getElementById('mSubMail').textContent=order.email||pending.mail||'';
      }
    }catch(error){
      if(emailStatus)emailStatus.textContent='Save this ID. Email confirmation is not available right now.';
@@ -11661,9 +11663,12 @@ async function finalizeReservation(order,pending){
 async function resumeStripeCheckout(){
   var params=new URLSearchParams(location.search);
   if(params.get('checkout')==='cancelled'){
-     var cancelledPending=null;
-     try{cancelledPending=JSON.parse(sessionStorage.getItem('bmi_pending_checkout')||'null');if(cancelledPending&&cancelledPending.reservationDraftId){activeReservationDraftId=cancelledPending.reservationDraftId;await releaseReservationDraft();}sessionStorage.removeItem('bmi_pending_checkout');}catch(error){}
-     history.replaceState(null,'',checkoutReturnUrl(cancelledPending,cancelledPending&&cancelledPending.campaignId));
+      var cancelledPending=null;
+      try{cancelledPending=JSON.parse(sessionStorage.getItem('bmi_pending_checkout')||'null');sessionStorage.removeItem('bmi_pending_checkout');}catch(error){}
+      history.replaceState(null,'',checkoutReturnUrl(Object.assign({},cancelledPending||{},{
+        campaignId:params.get('campaign')||((location.hash.match(/^#item\/([^/?#]+)/)||[])[1]||''),
+        returnSearch:params.get('demo')==='1'?'?demo=1':''
+      }),params.get('campaign')));
      DEMO_VIEW=new URLSearchParams(location.search).get('demo')==='1';
      route();
      toast('Reservation cancelled. Your card was not charged.');
@@ -11671,18 +11676,23 @@ async function resumeStripeCheckout(){
   }
   var sessionId=params.get('session_id');
   if(params.get('checkout')!=='success'||!sessionId)return;
+   var pending=null;
   try{
-    var pending=JSON.parse(sessionStorage.getItem('bmi_pending_checkout')||'null');
-    if(!pending)throw new Error('Checkout details are no longer available');
-    var response=await fetch('/api/checkout/sessions/'+encodeURIComponent(sessionId));
+     try{pending=JSON.parse(sessionStorage.getItem('bmi_pending_checkout')||'null')}catch(error){}
+     var response=await fetch('/api/checkout/sessions/'+encodeURIComponent(sessionId),{cache:'no-store'});
     var order=await response.json();
-     if(!response.ok||!['reserved','funded','payment_failed'].includes(order.status))throw new Error('Your reservation is still being confirmed');
-     sessionStorage.removeItem('bmi_pending_checkout');
-     history.replaceState(null,'',checkoutReturnUrl(pending,order.campaignId));
-     DEMO_VIEW=new URLSearchParams(location.search).get('demo')==='1';
+      if(!response.ok||!['reserved','funded'].includes(order.status))throw new Error(order.error||'Your reservation is still being confirmed');
+      var returnState=Object.assign({},pending||{},{
+        campaignId:order.campaignId||params.get('campaign'),
+        returnSearch:params.get('demo')==='1'?'?demo=1':'',
+        returnHash:'#item/'+encodeURIComponent(order.campaignId||params.get('campaign')||'')
+      });
+      history.replaceState(null,'',checkoutReturnUrl(returnState,order.campaignId||params.get('campaign')));
+      DEMO_VIEW=params.get('demo')==='1';
+      route();
+      sessionStorage.removeItem('bmi_pending_checkout');
      await finalizeReservation(order,pending);
   }catch(error){
-     try{var failedPending=JSON.parse(sessionStorage.getItem('bmi_pending_checkout')||'null');if(failedPending&&failedPending.reservationDraftId){activeReservationDraftId=failedPending.reservationDraftId;await releaseReservationDraft();}sessionStorage.removeItem('bmi_pending_checkout');}catch(releaseError){}
      toast(error&&error.message?error.message:'Could not confirm reservation');
   }
 }
@@ -11690,7 +11700,7 @@ function checkoutReturnUrl(pending,campaignId){
   pending=pending||{};
   var demoSearch='';
   try{if(new URLSearchParams(pending.returnSearch||'').get('demo')==='1')demoSearch='?demo=1'}catch(error){}
-  var returnHash=typeof pending.returnHash==='string'&&/^#item\/[^/?#]+$/.test(pending.returnHash)?pending.returnHash:'#item/'+encodeURIComponent(campaignId||pending.campaignId||'');
+  var returnHash='#item/'+encodeURIComponent(campaignId||pending.campaignId||'');
   return location.pathname+demoSearch+returnHash;
 }
 document.getElementById('mCopyId').onclick=function(){

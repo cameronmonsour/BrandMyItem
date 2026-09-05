@@ -444,6 +444,7 @@ export const CreatePlacementCheckoutBody = zod.object({
   "brandName": zod.string().min(1).max(createPlacementCheckoutBodyBrandNameMax),
   "email": zod.email().max(createPlacementCheckoutBodyEmailMax),
   "destinationUrl": zod.string().max(createPlacementCheckoutBodyDestinationUrlMax).optional(),
+  "demo": zod.boolean().optional().describe('Preserve the demo inventory view when Stripe returns to the app.'),
   "brandAssent": zod.object({
   "accepted": zod.literal(true),
   "termsVersion": zod.string(),
@@ -472,6 +473,10 @@ export const GetPlacementCheckoutParams = zod.object({
 export const GetPlacementCheckoutResponse = zod.object({
   "id": zod.string(),
   "campaignId": zod.string(),
+  "brandName": zod.string().optional(),
+  "email": zod.string().optional(),
+  "destinationUrl": zod.string().nullish(),
+  "logoObjectPath": zod.string().nullish(),
   "spotIndex": zod.int(),
   "amountCents": zod.int(),
   "status": zod.enum(['pending', 'reserved', 'funding', 'payment_failed', 'funded', 'cancelled', 'released', 'expired'])

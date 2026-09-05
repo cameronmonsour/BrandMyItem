@@ -10,6 +10,12 @@ import type { PlacementOrderStatus } from './placementOrderStatus';
 export interface PlacementOrder {
   id: string;
   campaignId: string;
+  brandName?: string;
+  email?: string;
+  /** @nullable */
+  destinationUrl?: string | null;
+  /** @nullable */
+  logoObjectPath?: string | null;
   spotIndex: number;
   amountCents: number;
   status: PlacementOrderStatus;

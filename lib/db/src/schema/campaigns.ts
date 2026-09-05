@@ -131,6 +131,8 @@ export const placementOrdersTable = pgTable(
     stripeCustomerId: text("stripe_customer_id"),
     stripePaymentMethodId: text("stripe_payment_method_id"),
     stripeSetupIntentId: text("stripe_setup_intent_id"),
+    confirmationEmailSentAt: timestamp("confirmation_email_sent_at", { withTimezone: true }),
+    confirmationEmailMessageId: text("confirmation_email_message_id"),
     reservedAt: timestamp("reserved_at", { withTimezone: true }),
     chargedAt: timestamp("charged_at", { withTimezone: true }),
     declineReason: text("decline_reason"),

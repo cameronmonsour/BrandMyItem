@@ -14,3 +14,9 @@ Any route-affecting flags restored with `history.replaceState()` must be recompu
 **Why:** Return URLs may initially omit demo or route context, and concurrent startup fetches can resolve after confirmation with pre-confirmation data.
 
 **How to apply:** Restore the final URL, synchronize location-derived state, render the campaign route, then open confirmation. Serialize startup work around external return handling, and reconcile the server-confirmed mutation into the visible detail state.
+
+Checkout completion webhooks must treat reservation finalization and confirmation-email delivery as separate outcomes.
+
+**Why:** A valid Stripe completion can be followed by a transient or recipient-specific email provider failure. Returning a webhook error after the reservation is committed causes Stripe retries without undoing the reservation.
+
+**How to apply:** Make the reservation transition idempotent, log email delivery failures separately, and acknowledge the completed Checkout event once the reservation is confirmed.

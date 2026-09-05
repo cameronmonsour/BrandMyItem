@@ -269,6 +269,8 @@ export interface PlacementCheckoutInput {
   email: string;
   /** @maxLength 2048 */
   destinationUrl?: string;
+  /** Preserve the demo inventory view when Stripe returns to the app. */
+  demo?: boolean;
   brandAssent: BrandAssent;
 }
 
@@ -385,6 +387,12 @@ export const PlacementOrderStatus = {
 export interface PlacementOrder {
   id: string;
   campaignId: string;
+  brandName?: string;
+  email?: string;
+  /** @nullable */
+  destinationUrl?: string | null;
+  /** @nullable */
+  logoObjectPath?: string | null;
   spotIndex: number;
   amountCents: number;
   status: PlacementOrderStatus;

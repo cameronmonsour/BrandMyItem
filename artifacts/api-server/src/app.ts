@@ -3,6 +3,7 @@ import pinoHttp from "pino-http";
 import router from "./routes/index.ts";
 import { logger } from "./lib/logger.ts";
 import { rateLimit } from "./lib/rateLimit.ts";
+import { stripeWebhook } from "./routes/stripeWebhook.ts";
 
 const app: Express = express();
 
@@ -33,6 +34,7 @@ app.use((_req, res, next) => {
   res.setHeader("Content-Security-Policy", "frame-ancestors 'none'; object-src 'none'; base-uri 'self'");
   next();
 });
+app.post("/api/stripe/webhook", express.raw({ type: "application/json" }), stripeWebhook);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

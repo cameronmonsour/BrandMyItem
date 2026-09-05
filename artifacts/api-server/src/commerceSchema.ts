@@ -7,7 +7,9 @@ export async function ensureCommerceSchema(): Promise<void> {
       ADD COLUMN IF NOT EXISTS checkout_access_token_hash text,
       ADD COLUMN IF NOT EXISTS stripe_refund_id text,
       ADD COLUMN IF NOT EXISTS stripe_refund_status text,
-      ADD COLUMN IF NOT EXISTS logo_object_path text;
+      ADD COLUMN IF NOT EXISTS logo_object_path text,
+      ADD COLUMN IF NOT EXISTS confirmation_email_sent_at timestamptz,
+      ADD COLUMN IF NOT EXISTS confirmation_email_message_id text;
     ALTER TABLE campaigns
       ADD COLUMN IF NOT EXISTS presentation jsonb NOT NULL DEFAULT '{}'::jsonb,
       ADD COLUMN IF NOT EXISTS owner_access_token_hash text,

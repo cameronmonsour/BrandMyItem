@@ -868,6 +868,9 @@ components:
         destinationUrl:
           type: string
           maxLength: 2048
+        demo:
+          type: boolean
+          description: Preserve the demo inventory view when Stripe returns to the app.
         brandAssent:
           $ref: "#/components/schemas/BrandAssent"
     SponsorReservationDraftInput:
@@ -964,6 +967,14 @@ components:
           type: string
         campaignId:
           type: string
+        brandName:
+          type: string
+        email:
+          type: string
+        destinationUrl:
+          type: ["string", "null"]
+        logoObjectPath:
+          type: ["string", "null"]
         spotIndex:
           type: integer
         amountCents:

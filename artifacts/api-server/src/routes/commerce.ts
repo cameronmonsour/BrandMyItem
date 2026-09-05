@@ -447,6 +447,7 @@ type SetupSessionSnapshot = {
   url?: string | null;
   customer?: string | null;
   setup_intent?: string | null;
+  metadata?: Record<string, string>;
 };
 
 type SetupIntentSnapshot = {
@@ -454,7 +455,111 @@ type SetupIntentSnapshot = {
   status: string;
   customer?: string | null;
   payment_method?: string | null;
+  metadata?: Record<string, string>;
 };
+
+type CustomerSnapshot = {
+  id: string;
+  email?: string | null;
+  name?: string | null;
+};
+
+function metadataValue(
+  metadata: Record<string, string> | undefined,
+  key: string,
+): string | undefined {
+  const value = metadata?.[key];
+  return typeof value === "string" && value.trim() ? value.trim() : undefined;
+}
+
+function metadataInteger(
+  metadata: Record<string, string> | undefined,
+  key: string,
+): number | undefined {
+  const value = metadataValue(metadata, key);
+  if (!value || !/^\d+$/.test(value)) return undefined;
+  return Number(value);
+}
+
+async function orderForCheckoutSession(
+  session: SetupSessionSnapshot,
+): Promise<typeof placementOrdersTable.$inferSelect> {
+  const metadata = session.metadata ?? {};
+  const [bySession] = await db
+    .select()
+    .from(placementOrdersTable)
+    .where(eq(placementOrdersTable.stripeCheckoutSessionId, session.id))
+    .limit(1);
+  if (bySession) return bySession;
+
+  const metadataOrderId = metadataValue(metadata, "reservationId");
+  if (metadataOrderId) {
+    const [byMetadata] = await db
+      .select()
+      .from(placementOrdersTable)
+      .where(eq(placementOrdersTable.id, metadataOrderId))
+      .limit(1);
+    if (byMetadata) return byMetadata;
+  }
+
+  const campaignId = metadataValue(metadata, "campaignId");
+  const spotIndex = metadataInteger(metadata, "spotIndex");
+  let email = metadataValue(metadata, "email");
+  let brandName = metadataValue(metadata, "brandName");
+  if ((!email || !brandName) && session.customer) {
+    const customer = await stripeRequest<CustomerSnapshot>(
+      `/v1/customers/${encodeURIComponent(session.customer)}`,
+    );
+    email ||= customer.email?.trim() || undefined;
+    brandName ||= customer.name?.trim() || undefined;
+  }
+  if (!campaignId || spotIndex === undefined || !email) {
+    throw new Error("Checkout session metadata is incomplete");
+  }
+  const [campaign] = await db
+    .select()
+    .from(campaignsTable)
+    .where(eq(campaignsTable.id, campaignId))
+    .limit(1);
+  const amountCents = campaign?.pricesCents[spotIndex];
+  if (!campaign || !Number.isInteger(amountCents) || amountCents < 100) {
+    throw new Error("Checkout session campaign placement is unavailable");
+  }
+
+  const orderId = metadataOrderId ?? randomUUID();
+  const now = new Date();
+  const inserted = await db
+    .insert(placementOrdersTable)
+    .values({
+      id: orderId,
+      campaignId,
+      spotIndex,
+      amountCents,
+      brandName: brandName ?? "Brand sponsor",
+      email,
+      destinationUrl: metadataValue(metadata, "destinationUrl") ?? null,
+      logoObjectPath: metadataValue(metadata, "logoObjectPath") ?? null,
+      status: "pending",
+      stripeCheckoutSessionId: session.id,
+      stripeCheckoutIdempotencyKey: checkoutIdempotencyKey(orderId, session.id),
+      checkoutAccessTokenHash: null,
+      brandAssentAt: now,
+      brandTermsVersion: metadataValue(metadata, "termsVersion") ?? "2026-09-04",
+      brandContentVersion: metadataValue(metadata, "contentVersion") ?? "2026-09-04",
+      updatedAt: now,
+    })
+    .onConflictDoNothing()
+    .returning();
+  if (inserted[0]) return inserted[0];
+
+  const [existing] = await db
+    .select()
+    .from(placementOrdersTable)
+    .where(eq(placementOrdersTable.stripeCheckoutSessionId, session.id))
+    .limit(1);
+  if (!existing) throw new Error("Checkout reservation could not be recovered");
+  return existing;
+}
 
 async function reserveFromSetupSession(
   order: typeof placementOrdersTable.$inferSelect,
@@ -489,6 +594,64 @@ async function reserveFromSetupSession(
     await attemptCampaignFunding(result.campaignId);
   }
   return result;
+}
+
+export async function finalizeCheckoutSession(
+  sessionId: string,
+): Promise<typeof placementOrdersTable.$inferSelect> {
+  const session = await stripeRequest<SetupSessionSnapshot>(
+    `/v1/checkout/sessions/${encodeURIComponent(sessionId)}`,
+  );
+  if (session.setup_intent) {
+    const setupIntent = await stripeRequest<SetupIntentSnapshot>(
+      `/v1/setup_intents/${encodeURIComponent(session.setup_intent)}`,
+    );
+    session.metadata = { ...setupIntent.metadata, ...session.metadata };
+  }
+  const order = await orderForCheckoutSession(session);
+  return reserveFromSetupSession(order, session);
+}
+
+export async function sendReservationConfirmationForOrder(
+  orderId: string,
+): Promise<{ sent: boolean; messageId?: string }> {
+  const [order] = await db
+    .select()
+    .from(placementOrdersTable)
+    .where(eq(placementOrdersTable.id, orderId))
+    .limit(1);
+  if (!order || !["reserved", "funded"].includes(order.status)) {
+    throw new Error("Reservation is not confirmed");
+  }
+  if (order.confirmationEmailSentAt) {
+    return { sent: false, messageId: order.confirmationEmailMessageId ?? undefined };
+  }
+  const [campaign] = await db
+    .select({
+      itemType: campaignsTable.itemType,
+      presentation: campaignsTable.presentation,
+    })
+    .from(campaignsTable)
+    .where(eq(campaignsTable.id, order.campaignId))
+    .limit(1);
+  if (!campaign) throw new Error("Campaign not found");
+  const delivery = await sendTransactionalEmail(
+    reservationConfirmationEmail({
+      email: order.email,
+      reservationId: `BMI-${order.id.toUpperCase().slice(0, 6)}`,
+      itemDisplayName: campaignItemDisplayName(campaign),
+      amountCents: order.amountCents,
+    }),
+  );
+  await db
+    .update(placementOrdersTable)
+    .set({
+      confirmationEmailSentAt: new Date(),
+      confirmationEmailMessageId: delivery.messageId ?? null,
+      updatedAt: new Date(),
+    })
+    .where(and(eq(placementOrdersTable.id, order.id), isNull(placementOrdersTable.confirmationEmailSentAt)));
+  return { sent: true, messageId: delivery.messageId };
 }
 
 router.post("/checkout/sessions", async (req, res): Promise<void> => {
@@ -609,9 +772,23 @@ router.post("/checkout/sessions", async (req, res): Promise<void> => {
     "metadata[reservationId]": orderId,
     "metadata[campaignId]": campaign.id,
     "metadata[spotIndex]": String(input.spotIndex),
+    "metadata[draftId]": input.reservationDraftId,
+    "metadata[brandName]": input.brandName,
+    "metadata[email]": input.email,
+    "metadata[destinationUrl]": input.destinationUrl || "",
+    "metadata[logoObjectPath]": String((await db
+      .select({ logoObjectPath: placementOrdersTable.logoObjectPath })
+      .from(placementOrdersTable)
+      .where(eq(placementOrdersTable.id, orderId))
+      .limit(1))[0]?.logoObjectPath || ""),
+    "metadata[termsVersion]": input.brandAssent.termsVersion,
+    "metadata[contentVersion]": input.brandAssent.contentVersion,
     "setup_intent_data[metadata][reservationId]": orderId,
-    success_url: `${origin}/?checkout=success&session_id={CHECKOUT_SESSION_ID}#item/${encodeURIComponent(campaign.id)}`,
-    cancel_url: `${origin}/?checkout=cancelled#item/${encodeURIComponent(campaign.id)}`,
+    "setup_intent_data[metadata][campaignId]": campaign.id,
+    "setup_intent_data[metadata][spotIndex]": String(input.spotIndex),
+    "setup_intent_data[metadata][draftId]": input.reservationDraftId,
+    success_url: `${origin}/?checkout=success&session_id={CHECKOUT_SESSION_ID}&campaign=${encodeURIComponent(campaign.id)}&demo=${input.demo ? "1" : "0"}#item/${encodeURIComponent(campaign.id)}`,
+    cancel_url: `${origin}/?checkout=cancelled&campaign=${encodeURIComponent(campaign.id)}&demo=${input.demo ? "1" : "0"}#item/${encodeURIComponent(campaign.id)}`,
   });
   const session = await stripeRequest<{ id: string; url: string | null }>(
     "/v1/checkout/sessions",
@@ -649,25 +826,27 @@ router.get("/checkout/sessions/:sessionId", async (req, res): Promise<void> => {
     .from(placementOrdersTable)
     .where(eq(placementOrdersTable.stripeCheckoutSessionId, params.data.sessionId))
     .limit(1);
-  if (!order) {
-    res.status(404).json({ error: "Reservation session not found" });
-    return;
-  }
-  const checkoutAccessToken = readAccessToken(req, "checkout", order.id);
-  if (!accessTokenMatches(order.checkoutAccessTokenHash, checkoutAccessToken)) {
-    res.status(404).json({ error: "Reservation session not found" });
-    return;
-  }
   const session = await stripeRequest<SetupSessionSnapshot>(
     `/v1/checkout/sessions/${encodeURIComponent(params.data.sessionId)}`,
   );
-  const reserved = await reserveFromSetupSession(order, session);
+  const checkoutAccessToken = order
+    ? readAccessToken(req, "checkout", order.id)
+    : undefined;
+  if (order && !accessTokenMatches(order.checkoutAccessTokenHash, checkoutAccessToken ?? "") && session.status !== "complete") {
+    res.status(404).json({ error: "Reservation session not found" });
+    return;
+  }
+  const reserved = await finalizeCheckoutSession(params.data.sessionId);
   res.json(
     GetPlacementCheckoutResponse.parse({
       id: reserved.id,
       campaignId: reserved.campaignId,
       spotIndex: reserved.spotIndex,
       amountCents: reserved.amountCents,
+      brandName: reserved.brandName,
+      email: reserved.email,
+      destinationUrl: reserved.destinationUrl,
+      logoObjectPath: reserved.logoObjectPath,
       status: reserved.status,
     }),
   );
@@ -689,28 +868,9 @@ router.post("/checkout/reservations/:orderId/confirmation-email", async (req, re
     res.status(409).json({ error: "Reservation is not confirmed" });
     return;
   }
-  const [campaign] = await db
-    .select({
-      itemType: campaignsTable.itemType,
-      presentation: campaignsTable.presentation,
-    })
-    .from(campaignsTable)
-    .where(eq(campaignsTable.id, order.campaignId))
-    .limit(1);
-  if (!campaign) {
-    res.status(404).json({ error: "Campaign not found" });
-    return;
-  }
   try {
-    const delivery = await sendTransactionalEmail(
-      reservationConfirmationEmail({
-        email: order.email,
-        reservationId: `BMI-${order.id.toUpperCase().slice(0, 6)}`,
-        itemDisplayName: campaignItemDisplayName(campaign),
-        amountCents: order.amountCents,
-      }),
-    );
-    res.status(202).json({ sent: true, messageId: delivery.messageId });
+    const delivery = await sendReservationConfirmationForOrder(order.id);
+    res.status(202).json(delivery);
   } catch (error) {
     req.log.error({ err: error, reservationId: order.id }, "Unable to deliver reservation confirmation");
     res.status(502).json({ sent: false, error: "Reservation confirmation email is unavailable" });
