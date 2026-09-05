@@ -31,3 +31,6 @@ defaultBucketID = "replit-objstore-840d852c-4e14-4418-af4e-41ecb4434056"
 [userenv.development]
 BRANDMYITEM_PUBLIC_ORIGINS = "https://3f7c2cc8-f08b-4158-944b-09fd3b52c7cc-00-32gdmyf8sb6bx.riker.replit.dev"
 BRANDMYITEM_PUBLIC_URL = "https://3f7c2cc8-f08b-4158-944b-09fd3b52c7cc-00-32gdmyf8sb6bx.riker.replit.dev"
+
+[userenv.shared]
+ADMIN_EMAIL = "cameronmonsour@gmail.com"

@@ -1,0 +1,322 @@
+{
+  "generatedAt": "2026-09-05T01:58:34.045Z",
+  "scenarios": {
+    "paymentFailureReopenPlus49Hours": {
+      "now": "2026-09-07T02:58:34.045Z"
+    },
+    "unfundedExpiryPlus61Days": {
+      "now": "2026-11-05T01:58:34.045Z"
+    },
+    "proofAutoApprovalPlus8Days": {
+      "now": "2026-09-13T01:59:46.374Z",
+      "testOrder": "73e6903d-0c69-4bd2-be6e-1d8f40f28c57",
+      "note": "A funded test placement was set to submitted proof with proof_sent_at eight days earlier."
+    },
+    "makeGoodRefundPlus31Days": {
+      "now": "2026-10-06T01:59:14.185Z",
+      "testCampaign": "djr99kx",
+      "note": "Existing funded Stripe test orders were placed into the explicit make-good cancellation state for verification."
+    }
+  },
+  "results": {
+    "paymentFailureReopenPlus49Hours": {
+      "locked": true,
+      "changes": [
+        {
+          "entity": "campaign",
+          "id": "djr99kx",
+          "before": {
+            "lifecycleStatus": "funding",
+            "active": true,
+            "checkinStatus": "not_due",
+            "proofStatus": "not_submitted",
+            "deliveredAt": null,
+            "checkinDueAt": null,
+            "fundedEmailSentAt": null,
+            "reopenedEmailSentAt": null
+          },
+          "after": {
+            "lifecycleStatus": "live",
+            "active": true,
+            "checkinStatus": "not_due",
+            "proofStatus": "not_submitted",
+            "deliveredAt": null,
+            "checkinDueAt": null,
+            "fundedEmailSentAt": null,
+            "reopenedEmailSentAt": "2026-09-07T02:58:34.045Z"
+          }
+        },
+        {
+          "entity": "placement_order",
+          "id": "775acfca-cba6-4a81-a820-e1f5b104fd48",
+          "before": {
+            "status": "payment_failed",
+            "proofStatus": "not_required",
+            "proofApprovedAt": null,
+            "paymentFailureExpiresAt": "2026-09-07T01:34:48.217Z",
+            "fundingEmailSentAt": null,
+            "paymentDeclineEmailSentAt": "2026-09-05T01:38:01.689Z",
+            "paymentReopenedEmailSentAt": null,
+            "stripeRefundStatus": null
+          },
+          "after": {
+            "status": "reserved",
+            "proofStatus": "not_required",
+            "proofApprovedAt": null,
+            "paymentFailureExpiresAt": null,
+            "fundingEmailSentAt": null,
+            "paymentDeclineEmailSentAt": "2026-09-05T01:38:01.689Z",
+            "paymentReopenedEmailSentAt": "2026-09-07T02:58:34.045Z",
+            "stripeRefundStatus": null
+          }
+        }
+      ],
+      "emails": [
+        {
+          "kind": "owner_reopened",
+          "campaignId": "djr99kx",
+          "sentAt": "2026-09-07T02:58:34.045Z"
+        },
+        {
+          "kind": "brand_reopened",
+          "reservationId": "775acfca-cba6-4a81-a820-e1f5b104fd48",
+          "sentAt": "2026-09-07T02:58:34.045Z"
+        }
+      ]
+    },
+    "unfundedExpiryPlus61Days": {
+      "locked": true,
+      "changes": [
+        {
+          "entity": "campaign",
+          "id": "rdgsm8x",
+          "before": {
+            "lifecycleStatus": "live",
+            "active": true,
+            "checkinStatus": "not_due",
+            "proofStatus": "not_submitted",
+            "deliveredAt": null,
+            "checkinDueAt": null,
+            "fundedEmailSentAt": null,
+            "reopenedEmailSentAt": null
+          },
+          "after": {
+            "lifecycleStatus": "expired",
+            "active": false,
+            "checkinStatus": "not_due",
+            "proofStatus": "not_submitted",
+            "deliveredAt": null,
+            "checkinDueAt": null,
+            "fundedEmailSentAt": null,
+            "reopenedEmailSentAt": null
+          }
+        },
+        {
+          "entity": "campaign",
+          "id": "djr99kx",
+          "before": {
+            "lifecycleStatus": "live",
+            "active": true,
+            "checkinStatus": "not_due",
+            "proofStatus": "not_submitted",
+            "deliveredAt": null,
+            "checkinDueAt": null,
+            "fundedEmailSentAt": null,
+            "reopenedEmailSentAt": "2026-09-07T02:58:34.045Z"
+          },
+          "after": {
+            "lifecycleStatus": "expired",
+            "active": false,
+            "checkinStatus": "not_due",
+            "proofStatus": "not_submitted",
+            "deliveredAt": null,
+            "checkinDueAt": null,
+            "fundedEmailSentAt": null,
+            "reopenedEmailSentAt": "2026-09-07T02:58:34.045Z"
+          }
+        },
+        {
+          "entity": "placement_order",
+          "id": "775acfca-cba6-4a81-a820-e1f5b104fd48",
+          "before": {
+            "status": "reserved",
+            "proofStatus": "not_required",
+            "proofApprovedAt": null,
+            "paymentFailureExpiresAt": null,
+            "fundingEmailSentAt": null,
+            "paymentDeclineEmailSentAt": "2026-09-05T01:38:01.689Z",
+            "paymentReopenedEmailSentAt": "2026-09-07T02:58:34.045Z",
+            "stripeRefundStatus": null
+          },
+          "after": {
+            "status": "released",
+            "proofStatus": "not_required",
+            "proofApprovedAt": null,
+            "paymentFailureExpiresAt": null,
+            "fundingEmailSentAt": null,
+            "paymentDeclineEmailSentAt": "2026-09-05T01:38:01.689Z",
+            "paymentReopenedEmailSentAt": "2026-09-07T02:58:34.045Z",
+            "stripeRefundStatus": null
+          }
+        }
+      ],
+      "emails": []
+    },
+    "proofAutoApprovalPlus8Days": {
+      "locked": true,
+      "changes": [
+        {
+          "entity": "placement_order",
+          "id": "73e6903d-0c69-4bd2-be6e-1d8f40f28c57",
+          "before": {
+            "status": "funded",
+            "proofStatus": "submitted",
+            "proofApprovedAt": null,
+            "paymentFailureExpiresAt": null,
+            "fundingEmailSentAt": "2026-09-05T01:38:01.689Z",
+            "paymentDeclineEmailSentAt": null,
+            "paymentReopenedEmailSentAt": null,
+            "stripeRefundStatus": "succeeded"
+          },
+          "after": {
+            "status": "funded",
+            "proofStatus": "approved",
+            "proofApprovedAt": "2026-09-13T01:59:46.374Z",
+            "paymentFailureExpiresAt": null,
+            "fundingEmailSentAt": "2026-09-05T01:38:01.689Z",
+            "paymentDeclineEmailSentAt": null,
+            "paymentReopenedEmailSentAt": null,
+            "stripeRefundStatus": "succeeded"
+          }
+        }
+      ],
+      "emails": []
+    },
+    "makeGoodRefundPlus31Days": {
+      "locked": true,
+      "changes": [
+        {
+          "entity": "placement_order",
+          "id": "73e6903d-0c69-4bd2-be6e-1d8f40f28c57",
+          "before": {
+            "status": "funded",
+            "proofStatus": "approved",
+            "proofApprovedAt": "2026-09-05T01:34:48.217Z",
+            "paymentFailureExpiresAt": null,
+            "fundingEmailSentAt": "2026-09-05T01:38:01.689Z",
+            "paymentDeclineEmailSentAt": null,
+            "paymentReopenedEmailSentAt": null,
+            "stripeRefundStatus": null
+          },
+          "after": {
+            "status": "funded",
+            "proofStatus": "approved",
+            "proofApprovedAt": "2026-09-05T01:34:48.217Z",
+            "paymentFailureExpiresAt": null,
+            "fundingEmailSentAt": "2026-09-05T01:38:01.689Z",
+            "paymentDeclineEmailSentAt": null,
+            "paymentReopenedEmailSentAt": null,
+            "stripeRefundStatus": "succeeded"
+          }
+        },
+        {
+          "entity": "placement_order",
+          "id": "df9b28a6-514d-403f-bd4a-69ef24a671dd",
+          "before": {
+            "status": "funded",
+            "proofStatus": "approved",
+            "proofApprovedAt": "2026-09-05T01:34:48.217Z",
+            "paymentFailureExpiresAt": null,
+            "fundingEmailSentAt": "2026-09-05T01:38:01.689Z",
+            "paymentDeclineEmailSentAt": null,
+            "paymentReopenedEmailSentAt": null,
+            "stripeRefundStatus": null
+          },
+          "after": {
+            "status": "funded",
+            "proofStatus": "approved",
+            "proofApprovedAt": "2026-09-05T01:34:48.217Z",
+            "paymentFailureExpiresAt": null,
+            "fundingEmailSentAt": "2026-09-05T01:38:01.689Z",
+            "paymentDeclineEmailSentAt": null,
+            "paymentReopenedEmailSentAt": null,
+            "stripeRefundStatus": "succeeded"
+          }
+        },
+        {
+          "entity": "placement_order",
+          "id": "5d02fcba-1dbb-47da-b397-3d8a31340762",
+          "before": {
+            "status": "funded",
+            "proofStatus": "approved",
+            "proofApprovedAt": "2026-09-05T01:34:48.217Z",
+            "paymentFailureExpiresAt": null,
+            "fundingEmailSentAt": "2026-09-05T01:39:48.930Z",
+            "paymentDeclineEmailSentAt": null,
+            "paymentReopenedEmailSentAt": null,
+            "stripeRefundStatus": null
+          },
+          "after": {
+            "status": "funded",
+            "proofStatus": "approved",
+            "proofApprovedAt": "2026-09-05T01:34:48.217Z",
+            "paymentFailureExpiresAt": null,
+            "fundingEmailSentAt": "2026-09-05T01:39:48.930Z",
+            "paymentDeclineEmailSentAt": null,
+            "paymentReopenedEmailSentAt": null,
+            "stripeRefundStatus": "succeeded"
+          }
+        },
+        {
+          "entity": "placement_order",
+          "id": "c62f4190-0d1b-445e-83c9-c72a59002fc7",
+          "before": {
+            "status": "funded",
+            "proofStatus": "approved",
+            "proofApprovedAt": "2026-09-05T01:34:48.217Z",
+            "paymentFailureExpiresAt": null,
+            "fundingEmailSentAt": "2026-09-05T01:38:01.689Z",
+            "paymentDeclineEmailSentAt": null,
+            "paymentReopenedEmailSentAt": null,
+            "stripeRefundStatus": null
+          },
+          "after": {
+            "status": "funded",
+            "proofStatus": "approved",
+            "proofApprovedAt": "2026-09-05T01:34:48.217Z",
+            "paymentFailureExpiresAt": null,
+            "fundingEmailSentAt": "2026-09-05T01:38:01.689Z",
+            "paymentDeclineEmailSentAt": null,
+            "paymentReopenedEmailSentAt": null,
+            "stripeRefundStatus": "succeeded"
+          }
+        },
+        {
+          "entity": "placement_order",
+          "id": "a9836bbc-2c16-411e-95bb-49116693f67f",
+          "before": {
+            "status": "funded",
+            "proofStatus": "approved",
+            "proofApprovedAt": "2026-09-05T01:34:48.217Z",
+            "paymentFailureExpiresAt": null,
+            "fundingEmailSentAt": "2026-09-05T01:38:01.689Z",
+            "paymentDeclineEmailSentAt": null,
+            "paymentReopenedEmailSentAt": null,
+            "stripeRefundStatus": null
+          },
+          "after": {
+            "status": "funded",
+            "proofStatus": "approved",
+            "proofApprovedAt": "2026-09-05T01:34:48.217Z",
+            "paymentFailureExpiresAt": null,
+            "fundingEmailSentAt": "2026-09-05T01:38:01.689Z",
+            "paymentDeclineEmailSentAt": null,
+            "paymentReopenedEmailSentAt": null,
+            "stripeRefundStatus": "succeeded"
+          }
+        }
+      ],
+      "emails": []
+    }
+  }
+}

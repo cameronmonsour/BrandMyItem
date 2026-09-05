@@ -30,3 +30,4 @@
 - [Test listing isolation](test-listing-isolation.md) — automated listings carry a persisted test flag and never enter public listing, tracking, or activity surfaces.
 - [Checkout popup session state](checkout-popup-session-state.md) — sessionStorage is cloned only when a popup opens, so later reservation state must also be written into that popup.
 - [Funding email idempotency](funding-email-idempotency.md) — charge transitions and Resend notifications are separate durable outcomes with retry-safe delivery markers.
+- [Admin direct route](brandmyitem-admin-routing.md) — Vite's custom 404 middleware must explicitly allow `/admin` before SPA routing can render the admin surface.

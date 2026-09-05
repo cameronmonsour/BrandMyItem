@@ -1,10 +1,12 @@
 import { logger } from "./lib/logger.ts";
-import { pool } from "@workspace/db";
+import { campaignsTable, db, placementOrdersTable, pool } from "@workspace/db";
 import {
   expireUnfundedCampaigns,
+  expirePaymentFailures,
   reconcileReservationPayments,
   advanceCheckinLifecycle,
   autoApprovePlacementProofs,
+  refundPendingMakeGoods,
 } from "./paymentFunding.ts";
 
 const DEFAULT_INTERVAL_MS = 5 * 60 * 1000;
@@ -18,9 +20,103 @@ export async function reconcilePayments(now = new Date()): Promise<void> {
     if (!lock.rows[0]?.locked) return;
     try {
       await reconcileReservationPayments(now);
+      await expirePaymentFailures(now);
       await expireUnfundedCampaigns(now);
       await advanceCheckinLifecycle(now);
       await autoApprovePlacementProofs(now);
+      await refundPendingMakeGoods(now);
+    } finally {
+      await client.query("SELECT pg_advisory_unlock(hashtext('brandmyitem-lifecycle-sweep'))");
+    }
+  } finally {
+    client.release();
+  }
+}
+
+type SweepSnapshot = {
+  campaigns: Map<string, Record<string, unknown>>;
+  orders: Map<string, Record<string, unknown>>;
+};
+
+async function snapshotSweeps(): Promise<SweepSnapshot> {
+  const [campaigns, orders] = await Promise.all([
+    db.select().from(campaignsTable),
+    db.select().from(placementOrdersTable),
+  ]);
+  return {
+    campaigns: new Map(campaigns.map((campaign) => [campaign.id, {
+      lifecycleStatus: campaign.lifecycleStatus,
+      active: campaign.active,
+      checkinStatus: campaign.checkinStatus,
+      proofStatus: campaign.proofStatus,
+      deliveredAt: campaign.deliveredAt?.toISOString() ?? null,
+      checkinDueAt: campaign.checkinDueAt?.toISOString() ?? null,
+      fundedEmailSentAt: campaign.fundedEmailSentAt?.toISOString() ?? null,
+      reopenedEmailSentAt: campaign.reopenedEmailSentAt?.toISOString() ?? null,
+    }])),
+    orders: new Map(orders.map((order) => [order.id, {
+      status: order.status,
+      proofStatus: order.proofStatus,
+      proofApprovedAt: order.proofApprovedAt?.toISOString() ?? null,
+      paymentFailureExpiresAt: order.paymentFailureExpiresAt?.toISOString() ?? null,
+      fundingEmailSentAt: order.fundingEmailSentAt?.toISOString() ?? null,
+      paymentDeclineEmailSentAt: order.paymentDeclineEmailSentAt?.toISOString() ?? null,
+      paymentReopenedEmailSentAt: order.paymentReopenedEmailSentAt?.toISOString() ?? null,
+      stripeRefundStatus: order.stripeRefundStatus,
+    }])),
+  };
+}
+
+export async function runLifecycleSweeps(now = new Date()): Promise<{
+  locked: boolean;
+  changes: Array<Record<string, unknown>>;
+  emails: Array<Record<string, unknown>>;
+}> {
+  const client = await pool.connect();
+  try {
+    const lock = await client.query<{ locked: boolean }>(
+      "SELECT pg_try_advisory_lock(hashtext('brandmyitem-lifecycle-sweep')) AS locked",
+    );
+    if (!lock.rows[0]?.locked) return { locked: false, changes: [], emails: [] };
+    try {
+      const before = await snapshotSweeps();
+      await reconcileReservationPayments(now);
+      await expirePaymentFailures(now);
+      await expireUnfundedCampaigns(now);
+      await advanceCheckinLifecycle(now);
+      await autoApprovePlacementProofs(now);
+      await refundPendingMakeGoods(now);
+      const after = await snapshotSweeps();
+      const changes: Array<Record<string, unknown>> = [];
+      const emails: Array<Record<string, unknown>> = [];
+      for (const [id, next] of after.campaigns) {
+        const previous = before.campaigns.get(id);
+        if (JSON.stringify(previous) !== JSON.stringify(next)) {
+          changes.push({ entity: "campaign", id, before: previous ?? null, after: next });
+        }
+        if (previous?.fundedEmailSentAt !== next.fundedEmailSentAt && next.fundedEmailSentAt) {
+          emails.push({ kind: "owner_funded", campaignId: id, sentAt: next.fundedEmailSentAt });
+        }
+        if (previous?.reopenedEmailSentAt !== next.reopenedEmailSentAt && next.reopenedEmailSentAt) {
+          emails.push({ kind: "owner_reopened", campaignId: id, sentAt: next.reopenedEmailSentAt });
+        }
+      }
+      for (const [id, next] of after.orders) {
+        const previous = before.orders.get(id);
+        if (JSON.stringify(previous) !== JSON.stringify(next)) {
+          changes.push({ entity: "placement_order", id, before: previous ?? null, after: next });
+        }
+        if (previous?.fundingEmailSentAt !== next.fundingEmailSentAt && next.fundingEmailSentAt) {
+          emails.push({ kind: "brand_funding", reservationId: id, sentAt: next.fundingEmailSentAt });
+        }
+        if (previous?.paymentDeclineEmailSentAt !== next.paymentDeclineEmailSentAt && next.paymentDeclineEmailSentAt) {
+          emails.push({ kind: "brand_decline", reservationId: id, sentAt: next.paymentDeclineEmailSentAt });
+        }
+        if (previous?.paymentReopenedEmailSentAt !== next.paymentReopenedEmailSentAt && next.paymentReopenedEmailSentAt) {
+          emails.push({ kind: "brand_reopened", reservationId: id, sentAt: next.paymentReopenedEmailSentAt });
+        }
+      }
+      return { locked: true, changes, emails };
     } finally {
       await client.query("SELECT pg_advisory_unlock(hashtext('brandmyitem-lifecycle-sweep'))");
     }

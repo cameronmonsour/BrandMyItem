@@ -60,6 +60,8 @@ export const campaignsTable = pgTable("campaigns", {
   fundedAt: timestamp("funded_at", { withTimezone: true }),
   fundedEmailSentAt: timestamp("funded_email_sent_at", { withTimezone: true }),
   fundedEmailMessageId: text("funded_email_message_id"),
+  reopenedEmailSentAt: timestamp("reopened_email_sent_at", { withTimezone: true }),
+  reopenedEmailMessageId: text("reopened_email_message_id"),
   relistCount: integer("relist_count").notNull().default(0),
   relistedAt: timestamp("relisted_at", { withTimezone: true }),
   relistExpiresAt: timestamp("relist_expires_at", { withTimezone: true }),
@@ -137,8 +139,11 @@ export const placementOrdersTable = pgTable(
     confirmationEmailMessageId: text("confirmation_email_message_id"),
     fundingEmailSentAt: timestamp("funding_email_sent_at", { withTimezone: true }),
     fundingEmailMessageId: text("funding_email_message_id"),
+    fundingEmailState: text("funding_email_state"),
     paymentDeclineEmailSentAt: timestamp("payment_decline_email_sent_at", { withTimezone: true }),
     paymentDeclineEmailMessageId: text("payment_decline_email_message_id"),
+    paymentReopenedEmailSentAt: timestamp("payment_reopened_email_sent_at", { withTimezone: true }),
+    paymentReopenedEmailMessageId: text("payment_reopened_email_message_id"),
     reservedAt: timestamp("reserved_at", { withTimezone: true }),
     chargedAt: timestamp("charged_at", { withTimezone: true }),
     declineReason: text("decline_reason"),
@@ -195,4 +200,50 @@ export const trackingMagicLinkRequestsTable = pgTable(
     requestedAt: timestamp("requested_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [index("tracking_magic_link_requests_email_requested_idx").on(table.normalizedEmail, table.requestedAt)],
+);
+
+export const updateCardCapabilitiesTable = pgTable(
+  "update_card_capabilities",
+  {
+    tokenHash: text("token_hash").primaryKey(),
+    placementOrderId: text("placement_order_id")
+      .notNull()
+      .references(() => placementOrdersTable.id),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    usedAt: timestamp("used_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    index("update_card_capabilities_order_idx").on(table.placementOrderId),
+    index("update_card_capabilities_expires_idx").on(table.expiresAt),
+  ],
+);
+
+export const adminMagicLinksTable = pgTable(
+  "admin_magic_links",
+  {
+    tokenHash: text("token_hash").primaryKey(),
+    email: text("email").notNull(),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    usedAt: timestamp("used_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [index("admin_magic_links_expires_idx").on(table.expiresAt)],
+);
+
+export const adminSessionsTable = pgTable(
+  "admin_sessions",
+  {
+    tokenHash: text("token_hash").primaryKey(),
+    email: text("email").notNull(),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [index("admin_sessions_expires_idx").on(table.expiresAt)],
 );

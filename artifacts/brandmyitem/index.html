@@ -882,6 +882,10 @@ details.faq .fa b{color:var(--fg);font-weight:600}
 .campaign-progress{height:7px;border-radius:99px;background:#E5E5EA;overflow:hidden;margin:18px 0 11px}
 .campaign-progress i{display:block;height:100%;border-radius:99px;background:#1D1D1F}
 .campaign-funding-meta{display:flex;justify-content:space-between;gap:12px;font-size:12px;color:#6E6E73}
+.campaign-funding-status{display:inline-flex;align-items:center;gap:7px;margin-top:12px;padding:8px 11px;border-radius:999px;background:#F5F5F7;color:#1D1D1F;font-size:12px;font-weight:600}
+.campaign-funding-status.pending{background:#FFF4D6;color:#8A5A00}
+.campaign-funding-status.failed{background:#FDE9E7;color:#A32920}
+.campaign-funding-status.funded{background:#E8F5EC;color:#1F7A44}
 .campaign-funding-panel{padding:30px 0 28px;border-top:1px solid #D2D2D7}
 .campaign-lower-grid{grid-column:1/-1;border-top:1px solid #D2D2D7}
 .campaign-lower-grid .campaign-panel{padding:26px 0 30px}
@@ -902,6 +906,16 @@ details.faq .fa b{color:var(--fg);font-weight:600}
 .campaign-no-open{font-size:13px;color:var(--mfg)}
 .campaign-footer{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 34px;border-top:1px solid #D2D2D7;background:#fff}
 .campaign-footer-note{font-size:12px;line-height:1.4;color:var(--mfg)}
+.admin-grid{display:grid;gap:16px}
+.admin-listing{border:1px solid var(--border);border-radius:18px;background:#fff;padding:20px}
+.admin-listing-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px}
+.admin-listing-title{font-size:18px;font-weight:600}
+.admin-listing-meta{font-size:12px;color:var(--mfg);margin-top:4px}
+.admin-spot{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--border)}
+.admin-spot-label{font-size:13px;font-weight:600}.admin-spot-sub{font-size:12px;color:var(--mfg);margin-top:3px}
+.admin-check{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--mfg);white-space:nowrap}
+.admin-shipping{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.admin-shipping .input{flex:1;min-width:150px}
+@media(max-width:620px){.admin-spot{grid-template-columns:1fr 1fr}.admin-spot>div:first-child{grid-column:1/-1}}
 .campaign-continue{flex:0 0 auto;border-radius:999px;min-height:48px;padding:0 22px}
 .upl{border:1px solid rgba(60,60,67,.20);border-radius:14px;padding:18px;text-align:center;font-size:13px;font-weight:600;color:var(--mfg);cursor:pointer;margin-bottom:12px}
 .upl:hover{border-color:#1D1D1F}
@@ -2413,6 +2427,7 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
         <div class="ap-raised"><span id="iRaised">$0</span></div>
         <div class="ap-goal">of <span id="iGoal">$0</span></div>
       </div>
+      <div id="iFundingStatus" class="campaign-funding-status" role="status"></div>
       <div class="ap-bar-track">
         <i id="iBar" class="ap-bar-fill" style="width:0%"></i>
       </div>
@@ -2529,6 +2544,26 @@ footer.site-footer{border-top:1px solid var(--border);background:var(--wash);col
       </div>
     </div>
     <div id="tkResult" style="display:none;margin-bottom:60px"></div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div class="view" id="v-admin">
+  <div class="wrap-narrow" style="max-width:900px">
+    <div class="card" id="adminLoginCard" style="margin:0 0 24px">
+      <div class="card-c" style="padding:24px">
+        <h2 style="margin:0 0 8px">Admin</h2>
+        <p class="finetext">Sign in with the configured admin email. The link is one-time and expires in 15 minutes.</p>
+        <div class="field"><label class="label" for="adminEmail">Admin email</label><input class="input" id="adminEmail" type="email" autocomplete="email" placeholder="you@example.com"></div>
+        <button class="btn btn-primary btn-full" id="adminLoginBtn" type="button">Email me a login link</button>
+        <p class="finetext" id="adminLoginStatus" role="status" style="margin:10px 0 0"></p>
+      </div>
+    </div>
+    <div id="adminApp" style="display:none">
+      <div class="campaign-top" style="margin-bottom:14px"><div><h1 style="margin:0">Fulfillment queue</h1><p class="finetext" style="margin:4px 0 0">Proof, shipment, delivery, and lifecycle sweeps.</p></div><button class="btn btn-outline" id="adminLogoutBtn" type="button">Sign out</button></div>
+      <div class="card" style="margin:0 0 18px"><div class="card-c" style="padding:18px"><div class="admin-shipping"><input class="input" id="sweepNow" type="datetime-local"><button class="btn btn-outline" id="runSweepsBtn" type="button">Run sweeps</button></div><pre id="sweepReport" style="white-space:pre-wrap;max-height:240px;overflow:auto;font-size:11px;color:#6E6E73;margin:12px 0 0"></pre></div></div>
+      <div id="adminListings" class="admin-grid"></div>
+    </div>
   </div>
 </div>
 
@@ -7212,6 +7247,18 @@ function logAct(txt,meta){
   DB.activity.unshift(event);DB.activity=DB.activity.slice(0,20);saveDB()
 }
 function claimIsRefunded(c){return !!(c&&c.refunded)}
+function claimIsFunded(c){return !!c&&(c.status==='funded'||c.orderStatus==='funded')}
+function fundedRaisedOf(l){return (l.claims||[]).reduce(function(s,c,i){return s+(claimIsFunded(c)?spotPurchaseTotal(l,(l.prices||[])[i]||0):0)},0)}
+function fundedSpotCount(l){return (l.claims||[]).filter(claimIsFunded).length}
+function fundingStatusOf(l){
+  var total=Number(l.slots||((l.prices||[]).length))||0, funded=fundedSpotCount(l), failed=(l.claims||[]).filter(function(c){return c&&(c.status==='payment_failed'||c.orderStatus==='payment_failed')});
+  if((l.lifecycleStatus==='funded'||l.lifecycleStatus==='ordered'||l.lifecycleStatus==='branded'||l.lifecycleStatus==='shipped'||l.lifecycleStatus==='active'||l.lifecycleStatus==='complete')&&funded>=total)return {kind:'funded',text:'FUNDED',detail:money(fundedRaisedOf(l))+' of '+money(goalOf(l))};
+  if(failed.length){
+    var deadline=failed[0].paymentFailureExpiresAt||failed[0].paymentFailureExpires||l.paymentFailureExpiresAt;
+    return {kind:'failed',text:'Payment pending',detail:deadline?'fix by '+new Date(deadline).toLocaleString():'fix card within 48 hours'};
+  }
+  return {kind:'pending',text:'Funding',detail:Math.max(0,total-funded)+' spot'+(Math.max(0,total-funded)===1?'':'s')+' pending payment'};
+}
 function raisedOf(l){return (l.claims||[]).reduce(function(s,c){return s+(c&&!claimIsRefunded(c)?claimPurchaseTotal(l,c):0)},0)}
 function goalOf(l){return l.prices.reduce(function(s,p){return s+spotPurchaseTotal(l,p)},0)}
 function pctOf(l){var g=goalOf(l);return g?Math.min(100,raisedOf(l)/g*100):0}
@@ -8314,10 +8361,12 @@ function runCountdown(elId,l){
 }
 
 /* --- ROUTER --- */
-var views=['home','dashboard','build','item','track'];
+  var views=['home','dashboard','build','item','track','admin'];
 var LAST_PRODUCT_VIEW_KEY='';
 function route(){
   var h=location.hash.replace('#','')||'home';
+  var adminPath=location.pathname.split('/').filter(Boolean).pop()==='admin';
+  if(adminPath)h='admin';
   var trackingToken=new URLSearchParams(location.search).get('tracking_token');
   if(trackingToken&&(h==='home'||h===''))h='track';
   var anchorId=h==='homeFeatureBento'?h:'';
@@ -8326,7 +8375,7 @@ function route(){
   if(h==='feed')h='dashboard';
   if(h.indexOf('home-')===0||anchorId)h='home';
   if(h!=='item')LAST_PRODUCT_VIEW_KEY='';
-  var routeMeta={home:['BrandMyItem | Physical advertising placements','Post items as live advertising inventory or reserve a physical placement for your brand.'],dashboard:['Live items | BrandMyItem','Browse live physical advertising placements available for brands.'],build:['Post your item | BrandMyItem','Create a BrandMyItem listing for an item from the catalog.'],item:['Listing | BrandMyItem','Review listing details and reserve an available placement.'],track:['Track your item | BrandMyItem','Track your BrandMyItem item, fulfillment, and check-ins.']}[h]||[];
+  var routeMeta={home:['BrandMyItem | Physical advertising placements','Post items as live advertising inventory or reserve a physical placement for your brand.'],dashboard:['Live items | BrandMyItem','Browse live physical advertising placements available for brands.'],build:['Post your item | BrandMyItem','Create a BrandMyItem listing for an item from the catalog.'],item:['Listing | BrandMyItem','Review listing details and reserve an available placement.'],track:['Track your item | BrandMyItem','Track your BrandMyItem item, fulfillment, and check-ins.'],admin:['BrandMyItem Admin','Manage funded listings and lifecycle operations.']}[h]||[];
   if(routeMeta.length){document.title=routeMeta[0];var routeDescription=document.querySelector('meta[name="description"]');if(routeDescription)routeDescription.content=routeMeta[1];}
   document.body.classList.toggle('track-page',h==='track');
   views.forEach(function(v){document.getElementById('v-'+v).classList.toggle('on',v===h)});
@@ -8342,6 +8391,7 @@ function route(){
   }
   if(h==='item')showItem(itemId);
   if(h==='track')showTrack();
+  if(h==='admin')showAdmin();
   if(anchorId)setTimeout(function(){var target=document.getElementById(anchorId);if(target)target.scrollIntoView({behavior:'auto',block:'start'})},0);
 }
 function placeBuilder(){
@@ -8617,7 +8667,7 @@ function renderCampaignDetails(l){
   var el=document.getElementById('campaignDetails');if(!el)return;
   var photo=PHO(l),label=LBLL(l),category=ITEMS[l.type]&&ITEMS[l.type].cat?ITEMS[l.type].cat:'Custom';
   var purpose=l.purpose||'The owner has not added a purpose statement yet.';
-  var reservedCount=(l.claims||[]).filter(Boolean).length,open=openSlots(l),raised=raisedOf(l),goal=goalOf(l),pct=Math.round(pctOf(l));
+  var reservedCount=(l.claims||[]).filter(Boolean).length,open=openSlots(l),raised=fundedRaisedOf(l),goal=goalOf(l),pct=goal?Math.round(raised/goal*100):0,funding=fundingStatusOf(l);
   var spotPrices=(l.prices||[]).map(function(price,i){return{price:price,meta:campaignSpotMeta(l,i),claim:(l.claims||[])[i]||null}});
   var photoHtml=safeImageAttr(photo)?'<img src="'+safeImageAttr(photo)+'" alt="'+safeCardText(label)+'">':'<div class="campaign-cover-fallback">'+safeCardText(label)+'</div>';
   var profile=ownerAvatarHtml(l);
@@ -8652,7 +8702,7 @@ function renderCampaignDetails(l){
       '<section class="campaign-panel campaign-panel-wide campaign-funding-panel">'+
         '<div class="campaign-funding-head"><div><div class="campaign-label">Funding progress</div><div class="campaign-funding-amount">'+money(raised)+' <span>of '+money(goal)+'</span></div></div><div class="campaign-percent">'+pct+'% funded</div></div>'+
         '<div class="campaign-progress"><i style="width:'+pct+'%"></i></div>'+
-        '<div class="campaign-funding-meta"><span>'+reservedCount+' of '+(l.slots||0)+' spots reserved</span><span>'+open+' open '+(open===1?'spot':'spots')+'</span></div>'+
+        '<div class="campaign-funding-status '+funding.kind+'"><b>'+safeCardText(funding.text)+'</b><span>'+safeCardText(funding.detail)+'</span></div><div class="campaign-funding-meta"><span>'+reservedCount+' of '+(l.slots||0)+' spots reserved</span><span>'+open+' open '+(open===1?'spot':'spots')+'</span></div>'+
       '</section>'+
       '<div class="campaign-lower-grid">'+
       '<section class="campaign-panel campaign-spot-panel">'+
@@ -11045,6 +11095,78 @@ async function retryFailedReservation(orderId,campaignId,spotIndex,brand,mail,li
     else window.top.location.assign(result.url);
   }catch(error){toast(error&&error.message?error.message:'Could not open card update')}
 }
+async function resumeEmailCardUpdate(){
+  var params=new URLSearchParams(location.search),reservationId=params.get('update_card'),token=params.get('token');
+  if(!reservationId||!token||params.get('checkout'))return;
+  try{
+    var response=await fetch('/api/checkout/reservations/'+encodeURIComponent(reservationId)+'/update-card?token='+encodeURIComponent(token),{method:'POST'});
+    var result=await response.json();
+    if(!response.ok||!result.url)throw new Error(result.error||'Card update is unavailable');
+    sessionStorage.setItem('bmi_pending_checkout',JSON.stringify({campaignId:result.campaignId,orderId:result.orderId,returnHash:'#item/'+encodeURIComponent(result.campaignId)}));
+    history.replaceState(null,'',location.pathname+location.hash);
+    window.top.location.assign(result.url);
+  }catch(error){
+    toast(error&&error.message?error.message:'This card update link is no longer available.');
+    history.replaceState(null,'',location.pathname+'#track');
+  }
+}
+var ADMIN_DATA=null;
+async function showAdmin(){
+  var login=document.getElementById('adminLoginCard'),app=document.getElementById('adminApp');
+  if(!login||!app)return;
+  var params=new URLSearchParams(location.search),adminToken=params.get('admin_token');
+  if(adminToken){
+    try{
+      var consumed=await fetch('/api/admin/auth/consume?token='+encodeURIComponent(adminToken));
+      if(!consumed.ok)throw new Error('This admin link is invalid, expired, or already used.');
+      history.replaceState(null,'',location.pathname);
+    }catch(error){var tokenStatus=document.getElementById('adminLoginStatus');if(tokenStatus)tokenStatus.textContent=error.message}
+  }
+  var session=await fetch('/api/admin/auth/session').then(function(response){return response.json()}).catch(function(){return {authenticated:false}});
+  if(!session.authenticated){
+    login.style.display='block';app.style.display='none';
+    var button=document.getElementById('adminLoginBtn');
+    if(button&&!button._wired){button._wired=true;button.onclick=async function(){
+      var email=document.getElementById('adminEmail').value.trim(),status=document.getElementById('adminLoginStatus');
+      button.disabled=true;status.textContent='Sending…';
+      try{var response=await fetch('/api/admin/auth/request',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email})});if(!response.ok)throw new Error('Admin login email is unavailable');status.textContent='Check the configured admin inbox for a one-time link.'}catch(error){status.textContent=error.message}finally{button.disabled=false}
+    }}
+    return;
+  }
+  login.style.display='none';app.style.display='block';
+  var logout=document.getElementById('adminLogoutBtn');
+  if(logout&&!logout._wired){logout._wired=true;logout.onclick=async function(){await fetch('/api/admin/auth/logout',{method:'POST'});location.reload()}}
+  var sweepButton=document.getElementById('runSweepsBtn');
+  if(sweepButton&&!sweepButton._wired){sweepButton._wired=true;sweepButton.onclick=async function(){
+    var input=document.getElementById('sweepNow'),value=input.value?new Date(input.value).toISOString():new Date().toISOString();
+    var response=await fetch('/api/admin/run-sweeps',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({now:value})});
+    document.getElementById('sweepReport').textContent=JSON.stringify(await response.json(),null,2);await loadAdminListings();
+  }}
+  await loadAdminListings();
+}
+async function loadAdminListings(){
+  var response=await fetch('/api/admin/campaigns');if(!response.ok)return;
+  ADMIN_DATA=await response.json();
+  var host=document.getElementById('adminListings');if(!host)return;
+  host.innerHTML=ADMIN_DATA.campaigns.length?ADMIN_DATA.campaigns.map(function(campaign){
+    var spots=campaign.orders.map(function(order){
+      return '<div class="admin-spot"><div><div class="admin-spot-label">Spot '+(order.spotIndex+1)+' · '+safeCardText(order.brandName)+'</div><div class="admin-spot-sub">'+safeCardText(order.reservationId)+' · '+money(order.amountCents/100)+'</div></div><label class="admin-check"><input type="checkbox" data-admin-action="proof-sent" data-campaign="'+safeCardText(campaign.id)+'" data-order="'+safeCardText(order.id)+'" '+(order.proofSentAt?'checked':'')+'> Proof sent</label><label class="admin-check"><input type="checkbox" data-admin-action="proof-approved" data-campaign="'+safeCardText(campaign.id)+'" data-order="'+safeCardText(order.id)+'" '+(order.proofStatus==='approved'?'checked':'')+'> Approved</label></div>';
+    }).join('');
+    return '<section class="admin-listing"><div class="admin-listing-head"><div><div class="admin-listing-title">'+safeCardText(campaign.title)+'</div><div class="admin-listing-meta">'+safeCardText(campaign.id)+' · '+safeCardText(campaign.ownerName)+' · '+safeCardText(campaign.lifecycleStatus)+'</div></div><span class="status-badge active">'+campaign.orders.length+' spots</span></div>'+spots+'<div class="admin-shipping"><input class="input" data-admin-carrier="'+safeCardText(campaign.id)+'" placeholder="Carrier" value="'+safeCardText(campaign.carrier||'')+'"><input class="input" data-admin-tracking="'+safeCardText(campaign.id)+'" placeholder="Tracking number" value="'+safeCardText(campaign.trackingNumber||'')+'"><label class="admin-check"><input type="checkbox" data-admin-delivered="'+safeCardText(campaign.id)+'" '+(campaign.deliveredAt?'checked':'')+'> Delivered</label><button class="btn btn-outline" data-admin-save="'+safeCardText(campaign.id)+'" type="button">Save fulfillment</button></div><p class="finetext" data-admin-status="'+safeCardText(campaign.id)+'"></p></section>';
+  }).join(''):'<div class="card"><div class="card-c"><p class="finetext">No funded listings are in the queue.</p></div></div>';
+  Array.prototype.forEach.call(host.querySelectorAll('input[data-admin-action]'),function(input){input.onchange=async function(){
+    var body=input.dataset.adminAction==='proof-sent'?{proofSent:input.checked}:{proofApproved:input.checked};
+    var result=await fetch('/api/admin/campaigns/'+encodeURIComponent(input.dataset.campaign)+'/orders/'+encodeURIComponent(input.dataset.order),{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(!result.ok){input.checked=!input.checked;toast('Could not update proof state')}
+  }});
+  Array.prototype.forEach.call(host.querySelectorAll('[data-admin-save]'),function(button){button.onclick=async function(){
+    var id=button.dataset.adminSave,status=document.querySelector('[data-admin-status="'+id+'"]');
+    var body={carrier:document.querySelector('[data-admin-carrier="'+id+'"]').value,trackingNumber:document.querySelector('[data-admin-tracking="'+id+'"]').value,delivered:document.querySelector('[data-admin-delivered="'+id+'"]').checked};
+    var response=await fetch('/api/admin/campaigns/'+encodeURIComponent(id)+'/fulfillment',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    status.textContent=response.ok?'Saved. Delivered listings start the seven-day check-in clock.':'Could not save fulfillment.';
+    if(response.ok)await loadAdminListings();
+  }});
+}
 function trackCardHtml(l,c){
   var photo=listingPhoto(l);
   var steps=[];
@@ -11196,9 +11318,12 @@ function refreshItemCards(){
   if(itemColorEl)itemColorEl.textContent=itemInfo.color||'As listed';
   if(itemCategoryEl)itemCategoryEl.textContent=itemInfo.cat||'Custom';
    if(itemRetailEl)itemRetailEl.textContent='Included in the all-in spot prices';
-  document.getElementById('iRaised').textContent=money(raised);
-  document.getElementById('iGoal').textContent=money(goal);
-  document.getElementById('iBar').style.width=pct+'%';
+  var funding=fundingStatusOf(CUR),fundedRaised=fundedRaisedOf(CUR),fundedCount=fundedSpotCount(CUR),listingGoal=goalOf(CUR);
+  document.getElementById('iRaised').textContent=money(fundedRaised);
+  document.getElementById('iGoal').textContent=money(listingGoal);
+  document.getElementById('iBar').style.width=(listingGoal?Math.min(100,fundedRaised/listingGoal*100):0)+'%';
+  var fundingStatusEl=document.getElementById('iFundingStatus');
+  if(fundingStatusEl){fundingStatusEl.className='campaign-funding-status '+funding.kind;fundingStatusEl.innerHTML='<b>'+safeCardText(funding.text)+'</b><span>'+safeCardText(funding.detail)+'</span>';}
   document.getElementById('iWho').innerHTML=ownerAvatarHtml(CUR)+'<span>Posted by '+safeCardText(CUR.owner)+'</span>';
   var ownerLocationEl=document.getElementById('iOwnerLocation'),ownerSocialsEl=document.getElementById('iOwnerSocials');
   var ownerLocations=(CUR.cities||[]).slice(0,1).concat((CUR.universities||[]).slice(0,1)).filter(function(value,index,values){
@@ -11244,7 +11369,7 @@ function refreshItemCards(){
   var brandingWindowEl=document.getElementById('iBrandingWindow'),proofCadenceEl=document.getElementById('iProofCadence');
    if(brandingWindowEl)brandingWindowEl.textContent='BrandMyItem applies and verifies branding - 60-day delivery window';
   if(proofCadenceEl)proofCadenceEl.textContent=checkinFrequencyLabel(CUR)+' check-ins';
-  var reservedCount=CUR.slots-openSlots(CUR);
+   var reservedCount=(CUR.claims||[]).filter(Boolean).length;
   var spotSummary=document.getElementById('spotSummary');
    if(spotSummary)spotSummary.innerHTML=
        reservedCount+' of '+CUR.slots+' spots reserved. Larger surfaces carry a premium. Every brand submits their logo at reservation; the '+safeCardText(brandingMethod(CUR.type))+' is produced from that file.'+
@@ -12022,6 +12147,7 @@ async function initializeApp(){
   }catch(error){}
   route();
   await resumeStripeCheckout();
+  await resumeEmailCardUpdate();
 }
 initializeApp();
 /* Keep semantic image metadata intact for static and dynamically rendered listing views. */

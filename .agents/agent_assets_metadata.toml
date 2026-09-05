@@ -140,3 +140,45 @@ mtime_ms = 1788567616979
 storage_uri = "gcs://replit-rams-assets-riker/rams/assets/repl:3f7c2cc8-f08b-4158-944b-09fd3b52c7cc/c788f1f1-8774-42b1-adc0-192e8d50653d/e332f577-8622-43b1-a9be-e5953bbb24bf"
 storage_version_token = "1788567817659013"
 content_type = "image/jpeg"
+
+[[outputs]]
+id = "5gDhWtM0YKm3qDjUB5-R_"
+uri = "file://verification/lifecycle-sweep.json"
+type = "unspecified"
+title = "Lifecycle sweep verification report"
+description = "Observed +49h payment-failure reopen, +61d unfunded expiry and release, +8d proof auto-approval, and +31d prorated Stripe test refunds."
+logical_id = "7cbf7c6e-02e2-4712-84ba-b63c79203d5d"
+content_hash = "sha256:41f8bbd2b76cfae54a9c8b0bb51d75ef7c4b383e7f8f69878cc432f742d58949"
+size = 11278
+mtime_ms = 1788573586447
+storage_uri = "gcs://replit-rams-assets-riker/rams/assets/repl:3f7c2cc8-f08b-4158-944b-09fd3b52c7cc/7cbf7c6e-02e2-4712-84ba-b63c79203d5d/7ace779e-6489-4a0f-a325-611cb4976d3e"
+storage_version_token = "1788573629173360"
+content_type = "application/octet-stream"
+
+[[outputs]]
+id = "MLVDfJxbKTLoCflwzz1hO"
+uri = "file://verification/admin-desktop.jpg"
+type = "image"
+title = "Admin surface desktop screenshot"
+description = "Authenticated admin entry surface at /admin."
+logical_id = "0ac1aadb-fa25-4bed-9e75-d7086f445abd"
+content_hash = "sha256:2fff664caba8071646588cff58d9159d9ecdb69a89a3c2209bd2897be24d2365"
+size = 29631
+mtime_ms = 1788573622275
+storage_uri = "gcs://replit-rams-assets-riker/rams/assets/repl:3f7c2cc8-f08b-4158-944b-09fd3b52c7cc/0ac1aadb-fa25-4bed-9e75-d7086f445abd/1ca4af8b-38e3-4950-9a03-399dd5d3ec2a"
+storage_version_token = "1788573629752753"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "t2WZkq_AkuIAhLIW0BL5q"
+uri = "file://verification/admin-mobile.jpg"
+type = "image"
+title = "Admin surface mobile screenshot"
+description = "Responsive admin entry surface at /admin on a mobile viewport."
+logical_id = "a574f641-c6de-4f45-8b42-be81147e2475"
+content_hash = "sha256:1e3d949a1d49af4a9c9b53124311fbbbcae4a6e28cc3344b9478cc6ce76a48b5"
+size = 17588
+mtime_ms = 1788573623847
+storage_uri = "gcs://replit-rams-assets-riker/rams/assets/repl:3f7c2cc8-f08b-4158-944b-09fd3b52c7cc/a574f641-c6de-4f45-8b42-be81147e2475/3a464fc7-a8a2-4921-a635-5e2199f6ba74"
+storage_version_token = "1788573630351198"
+content_type = "image/jpeg"

@@ -1,4 +1,5 @@
 import express, { type Express } from "express";
+import cookieParser from "cookie-parser";
 import pinoHttp from "pino-http";
 import router from "./routes/index.ts";
 import { logger } from "./lib/logger.ts";
@@ -37,6 +38,7 @@ app.use((_req, res, next) => {
 app.post("/api/stripe/webhook", express.raw({ type: "application/json" }), stripeWebhook);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // These endpoints accept anonymous identifiers or bearer-like capability
 // tokens and therefore need a tighter budget than normal public browsing.

@@ -3,6 +3,7 @@ import {
   campaignsTable,
   db,
   placementOrdersTable,
+  updateCardCapabilitiesTable,
   sponsorReservationDraftsTable,
   trackingMagicLinksTable,
   trackingMagicLinkRequestsTable,
@@ -98,6 +99,7 @@ function publicClaim(order: typeof placementOrdersTable.$inferSelect) {
     amountCents: order.amountCents,
     reservedAt: order.reservedAt ?? order.updatedAt,
     status: order.status,
+    paymentFailureExpiresAt: order.paymentFailureExpiresAt,
   };
 }
 
@@ -888,14 +890,27 @@ router.post("/checkout/reservations/:orderId/confirmation-email", async (req, re
 });
 
 router.post("/checkout/reservations/:orderId/update-card", async (req, res): Promise<void> => {
-  const orderId = String(req.params.orderId);
+  const publicOrInternalId = String(req.params.orderId);
+  const orderId = publicOrInternalId.startsWith("BMI-")
+    ? publicOrInternalId.slice(4).toLowerCase()
+    : publicOrInternalId;
   const [order] = await db
     .select()
     .from(placementOrdersTable)
     .where(eq(placementOrdersTable.id, orderId))
     .limit(1);
+  const emailToken = typeof req.query.token === "string" ? req.query.token : "";
+  let capability: typeof updateCardCapabilitiesTable.$inferSelect | undefined;
+  if (emailToken) {
+    [capability] = await db.select().from(updateCardCapabilitiesTable).where(and(
+      eq(updateCardCapabilitiesTable.tokenHash, hashAccessToken(emailToken)),
+      eq(updateCardCapabilitiesTable.placementOrderId, orderId),
+      isNull(updateCardCapabilitiesTable.usedAt),
+      gt(updateCardCapabilitiesTable.expiresAt, new Date()),
+    )).limit(1);
+  }
   const token = readAccessToken(req, "checkout", orderId);
-  if (!order || !accessTokenMatches(order.checkoutAccessTokenHash, token)) {
+  if (!order || (!capability && !accessTokenMatches(order.checkoutAccessTokenHash, token))) {
     res.status(404).json({ error: "Reservation not found" });
     return;
   }
@@ -925,11 +940,17 @@ router.post("/checkout/reservations/:orderId/update-card", async (req, res): Pro
     { method: "POST", body: form, idempotencyKey },
   );
   if (!session.url) throw new Error("Stripe did not return a card update URL");
+  if (capability) {
+    await db.update(updateCardCapabilitiesTable).set({ usedAt: new Date() }).where(and(
+      eq(updateCardCapabilitiesTable.tokenHash, capability.tokenHash),
+      isNull(updateCardCapabilitiesTable.usedAt),
+    ));
+  }
   await db
     .update(placementOrdersTable)
     .set({ stripeCheckoutSessionId: session.id, updatedAt: new Date() })
     .where(eq(placementOrdersTable.id, order.id));
-  res.json({ url: session.url, orderId: order.id, sessionId: session.id });
+  res.json({ url: session.url, orderId: order.id, campaignId: order.campaignId, sessionId: session.id });
 });
 
 router.post("/checkout/reservations/:orderId/cancel", async (req, res): Promise<void> => {

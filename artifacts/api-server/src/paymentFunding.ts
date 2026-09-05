@@ -1,13 +1,16 @@
-import { campaignsTable, db, placementOrdersTable } from "@workspace/db";
+import { campaignsTable, db, placementOrdersTable, updateCardCapabilitiesTable } from "@workspace/db";
 import { and, eq, inArray, isNull, lte } from "drizzle-orm";
 import { logger } from "./lib/logger.ts";
 import { stripeRequest } from "./stripeClient.ts";
 import { sendTransactionalEmail } from "./emailDelivery.ts";
+import { createAccessToken, hashAccessToken } from "./lib/accessControl.ts";
 import {
   campaignItemDisplayName,
   fundingConfirmationEmail,
   ownerCampaignFundedEmail,
+  ownerCampaignReopenedEmail,
   paymentDeclinedEmail,
+  paymentReopenedEmail,
 } from "./emailTemplates.ts";
 import {
   fundingChargeIdempotencyKey,
@@ -189,22 +192,34 @@ export async function sendFundingLifecycleEmails(
     .where(eq(placementOrdersTable.campaignId, campaignId));
   const itemDisplayName = campaignItemDisplayName(campaign);
 
+  const listingFunded =
+    campaign.lifecycleStatus === "funded" &&
+    orders.length >= campaign.pricesCents.length &&
+    orders.every((order) => order.status === "funded");
   for (const order of orders) {
-    if (order.status === "funded" && !order.fundingEmailSentAt) {
+    if (
+      order.status === "funded" &&
+      (!order.fundingEmailSentAt ||
+        (listingFunded && order.fundingEmailState !== "funded"))
+    ) {
       try {
         const delivery = await sendTransactionalEmail(fundingConfirmationEmail({
           email: order.email,
           reservationId: `BMI-${order.id.toUpperCase().slice(0, 6)}`,
           itemDisplayName,
           amountCents: order.amountCents,
+          listingFunded,
         }));
         await db.update(placementOrdersTable).set({
           fundingEmailSentAt: now,
           fundingEmailMessageId: delivery.messageId ?? null,
+          fundingEmailState: listingFunded ? "funded" : "partial",
           updatedAt: now,
         }).where(and(
           eq(placementOrdersTable.id, order.id),
-          isNull(placementOrdersTable.fundingEmailSentAt),
+          listingFunded
+            ? eq(placementOrdersTable.fundingEmailState, "partial")
+            : isNull(placementOrdersTable.fundingEmailSentAt),
         ));
       } catch (error) {
         logger.warn({ err: error, reservationId: order.id }, "Funded reservation email delivery failed");
@@ -212,10 +227,16 @@ export async function sendFundingLifecycleEmails(
     }
     if (order.status === "payment_failed" && !order.paymentDeclineEmailSentAt) {
       try {
+        const capability = createAccessToken();
+        await db.insert(updateCardCapabilitiesTable).values({
+          tokenHash: hashAccessToken(capability),
+          placementOrderId: order.id,
+          expiresAt: order.paymentFailureExpiresAt ?? new Date(now.getTime() + 48 * 60 * 60 * 1000),
+        });
         const delivery = await sendTransactionalEmail(paymentDeclinedEmail({
           email: order.email,
           reservationId: `BMI-${order.id.toUpperCase().slice(0, 6)}`,
-          updateCardUrl: `${publicAppUrl()}/#track`,
+          updateCardUrl: `${publicAppUrl()}/?update_card=${encodeURIComponent(`BMI-${order.id.toUpperCase().slice(0, 6)}`)}&token=${encodeURIComponent(capability)}`,
         }));
         await db.update(placementOrdersTable).set({
           paymentDeclineEmailSentAt: now,
@@ -228,6 +249,10 @@ export async function sendFundingLifecycleEmails(
       } catch (error) {
         logger.warn({ err: error, reservationId: order.id }, "Payment decline email delivery failed");
       }
+    }
+    if (order.status === "reserved" && order.paymentReopenedEmailSentAt && !order.paymentReopenedEmailMessageId) {
+      // A provider response may have committed the timestamp before its message id.
+      // The next pass retries the same durable notification.
     }
   }
 
@@ -265,6 +290,62 @@ export async function sendFundingLifecycleEmails(
       ));
     } catch (error) {
       logger.warn({ err: error, campaignId }, "Owner funded email delivery failed");
+    }
+  }
+}
+
+export async function expirePaymentFailures(now = new Date()): Promise<void> {
+  const failed = await db.select().from(placementOrdersTable).where(and(
+    eq(placementOrdersTable.status, "payment_failed"),
+    lte(placementOrdersTable.paymentFailureExpiresAt, now),
+  ));
+  for (const order of failed) {
+    await db.update(placementOrdersTable).set({
+      status: "reserved",
+      paymentFailureAt: null,
+      paymentFailureExpiresAt: null,
+      paymentRetryAt: null,
+      updatedAt: now,
+    }).where(and(eq(placementOrdersTable.id, order.id), eq(placementOrdersTable.status, "payment_failed")));
+    await db.update(campaignsTable).set({
+      active: true,
+      lifecycleStatus: "live",
+      updatedAt: now,
+    }).where(and(eq(campaignsTable.id, order.campaignId), eq(campaignsTable.lifecycleStatus, "funding")));
+    const [campaign] = await db.select().from(campaignsTable).where(eq(campaignsTable.id, order.campaignId)).limit(1);
+    if (!campaign) continue;
+    try {
+      const delivery = await sendTransactionalEmail(paymentReopenedEmail({
+        email: order.email,
+        reservationId: `BMI-${order.id.toUpperCase().slice(0, 6)}`,
+        itemDisplayName: campaignItemDisplayName(campaign),
+      }));
+      await db.update(placementOrdersTable).set({
+        paymentReopenedEmailSentAt: now,
+        paymentReopenedEmailMessageId: delivery.messageId ?? null,
+        updatedAt: now,
+      }).where(and(
+        eq(placementOrdersTable.id, order.id),
+        isNull(placementOrdersTable.paymentReopenedEmailSentAt),
+      ));
+    } catch (error) {
+      logger.warn({ err: error, reservationId: order.id }, "Payment reopen email delivery failed");
+    }
+    if (campaign.ownerEmail && !campaign.reopenedEmailSentAt) {
+      try {
+        const delivery = await sendTransactionalEmail(ownerCampaignReopenedEmail({
+          email: campaign.ownerEmail,
+          itemDisplayName: campaignItemDisplayName(campaign),
+          campaignId: campaign.id,
+        }));
+        await db.update(campaignsTable).set({
+          reopenedEmailSentAt: now,
+          reopenedEmailMessageId: delivery.messageId ?? null,
+          updatedAt: now,
+        }).where(and(eq(campaignsTable.id, campaign.id), isNull(campaignsTable.reopenedEmailSentAt)));
+      } catch (error) {
+        logger.warn({ err: error, campaignId: campaign.id }, "Campaign reopen email delivery failed");
+      }
     }
   }
 }
@@ -343,6 +424,22 @@ export async function expireUnfundedCampaigns(now = new Date()): Promise<void> {
       (order) => order.status === "reserved" || order.status === "payment_failed",
     ).length;
     const relistEligible = reservedCount >= Math.ceil(campaign.pricesCents.length / 2);
+    if (relistEligible && campaign.relistCount < 1) {
+      const relistExpiresAt = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+      await db.update(campaignsTable).set({
+        active: true,
+        lifecycleStatus: "live",
+        expiresAt: relistExpiresAt,
+        relistedAt: now,
+        relistExpiresAt,
+        relistCount: campaign.relistCount + 1,
+        updatedAt: now,
+      }).where(and(
+        eq(campaignsTable.id, campaign.id),
+        inArray(campaignsTable.lifecycleStatus, ["live", "funding"]),
+      ));
+      continue;
+    }
     await db
       .update(campaignsTable)
       .set({
@@ -415,6 +512,50 @@ export async function autoApprovePlacementProofs(now = new Date()): Promise<void
         lte(placementOrdersTable.proofSentAt, cutoff),
       ),
     );
+}
+
+export async function refundPendingMakeGoods(now = new Date()): Promise<void> {
+  const cutoff = new Date(now.getTime() - 31 * 24 * 60 * 60 * 1000);
+  const campaigns = await db.select().from(campaignsTable).where(and(
+    eq(campaignsTable.checkinStatus, "missed"),
+    eq(campaignsTable.makeGoodSelection, "cancellation"),
+    lte(campaignsTable.makeGoodSelectedAt, cutoff),
+  ));
+  for (const campaign of campaigns) {
+    const termValue = campaign.presentation?.termMonths;
+    const termMonths = typeof termValue === "number" && [6, 12, 18].includes(termValue) ? termValue : 12;
+    const monthsRemaining = Math.max(0, termMonths - 1);
+    const orders = await db.select().from(placementOrdersTable).where(and(
+      eq(placementOrdersTable.campaignId, campaign.id),
+      eq(placementOrdersTable.status, "funded"),
+    ));
+    for (const order of orders) {
+      if (!order.stripePaymentIntentId || order.stripeRefundStatus === "succeeded") continue;
+      const refundCents = Math.floor(order.amountCents * monthsRemaining / termMonths);
+      if (refundCents <= 0) continue;
+      try {
+        const refund = await stripeRequest<{ id: string; status: string }>("/v1/refunds", {
+          method: "POST",
+          body: new URLSearchParams({
+            payment_intent: order.stripePaymentIntentId,
+            amount: String(refundCents),
+            reason: "requested_by_customer",
+          }),
+          idempotencyKey: `brandmyitem-order-${order.id}-make-good-refund`,
+        });
+        await db.update(placementOrdersTable).set({
+          stripeRefundId: refund.id,
+          stripeRefundStatus: refund.status,
+          updatedAt: now,
+        }).where(and(
+          eq(placementOrdersTable.id, order.id),
+          eq(placementOrdersTable.status, "funded"),
+        ));
+      } catch (error) {
+        logger.warn({ err: error, reservationId: order.id }, "Make-good refund failed");
+      }
+    }
+  }
 }
 
 export async function relistCampaign(

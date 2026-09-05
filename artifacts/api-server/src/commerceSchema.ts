@@ -12,8 +12,11 @@ export async function ensureCommerceSchema(): Promise<void> {
       ADD COLUMN IF NOT EXISTS confirmation_email_message_id text,
       ADD COLUMN IF NOT EXISTS funding_email_sent_at timestamptz,
       ADD COLUMN IF NOT EXISTS funding_email_message_id text,
+      ADD COLUMN IF NOT EXISTS funding_email_state text,
       ADD COLUMN IF NOT EXISTS payment_decline_email_sent_at timestamptz,
-      ADD COLUMN IF NOT EXISTS payment_decline_email_message_id text;
+      ADD COLUMN IF NOT EXISTS payment_decline_email_message_id text,
+      ADD COLUMN IF NOT EXISTS payment_reopened_email_sent_at timestamptz,
+      ADD COLUMN IF NOT EXISTS payment_reopened_email_message_id text;
     ALTER TABLE campaigns
       ADD COLUMN IF NOT EXISTS presentation jsonb NOT NULL DEFAULT '{}'::jsonb,
       ADD COLUMN IF NOT EXISTS owner_access_token_hash text,
@@ -42,7 +45,9 @@ export async function ensureCommerceSchema(): Promise<void> {
       ADD COLUMN IF NOT EXISTS make_good_selection text,
       ADD COLUMN IF NOT EXISTS make_good_selected_at timestamptz,
       ADD COLUMN IF NOT EXISTS funded_email_sent_at timestamptz,
-      ADD COLUMN IF NOT EXISTS funded_email_message_id text;
+      ADD COLUMN IF NOT EXISTS funded_email_message_id text,
+      ADD COLUMN IF NOT EXISTS reopened_email_sent_at timestamptz,
+      ADD COLUMN IF NOT EXISTS reopened_email_message_id text;
     ALTER TABLE placement_orders
       ADD COLUMN IF NOT EXISTS proof_status text NOT NULL DEFAULT 'not_required',
       ADD COLUMN IF NOT EXISTS proof_revision integer NOT NULL DEFAULT 0,
@@ -78,6 +83,34 @@ export async function ensureCommerceSchema(): Promise<void> {
     );
     CREATE INDEX IF NOT EXISTS tracking_magic_link_requests_email_requested_idx
       ON tracking_magic_link_requests (normalized_email, requested_at);
+    CREATE TABLE IF NOT EXISTS update_card_capabilities (
+      token_hash text PRIMARY KEY,
+      placement_order_id text NOT NULL REFERENCES placement_orders(id),
+      expires_at timestamptz NOT NULL,
+      used_at timestamptz,
+      created_at timestamptz NOT NULL DEFAULT now()
+    );
+    CREATE INDEX IF NOT EXISTS update_card_capabilities_order_idx
+      ON update_card_capabilities (placement_order_id);
+    CREATE INDEX IF NOT EXISTS update_card_capabilities_expires_idx
+      ON update_card_capabilities (expires_at);
+    CREATE TABLE IF NOT EXISTS admin_magic_links (
+      token_hash text PRIMARY KEY,
+      email text NOT NULL,
+      expires_at timestamptz NOT NULL,
+      used_at timestamptz,
+      created_at timestamptz NOT NULL DEFAULT now()
+    );
+    CREATE INDEX IF NOT EXISTS admin_magic_links_expires_idx
+      ON admin_magic_links (expires_at);
+    CREATE TABLE IF NOT EXISTS admin_sessions (
+      token_hash text PRIMARY KEY,
+      email text NOT NULL,
+      expires_at timestamptz NOT NULL,
+      created_at timestamptz NOT NULL DEFAULT now()
+    );
+    CREATE INDEX IF NOT EXISTS admin_sessions_expires_idx
+      ON admin_sessions (expires_at);
     CREATE TABLE IF NOT EXISTS upload_intents (
       id text PRIMARY KEY,
       capability_digest text NOT NULL,

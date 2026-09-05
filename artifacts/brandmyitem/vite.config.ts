@@ -56,6 +56,7 @@ function realNotFoundPage() {
         if (
           pathname === '/' ||
           pathname === '/index.html' ||
+          pathname === '/admin' ||
           pathname.startsWith('/api/') ||
           pathname.startsWith('/@') ||
           pathname.startsWith('/src/') ||

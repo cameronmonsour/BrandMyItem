@@ -97,6 +97,38 @@ export function paymentDeclinedEmail(input: {
   };
 }
 
+export function paymentReopenedEmail(input: {
+  email: string;
+  reservationId: string;
+  itemDisplayName: string;
+}): TransactionalEmail {
+  return {
+    to: input.email,
+    subject: "Your BrandMyItem spot is open again",
+    text: `The 48-hour card-update window for reservation ${input.reservationId} ended without a successful charge. Your spot on ${input.itemDisplayName} is open again and your card was not charged.`,
+    html: wrap(
+      "Spot open again",
+      `The 48-hour card-update window for reservation ${input.reservationId} ended without a successful charge. Your spot on ${escapeHtml(input.itemDisplayName)} is open again and your card was not charged.`,
+    ),
+  };
+}
+
+export function ownerCampaignReopenedEmail(input: {
+  email: string;
+  itemDisplayName: string;
+  campaignId: string;
+}): TransactionalEmail {
+  return {
+    to: input.email,
+    subject: "A BrandMyItem spot is open again",
+    text: `A spot on your ${input.itemDisplayName} listing is open again after a declined funding charge. The listing is live and can accept a new reservation. Listing ID: ${input.campaignId}.`,
+    html: wrap(
+      "Your listing is live again",
+      `A spot on your ${escapeHtml(input.itemDisplayName)} listing is open again after a declined funding charge. The listing is live and can accept a new reservation. Listing ID: ${escapeHtml(input.campaignId)}.`,
+    ),
+  };
+}
+
 export function reservationReleaseEmail(input: {
   email: string;
   reservationId: string;
@@ -119,16 +151,36 @@ export function fundingConfirmationEmail(input: {
   reservationId: string;
   itemDisplayName: string;
   amountCents: number;
+  listingFunded?: boolean;
 }): TransactionalEmail {
   const itemDisplayName = escapeHtml(input.itemDisplayName);
+  const listingFunded = input.listingFunded !== false;
+  const subject = listingFunded
+    ? "Your BrandMyItem reservation funded"
+    : "Your BrandMyItem charge succeeded";
+  const text = listingFunded
+    ? `The ${input.itemDisplayName} listing fully funded. Your saved card was charged $${(input.amountCents / 100).toFixed(2)} for reservation ${input.reservationId}.`
+    : `Your saved card was charged $${(input.amountCents / 100).toFixed(2)} for reservation ${input.reservationId}. Your charge succeeded. The listing completes when all spots clear.`;
+  const body = listingFunded
+    ? `The ${itemDisplayName} listing fully funded. Your saved card was charged $${(input.amountCents / 100).toFixed(2)} for reservation ${input.reservationId}.`
+    : `Your saved card was charged $${(input.amountCents / 100).toFixed(2)} for reservation ${input.reservationId}. <b>Your charge succeeded · listing completes when all spots clear.</b>`;
   return {
     to: input.email,
-    subject: `Your BrandMyItem reservation funded`,
-    text: `The ${input.itemDisplayName} listing fully funded. Your saved card was charged $${(input.amountCents / 100).toFixed(2)} for reservation ${input.reservationId}.`,
+    subject,
+    text,
     html: wrap(
-      "Listing funded",
-      `The ${itemDisplayName} listing fully funded. Your saved card was charged $${(input.amountCents / 100).toFixed(2)} for reservation ${input.reservationId}.`,
+      listingFunded ? "Listing funded" : "Charge succeeded",
+      body,
     ),
+  };
+}
+
+export function adminMagicLinkEmail(input: { email: string; url: string }): TransactionalEmail {
+  return {
+    to: input.email,
+    subject: "Your BrandMyItem admin login",
+    text: `Use this one-time admin login link. It expires in 15 minutes: ${input.url}`,
+    html: wrap("Admin login", `Use this one-time admin login link. It expires in 15 minutes: <a href="${input.url}">Open admin</a>.`),
   };
 }
 

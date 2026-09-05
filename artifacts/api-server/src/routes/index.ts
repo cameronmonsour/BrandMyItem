@@ -6,6 +6,7 @@ import fulfillmentRouter from "./fulfillment.ts";
 import campaignDraftRouter from "./campaignDrafts.ts";
 import sponsorReservationDraftRouter from "./sponsorReservationDrafts.ts";
 import contactRouter from "./contact.ts";
+import adminRouter from "./admin.ts";
 
 const router: IRouter = Router();
 
@@ -16,5 +17,6 @@ router.use(sponsorReservationDraftRouter);
 router.use(contactRouter);
 router.use(storageRouter);
 router.use(fulfillmentRouter);
+router.use(adminRouter);
 
 export default router;
