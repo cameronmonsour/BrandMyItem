@@ -12,6 +12,7 @@ import {
 } from "../lib/adminAuth.ts";
 import { recordAuditEvent } from "../lib/audit.ts";
 import { runLifecycleSweeps } from "../paymentReconciliation.ts";
+import { cleanupTestRecords } from "../testRecordCleanup.ts";
 
 const router: IRouter = Router();
 
@@ -63,6 +64,18 @@ router.post("/admin/run-sweeps", async (req, res): Promise<void> => {
   }
   const report = await runLifecycleSweeps(now);
   res.json({ now: now.toISOString(), ...report });
+});
+
+router.post("/admin/cleanup-test-records", async (req, res): Promise<void> => {
+  if (!await requireAdmin(req, res)) return;
+  const dryRun = req.body?.dryRun !== false;
+  const maxDeletions = typeof req.body?.maxDeletions === "number" ? req.body.maxDeletions : undefined;
+  const report = await cleanupTestRecords({ dryRun, maxDeletions });
+  if (report.aborted) {
+    res.status(409).json({ error: "Test-record cleanup exceeded the deletion cap", ...report });
+    return;
+  }
+  res.json(report);
 });
 
 router.post("/admin/auth/logout", async (req, res): Promise<void> => {

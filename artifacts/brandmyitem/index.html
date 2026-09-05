@@ -6833,7 +6833,7 @@ var BRANDING_METHODS={
   suit:'Patch',
   backpack:'Embroidery'
 };
-function brandingMethod(type){return BRANDING_METHODS[type]||'custom branding method'}
+function brandingMethod(type){return BRANDING_METHODS[type]||'Sticker'}
 function brandingMaterial(){return 'set by surface: sticker, patch, embroidery, or engraving. Applied by BrandMyItem.'}
 var HAB_BY_CAT={Tech:['Coffee shops','Office'],Audio:['Coffee shops','Office'],Coolers:['Events','Gym'],Travel:['Airport'],Bags:['Campus','Office'],Golf:['Golf courses'],Sports:['Gym','Events'],Style:['Office','Events']};
 var ITEM_VARIANTS={
@@ -8765,10 +8765,6 @@ function showDash(){
       option.textContent=method.charAt(0).toUpperCase()+method.slice(1);
       methodSelect.appendChild(option);
     });
-    var customOption=document.createElement('option');
-    customOption.value='custom branding method';
-    customOption.textContent='Custom branding method';
-    methodSelect.appendChild(customOption);
   }
   [
     ['fSocial','social','change'],['fFreq','freq','change'],

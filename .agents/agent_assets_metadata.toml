@@ -182,3 +182,45 @@ mtime_ms = 1788573623847
 storage_uri = "gcs://replit-rams-assets-riker/rams/assets/repl:3f7c2cc8-f08b-4158-944b-09fd3b52c7cc/a574f641-c6de-4f45-8b42-be81147e2475/3a464fc7-a8a2-4921-a635-5e2199f6ba74"
 storage_version_token = "1788573630351198"
 content_type = "image/jpeg"
+
+[[outputs]]
+id = "71fnuU4Q_UCsiPKTLnlgj"
+uri = "file://verification/recovery-verification.json"
+type = "unspecified"
+title = "Recovery verification report"
+description = "Final campaign, reservation, Stripe-reference, cleanup, restart, and build verification results."
+logical_id = "4ad968b8-6ce6-4455-bc9e-9827f2b4228b"
+content_hash = "sha256:d982d407f9c681dbfbf9760d77570dbfd87c16a563f09b8745424d6d45cc4868"
+size = 3747
+mtime_ms = 1788574493236
+storage_uri = "gcs://replit-rams-assets-riker/rams/assets/repl:3f7c2cc8-f08b-4158-944b-09fd3b52c7cc/4ad968b8-6ce6-4455-bc9e-9827f2b4228b/e575f8e9-a086-49a4-aa4a-8105aad1a309"
+storage_version_token = "1788574519775398"
+content_type = "application/octet-stream"
+
+[[outputs]]
+id = "ssbN2rK4Ow-74F-o6if-I"
+uri = "file://verification/guarded-cleanup-dry-run.log"
+type = "unspecified"
+title = "Guarded cleanup dry run"
+description = "Final zero-deletion dry-run log with the 20-row deletion cap."
+logical_id = "3de555ba-88ea-4dfd-9429-2b51eb1609fe"
+content_hash = "sha256:8db4a0b6836e8eaa688210bc4923396c713b6ba44b76b313968fd4feb4b51af2"
+size = 258
+mtime_ms = 1788574482285
+storage_uri = "gcs://replit-rams-assets-riker/rams/assets/repl:3f7c2cc8-f08b-4158-944b-09fd3b52c7cc/3de555ba-88ea-4dfd-9429-2b51eb1609fe/dd3e97c4-8262-46a6-b7e1-ac2565280961"
+storage_version_token = "1788574520394816"
+content_type = "application/octet-stream"
+
+[[outputs]]
+id = "QwL9xUk-iiCxo3F4z4o-P"
+uri = "file://verification/recovery-final-home.jpg"
+type = "image"
+title = "Final BrandMyItem preview"
+description = "Desktop preview captured after recovery and final restart verification."
+logical_id = "c0a82b6a-f40f-4a37-9ed4-be4963efee13"
+content_hash = "sha256:fdb8562cf386d0a56d48e95e971834e27f7de8c81ba0f89511806527005574c5"
+size = 67980
+mtime_ms = 1788574428893
+storage_uri = "gcs://replit-rams-assets-riker/rams/assets/repl:3f7c2cc8-f08b-4158-944b-09fd3b52c7cc/c0a82b6a-f40f-4a37-9ed4-be4963efee13/aa5d727d-4a0b-420c-9e12-45785b4b8fe2"
+storage_version_token = "1788574520981157"
+content_type = "image/jpeg"

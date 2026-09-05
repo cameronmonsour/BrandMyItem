@@ -114,6 +114,7 @@ export const placementOrdersTable = pgTable(
   "placement_orders",
   {
     id: text("id").primaryKey(),
+    test: boolean("test").notNull().default(false),
     campaignId: text("campaign_id")
       .notNull()
       .references(() => campaignsTable.id),

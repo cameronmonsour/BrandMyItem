@@ -138,7 +138,8 @@ export const ListCampaignsResponseItem = zod.object({
   "logoObjectPath": zod.string().nullish(),
   "amountCents": zod.int(),
   "reservedAt": zod.coerce.date(),
-  "status": zod.enum(['reserved', 'funding', 'payment_failed', 'funded'])
+  "status": zod.enum(['reserved', 'funding', 'payment_failed', 'funded']),
+  "paymentFailureExpiresAt": zod.coerce.date().nullish()
 }),zod.null()])),
   "active": zod.boolean(),
   "lifecycleStatus": zod.enum(['live', 'funding', 'funded', 'ordered', 'branded', 'shipped', 'active', 'complete', 'expired']),

@@ -1,0 +1,105 @@
+{
+  "verifiedAt": "2026-09-05T02:14:21Z",
+  "incident": {
+    "cause": "The lifecycle sweep was run with a future clock of 2026-11-05. It transitioned both canonical campaigns to expired and released BMI-775ACF. No campaign or reservation row deletion was found.",
+    "evidence": "verification/lifecycle-sweep.json",
+    "databaseSnapshot": "verification/pre-restore-20260905T020925Z.sql"
+  },
+  "stripe": {
+    "mode": "test",
+    "source": "Retained SetupIntent and Customer records",
+    "paymentFailedReservation": {
+      "reservationId": "775acfca-cba6-4a81-a820-e1f5b104fd48",
+      "setupIntentId": "seti_1UC6n0PPj4L83CJBulwGH8vg",
+      "customerId": "cus_VCVpWGzyD0b3Lk",
+      "setupIntentStatus": "succeeded"
+    },
+    "fundedReservationStripeReferences": [
+      {
+        "reservationId": "5d02fcba-1dbb-47da-b397-3d8a31340762",
+        "setupIntentId": "seti_1UC8TXPPj4L83CJBEIgyxUSU",
+        "customerId": "cus_VCXZPMtO9lwHxf",
+        "paymentIntentId": "pi_3UC8VKPPj4L83CJB0OXbHA2r"
+      },
+      {
+        "reservationId": "c62f4190-0d1b-445e-83c9-c72a59002fc7",
+        "setupIntentId": "seti_1UC7cWPPj4L83CJB7pVYxDvU",
+        "customerId": "cus_VCWhbiJp1gqTPd",
+        "paymentIntentId": "pi_3UC8VJPPj4L83CJB1fhjYtc9"
+      },
+      {
+        "reservationId": "73e6903d-0c69-4bd2-be6e-1d8f40f28c57",
+        "setupIntentId": "seti_1UC3swPPj4L83CJBtGhhhLHq",
+        "customerId": "cus_VCSpeJGTHvIfzX",
+        "paymentIntentId": "pi_3UC8VJPPj4L83CJB0ceJDw4G"
+      },
+      {
+        "reservationId": "a9836bbc-2c16-411e-95bb-49116693f67f",
+        "setupIntentId": "seti_1UC8V2PPj4L83CJBhm66t8hL",
+        "customerId": "cus_VCXaG6jnYxKesx",
+        "paymentIntentId": "pi_3UC8VLPPj4L83CJB1xyPPBb3"
+      },
+      {
+        "reservationId": "df9b28a6-514d-403f-bd4a-69ef24a671dd",
+        "setupIntentId": "seti_1UC8VCPPj4L83CJB5n3sgneg",
+        "customerId": "cus_VCXaYNZV3KLAMk",
+        "paymentIntentId": "pi_3UC8VMPPj4L83CJB0KM3u97k"
+      }
+    ]
+  },
+  "campaigns": {
+    "djr99kx": {
+      "lifecycleStatus": "funding",
+      "active": true,
+      "reservationStates": {
+        "spot0": "funded",
+        "spot1": "payment_failed",
+        "spot2": "funded",
+        "spot3": "funded",
+        "spot4": "funded",
+        "spot5": "funded"
+      },
+      "paymentFailedReservation": "BMI-775ACF",
+      "paymentFailureExpiresAt": "2026-09-07T02:09:26.040Z"
+    },
+    "rdgsm8x": {
+      "lifecycleStatus": "live",
+      "active": true,
+      "w9Status": "submitted",
+      "w9ObjectPathPresent": true,
+      "listingEvidence": "MacBook Pro listing data and W-9 upload evidence were retained"
+    }
+  },
+  "publicApi": {
+    "campaignCount": 2,
+    "campaignIds": ["rdgsm8x", "djr99kx"],
+    "paymentFailureExpiryIncluded": true
+  },
+  "guardedCleanup": {
+    "log": "verification/guarded-cleanup-dry-run.log",
+    "dryRun": true,
+    "candidateCount": 0,
+    "deletedCount": 0,
+    "aborted": false,
+    "deletionCap": 20,
+    "predicate": "test = true and created_at older than one hour"
+  },
+  "restartVerification": {
+    "campaignStateHashBefore": "97219e4e921d3b57cca21f7c3794b2b2",
+    "campaignStateHashAfter": "97219e4e921d3b57cca21f7c3794b2b2",
+    "reservationStateHashBefore": "103098db14127452e30c466312fdd010",
+    "reservationStateHashAfter": "103098db14127452e30c466312fdd010",
+    "hashesMatch": true,
+    "apiWorkflow": "running",
+    "webWorkflow": "running"
+  },
+  "checks": {
+    "apiTests": "58 passed, 0 failed",
+    "apiTypecheck": "passed",
+    "databaseTypecheck": "passed",
+    "productionWebBuild": "passed",
+    "gitDiffCheck": "passed",
+    "brandingFilterOptions": ["Sticker", "Patch", "Embroidery", "Engraving"],
+    "homeScreenshot": "verification/recovery-final-home.jpg"
+  }
+}

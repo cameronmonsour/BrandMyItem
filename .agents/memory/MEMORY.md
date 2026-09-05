@@ -31,3 +31,4 @@
 - [Checkout popup session state](checkout-popup-session-state.md) — sessionStorage is cloned only when a popup opens, so later reservation state must also be written into that popup.
 - [Funding email idempotency](funding-email-idempotency.md) — charge transitions and Resend notifications are separate durable outcomes with retry-safe delivery markers.
 - [Admin direct route](brandmyitem-admin-routing.md) — Vite's custom 404 middleware must explicitly allow `/admin` before SPA routing can render the admin surface.
+- [Recovery guardrails](brandmyitem-recovery-guardrails.md) — lifecycle repair must preserve IDs and Stripe references, while cleanup only deletes explicitly flagged stale test rows.

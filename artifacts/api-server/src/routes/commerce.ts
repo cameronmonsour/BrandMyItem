@@ -690,6 +690,7 @@ router.post("/checkout/sessions", async (req, res): Promise<void> => {
   const idempotencyKey = checkoutIdempotencyKey(orderId);
   const reservationValues = {
     campaignId: campaign.id,
+    test: campaign.test,
     spotIndex: input.spotIndex,
     amountCents,
     brandName: input.brandName,
