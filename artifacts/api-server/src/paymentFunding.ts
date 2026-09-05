@@ -1,5 +1,5 @@
 import { campaignsTable, db, placementOrdersTable, updateCardCapabilitiesTable } from "@workspace/db";
-import { and, eq, inArray, isNull, lte } from "drizzle-orm";
+import { and, eq, inArray, isNotNull, isNull, lte } from "drizzle-orm";
 import { logger } from "./lib/logger.ts";
 import { stripeRequest } from "./stripeClient.ts";
 import { sendTransactionalEmail } from "./emailDelivery.ts";
@@ -19,6 +19,7 @@ import {
 } from "./paymentTransitions.ts";
 
 const FUNDING_STATUSES = ["reserved", "funding", "payment_failed"] as const;
+const ACTIVE_FUNDING_STATUSES = ["reserved", "funding", "payment_failed", "funded"] as const;
 const SIXTY_DAYS_MS = 60 * 24 * 60 * 60 * 1000;
 const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
 
@@ -69,7 +70,10 @@ export async function attemptCampaignFunding(
   const reserved = orders.filter((order) =>
     FUNDING_STATUSES.includes(order.status as (typeof FUNDING_STATUSES)[number]),
   );
-  if (reserved.length < campaign.pricesCents.length) return;
+  const activeOrders = orders.filter((order) =>
+    ACTIVE_FUNDING_STATUSES.includes(order.status as (typeof ACTIVE_FUNDING_STATUSES)[number]),
+  );
+  if (activeOrders.length < campaign.pricesCents.length) return;
 
   await db
     .update(campaignsTable)
@@ -160,9 +164,12 @@ export async function attemptCampaignFunding(
     .select()
     .from(placementOrdersTable)
     .where(eq(placementOrdersTable.campaignId, campaignId));
+  const finalActiveOrders = finalOrders.filter((order) =>
+    ACTIVE_FUNDING_STATUSES.includes(order.status as (typeof ACTIVE_FUNDING_STATUSES)[number]),
+  );
   if (
-    finalOrders.length >= campaign.pricesCents.length &&
-    finalOrders.every((order) => order.status === "funded")
+    finalActiveOrders.length >= campaign.pricesCents.length &&
+    finalActiveOrders.every((order) => order.status === "funded")
   ) {
     await db
       .update(campaignsTable)
@@ -192,10 +199,13 @@ export async function sendFundingLifecycleEmails(
     .where(eq(placementOrdersTable.campaignId, campaignId));
   const itemDisplayName = campaignItemDisplayName(campaign);
 
+  const activeOrders = orders.filter((order) =>
+    ACTIVE_FUNDING_STATUSES.includes(order.status as (typeof ACTIVE_FUNDING_STATUSES)[number]),
+  );
   const listingFunded =
     campaign.lifecycleStatus === "funded" &&
-    orders.length >= campaign.pricesCents.length &&
-    orders.every((order) => order.status === "funded");
+    activeOrders.length >= campaign.pricesCents.length &&
+    activeOrders.every((order) => order.status === "funded");
   for (const order of orders) {
     if (
       order.status === "funded" &&
@@ -266,12 +276,15 @@ export async function sendFundingLifecycleEmails(
     .from(placementOrdersTable)
     .where(eq(placementOrdersTable.campaignId, campaignId));
   const latest = currentCampaign[0];
+  const latestActiveOrders = latestOrders.filter((order) =>
+    ACTIVE_FUNDING_STATUSES.includes(order.status as (typeof ACTIVE_FUNDING_STATUSES)[number]),
+  );
   if (
     latest?.lifecycleStatus === "funded" &&
     latest.ownerEmail &&
     !latest.fundedEmailSentAt &&
-    latestOrders.length >= latest.pricesCents.length &&
-    latestOrders.every((order) => order.status === "funded")
+    latestActiveOrders.length >= latest.pricesCents.length &&
+    latestActiveOrders.every((order) => order.status === "funded")
   ) {
     try {
       const delivery = await sendTransactionalEmail(ownerCampaignFundedEmail({
@@ -300,8 +313,19 @@ export async function expirePaymentFailures(now = new Date()): Promise<void> {
     lte(placementOrdersTable.paymentFailureExpiresAt, now),
   ));
   for (const order of failed) {
+    if (order.stripePaymentMethodId) {
+      try {
+        await stripeRequest(
+          `/v1/payment_methods/${encodeURIComponent(order.stripePaymentMethodId)}/detach`,
+          { method: "POST", idempotencyKey: `brandmyitem-order-${order.id}-detach-payment-method` },
+        );
+      } catch (error) {
+        logger.warn({ err: error, reservationId: order.id }, "Expired reservation payment method detach failed");
+      }
+    }
     await db.update(placementOrdersTable).set({
-      status: "reserved",
+      status: "cancelled",
+      stripePaymentMethodId: null,
       paymentFailureAt: null,
       paymentFailureExpiresAt: null,
       paymentRetryAt: null,
@@ -394,13 +418,17 @@ export async function reconcileReservationPayments(now = new Date()): Promise<vo
         !!order.paymentFailureExpiresAt &&
         order.paymentFailureExpiresAt > now,
     );
-    const allReserved = orders.filter(
-      (order) =>
-        order.status === "reserved" ||
-        order.status === "funding" ||
-        order.status === "payment_failed",
+    const allSpotsActive = orders.filter((order) =>
+      ACTIVE_FUNDING_STATUSES.includes(order.status as (typeof ACTIVE_FUNDING_STATUSES)[number]),
     ).length >= campaign.pricesCents.length;
-    if (shouldRetry || allReserved) await attemptCampaignFunding(campaign.id, now);
+    if (shouldRetry || allSpotsActive) await attemptCampaignFunding(campaign.id, now);
+  }
+  const fundedCampaigns = await db
+    .select()
+    .from(campaignsTable)
+    .where(eq(campaignsTable.lifecycleStatus, "funded"));
+  for (const campaign of fundedCampaigns) {
+    await sendFundingLifecycleEmails(campaign.id, now);
   }
 }
 
@@ -484,6 +512,7 @@ export async function advanceCheckinLifecycle(now = new Date()): Promise<void> {
     .set({ checkinStatus: "reminded", checkinReminderSentAt: now, updatedAt: now })
     .where(
       and(
+        isNotNull(campaignsTable.deliveredAt),
         eq(campaignsTable.checkinStatus, "due"),
         lte(campaignsTable.checkinDueAt, now),
       ),
@@ -493,6 +522,7 @@ export async function advanceCheckinLifecycle(now = new Date()): Promise<void> {
     .set({ checkinStatus: "missed", updatedAt: now })
     .where(
       and(
+        isNotNull(campaignsTable.deliveredAt),
         eq(campaignsTable.checkinStatus, "reminded"),
         lte(campaignsTable.checkinReminderSentAt, reminderCutoff),
       ),

@@ -3,8 +3,11 @@ import test from "node:test";
 import {
   campaignItemDisplayName,
   contactSupportEmail,
+  fundingConfirmationEmail,
+  ownerCampaignFundedEmail,
   ownerCampaignConfirmationEmail,
   paymentDeclinedEmail,
+  paymentReopenedEmail,
   reservationConfirmationEmail,
   trackingMagicLinkEmail,
 } from "./emailTemplates.ts";
@@ -62,6 +65,49 @@ test("payment decline email deep-links to the reservation card-update flow", () 
 
   assert.match(email.text, /update_card=BMI-775ACF&token=capability-token/);
   assert.match(email.html, /href="https:\/\/brandmyitem\.com\/\?update_card=BMI-775ACF&token=capability-token"/);
+});
+
+test("funding emails distinguish a completed listing from partial funding", () => {
+  const partial = fundingConfirmationEmail({
+    email: "brand@example.com",
+    reservationId: "BMI-PARTIAL",
+    itemDisplayName: "iPhone 17",
+    amountCents: 24000,
+    listingFunded: false,
+  });
+  assert.match(partial.text, /listing completes when all spots clear/);
+  assert.doesNotMatch(partial.text, /fully funded/);
+
+  const completed = fundingConfirmationEmail({
+    email: "brand@example.com",
+    reservationId: "BMI-COMPLETE",
+    itemDisplayName: "iPhone 17",
+    amountCents: 24000,
+    listingFunded: true,
+  });
+  assert.match(completed.text, /listing completed/);
+  assert.doesNotMatch(completed.text, /fully funded/);
+});
+
+test("released reservation email gives the replacement-card instruction", () => {
+  const email = paymentReopenedEmail({
+    email: "brand@example.com",
+    reservationId: "BMI-775ACF",
+    itemDisplayName: "iPhone 17",
+  });
+  assert.match(email.text, /Your reservation was released\. Reserve again with a different card\./);
+  assert.match(email.html, /Your reservation was released\. Reserve again with a different card\./);
+});
+
+test("owner funded email describes completion", () => {
+  const email = ownerCampaignFundedEmail({
+    email: "owner@example.com",
+    itemDisplayName: "iPhone 17",
+    campaignId: "djr99kx",
+    totalCents: 144100,
+  });
+  assert.match(email.text, /listing completed/);
+  assert.doesNotMatch(email.text, /fully funded/);
 });
 
 test("contact support email targets support and escapes submitted HTML", () => {

@@ -105,10 +105,10 @@ export function paymentReopenedEmail(input: {
   return {
     to: input.email,
     subject: "Your BrandMyItem spot is open again",
-    text: `The 48-hour card-update window for reservation ${input.reservationId} ended without a successful charge. Your spot on ${input.itemDisplayName} is open again and your card was not charged.`,
+    text: `Your reservation was released. Reserve again with a different card. The 48-hour card-update window for reservation ${input.reservationId} ended without a successful charge.`,
     html: wrap(
-      "Spot open again",
-      `The 48-hour card-update window for reservation ${input.reservationId} ended without a successful charge. Your spot on ${escapeHtml(input.itemDisplayName)} is open again and your card was not charged.`,
+      "Reservation released",
+      `Your reservation was released. Reserve again with a different card. Your spot on ${escapeHtml(input.itemDisplayName)} is open again and your card was not charged.`,
     ),
   };
 }
@@ -159,10 +159,10 @@ export function fundingConfirmationEmail(input: {
     ? "Your BrandMyItem reservation funded"
     : "Your BrandMyItem charge succeeded";
   const text = listingFunded
-    ? `The ${input.itemDisplayName} listing fully funded. Your saved card was charged $${(input.amountCents / 100).toFixed(2)} for reservation ${input.reservationId}.`
+    ? `The ${input.itemDisplayName} listing completed. Your saved card was charged $${(input.amountCents / 100).toFixed(2)} for reservation ${input.reservationId}.`
     : `Your saved card was charged $${(input.amountCents / 100).toFixed(2)} for reservation ${input.reservationId}. Your charge succeeded. The listing completes when all spots clear.`;
   const body = listingFunded
-    ? `The ${itemDisplayName} listing fully funded. Your saved card was charged $${(input.amountCents / 100).toFixed(2)} for reservation ${input.reservationId}.`
+    ? `The ${itemDisplayName} listing completed. Your saved card was charged $${(input.amountCents / 100).toFixed(2)} for reservation ${input.reservationId}.`
     : `Your saved card was charged $${(input.amountCents / 100).toFixed(2)} for reservation ${input.reservationId}. <b>Your charge succeeded · listing completes when all spots clear.</b>`;
   return {
     to: input.email,
@@ -194,11 +194,11 @@ export function ownerCampaignFundedEmail(input: {
   const total = `$${(input.totalCents / 100).toFixed(2)}`;
   return {
     to: input.email,
-    subject: `Your BrandMyItem listing is fully funded`,
-    text: `Your ${input.itemDisplayName} listing is fully funded. All reserved placements were charged, for a campaign total of ${total}. Listing ID: ${input.campaignId}.`,
+    subject: `Your BrandMyItem listing completed`,
+    text: `Your ${input.itemDisplayName} listing completed. All reserved placements were charged, for a campaign total of ${total}. Listing ID: ${input.campaignId}.`,
     html: wrap(
-      "Your listing is fully funded",
-      `Your ${itemDisplayName} listing is fully funded. All reserved placements were charged, for a campaign total of ${total}. Listing ID: ${escapeHtml(input.campaignId)}.`,
+      "Your listing completed",
+      `Your ${itemDisplayName} listing completed. All reserved placements were charged, for a campaign total of ${total}. Listing ID: ${escapeHtml(input.campaignId)}.`,
     ),
   };
 }

@@ -44,7 +44,7 @@ export const campaignsTable = pgTable("campaigns", {
   deliveredAt: timestamp("delivered_at", { withTimezone: true }),
   checkinDueAt: timestamp("checkin_due_at", { withTimezone: true }),
   checkinReminderSentAt: timestamp("checkin_reminder_sent_at", { withTimezone: true }),
-  checkinStatus: text("checkin_status").notNull().default("not_due"),
+  checkinStatus: text("checkin_status").notNull().default("not_started"),
   makeGoodSelection: text("make_good_selection"),
   makeGoodSelectedAt: timestamp("make_good_selected_at", { withTimezone: true }),
   w9Required: boolean("w9_required").notNull().default(false),

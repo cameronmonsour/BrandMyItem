@@ -42,7 +42,7 @@ export async function ensureCommerceSchema(): Promise<void> {
       ADD COLUMN IF NOT EXISTS delivered_at timestamptz,
       ADD COLUMN IF NOT EXISTS checkin_due_at timestamptz,
       ADD COLUMN IF NOT EXISTS checkin_reminder_sent_at timestamptz,
-      ADD COLUMN IF NOT EXISTS checkin_status text NOT NULL DEFAULT 'not_due',
+      ADD COLUMN IF NOT EXISTS checkin_status text NOT NULL DEFAULT 'not_started',
       ADD COLUMN IF NOT EXISTS make_good_selection text,
       ADD COLUMN IF NOT EXISTS make_good_selected_at timestamptz,
       ADD COLUMN IF NOT EXISTS funded_email_sent_at timestamptz,

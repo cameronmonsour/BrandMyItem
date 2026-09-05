@@ -181,7 +181,7 @@ router.patch("/admin/campaigns/:campaignId/fulfillment", async (req, res): Promi
     patch.lifecycleStatus = "active";
     patch.deliveredAt = campaign.deliveredAt ?? now;
     patch.checkinDueAt = campaign.checkinDueAt ?? new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-    patch.checkinStatus = campaign.checkinStatus === "not_due" ? "due" : campaign.checkinStatus;
+     patch.checkinStatus = campaign.checkinStatus === "not_started" ? "due" : campaign.checkinStatus;
   }
   const [updated] = await db.update(campaignsTable).set(patch).where(eq(campaignsTable.id, campaignId)).returning();
   await recordAuditEvent({

@@ -32,3 +32,4 @@
 - [Funding email idempotency](funding-email-idempotency.md) — charge transitions and Resend notifications are separate durable outcomes with retry-safe delivery markers.
 - [Admin direct route](brandmyitem-admin-routing.md) — Vite's custom 404 middleware must explicitly allow `/admin` before SPA routing can render the admin surface.
 - [Recovery guardrails](brandmyitem-recovery-guardrails.md) — lifecycle repair must preserve IDs and Stripe references, while cleanup only deletes explicitly flagged stale test rows.
+- [Active order counts](active-order-counts.md) — funding thresholds and completion emails must ignore cancelled and expired reservation history.
