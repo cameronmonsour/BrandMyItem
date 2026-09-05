@@ -15,9 +15,21 @@ localPort = 22686
 run = "pnpm --filter @workspace/brandmyitem run dev"
 
 [services.production]
-build = [ "pnpm", "--filter", "@workspace/brandmyitem", "run", "build" ]
-serve = "static"
-publicDir = "artifacts/brandmyitem/dist/public"
+
+[services.production.build]
+args = [ "pnpm", "run", "build" ]
+
+[services.production.build.env]
+NODE_ENV = "production"
+
+[services.production.run]
+args = [ "node", "artifacts/api-server/dist/index.mjs" ]
+
+[services.production.run.env]
+NODE_ENV = "production"
+
+[services.production.health.startup]
+path = "/api/health"
 
 
 [services.env]
