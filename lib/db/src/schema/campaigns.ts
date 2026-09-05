@@ -8,6 +8,7 @@ import {
   timestamp,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 
 export const campaignsTable = pgTable("campaigns", {
   id: text("id").primaryKey(),
@@ -154,10 +155,10 @@ export const placementOrdersTable = pgTable(
       .defaultNow(),
   },
   (table) => [
-    uniqueIndex("placement_orders_campaign_spot_unique").on(
+    uniqueIndex("placement_orders_active_campaign_spot_unique").on(
       table.campaignId,
       table.spotIndex,
-    ),
+    ).where(sql`${table.status} in ('pending', 'reserved', 'funding', 'payment_failed', 'funded')`),
     uniqueIndex("placement_orders_stripe_session_unique").on(
       table.stripeCheckoutSessionId,
     ),

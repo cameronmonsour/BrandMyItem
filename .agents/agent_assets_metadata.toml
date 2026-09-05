@@ -126,3 +126,17 @@ mtime_ms = 1788566009315
 storage_uri = "gcs://replit-rams-assets-riker/rams/assets/repl:3f7c2cc8-f08b-4158-944b-09fd3b52c7cc/dd97accc-fa04-4bcc-8be6-4ec5a16b76e2/b9d2e089-2515-4a54-b2b6-2b27dd4195ca"
 storage_version_token = "1788566015898144"
 content_type = "image/jpeg"
+
+[[outputs]]
+id = "oRPX49_cg6QVl8LwnkXuO"
+uri = "file://screenshots/round4-listing-state.jpg"
+type = "image"
+title = "Round 4 listing state"
+description = "Live browser evidence for djr99kx showing $480 of $1,441, with only Spots 2 and 4 reserved."
+logical_id = "c788f1f1-8774-42b1-adc0-192e8d50653d"
+content_hash = "sha256:7f96f4e4f8db860ac5f20ae6bd7755beda6125a3c5ec91c41334061b765f9b82"
+size = 74709
+mtime_ms = 1788567616979
+storage_uri = "gcs://replit-rams-assets-riker/rams/assets/repl:3f7c2cc8-f08b-4158-944b-09fd3b52c7cc/c788f1f1-8774-42b1-adc0-192e8d50653d/e332f577-8622-43b1-a9be-e5953bbb24bf"
+storage_version_token = "1788567817659013"
+content_type = "image/jpeg"

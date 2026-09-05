@@ -1,4 +1,5 @@
 import { index, integer, pgTable, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 // @ts-expect-error TS5097: source-level Node tests need the extension.
 import { campaignsTable } from "./campaigns.ts";
 
@@ -18,7 +19,9 @@ export const sponsorReservationDraftsTable = pgTable(
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [
-    uniqueIndex("sponsor_reservation_drafts_campaign_spot_unique").on(table.campaignId, table.spotIndex),
+    uniqueIndex("sponsor_reservation_drafts_active_spot_unique")
+      .on(table.campaignId, table.spotIndex)
+      .where(sql`${table.status} = 'issued'`),
     index("sponsor_reservation_drafts_expiry_idx").on(table.expiresAt),
   ],
 );

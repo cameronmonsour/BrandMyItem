@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { campaignsTable, db, placementOrdersTable, sponsorReservationDraftsTable, uploadIntentsTable } from "@workspace/db";
+import { campaignsTable, db, sponsorReservationDraftsTable, uploadIntentsTable } from "@workspace/db";
 import {
   CreateSponsorReservationDraftBody, CreateSponsorReservationDraftResponse,
   DeleteSponsorReservationDraftParams,
@@ -8,29 +8,31 @@ import {
   RequestSponsorReservationDraftLogoUploadResponse,
 } from "@workspace/api-zod";
 import { and, eq, gt, lte } from "drizzle-orm";
-import { Router, type IRouter, type Request } from "express";
+import { Router, type IRouter, type Request, type Response } from "express";
 import {
   accessCookieName, accessTokenMatches, createAccessToken, hashAccessToken, readAccessToken, setAccessCookie,
 } from "../lib/accessControl.ts";
 import { createImageUploadURL, objectPathFromUploadUrl, verifyUploadIntentObject } from "../lib/objectStorage.ts";
 import { hashUploadCapability, toPublicUploadIntent, uploadCapabilityMatches } from "../lib/uploadIntents.ts";
+import { readActiveReservationsForSpot } from "../lib/activeReservations.ts";
 
 const router: IRouter = Router();
-const DRAFT_TTL_MS = 15 * 60 * 1000;
+const DRAFT_TTL_MS = 3 * 60 * 1000;
 const LOGO_TYPES = new Set(["image/svg+xml", "application/pdf"]);
 const LOGO_MAX_BYTES = 20_000_000;
 
 async function authorizedDraft(req: Request, draftId: string) {
+  const now = new Date();
   const [draft] = await db.select().from(sponsorReservationDraftsTable)
-    .where(eq(sponsorReservationDraftsTable.id, draftId)).limit(1);
+    .where(and(
+      eq(sponsorReservationDraftsTable.id, draftId),
+      eq(sponsorReservationDraftsTable.status, "issued"),
+      gt(sponsorReservationDraftsTable.expiresAt, now),
+    )).limit(1);
   const capability = readAccessToken(req, "sponsor_reservation", draftId);
   return draft && capability && accessTokenMatches(draft.capabilityDigest, capability)
     ? { draft, capability }
     : null;
-}
-
-function isOpenOrder(status: string): boolean {
-  return ["pending", "reserved", "funding", "payment_failed", "funded"].includes(status);
 }
 
 router.post("/sponsor-reservation-drafts", async (req, res): Promise<void> => {
@@ -44,10 +46,8 @@ router.post("/sponsor-reservation-drafts", async (req, res): Promise<void> => {
       !Number.isInteger(campaign.pricesCents[spotIndex])) {
     res.status(404).json({ error: "Campaign spot is not available" }); return;
   }
-  const [order] = await db.select().from(placementOrdersTable).where(and(
-    eq(placementOrdersTable.campaignId, campaignId), eq(placementOrdersTable.spotIndex, spotIndex),
-  )).limit(1);
-  if (order && isOpenOrder(order.status)) { res.status(409).json({ error: "Placement is already reserved" }); return; }
+  const [order] = await readActiveReservationsForSpot(campaignId, spotIndex);
+  if (order) { res.status(409).json({ error: "Placement is already reserved" }); return; }
 
   const id = randomUUID();
   const capability = createAccessToken();
@@ -71,7 +71,7 @@ router.post("/sponsor-reservation-drafts", async (req, res): Promise<void> => {
   }));
 });
 
-router.delete("/sponsor-reservation-drafts/:draftId", async (req, res): Promise<void> => {
+async function releaseDraft(req: Request, res: Response): Promise<void> {
   const params = DeleteSponsorReservationDraftParams.safeParse(req.params);
   if (!params.success) { res.status(400).json({ error: "Invalid reservation draft" }); return; }
   const authorized = await authorizedDraft(req, params.data.draftId);
@@ -103,6 +103,12 @@ router.delete("/sponsor-reservation-drafts/:draftId", async (req, res): Promise<
   }
   res.clearCookie(accessCookieName("sponsor_reservation", draft.id), { path: "/api" });
   res.sendStatus(204);
+}
+
+router.delete("/sponsor-reservation-drafts/:draftId", releaseDraft);
+router.post("/sponsor-reservation-drafts/:draftId", async (req, res, next) => {
+  if (req.query["_method"] !== "DELETE") return next();
+  await releaseDraft(req, res);
 });
 
 router.post("/sponsor-reservation-drafts/:draftId/logo/request-url", async (req, res): Promise<void> => {

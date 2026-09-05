@@ -61,6 +61,10 @@ import {
   trackingMagicLinkEmail,
 } from "../emailTemplates.ts";
 import { logger } from "../lib/logger.ts";
+import {
+  readActiveReservationsForCampaigns,
+  readActiveReservationsForEmail,
+} from "../lib/activeReservations.ts";
 
 const router: IRouter = Router();
 const TRACKING_LINK_TTL_MS = 15 * 60 * 1000;
@@ -102,17 +106,7 @@ async function publicCampaigns(
 ) {
   campaigns = campaigns.filter((campaign) => !campaign.test);
   const ids = campaigns.map((campaign) => campaign.id);
-  const orders = ids.length
-    ? await db
-        .select()
-        .from(placementOrdersTable)
-        .where(
-          and(
-            inArray(placementOrdersTable.campaignId, ids),
-            inArray(placementOrdersTable.status, ["reserved", "funding", "payment_failed", "funded"]),
-          ),
-        )
-    : [];
+  const orders = await readActiveReservationsForCampaigns(ids);
   const claimsByCampaign = new Map<string, Array<ReturnType<typeof publicClaim>>>();
   for (const order of orders) {
     const claims = claimsByCampaign.get(order.campaignId) ?? [];
@@ -374,32 +368,21 @@ router.get("/tracking", async (req, res): Promise<void> => {
         )
         .orderBy(desc(campaignsTable.createdAt))
     : [];
-  const brandOrders = magicLink || checkoutAccessHashes.length
-    ? await db
-        .select()
-        .from(placementOrdersTable)
-        .where(
-          and(
-            sql`lower(${placementOrdersTable.email}) = ${email}`,
-            magicLink
-              ? sql`true`
-              : inArray(
-                  placementOrdersTable.checkoutAccessTokenHash,
-                  checkoutAccessHashes,
-                ),
-          ),
-        )
-        .orderBy(desc(placementOrdersTable.createdAt))
+  const emailOrders = magicLink || checkoutAccessHashes.length
+    ? await readActiveReservationsForEmail(email)
     : [];
+  const brandOrders = emailOrders
+    .filter((order) =>
+      magicLink || (
+        order.checkoutAccessTokenHash &&
+        checkoutAccessHashes.includes(order.checkoutAccessTokenHash)
+      ),
+    )
+    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
   const ownerCampaignIds = ownerCampaigns.map((campaign) => campaign.id);
-  const ownerOrders = ownerCampaignIds.length
-    ? await db
-        .select()
-        .from(placementOrdersTable)
-        .where(inArray(placementOrdersTable.campaignId, ownerCampaignIds))
-        .orderBy(desc(placementOrdersTable.createdAt))
-    : [];
+  const ownerOrders = (await readActiveReservationsForCampaigns(ownerCampaignIds))
+    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
   const campaignIds = Array.from(
     new Set([
       ...ownerCampaignIds,
@@ -569,15 +552,28 @@ router.post("/checkout/sessions", async (req, res): Promise<void> => {
       .where(eq(sponsorReservationDraftsTable.id, input.reservationDraftId)).limit(1);
     const [intent] = await tx.select().from(uploadIntentsTable)
       .where(eq(uploadIntentsTable.id, input.logoIntentId)).limit(1);
-    if (!liveCampaign || !liveCampaign.active || liveCampaign.lifecycleStatus !== "live" ||
-        (liveCampaign.expiresAt && liveCampaign.expiresAt <= now) ||
-        !draft || !intent || draft.status !== "issued" || draft.expiresAt <= now ||
-        !accessTokenMatches(draft.capabilityDigest, reservationCapability) ||
-        intent.purpose !== "sponsor_reservation_draft_logo" || intent.actorType !== "sponsor" ||
-        intent.actorId !== draft.id || intent.resourceType !== "sponsor_reservation_draft" ||
-        intent.resourceId !== draft.id || intent.campaignId !== campaign.id ||
-        intent.spotIndex !== input.spotIndex || intent.status !== "finalized" ||
-        intent.expiresAt <= now || !uploadCapabilityMatches(intent.capabilityDigest, reservationCapability)) {
+    const invalidReasons = [
+      !liveCampaign || !liveCampaign.active ? "campaign_inactive" : null,
+      liveCampaign?.lifecycleStatus !== "live" ? "campaign_not_live" : null,
+      liveCampaign?.expiresAt && liveCampaign.expiresAt <= now ? "campaign_expired" : null,
+      !draft ? "draft_missing" : null,
+      draft && draft.status !== "issued" ? "draft_not_issued" : null,
+      draft && draft.expiresAt <= now ? "draft_expired" : null,
+      draft && !accessTokenMatches(draft.capabilityDigest, reservationCapability) ? "draft_capability" : null,
+      !intent ? "intent_missing" : null,
+      intent && intent.purpose !== "sponsor_reservation_draft_logo" ? "intent_purpose" : null,
+      intent && intent.actorType !== "sponsor" ? "intent_actor_type" : null,
+      intent && draft && intent.actorId !== draft.id ? "intent_actor" : null,
+      intent && intent.resourceType !== "sponsor_reservation_draft" ? "intent_resource_type" : null,
+      intent && draft && intent.resourceId !== draft.id ? "intent_resource" : null,
+      intent && intent.campaignId !== campaign.id ? "intent_campaign" : null,
+      intent && intent.spotIndex !== input.spotIndex ? "intent_spot" : null,
+      intent && intent.status !== "finalized" ? "intent_not_finalized" : null,
+      intent && intent.expiresAt <= now ? "intent_expired" : null,
+      intent && !uploadCapabilityMatches(intent.capabilityDigest, reservationCapability) ? "intent_capability" : null,
+    ].filter(Boolean);
+    if (invalidReasons.length) {
+        req.log.warn({ invalidReasons, campaignId: campaign.id, spotIndex: input.spotIndex }, "Reservation draft validation failed");
         throw new Error("invalid_reservation_draft");
     }
     const consumedIntent = await tx.update(uploadIntentsTable).set({
