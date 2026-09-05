@@ -11284,13 +11284,14 @@ function renderItemSpotList(){
   host.innerHTML='';
   (CUR.prices||[]).forEach(function(price,i){
     var claim=CUR.claims&&CUR.claims[i],meta=slotMeta(CUR.type,CUR.slots,i);
-     var stateLabel=claim?(claim.orderStatus==='funded'?'Funded':'Reserved'):(CUR.closed?'Expired':'Reserve');
+      var claimStatus=claim&&(claim.orderStatus||claim.status);
+      var stateLabel=claim?(claimStatus==='funded'?'Funded':(claimStatus==='payment_failed'?'Payment pending':'Reserved')):(CUR.closed?'Expired':'Reserve');
     var button=document.createElement('button');
     button.type='button';
     button.className='ap-spot-option '+(claim?'reserved':'open');
     button.disabled=!!claim||!!CUR.closed;
      button.setAttribute('aria-label',claim?
-        ('Spot '+(i+1)+' reserved by '+(claim.brand||'a brand')):
+         ('Spot '+(i+1)+' '+(claimStatus==='payment_failed'?'payment pending':'reserved')+' by '+(claim.brand||'a brand')):
         ('Reserve Spot '+(i+1)+' for '+money(price)));
     var brand=(claim&&claim.brand||'Sponsor').trim();
     var mark=claim?

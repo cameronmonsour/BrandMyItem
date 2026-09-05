@@ -25,19 +25,23 @@ async function requireAdmin(req: import("express").Request, res: import("express
   return email;
 }
 
-router.post("/admin/auth/request", async (req, res): Promise<void> => {
+async function requestAdminLoginLink(req: import("express").Request, res: import("express").Response): Promise<void> {
   const email = typeof req.body?.email === "string" ? req.body.email : "";
   try {
     const result = await issueAdminMagicLink(email);
     res.status(202).json({
       accepted: result.accepted,
+      ...(result.messageId ? { messageId: result.messageId } : {}),
       message: "If that address is configured for admin access, a one-time login link is on its way.",
     });
   } catch (error) {
     req.log.error({ err: error }, "Unable to send admin magic link");
     res.status(502).json({ error: "Admin login email is unavailable" });
   }
-});
+}
+
+router.post("/admin/auth/request", requestAdminLoginLink);
+router.post("/admin/login-link", requestAdminLoginLink);
 
 router.get("/admin/auth/consume", async (req, res): Promise<void> => {
   const token = typeof req.query.token === "string" ? req.query.token : "";

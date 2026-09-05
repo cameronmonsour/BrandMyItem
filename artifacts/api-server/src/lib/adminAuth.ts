@@ -43,7 +43,7 @@ export async function readAdminIdentity(req: Request): Promise<string | null> {
 
 export async function issueAdminMagicLink(
   emailInput: string,
-): Promise<{ accepted: boolean; sent: boolean }> {
+): Promise<{ accepted: boolean; sent: boolean; messageId?: string }> {
   const email = emailInput.trim().toLowerCase();
   if (!email || email !== configuredAdminEmail()) {
     return { accepted: false, sent: false };
@@ -56,7 +56,7 @@ export async function issueAdminMagicLink(
   });
   const url = `${publicAppUrl()}/admin?admin_token=${encodeURIComponent(token)}`;
   const delivery = await sendTransactionalEmail(adminMagicLinkEmail({ email, url }));
-  return { accepted: true, sent: Boolean(delivery.messageId) };
+  return { accepted: true, sent: Boolean(delivery.messageId), messageId: delivery.messageId };
 }
 
 export async function consumeAdminMagicLink(
