@@ -71,6 +71,13 @@ router.get("/admin/auth/session", async (req, res): Promise<void> => {
 });
 
 router.post("/admin/run-sweeps", async (req, res): Promise<void> => {
+  if (
+    process.env.NODE_ENV === "production" &&
+    process.env.ADMIN_SWEEP_ENABLED !== "true"
+  ) {
+    res.status(404).json({ error: "Not found" });
+    return;
+  }
   if (!await requireAdmin(req, res)) return;
   const nowInput = typeof req.body?.now === "string" ? req.body.now : "";
   const now = new Date(nowInput);

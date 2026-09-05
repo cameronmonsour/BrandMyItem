@@ -8,7 +8,31 @@ import {
   autoApprovePlacementProofs,
 } from "./paymentFunding.ts";
 
-const DEFAULT_INTERVAL_MS = 5 * 60 * 1000;
+const DEFAULT_SCHEDULER_POLL_INTERVAL_MS = 60 * 1000;
+
+function lifecycleSweepJobName(): string {
+  return process.env.NODE_ENV === "production"
+    ? "lifecycle-sweep-production"
+    : "lifecycle-sweep-development";
+}
+
+export function hourlySweepBucket(now = new Date()): Date {
+  const bucket = new Date(now);
+  bucket.setUTCMinutes(0, 0, 0);
+  return bucket;
+}
+
+async function claimHourlySweep(now: Date): Promise<Date | null> {
+  const runHour = hourlySweepBucket(now);
+  const result = await pool.query<{ run_hour: Date }>(
+    `INSERT INTO maintenance_job_runs (job_name, run_hour)
+     VALUES ($1, $2)
+     ON CONFLICT (job_name, run_hour) DO NOTHING
+     RETURNING run_hour`,
+    [lifecycleSweepJobName(), runHour],
+  );
+  return result.rows[0]?.run_hour ?? null;
+}
 
 export async function reconcilePayments(now = new Date()): Promise<void> {
   const client = await pool.connect();
@@ -137,21 +161,57 @@ export async function runLifecycleSweeps(now = new Date()): Promise<{
   }
 }
 
+export async function runHourlyLifecycleSweep(now = new Date()): Promise<{
+  claimed: boolean;
+  runHour: string;
+  locked?: boolean;
+  changeCount?: number;
+  emailCount?: number;
+}> {
+  const runHour = hourlySweepBucket(now).toISOString();
+  const claimed = await claimHourlySweep(now);
+  if (!claimed) return { claimed: false, runHour };
+
+  try {
+    const report = await runLifecycleSweeps(now);
+    const summary = {
+      claimed: true,
+      runHour,
+      locked: report.locked,
+      changeCount: report.changes.length,
+      emailCount: report.emails.length,
+    };
+    logger.info(summary, "Hourly lifecycle sweep summary");
+    return summary;
+  } catch (err) {
+    logger.error(
+      {
+        claimed: true,
+        runHour,
+        success: false,
+        error: err instanceof Error ? err.message : String(err),
+      },
+      "Hourly lifecycle sweep summary",
+    );
+    return { claimed: true, runHour };
+  }
+}
+
 export function startPaymentReconciliation(): () => void {
-  const configured = Number(process.env.PAYMENT_RECONCILIATION_INTERVAL_MS);
+  const configured = Number(process.env.LIFECYCLE_SWEEP_POLL_INTERVAL_MS);
   const intervalMs =
     Number.isFinite(configured) && configured >= 10_000
       ? configured
-      : DEFAULT_INTERVAL_MS;
+      : DEFAULT_SCHEDULER_POLL_INTERVAL_MS;
   let running = false;
 
   const run = async () => {
     if (running) return;
     running = true;
     try {
-      await reconcilePayments();
+      await runHourlyLifecycleSweep();
     } catch (err) {
-      logger.error({ err }, "Reservation payment reconciliation cycle failed");
+      logger.error({ err }, "Hourly lifecycle sweep scheduler failed");
     } finally {
       running = false;
     }

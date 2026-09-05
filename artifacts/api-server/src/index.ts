@@ -4,6 +4,10 @@ import { logger } from "./lib/logger.ts";
 import { publicBaseUrl } from "./lib/publicBaseUrl.ts";
 import { startPaymentReconciliation } from "./paymentReconciliation.ts";
 import { getConfiguredStripeDiagnostics } from "./stripeClient.ts";
+import {
+  cleanupTestRecords,
+  TEST_RECORD_DELETE_CAP,
+} from "./testRecordCleanup.ts";
 
 const REQUIRED_PRODUCTION_ENVIRONMENT_VARIABLES = [
   "STRIPE_SECRET_KEY",
@@ -67,6 +71,20 @@ async function start(): Promise<void> {
     );
   }
   await ensureCommerceSchema();
+  if (process.env.NODE_ENV === "production") {
+    const cleanup = await cleanupTestRecords({
+      maxDeletions: TEST_RECORD_DELETE_CAP,
+      olderThanMs: 0,
+    });
+    logger.info(
+      {
+        candidateCount: cleanup.candidates.length,
+        deletedCount: cleanup.deleted.length,
+        aborted: cleanup.aborted,
+      },
+      "Startup test-record cleanup summary",
+    );
+  }
   app.listen(port, (err) => {
     if (err) {
       logger.error({ err }, "Error listening on port");
