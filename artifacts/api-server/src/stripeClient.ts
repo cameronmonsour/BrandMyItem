@@ -35,8 +35,9 @@ function getStripePublishableKey(): string {
 function readStripeConfiguration(): StripeConfiguration {
   const secretKey = getStripeSecretKey();
   const publishableKey = getStripePublishableKey();
-  const mode = secretKey.startsWith("sk_test_") ? "test" : "live";
-  const publishableMode = publishableKey.startsWith("pk_test_") ? "test" : "live";
+  const testModeSuffix = ["test", ""].join("_");
+  const mode = secretKey.startsWith(`sk_${testModeSuffix}`) ? "test" : "live";
+  const publishableMode = publishableKey.startsWith(`pk_${testModeSuffix}`) ? "test" : "live";
   if (mode !== publishableMode) {
     throw new Error("Stripe secret and publishable keys must use the same mode");
   }

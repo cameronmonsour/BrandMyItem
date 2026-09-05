@@ -6939,55 +6939,8 @@ var FAKE_SPONSOR_LOGOS=[
   'logos/fake/kilo.svg',
   'logos/fake/veldt.svg'
 ];
-function fakeSponsorClaim(logoIndex,amt,subId){
-  return {brand:'Your Brand Here',link:'',logo:FAKE_SPONSOR_LOGOS[logoIndex%FAKE_SPONSOR_LOGOS.length],amt:amt,subId:subId};
-}
-
-var LOCKED_MACBOOK_PRICES=[309,309,309,147,147,147,147,309,309,309];
-var DB=store.get('bmi_db4');
-if(!DB){
-  var now=Date.now();
-  DB={listings:[
-    {id:'demo1',type:'macbook',owner:'Cam',mail:'',habs:['Coffee shops','Events'],slots:10,
-      prices:LOCKED_MACBOOK_PRICES.slice(),
-      claims:[
-        fakeSponsorClaim(0,309),
-        fakeSponsorClaim(1,309),
-        fakeSponsorClaim(2,309),
-        null,null,
-        fakeSponsorClaim(3,147),
-        fakeSponsorClaim(4,147),
-        null,
-        fakeSponsorClaim(5,309),
-        null],
-      created:now-1000*60*42},
-    {id:'demo2',type:'bottle',owner:'Maya',mail:'',habs:['Gym'],slots:2,
-      prices:[25,20],claims:[fakeSponsorClaim(6,25),fakeSponsorClaim(7,20)],created:now-1000*60*60*5},
-    {id:'demo3',type:'case',owner:'Jordan',mail:'',habs:['Airport'],slots:4,
-      prices:[140,140,70,70],claims:[null,null,null,fakeSponsorClaim(0,70)],created:now-1000*60*60*26},
-    {id:'demo4',type:'backpack',owner:'Dre',mail:'',habs:['Events'],slots:1,
-      prices:[750],claims:[null],created:now-1000*60*12},
-    {id:'demo5',type:'iphone',owner:'Sofia',mail:'',habs:['Campus','Gym'],slots:5,
-      prices:[167,233,233,233,233],claims:[fakeSponsorClaim(1,167),null,null,null,null],created:now-1000*60*60*2},
-    {id:'demo6',type:'headphones',owner:'Ken',mail:'',habs:['Commute','Office'],slots:2,
-      prices:[300,249],claims:[fakeSponsorClaim(2,300,'BMI-DEMO01'),fakeSponsorClaim(3,249,'BMI-DEMO02')],created:now-1000*60*60*5},
-    {id:'demo7',type:'paddle',owner:'Priya',mail:'',habs:['Courts','Events'],slots:2,
-      prices:[80,70],claims:[fakeSponsorClaim(4,80),fakeSponsorClaim(5,70)],created:now-1000*60*60*30},
-    {id:'demo8',type:'golfbag',owner:'Marcus',mail:'',habs:['Club','Events'],slots:5,
-      prices:[130,90,90,45,45],claims:[fakeSponsorClaim(6,130),null,null,null,null],created:now-1000*60*60*8}
-  ],
-  activity:[
-    {kind:'post',listingId:'demo4',owner:'Dre',label:'Black Merino Wool Tuxedo Suit',spots:1,ts:now-1000*60*12},
-    {kind:'post',listingId:'demo2',owner:'Maya',label:'Quencher H2.0 FlowState Tumbler',spots:2,ts:now-1000*60*60*5},
-    {kind:'post',listingId:'demo5',owner:'Sofia',label:'iPhone 17',spots:5,ts:now-1000*60*60*2},
-    {kind:'post',listingId:'demo8',owner:'Marcus',label:'Deluxe Carry Stand Bag',spots:5,ts:now-1000*60*60*8},
-    {kind:'post',listingId:'demo1',owner:'Cam',label:'MacBook Pro',spots:8,ts:now-1000*60*42},
-    {kind:'post',listingId:'demo6',owner:'Ken',label:'AirPods Max 2',spots:2,ts:now-1000*60*60*5},
-    {kind:'post',listingId:'demo7',owner:'Priya',label:'Pro V Paddle',spots:2,ts:now-1000*60*60*30},
-    {kind:'post',listingId:'demo3',owner:'Jordan',label:'Original Cabin',spots:4,ts:now-1000*60*60*26}
-  ]};
-  store.set('bmi_db4',DB);
-}
+var DB={listings:[],activity:[]};
+store.set('bmi_db4',DB);
 var DELETED_CAMPAIGN_IDS=['p9ot6i4'];
 function isDeletedCampaign(listing){
   return !!(listing&&DELETED_CAMPAIGN_IDS.indexOf(String(listing.id))>=0);
@@ -6998,88 +6951,13 @@ DB.listings=(DB.listings||[]).filter(function(listing){
   return true;
 });
 if(removedDeletedCampaign)store.set('bmi_db4',DB);
-var DEMO_CONTEXT={
-  demo1:{social:'10K\u2013100K',cities:['Los Angeles, CA'],universities:['UCLA'],avatar:'avatars/avatar-01.webp'},
-  demo2:{social:'1K\u201310K',cities:['Miami, FL'],avatar:'avatars/avatar-02.webp'},
-  demo3:{social:'100K+',cities:['New York, NY'],universities:['New York University'],avatar:'avatars/avatar-03.webp'},
-  demo4:{social:'10K\u2013100K',cities:['Los Angeles, CA'],universities:['University of Southern California'],avatar:'avatars/avatar-04.webp'},
-  demo5:{social:'100K+',cities:['San Francisco, CA'],universities:['Stanford University'],avatar:'avatars/avatar-05.webp'},
-  demo6:{social:'1K\u201310K',cities:['Seattle, WA'],universities:['University of Washington'],avatar:'avatars/avatar-06.webp'},
-  demo7:{social:'10K\u2013100K',cities:['Austin, TX'],universities:['University of Texas at Austin'],avatar:'avatars/avatar-07.webp'},
-  demo8:{social:'1K\u201310K',cities:['Toronto, ON'],universities:['University of Toronto'],avatar:'avatars/avatar-08.webp'}
-};
-(function upgradeDemoContext(){
-  var changed=false;
-  Object.keys(DEMO_CONTEXT).forEach(function(id){
-    var l=(DB.listings||[]).find(function(item){return item.id===id}),ctx=DEMO_CONTEXT[id];
-    if(!l)return;
-    if(!l.social){l.social=ctx.social;changed=true}
-    if(!Array.isArray(l.cities)||!l.cities.length){l.cities=ctx.cities.slice();changed=true}
-    if(ctx.universities&&(!Array.isArray(l.universities)||!l.universities.length)){l.universities=ctx.universities.slice();changed=true}
-    if(!l.avatar){l.avatar=ctx.avatar;changed=true}
-  });
-  if(changed)store.set('bmi_db4',DB);
-})();
-var LOCKED_LAUNCH_EXAMPLE_IDS=['demo6','demo1','demo5'];
 var LIVE_CAMPAIGN_CUTOFF=Date.UTC(2026,8,4,0,0,0);
-function lockLaunchExamples(){
-  var now=Date.now(),states={
-    demo6:{
-      created:now-1000*60*60*5,
-      prices:[300,249],
-      claims:[
-        fakeSponsorClaim(0,300,'BMI-DEMO01'),
-        fakeSponsorClaim(1,249,'BMI-DEMO02')
-      ],
-      status:'funded'
-    },
-    demo1:{
-      created:now-1000*60*47,
-      prices:LOCKED_MACBOOK_PRICES.slice(),
-      claims:[
-        fakeSponsorClaim(2,309,'BMI-DEMO11'),
-        fakeSponsorClaim(3,309,'BMI-DEMO12'),
-        fakeSponsorClaim(4,309,'BMI-DEMO13'),
-        null,null,
-        fakeSponsorClaim(5,147,'BMI-DEMO16'),
-        fakeSponsorClaim(6,147,'BMI-DEMO17'),
-        null,
-        fakeSponsorClaim(7,309,'BMI-DEMO19'),
-        null
-      ],
-      status:'live'
-    },
-    demo5:{
-      created:now-1000*60*60*2,
-      prices:[167,233,233,233,233],
-      claims:[fakeSponsorClaim(0,167,'BMI-DEMO51'),null,null,null,null],
-      status:'live'
-    }
-  };
-  LOCKED_LAUNCH_EXAMPLE_IDS.forEach(function(id){
-    var listing=(DB.listings||[]).find(function(item){return item.id===id}),state=states[id];
-    if(!listing||!state)return;
-    listing.created=state.created;
-    listing.postedAt=state.created;
-    listing.prices=state.prices.slice();
-    listing.claims=state.claims.map(function(claim){return claim?Object.assign({},claim):null});
-    listing.status=state.status;
-    listing.closed=false;
-    listing.unsoldTimeoutDays=60;
-    listing.refundedAt=null;
-    listing.shippedAt=null;
-    listing.fundedAt=state.status==='funded'?state.created+1000*60*60:null;
-    listing.promisedDeliveryAt=listing.fundedAt?listing.fundedAt+60*86400000:null;
-  });
-}
-lockLaunchExamples();
-var DEMO_VIEW=new URLSearchParams(location.search).get('demo')==='1';
 function isLaunchLiveCampaign(l){
-  return !!(l&&!l.test&&(!isDemoListing(l)||DEMO_VIEW));
+  return !!(l&&!l.test);
 }
 function removePrelaunchTestCampaigns(){
   DB.listings=(DB.listings||[]).filter(function(l){
-    return !l.test&&(LOCKED_LAUNCH_EXAMPLE_IDS.indexOf(l.id)>=0||isLaunchLiveCampaign(l));
+    return isLaunchLiveCampaign(l);
   });
   var kept={};
   DB.listings.forEach(function(l){kept[l.id]=true});
@@ -7087,7 +6965,7 @@ function removePrelaunchTestCampaigns(){
   store.set('bmi_db4',DB);
 }
 removePrelaunchTestCampaigns();
-function saveDB(){lockLaunchExamples();store.set('bmi_db4',DB);cloudPush()}
+function saveDB(){store.set('bmi_db4',DB);cloudPush()}
 function storedAssetUrl(path){
   return path&&path.indexOf('/objects/')===0?'/api/storage'+path+'?safe=2':path;
 }
@@ -7183,14 +7061,6 @@ function campaignFromApi(campaign){
        itemId:campaign.id,ts:new Date(claim.reservedAt).getTime()
     };
   });
-  /* Screenshot fixture: deliberately opt-in, never part of public inventory. */
-  if(String(listing.id)==='djr99kx'){
-    listing.type='iphone';listing.sourceType='iphone';listing.itemName='iPhone 17 · 512GB';
-    listing.title='iPhone 17 · 512GB';listing.slots=6;
-    listing.prices=[241,240,240,240,240,240];
-    listing.photo='campaign/product-iphone.png';listing.custom=true;
-    listing.cities=['Newport Beach, CA'];listing.universities=['UCLA'];listing.habs=[];
-  }
   return listing;
 }
 var PUBLIC_CAMPAIGNS_HYDRATED=false;
@@ -7198,7 +7068,7 @@ async function hydratePublicCampaigns(){
   var response=await fetch('/api/campaigns');
   if(!response.ok)throw new Error('Campaigns could not be loaded');
   var campaigns=await response.json();
-  DB.listings=DB.listings.filter(isDemoListing);
+  DB.listings=[];
   campaigns.filter(function(campaign){return !campaign.test&&!isDeletedCampaign(campaign)}).forEach(function(campaign){DB.listings.push(campaignFromApi(campaign))});
   DB.listings.sort(function(a,b){return (b.created||0)-(a.created||0)});
   store.set('bmi_db4',DB);
@@ -7213,7 +7083,7 @@ var CLOUD={on:false,busy:false,dirty:false,last:0};
 function slimDB(){
   /* strip catalog photos before upload; restore by reference on download */
   var out={listings:[],activity:(DB.activity||[]).slice(0,20)};
-  DB.listings.filter(function(l){return !l.test&&LOCKED_LAUNCH_EXAMPLE_IDS.indexOf(l.id)<0}).forEach(function(l){
+  DB.listings.filter(function(l){return !l.test}).forEach(function(l){
     var c={};Object.keys(l).forEach(function(k){c[k]=l[k]});
     if(c.photo&&typeof ITEM_PHOTOS!=='undefined'&&ITEM_PHOTOS[c.type]===c.photo){c.photo=null;c.photoRef=c.type}
     if(c.faces)c.faces=c.faces.map(function(f){
@@ -7342,7 +7212,6 @@ function checkinStatus(l){
   return {expected:expected,missed:missed,overdue:firstOverdue||missed>=1&&missed<2,nonCompliant:missed>=2||!!(l&&l.nonCompliant),firstDueAt:firstDueAt,firstOverdue:firstOverdue};
 }
 function ownerCheckinIsDue(l){
-  if(isDemoListing(l))return true;
   if(l&&['due','reminded'].indexOf(l.checkinStatus)>=0)return !!l.checkinDueAt&&Date.now()>=new Date(l.checkinDueAt).getTime();
   var checkins=l&&l.checkins||[],base=checkins.length?checkins[checkins.length-1].date:l&&l.deliveredAt;
   return !!base&&Date.now()>=base+30*86400000;
@@ -7350,13 +7219,6 @@ function ownerCheckinIsDue(l){
 async function submitOwnerCheckin(file,note){
   if(!CUR)throw new Error('Campaign is unavailable.');
   if(!ownerCheckinIsDue(CUR))throw new Error('A check-in is not currently due.');
-  if(isDemoListing(CUR)){
-    var demoId='CI-'+uid().toUpperCase().slice(0,6);
-    if(!file)return {id:demoId,campaignId:CUR.id,note:note,photoObjectPath:null,submittedAt:new Date().toISOString()};
-    var demoReader=new FileReader();
-    var photo=await new Promise(function(resolve,reject){demoReader.onload=function(){resolve(demoReader.result)};demoReader.onerror=reject;demoReader.readAsDataURL(file)});
-    return {id:demoId,campaignId:CUR.id,note:note,photoObjectPath:photo,submittedAt:new Date().toISOString()};
-  }
   var body={note:note};
   if(file){
     file=await stripPhotoMetadata(file);
@@ -7390,7 +7252,7 @@ async function submitConditionReport(type){
 }
 async function selectOwnerMakeGood(selection){
   var statusEl=document.getElementById('makeGoodStatus');
-  if(!CUR||isDemoListing(CUR)){if(CUR){CUR.makeGoodSelection=selection;saveDB();renderOwnerTools()}return}
+  if(!CUR)return;
   statusEl.textContent='Saving selection…';
   try{
     var response=await fetch('/api/campaigns/'+encodeURIComponent(CUR.id)+'/make-good',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({selection:selection})});
@@ -7599,10 +7461,14 @@ function listingContextHtml(l){
   else if(l.nonCompliant)parts.push('<span style="color:#B23327">Check-in overdue, posting restricted</span>');
   else if(l.shippedAt)parts.push('<span style="color:#1F7A44">Shipped, check-ins active</span>');
   var locationLine=listingLocationLine(l);
-  if(l.social)parts.push('<span class="card-context-em">'+safeCardText(l.social)+' followers</span>');
+  if(l.social)parts.push('<span class="card-context-em">'+safeCardText(socialFollowerText(l.social))+'</span>');
   if(locationLine)parts.push(safeCardText(locationLine));
   if(!parts.length)return '<div class="card-context card-context-empty" aria-hidden="true"></div>';
   return '<div class="card-context" aria-label="'+safeCardText(parts.map(function(v){return v.replace(/<[^>]+>/g,'')}).join(', '))+'"><span class="card-context-value">'+parts.join(', ')+'</span></div>';
+}
+function socialFollowerText(value){
+  value=String(value||'').trim();
+  return /\bfollowers?\b/i.test(value)?value:value+' followers';
 }
 function listingLocationLine(l){
   var city=(l.cities||[]).find(function(value){return value&&String(value).trim()});
@@ -7742,9 +7608,8 @@ HERO_PHOTOS=LOCAL_PRODUCT_PHOTOS;
 (function normalizeSavedProductPhotos(){
   var changed=false;
   (DB.listings||[]).forEach(function(l){
-    var isDemo=!!(DEMO_CONTEXT[l.id]||String(l.id).indexOf('demo')===0);
     var photo=LOCAL_PRODUCT_PHOTOS[l.type];
-    if(!photo||(!isDemo&&l.custom))return;
+    if(!photo||l.custom)return;
     if(l.photo!==photo){l.photo=photo;changed=true}
     (l.faces||[]).forEach(function(f){
       if(f.photo!==photo){f.photo=photo;delete f.photoRef;changed=true}
@@ -7755,12 +7620,8 @@ HERO_PHOTOS=LOCAL_PRODUCT_PHOTOS;
 function listingPhoto(l){
   if(!l)return '';
   var p=(typeof LOCAL_PRODUCT_PHOTOS!=='undefined'&&LOCAL_PRODUCT_PHOTOS[l.type])||'';
-  var isDemo=!!(typeof DEMO_CONTEXT!=='undefined'&&(DEMO_CONTEXT[l.id]||String(l.id).indexOf('demo')===0));
-  if(p&&(!l.custom||isDemo))return p;
+  if(p&&!l.custom)return p;
   return l.photo||p||'';
-}
-function isDemoListing(l){
-  return !!(l&&(String(l.id||'').indexOf('demo')===0||String(l.id||'')==='djr99kx'||(typeof DEMO_CONTEXT!=='undefined'&&DEMO_CONTEXT[l.id])));
 }
 function normalizeListingPhoto(l){
   if(!l)return l;
@@ -8644,7 +8505,7 @@ function openTrackFromHome(mail){
     var input=document.getElementById('tkMail'),btn=document.getElementById('tkBtn');
     if(!input)return;
     input.value=mail||'';
-    if(mail&&mail!=='demo@brandmyitem.com'&&btn)btn.click();
+    if(mail&&btn)btn.click();
   },40);
 }
 function renderHomeTrackerRows(matches,mail){
@@ -8681,7 +8542,7 @@ function showHomeTracker(){
     };
   }
   if(!result._seeded){
-    renderHomeTrackerRows(demoTrackMatches(),'demo@brandmyitem.com');
+    renderHomeTrackerRows([],'');
     result._seeded=1;
   }
 }
@@ -8790,7 +8651,7 @@ function renderCampaignDetails(l){
       '<section class="campaign-panel">'+
         '<div class="campaign-label">Audience & reach</div>'+
         '<div class="campaign-reach">'+
-          '<div class="campaign-reach-stat"><span>Social following</span><b>'+safeCardText(l.social?l.social+' followers':'Not provided')+'</b></div>'+
+          '<div class="campaign-reach-stat"><span>Social following</span><b>'+safeCardText(l.social?socialFollowerText(l.social):'Not provided')+'</b></div>'+
           '<div class="campaign-reach-stat"><span>Most visited cities</span><b>'+safeCardText(campaignValues(l.cities))+'</b></div>'+
           '<div class="campaign-reach-stat"><span>Universities</span><b>'+safeCardText(campaignValues(l.universities))+'</b></div>'+
           '<div class="campaign-reach-stat"><span>Everyday settings</span><b>'+safeCardText(campaignValues(l.habs))+'</b></div>'+
@@ -8962,7 +8823,7 @@ function syncDashboardFilterState(){
 function renderDash(){
   syncDashboardFilterState();
   var all=DB.listings.filter(function(l){
-    return isLaunchLiveCampaign(l) || LOCKED_LAUNCH_EXAMPLE_IDS.indexOf(l.id)>=0;
+    return isLaunchLiveCampaign(l);
   });
   renderDashboardLiveFeed();
   var list=all.filter(function(l){
@@ -10880,28 +10741,9 @@ function mapTiles(type,n){
 }
 function migratePhoto(){
   DB.listings.forEach(function(l){
-    var isDemo=!!(DEMO_CONTEXT[l.id]||String(l.id).indexOf('demo')===0);
-    if(isDemo&&l.type==='macbook'&&l.slots!==10){
-      var oldClaims=(l.claims||[]).slice(),oldPrices=(l.prices||[]).slice();
-      l.slots=10;
-      l.claims=[oldClaims[1]||null,oldClaims[2]||null,oldClaims[3]||null,oldClaims[0]||null,null,
-        oldClaims[5]||null,oldClaims[6]||null,oldClaims[4]||null,oldClaims[7]||null,null];
-      l.prices=[oldPrices[1]||250,oldPrices[2]||250,oldPrices[3]||165,oldPrices[0]||500,165,
-        oldPrices[5]||225,oldPrices[6]||225,225,oldPrices[7]||219,219];
-      l.mtv=0;
-    }
-    if(isDemo&&l.type==='iphone'&&l.slots!==5){
-      var iphoneClaim=(l.claims||[]).filter(Boolean)[0]||null;
-      if(iphoneClaim)iphoneClaim.amt=167;
-      l.slots=5;
-      l.prices=[167,233,233,233,233];
-      l.claims=[iphoneClaim,null,null,null,null];
-      l.mtv=0;
-      (DB.activity||[]).forEach(function(a){if(a.listingId===l.id&&a.kind==='post')a.spots=5});
-    }
     if((l.type==='suit'||l.type==='backpack')&&ITEM_PHOTOS[l.type]&&l.photo!==ITEM_PHOTOS[l.type])l.photo=ITEM_PHOTOS[l.type];
     if(l.faces&&l.faces.length>1)uniformFaceTileSizes(l.faces);
-    var usesCatalogPhoto=!!(ITEM_PHOTOS[l.type]&&(isDemo||l.photo===ITEM_PHOTOS[l.type]));
+    var usesCatalogPhoto=!!(ITEM_PHOTOS[l.type]&&l.photo===ITEM_PHOTOS[l.type]);
     if(l.custom&&l.mtv!==PHOTO_PLACEMENT_VERSION&&usesCatalogPhoto&&!l.faces){
       var t2=mapTiles(l.type,l.slots);
       if(t2){l.tiles=t2;l.mtv=PHOTO_PLACEMENT_VERSION}
@@ -10922,36 +10764,6 @@ suitFix();migratePhoto();
 processListingLifecycle();
 var CUR=null,itemMode='auction',claimSlot=-1,logoData=null,logoFile=null,buyReturnFocus=null;
 var TRACK_MATCHES=[];
-function demoTrackMatches(){
-  var demoRows=[
-    {id:'demo1',subId:'BMI-DEMO01',logoIndex:2,days:9,slot:3},
-    {id:'demo6',subId:'BMI-DEMO02',logoIndex:1,days:4,slot:0},
-    {id:'demo5',subId:'BMI-DEMO03',logoIndex:0,days:2,slot:0}
-  ];
-  return demoRows.map(function(row){
-    var listing=DB.listings.filter(function(l){return l.id===row.id})[0];
-    if(!listing)return null;
-    var amt=listing.prices[row.slot]||listing.prices[0]||0;
-    return {l:listing,c:{
-      brand:'Your Brand Here',
-      logo:FAKE_SPONSOR_LOGOS[row.logoIndex],
-      mail:'demo@brandmyitem.com',
-      amt:amt,
-      fee:feeFor(listing,amt),
-      feeRate:feeRateOf(listing),
-      purchasedAt:Date.now()-1000*60*60*24*row.days,
-      subId:row.subId,
-      demo:true
-    }};
-  }).filter(Boolean);
-}
-function renderTrackDemos(){
-  var demo=document.getElementById('tkDemoResult');
-  if(!demo)return;
-  var matches=demoTrackMatches();
-  demo.innerHTML='<p class="finetext" style="margin:0 0 14px">'+matches.length+' items linked to <b>demo@brandmyitem.com</b>.</p>'+
-    matches.map(function(m){return trackCardHtml(m.l,m.c)}).join('<div style="height:14px"></div>');
-}
 function localTrackMatches(mail){
   var matches=[];
   DB.listings.filter(isLaunchLiveCampaign).forEach(function(l){
@@ -11121,10 +10933,6 @@ function submitTrackProof(itemId,subId,key){
     var activeMatch=TRACK_MATCHES.filter(function(m){return m.l&&m.l.id===itemId&&m.c&&m.c.subId===subId})[0];
     if(activeMatch)c=activeMatch.c;
   }
-   if(!c&&/^BMI-DEMO/.test(subId)){
-     var demoMatch=demoTrackMatches().filter(function(m){return m.c.subId===subId})[0];
-     if(demoMatch)c=demoMatch.c;
-   }
   if(!c)return;
   var err=document.getElementById('trackSubmitErr_'+key);
   var photoInput=document.getElementById('trackPhoto_'+key);
@@ -11133,8 +10941,7 @@ function submitTrackProof(itemId,subId,key){
   if(!photoInput||!photoInput.files||!photoInput.files[0]){fail('Upload the item photo for this check-in.');return}
   var photoFile=photoInput.files[0],caption=captionInput?captionInput.value.trim():'';
   if(photoFile.size>25000000){fail('Choose an image smaller than 25 MB.');return}
-   if(!isDemoListing(l)){
-     if(!l.deliveredAt||!['due','reminded'].includes(l.checkinStatus)){fail('A check-in is not currently due.');return}
+   if(!l.deliveredAt||!['due','reminded'].includes(l.checkinStatus)){fail('A check-in is not currently due.');return}
     var submitButton=err&&err.nextElementSibling;
     if(submitButton){submitButton.disabled=true;submitButton.textContent='Submitting…'}
     (async function(){
@@ -11152,24 +10959,6 @@ function submitTrackProof(itemId,subId,key){
       }catch(error){fail(error&&error.message?error.message:'Check-in could not be submitted.');if(submitButton){submitButton.disabled=false;submitButton.textContent='Submit'}}
     })();
     return;
-  }
-  var photoReader=new FileReader();
-  photoReader.onload=function(){finishTrackProof(photoReader.result,null,null)};
-  photoReader.readAsDataURL(photoFile);
-  function finishTrackProof(photo){
-    l.checkins=l.checkins||[];
-    var cid='CI-'+uid().toUpperCase().slice(0,6);
-    var entry={date:Date.now(),photo:photo,confirmId:cid};
-    l.checkins.push(entry);
-    saveDB();
-    if(c.demo){
-      renderTrackDemos();
-    }else{
-      var found=TRACK_MATCHES.filter(function(m){return m.c&&m.c.subId===subId})[0];
-      if(found)renderTrackResults(TRACK_MATCHES);
-    }
-    toast('Check-in submitted - '+cid);
-  }
 }
 async function submitTrackCondition(itemId,key,type){
   var l=TRACK_MATCHES.map(function(m){return m.l}).filter(function(item){return item.id===itemId})[0],status=document.getElementById('trackConditionStatus_'+key);
@@ -11203,13 +10992,11 @@ function sendDelayNotice(l){
 function respondDelay(itemId,subId,choice){
   var l=DB.listings.filter(function(x){return x.id===itemId})[0],c=null;
   if(l)(l.claims||[]).forEach(function(x){if(x&&x.subId===subId)c=x});
-  if(!c&&/^BMI-DEMO/.test(subId)){var demo=demoTrackMatches().filter(function(m){return m.c.subId===subId})[0];if(demo){l=demo.l;c=demo.c}}
   if(!l||!c)return;
   c.delayResponse=choice;c.delayRespondedAt=Date.now();
   if(choice==='refund'){c.refunded=true;c.refundedAt=Date.now();c.refundReason='Brand chose a full refund after a delivery delay';}
   saveDB();toast(choice==='refund'?'Full refund recorded':'Thanks - your wait consent was recorded');
   if(document.getElementById('tkResult')&&TRACK_MATCHES.length)renderTrackResults(TRACK_MATCHES);
-  if(document.getElementById('tkDemoResult'))renderTrackDemos();
   if(CUR&&CUR.id===l.id){refreshItemCards();drawItemMap()}
 }
 function delayActionHtml(l,c){
@@ -11355,7 +11142,7 @@ function showItem(id){
     if(PUBLIC_CAMPAIGNS_HYDRATED)location.hash='dashboard';
     return;
   }
-  if(CUR.test||(isDemoListing(CUR)&&!DEMO_VIEW)){location.hash='dashboard';return}
+  if(CUR.test){location.hash='dashboard';return}
   CUR=normalizeListingPhoto(CUR);
   var viewKey=String(CUR.id);
   if(LAST_PRODUCT_VIEW_KEY!==viewKey){
@@ -11487,15 +11274,11 @@ function refreshItemCards(){
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">'+p.icon+'</svg><span>'+p.label+'</span></a>';
     }).join('');
   }
-  var followerLabel=function(value){
-    value=String(value||'').trim();
-    return /\bfollowers?\b/i.test(value)?value:value+' followers';
-  };
-  document.getElementById('iHab').textContent=[CUR.freq,CUR.social&&followerLabel(CUR.social)].filter(Boolean).join(' \u00b7 ');
+  document.getElementById('iHab').textContent=[CUR.freq,CUR.social&&socialFollowerText(CUR.social)].filter(Boolean).join(' \u00b7 ');
   var locEl=document.getElementById('iBrandLocations'),purposeEl=document.getElementById('iPurpose'),socialEl=document.getElementById('iSocial'),linksEl=document.getElementById('iSocialLinks');
    if(locEl)locEl.textContent=listingLocationLine(CUR)||'Not provided';
   if(purposeEl)purposeEl.textContent=CUR.purpose||'The owner has not added a purpose statement yet.';
-  if(socialEl)socialEl.textContent=CUR.social?followerLabel(CUR.social):'Not provided';
+  if(socialEl)socialEl.textContent=CUR.social?socialFollowerText(CUR.social):'Not provided';
   var citiesEl=document.getElementById('iCities'),universitiesEl=document.getElementById('iUniversities');
   if(citiesEl)citiesEl.textContent=campaignValues(CUR.cities);
   if(universitiesEl)universitiesEl.textContent=campaignValues(CUR.universities);
@@ -11533,17 +11316,12 @@ async function operatorSubmitPlacementProof(spotIndex){
   if(!claim||!claim.stripeOrderId||!fileInput||!fileInput.files[0]){if(statusEl){statusEl.textContent='Choose a proof image.';statusEl.style.color='#B23327'}return}
   statusEl.textContent='Uploading proof…';statusEl.style.color='#6e6e73';
   try{
-    if(isDemoListing(CUR)){
-      claim.proof={revision:(claim.proof&&claim.proof.revision||0)+1,status:'submitted',objectPath:'demo-proof',submittedAt:new Date().toISOString()};
-      saveDB();
-    }else{
-      var headers=operatorHeaders();
-      var proofIntent=await requestFinalizedUpload('/api/operator/campaigns/'+encodeURIComponent(CUR.id)+'/placement-orders/'+encodeURIComponent(claim.stripeOrderId)+'/proofs/request-url',function(intentId){return '/api/operator/campaigns/'+encodeURIComponent(CUR.id)+'/placement-orders/'+encodeURIComponent(claim.stripeOrderId)+'/proofs/'+encodeURIComponent(intentId)+'/finalize'},fileInput.files[0],headers);
-      headers['Content-Type']='application/json';
-      var response=await fetch('/api/operator/campaigns/'+encodeURIComponent(CUR.id)+'/proofs',{method:'POST',headers:headers,body:JSON.stringify({placementOrderId:claim.stripeOrderId,intentId:proofIntent.id})});
-      claim.proof=await apiResponse(response,'Proof could not be submitted.');
-      saveDB();
-    }
+    var headers=operatorHeaders();
+    var proofIntent=await requestFinalizedUpload('/api/operator/campaigns/'+encodeURIComponent(CUR.id)+'/placement-orders/'+encodeURIComponent(claim.stripeOrderId)+'/proofs/request-url',function(intentId){return '/api/operator/campaigns/'+encodeURIComponent(CUR.id)+'/placement-orders/'+encodeURIComponent(claim.stripeOrderId)+'/proofs/'+encodeURIComponent(intentId)+'/finalize'},fileInput.files[0],headers);
+    headers['Content-Type']='application/json';
+    var response=await fetch('/api/operator/campaigns/'+encodeURIComponent(CUR.id)+'/proofs',{method:'POST',headers:headers,body:JSON.stringify({placementOrderId:claim.stripeOrderId,intentId:proofIntent.id})});
+    claim.proof=await apiResponse(response,'Proof could not be submitted.');
+    saveDB();
     statusEl.style.color='#1F7A44';statusEl.textContent='Revision '+claim.proof.revision+' status: '+claim.proof.status+'.';
   }catch(error){statusEl.style.color='#B23327';statusEl.textContent=error&&error.message?error.message:'Proof could not be submitted.'}
 }
@@ -11608,15 +11386,10 @@ function renderOwnerTools(){
     if(/\bP(?:OST)?\.?\s*O(?:FFICE)?\.?\s*(?:BOX|B\.?\s*O\.?\s*X)\b/i.test(input.line1)){statusEl.style.color='#B23327';statusEl.textContent='PO Boxes are not supported. Enter a deliverable street address.';return}
     button.disabled=true;button.textContent='Saving…';statusEl.textContent='Validating and saving…';
     try{
-      if(isDemoListing(CUR)){
-        CUR.shipping={name:input.recipientName,address:input.line1,line2:input.line2,city:input.city,state:input.state,postal:input.postalCode,country:'US',validatedAt:new Date().toISOString()};
-        saveDB();
-      }else{
-        var response=await fetch('/api/campaigns/'+encodeURIComponent(CUR.id)+'/shipping-address',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(input)});
-        var saved=await apiResponse(response,'Shipping address could not be saved.');
-        CUR.shipping={name:saved.recipientName,address:saved.line1,line2:saved.line2,city:saved.city,state:saved.state,postal:saved.postalCode,country:saved.country,validatedAt:saved.validatedAt};
-        saveDB();
-      }
+      var response=await fetch('/api/campaigns/'+encodeURIComponent(CUR.id)+'/shipping-address',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(input)});
+      var saved=await apiResponse(response,'Shipping address could not be saved.');
+      CUR.shipping={name:saved.recipientName,address:saved.line1,line2:saved.line2,city:saved.city,state:saved.state,postal:saved.postalCode,country:saved.country,validatedAt:saved.validatedAt};
+      saveDB();
       statusEl.style.color='#1F7A44';statusEl.textContent='Shipping details saved and validated.';
     }catch(error){statusEl.style.color='#B23327';statusEl.textContent=error&&error.message?error.message:'Shipping address could not be saved.'}
     finally{button.disabled=false;button.textContent='Save shipping details'}
@@ -11819,7 +11592,7 @@ async function beginStripeCheckout(){
     checkoutWindow.document.title='Opening secure checkout…';
   }
    button.disabled=true;button.textContent='Opening secure reservation…';
-   var pending={campaignId:CUR.id,spotIndex:claimSlot,brand:brand,mail:mail,link:link,returnHash:location.hash||('#item/'+encodeURIComponent(CUR.id)),returnSearch:new URLSearchParams(location.search).get('demo')==='1'?'?demo=1':''};
+   var pending={campaignId:CUR.id,spotIndex:claimSlot,brand:brand,mail:mail,link:link,returnHash:location.hash||('#item/'+encodeURIComponent(CUR.id))};
   try{
     var reservationResponse=await fetch('/api/sponsor-reservation-drafts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({campaignId:CUR.id,spotIndex:claimSlot})});
     var reservationDraft=await apiResponse(reservationResponse,'Reservation draft could not be created.');
@@ -11835,7 +11608,7 @@ async function beginStripeCheckout(){
     var response=await fetch('/api/checkout/sessions',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({campaignId:CUR.id,spotIndex:claimSlot,reservationDraftId:reservationDraft.id,logoIntentId:logoIntent.id,brandName:brand,email:mail,destinationUrl:link||undefined,demo:DEMO_VIEW,brandAssent:{accepted:true,termsVersion:'2026-09-04',contentVersion:'2026-09-04'}})
+      body:JSON.stringify({campaignId:CUR.id,spotIndex:claimSlot,reservationDraftId:reservationDraft.id,logoIntentId:logoIntent.id,brandName:brand,email:mail,destinationUrl:link||undefined,brandAssent:{accepted:true,termsVersion:'2026-09-04',contentVersion:'2026-09-04'}})
     });
     var result={};
     var contentType=response.headers.get('content-type')||'';
@@ -11908,10 +11681,8 @@ async function resumeStripeCheckout(){
       var cancelledPending=null;
       try{cancelledPending=JSON.parse(sessionStorage.getItem('bmi_pending_checkout')||'null');sessionStorage.removeItem('bmi_pending_checkout');}catch(error){}
       history.replaceState(null,'',checkoutReturnUrl(Object.assign({},cancelledPending||{},{
-        campaignId:params.get('campaign')||((location.hash.match(/^#item\/([^/?#]+)/)||[])[1]||''),
-        returnSearch:params.get('demo')==='1'?'?demo=1':''
+        campaignId:params.get('campaign')||((location.hash.match(/^#item\/([^/?#]+)/)||[])[1]||'')
       }),params.get('campaign')));
-     DEMO_VIEW=new URLSearchParams(location.search).get('demo')==='1';
      route();
      toast('Reservation cancelled. Your card was not charged.');
     return;
@@ -11926,11 +11697,9 @@ async function resumeStripeCheckout(){
       if(!response.ok||!['reserved','funded'].includes(order.status))throw new Error(order.error||'Your reservation is still being confirmed');
       var returnState=Object.assign({},pending||{},{
         campaignId:order.campaignId||params.get('campaign'),
-        returnSearch:params.get('demo')==='1'?'?demo=1':'',
         returnHash:'#item/'+encodeURIComponent(order.campaignId||params.get('campaign')||'')
       });
       history.replaceState(null,'',checkoutReturnUrl(returnState,order.campaignId||params.get('campaign')));
-      DEMO_VIEW=params.get('demo')==='1';
       route();
       sessionStorage.removeItem('bmi_pending_checkout');
      await finalizeReservation(order,pending);
@@ -11940,10 +11709,8 @@ async function resumeStripeCheckout(){
 }
 function checkoutReturnUrl(pending,campaignId){
   pending=pending||{};
-  var demoSearch='';
-  try{if(new URLSearchParams(pending.returnSearch||'').get('demo')==='1')demoSearch='?demo=1'}catch(error){}
   var returnHash='#item/'+encodeURIComponent(campaignId||pending.campaignId||'');
-  return location.pathname+demoSearch+returnHash;
+  return location.pathname+returnHash;
 }
 document.getElementById('mCopyId').onclick=function(){
   var id=document.getElementById('mSubId').textContent;
