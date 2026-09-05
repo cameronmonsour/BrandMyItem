@@ -29,6 +29,53 @@ if (!basePath) {
 }
 
 const publicRoot = path.resolve(import.meta.dirname, 'public');
+const buildOutput = path.resolve(import.meta.dirname, 'dist/public');
+const publicBaseUrl = process.env.PUBLIC_BASE_URL?.trim().replace(/\/+$/, '');
+
+if (process.env.NODE_ENV === 'production') {
+  if (!publicBaseUrl) {
+    throw new Error(
+      'PUBLIC_BASE_URL environment variable is required for production builds.',
+    );
+  }
+  const url = new URL(publicBaseUrl);
+  if (
+    url.protocol !== 'https:' ||
+    url.origin !== publicBaseUrl ||
+    url.pathname !== '/'
+  ) {
+    throw new Error('PUBLIC_BASE_URL must be an HTTPS origin without a path.');
+  }
+}
+
+function applyPublicBaseUrl(content: string): string {
+  return content.replaceAll('__PUBLIC_BASE_URL__', publicBaseUrl || '');
+}
+
+function productionPublicUrls() {
+  return {
+    name: 'brandmyitem-production-public-urls',
+    transformIndexHtml(html: string) {
+      return applyPublicBaseUrl(html);
+    },
+    closeBundle() {
+      if (!publicBaseUrl) return;
+      for (const filename of [
+        'contact.html',
+        'legal.html',
+        'accessibility.html',
+        'robots.txt',
+        'sitemap.xml',
+      ]) {
+        const outputPath = path.join(buildOutput, filename);
+        fs.writeFileSync(
+          outputPath,
+          applyPublicBaseUrl(fs.readFileSync(outputPath, 'utf8')),
+        );
+      }
+    },
+  };
+}
 
 function realNotFoundPage() {
   return {
@@ -89,6 +136,7 @@ function realNotFoundPage() {
 export default defineConfig({
   base: basePath,
   plugins: [
+    productionPublicUrls(),
     realNotFoundPage(),
     react(),
     tailwindcss(),
@@ -121,7 +169,7 @@ export default defineConfig({
   },
   root: path.resolve(import.meta.dirname),
   build: {
-    outDir: path.resolve(import.meta.dirname, 'dist/public'),
+    outDir: buildOutput,
     emptyOutDir: true,
   },
   server: {

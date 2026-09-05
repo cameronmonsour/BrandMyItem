@@ -1,6 +1,7 @@
 import { campaignCheckinEmailEventsTable, campaignCheckinsTable, campaignsTable, db, placementOrdersTable, updateCardCapabilitiesTable } from "@workspace/db";
 import { and, eq, inArray, isNotNull, isNull, lte } from "drizzle-orm";
 import { logger } from "./lib/logger.ts";
+import { publicAppUrl } from "./lib/publicBaseUrl.ts";
 import { stripeRequest } from "./stripeClient.ts";
 import { sendTransactionalEmail } from "./emailDelivery.ts";
 import { createAccessToken, hashAccessToken } from "./lib/accessControl.ts";
@@ -58,13 +59,6 @@ async function sendCheckinCycleEmailOnce(
     ));
     throw error;
   }
-}
-
-function publicAppUrl(): string {
-  const configured = process.env.BRANDMYITEM_PUBLIC_URL?.trim();
-  if (configured) return configured.replace(/\/$/, "");
-  const domain = process.env.REPLIT_DEV_DOMAIN?.trim();
-  return domain ? `https://${domain}` : "https://brandmyitem.com";
 }
 
 type PaymentIntentSnapshot = {
@@ -283,7 +277,10 @@ export async function sendFundingLifecycleEmails(
         const delivery = await sendTransactionalEmail(paymentDeclinedEmail({
           email: order.email,
           reservationId: `BMI-${order.id.toUpperCase().slice(0, 6)}`,
-          updateCardUrl: `${publicAppUrl()}/?update_card=${encodeURIComponent(`BMI-${order.id.toUpperCase().slice(0, 6)}`)}&token=${encodeURIComponent(capability)}`,
+          updateCardUrl: publicAppUrl("/", {
+            update_card: `BMI-${order.id.toUpperCase().slice(0, 6)}`,
+            token: capability,
+          }),
         }));
         await db.update(placementOrdersTable).set({
           paymentDeclineEmailSentAt: now,

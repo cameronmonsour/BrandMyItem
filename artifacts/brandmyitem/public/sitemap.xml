@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://brandmyitem.com/</loc></url>
-  <url><loc>https://brandmyitem.com/contact.html</loc></url>
-  <url><loc>https://brandmyitem.com/accessibility.html</loc></url>
-  <url><loc>https://brandmyitem.com/legal.html</loc></url>
+  <url><loc>__PUBLIC_BASE_URL__/</loc></url>
+  <url><loc>__PUBLIC_BASE_URL__/contact.html</loc></url>
+  <url><loc>__PUBLIC_BASE_URL__/accessibility.html</loc></url>
+  <url><loc>__PUBLIC_BASE_URL__/legal.html</loc></url>
 </urlset>

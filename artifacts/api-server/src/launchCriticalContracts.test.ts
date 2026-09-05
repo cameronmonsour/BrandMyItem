@@ -76,7 +76,7 @@ test("campaign publication keeps the $2,000 W-9 and social-context gate", async 
   assert.match(commerce, /w9Status:\s*\n\s*highValue\s*\n\s*\?\s*"submitted"/);
 });
 
-test("tracking links normalize addresses durably and use only an allowlisted canonical origin", async () => {
+test("tracking links normalize addresses durably and use only the configured public origin", async () => {
   const [commerce, schema] = await Promise.all([
     source("./routes/commerce.ts"),
     source("../../../lib/db/src/schema/campaigns.ts"),
@@ -102,9 +102,11 @@ test("tracking links normalize addresses durably and use only an allowlisted can
     schema,
     /tracking_magic_link_requests_email_requested_idx"\)\.on\(table\.normalizedEmail, table\.requestedAt\)/,
   );
-  assert.match(trackingHandler, /const canonicalOrigin = publicAppUrl\?\.replace/);
-  assert.match(trackingHandler, /allowedOrigins\.includes\(canonicalOrigin\)/);
-  assert.match(trackingHandler, /new URL\("\/", canonicalOrigin\)/);
+  assert.match(trackingHandler, /new URL\("\/", publicBaseUrl\(\)\)/);
+  assert.doesNotMatch(
+    trackingHandler,
+    /BRANDMYITEM_PUBLIC_URL|BRANDMYITEM_PUBLIC_ORIGINS/,
+  );
   assert.doesNotMatch(trackingHandler, /req\.get\("host"\)|x-forwarded-host/i);
 });
 

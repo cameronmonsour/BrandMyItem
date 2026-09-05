@@ -64,6 +64,7 @@ import {
   trackingMagicLinkEmail,
 } from "../emailTemplates.ts";
 import { logger } from "../lib/logger.ts";
+import { publicAppUrl, publicBaseUrl } from "../lib/publicBaseUrl.ts";
 import {
   readActiveReservationsForCampaigns,
   readActiveReservationsForEmail,
@@ -284,20 +285,7 @@ router.post("/tracking/magic-link", async (req, res): Promise<void> => {
   });
 
   try {
-    const publicAppUrl = process.env.BRANDMYITEM_PUBLIC_URL;
-    const allowedOrigins = (process.env.BRANDMYITEM_PUBLIC_ORIGINS ?? "")
-      .split(",")
-      .map((origin) => origin.trim().replace(/\/$/, ""))
-      .filter(Boolean);
-    const canonicalOrigin = publicAppUrl?.replace(/\/$/, "");
-    if (
-      !canonicalOrigin ||
-      !/^https:\/\/[a-z0-9.-]+(?::443)?$/i.test(canonicalOrigin) ||
-      !allowedOrigins.includes(canonicalOrigin)
-    ) {
-      throw new Error("BRANDMYITEM_PUBLIC_URL must be an allowlisted HTTPS canonical origin");
-    }
-    const trackingUrl = new URL("/", canonicalOrigin);
+    const trackingUrl = new URL("/", publicBaseUrl());
     trackingUrl.searchParams.set("tracking_token", token);
 
     const delivery = await sendTransactionalEmail(
@@ -823,8 +811,15 @@ router.post("/checkout/sessions", async (req, res): Promise<void> => {
     return;
   }
   setAccessCookie(res, "checkout", orderId, checkoutAccessToken);
-  const forwardedProto = req.get("x-forwarded-proto")?.split(",")[0];
-  const origin = `${forwardedProto ?? req.protocol}://${req.get("host")}`;
+  const returnUrl = new URL(publicAppUrl("/"));
+  returnUrl.searchParams.set("checkout", "success");
+  returnUrl.searchParams.set("session_id", "{CHECKOUT_SESSION_ID}");
+  returnUrl.searchParams.set("campaign", campaign.id);
+  returnUrl.hash = `item/${encodeURIComponent(campaign.id)}`;
+  const cancelUrl = new URL(publicAppUrl("/"));
+  cancelUrl.searchParams.set("checkout", "cancelled");
+  cancelUrl.searchParams.set("campaign", campaign.id);
+  cancelUrl.hash = `item/${encodeURIComponent(campaign.id)}`;
   const form = new URLSearchParams({
     mode: "setup",
     customer_creation: "always",
@@ -848,8 +843,11 @@ router.post("/checkout/sessions", async (req, res): Promise<void> => {
     "setup_intent_data[metadata][campaignId]": campaign.id,
     "setup_intent_data[metadata][spotIndex]": String(input.spotIndex),
     "setup_intent_data[metadata][draftId]": input.reservationDraftId,
-    success_url: `${origin}/?checkout=success&session_id={CHECKOUT_SESSION_ID}&campaign=${encodeURIComponent(campaign.id)}&demo=${input.demo ? "1" : "0"}#item/${encodeURIComponent(campaign.id)}`,
-    cancel_url: `${origin}/?checkout=cancelled&campaign=${encodeURIComponent(campaign.id)}&demo=${input.demo ? "1" : "0"}#item/${encodeURIComponent(campaign.id)}`,
+    success_url: returnUrl.toString().replace(
+      "%7BCHECKOUT_SESSION_ID%7D",
+      "{CHECKOUT_SESSION_ID}",
+    ),
+    cancel_url: cancelUrl.toString(),
   });
   const session = await stripeRequest<{ id: string; url: string | null }>(
     "/v1/checkout/sessions",
@@ -971,8 +969,13 @@ router.post("/checkout/reservations/:orderId/update-card", async (req, res): Pro
     res.status(409).json({ error: "This reservation does not need a card update." });
     return;
   }
-  const forwardedProto = req.get("x-forwarded-proto")?.split(",")[0];
-  const origin = `${forwardedProto ?? req.protocol}://${req.get("host")}`;
+  const returnUrl = new URL(publicAppUrl("/"));
+  returnUrl.searchParams.set("checkout", "success");
+  returnUrl.searchParams.set("session_id", "{CHECKOUT_SESSION_ID}");
+  returnUrl.hash = `item/${encodeURIComponent(order.campaignId)}`;
+  const cancelUrl = new URL(publicAppUrl("/"));
+  cancelUrl.searchParams.set("checkout", "cancelled");
+  cancelUrl.hash = `item/${encodeURIComponent(order.campaignId)}`;
   const idempotencyKey = `brandmyitem-reservation-${order.id}-card-update-${order.paymentAttempt}`;
   const form = new URLSearchParams({
     mode: "setup",
@@ -981,8 +984,11 @@ router.post("/checkout/reservations/:orderId/update-card", async (req, res): Pro
     "wallet_options[link][display]": "never",
     "metadata[reservationId]": order.id,
     "setup_intent_data[metadata][reservationId]": order.id,
-    success_url: `${origin}/?checkout=success&session_id={CHECKOUT_SESSION_ID}#item/${encodeURIComponent(order.campaignId)}`,
-    cancel_url: `${origin}/?checkout=cancelled#item/${encodeURIComponent(order.campaignId)}`,
+    success_url: returnUrl.toString().replace(
+      "%7BCHECKOUT_SESSION_ID%7D",
+      "{CHECKOUT_SESSION_ID}",
+    ),
+    cancel_url: cancelUrl.toString(),
   });
   const session = await stripeRequest<{ id: string; url: string | null }>(
     "/v1/checkout/sessions",

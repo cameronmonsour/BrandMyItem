@@ -46,12 +46,10 @@ test("campaign presentation rejects invalid semantic field types", () => {
 });
 
 test("tracking email failures keep the response generic and invalidate the link", async () => {
-  const previousOrigin = process.env.BRANDMYITEM_PUBLIC_URL;
-  const previousOrigins = process.env.BRANDMYITEM_PUBLIC_ORIGINS;
+  const previousOrigin = process.env.PUBLIC_BASE_URL;
   const previousResendKey = process.env.RESEND_API_KEY;
   const previousResendFrom = process.env.RESEND_FROM;
-  process.env.BRANDMYITEM_PUBLIC_URL = "https://example.test";
-  process.env.BRANDMYITEM_PUBLIC_ORIGINS = "https://example.test";
+  process.env.PUBLIC_BASE_URL = "https://example.test";
   process.env.RESEND_API_KEY = "re_test_key";
   process.env.RESEND_FROM = "BrandMyItem <test@example.com>";
   let requestBody = "";
@@ -123,10 +121,8 @@ test("tracking email failures keep the response generic and invalidate the link"
     await db.delete(trackingMagicLinksTable).where(eq(trackingMagicLinksTable.email, email));
     await db.delete(trackingMagicLinkRequestsTable).where(eq(trackingMagicLinkRequestsTable.normalizedEmail, email));
     await db.delete(campaignsTable).where(eq(campaignsTable.id, campaignId));
-    if (previousOrigin === undefined) delete process.env.BRANDMYITEM_PUBLIC_URL;
-    else process.env.BRANDMYITEM_PUBLIC_URL = previousOrigin;
-    if (previousOrigins === undefined) delete process.env.BRANDMYITEM_PUBLIC_ORIGINS;
-    else process.env.BRANDMYITEM_PUBLIC_ORIGINS = previousOrigins;
+    if (previousOrigin === undefined) delete process.env.PUBLIC_BASE_URL;
+    else process.env.PUBLIC_BASE_URL = previousOrigin;
     if (previousResendKey === undefined) delete process.env.RESEND_API_KEY;
     else process.env.RESEND_API_KEY = previousResendKey;
     if (previousResendFrom === undefined) delete process.env.RESEND_FROM;

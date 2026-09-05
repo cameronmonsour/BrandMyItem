@@ -1,9 +1,21 @@
 import app from "./app.ts";
 import { ensureCommerceSchema } from "./commerceSchema.ts";
 import { logger } from "./lib/logger.ts";
+import { publicBaseUrl } from "./lib/publicBaseUrl.ts";
 import { startPaymentReconciliation } from "./paymentReconciliation.ts";
 import { getConfiguredStripeDiagnostics } from "./stripeClient.ts";
-import { isResendConfigured } from "./emailDelivery.ts";
+
+const REQUIRED_PRODUCTION_ENVIRONMENT_VARIABLES = [
+  "STRIPE_SECRET_KEY",
+  "STRIPE_PUBLISHABLE_KEY",
+  "STRIPE_WEBHOOK_SECRET",
+  "RESEND_API_KEY",
+  "RESEND_FROM",
+  "ADMIN_EMAIL",
+  "SESSION_SECRET",
+  "DATABASE_URL",
+  "PUBLIC_BASE_URL",
+] as const;
 
 const rawPort = process.env["PORT"];
 
@@ -20,15 +32,40 @@ if (Number.isNaN(port) || port <= 0) {
 }
 
 async function start(): Promise<void> {
+  const environmentPresence = Object.fromEntries(
+    REQUIRED_PRODUCTION_ENVIRONMENT_VARIABLES.map((name) => [
+      name,
+      Boolean(process.env[name]?.trim()),
+    ]),
+  );
+  logger.info(
+    { environmentPresence },
+    "Required production environment variable presence",
+  );
+
+  const missing = REQUIRED_PRODUCTION_ENVIRONMENT_VARIABLES.filter(
+    (name) => !environmentPresence[name],
+  );
+  if (process.env.NODE_ENV === "production" && missing.length > 0) {
+    throw new Error(
+      `Missing required production environment variables: ${missing.join(", ")}`,
+    );
+  }
+
   const stripe = getConfiguredStripeDiagnostics();
-  logger.info(
-    `Stripe secret key: ${stripe.secretKeyPrefix}... source=process.env.STRIPE_SECRET_KEY`,
-  );
-  logger.info(
-    `Stripe publishable key: ${stripe.publishableKeyPrefix}... source=process.env.STRIPE_PUBLISHABLE_KEY`,
-  );
-  logger.info(`Stripe mode: ${stripe.mode}`);
-  logger.info(`Resend: ${isResendConfigured() ? "configured" : "missing"}`);
+  logger.info({ stripeMode: stripe.mode }, "Stripe configuration mode");
+  const configuredPublicBaseUrl = environmentPresence.PUBLIC_BASE_URL
+    ? publicBaseUrl()
+    : null;
+  if (
+    stripe.mode === "test" &&
+    configuredPublicBaseUrl === "https://brandmyitem.com"
+  ) {
+    logger.warn(
+      { stripeMode: stripe.mode, publicBaseUrl: "https://brandmyitem.com" },
+      "Production domain is configured with Stripe test-mode credentials",
+    );
+  }
   await ensureCommerceSchema();
   app.listen(port, (err) => {
     if (err) {

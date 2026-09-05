@@ -444,7 +444,6 @@ export const CreatePlacementCheckoutBody = zod.object({
   "brandName": zod.string().min(1).max(createPlacementCheckoutBodyBrandNameMax),
   "email": zod.email().max(createPlacementCheckoutBodyEmailMax),
   "destinationUrl": zod.string().max(createPlacementCheckoutBodyDestinationUrlMax).optional(),
-  "demo": zod.boolean().optional().describe('Preserve the demo inventory view when Stripe returns to the app.'),
   "brandAssent": zod.object({
   "accepted": zod.literal(true),
   "termsVersion": zod.string(),

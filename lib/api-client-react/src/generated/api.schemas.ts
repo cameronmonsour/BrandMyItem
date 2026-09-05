@@ -269,8 +269,6 @@ export interface PlacementCheckoutInput {
   email: string;
   /** @maxLength 2048 */
   destinationUrl?: string;
-  /** Preserve the demo inventory view when Stripe returns to the app. */
-  demo?: boolean;
   brandAssent: BrandAssent;
 }
 

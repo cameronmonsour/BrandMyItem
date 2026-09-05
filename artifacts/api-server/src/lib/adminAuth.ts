@@ -4,6 +4,7 @@ import { and, eq, gt, isNull } from "drizzle-orm";
 import { adminMagicLinksTable, adminSessionsTable, db } from "@workspace/db";
 import { sendTransactionalEmail } from "../emailDelivery.ts";
 import { adminMagicLinkEmail } from "../emailTemplates.ts";
+import { publicAppUrl } from "./publicBaseUrl.ts";
 
 const ADMIN_COOKIE = "bmi_admin_session";
 const MAGIC_LINK_TTL_MS = 15 * 60 * 1000;
@@ -15,13 +16,6 @@ function configuredAdminEmail(): string {
 
 function hash(value: string): string {
   return createHash("sha256").update(value).digest("hex");
-}
-
-function publicAppUrl(): string {
-  const configured = process.env.BRANDMYITEM_PUBLIC_URL?.trim();
-  if (configured) return configured.replace(/\/$/, "");
-  const domain = process.env.REPLIT_DEV_DOMAIN?.trim();
-  return domain ? `https://${domain}` : "https://brandmyitem.com";
 }
 
 function cookieValue(req: Request): string | null {
@@ -54,7 +48,7 @@ export async function issueAdminMagicLink(
     email,
     expiresAt: new Date(Date.now() + MAGIC_LINK_TTL_MS),
   });
-  const url = `${publicAppUrl()}/admin?admin_token=${encodeURIComponent(token)}`;
+  const url = publicAppUrl("/admin", { admin_token: token });
   const delivery = await sendTransactionalEmail(adminMagicLinkEmail({ email, url }));
   return { accepted: true, sent: Boolean(delivery.messageId), messageId: delivery.messageId };
 }
