@@ -5,6 +5,7 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { TrackingOrderMakeGoodStatus } from './trackingOrderMakeGoodStatus';
 import type { TrackingOrderStatus } from './trackingOrderStatus';
 
 export interface TrackingOrder {
@@ -19,5 +20,6 @@ export interface TrackingOrder {
   /** @nullable */
   logoObjectPath?: string | null;
   status: TrackingOrderStatus;
+  makeGoodStatus?: TrackingOrderMakeGoodStatus;
   createdAt: Date;
 }

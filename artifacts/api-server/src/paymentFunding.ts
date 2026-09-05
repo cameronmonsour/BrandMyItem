@@ -1,4 +1,4 @@
-import { campaignsTable, db, placementOrdersTable, updateCardCapabilitiesTable } from "@workspace/db";
+import { campaignCheckinsTable, campaignsTable, db, placementOrdersTable, updateCardCapabilitiesTable } from "@workspace/db";
 import { and, eq, inArray, isNotNull, isNull, lte } from "drizzle-orm";
 import { logger } from "./lib/logger.ts";
 import { stripeRequest } from "./stripeClient.ts";
@@ -602,6 +602,15 @@ export async function advanceCheckinLifecycle(now = new Date()): Promise<void> {
       inArray(campaignsTable.checkinStatus, ["due", "reminded"]),
     )).returning();
     if (!missed) continue;
+    await db.insert(campaignCheckinsTable).values({
+      id: `missed-${campaign.id}-${dueAt.toISOString()}`,
+      campaignId: campaign.id,
+      submittedBy: "system",
+      note: null,
+      photoObjectPath: null,
+      status: "missed",
+      submittedAt: dueAt,
+    }).onConflictDoNothing();
     if (campaign.ownerEmail) {
       try {
         await sendTransactionalEmail(checkinReminderEmail({

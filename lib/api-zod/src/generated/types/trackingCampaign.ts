@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { TrackingCampaignLifecycleStatus } from './trackingCampaignLifecycleStatus';
+import type { TrackingCheckin } from './trackingCheckin';
 import type { TrackingOrder } from './trackingOrder';
 
 export interface TrackingCampaign {
@@ -21,6 +22,7 @@ export interface TrackingCampaign {
   /** @nullable */
   checkinDueAt?: Date | null;
   checkinStatus?: string;
+  checkins?: TrackingCheckin[];
   ownerMatch: boolean;
   createdAt: Date;
   orders: TrackingOrder[];

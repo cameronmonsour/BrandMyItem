@@ -63,6 +63,8 @@ export const campaignsTable = pgTable("campaigns", {
   restrictionEmailSentAt: timestamp("restriction_email_sent_at", { withTimezone: true }),
   proofAutoApprovedEmailSentAt: timestamp("proof_auto_approved_email_sent_at", { withTimezone: true }),
   expiredEmailSentAt: timestamp("expired_email_sent_at", { withTimezone: true }),
+  checkinConfirmationEmailSentAt: timestamp("checkin_confirmation_email_sent_at", { withTimezone: true }),
+  conditionReportOwnerEmailSentAt: timestamp("condition_report_owner_email_sent_at", { withTimezone: true }),
   w9Required: boolean("w9_required").notNull().default(false),
   w9Status: text("w9_status").notNull().default("not_required"),
   w9ObjectPath: text("w9_object_path"),
@@ -102,9 +104,27 @@ export const campaignCheckinsTable = pgTable(
     submittedBy: text("submitted_by").notNull(),
     note: text("note"),
     photoObjectPath: text("photo_object_path"),
+    status: text("status").notNull().default("submitted"),
     submittedAt: timestamp("submitted_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [index("campaign_checkins_campaign_submitted_idx").on(table.campaignId, table.submittedAt)],
+);
+
+export const conditionReportsTable = pgTable(
+  "condition_reports",
+  {
+    id: text("id").primaryKey(),
+    campaignId: text("campaign_id").notNull().references(() => campaignsTable.id),
+    type: text("type").notNull(),
+    affectedSpotIndexes: jsonb("affected_spot_indexes").$type<number[]>().notNull(),
+    note: text("note"),
+    evidenceObjectPath: text("evidence_object_path").notNull(),
+    policeReportNumber: text("police_report_number"),
+    ownerLiability: text("owner_liability"),
+    status: text("status").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [index("condition_reports_campaign_created_idx").on(table.campaignId, table.createdAt)],
 );
 
 export const auditEventsTable = pgTable(
@@ -163,6 +183,9 @@ export const placementOrdersTable = pgTable(
     paymentReopenedEmailMessageId: text("payment_reopened_email_message_id"),
     releaseEmailSentAt: timestamp("release_email_sent_at", { withTimezone: true }),
     releaseEmailMessageId: text("release_email_message_id"),
+    makeGoodStatus: text("make_good_status").notNull().default("none"),
+    makeGoodSource: text("make_good_source"),
+    makeGoodEmailSentAt: timestamp("make_good_email_sent_at", { withTimezone: true }),
     reservedAt: timestamp("reserved_at", { withTimezone: true }),
     chargedAt: timestamp("charged_at", { withTimezone: true }),
     declineReason: text("decline_reason"),

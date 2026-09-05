@@ -262,6 +262,52 @@ export function checkinReminderEmail(input: {
   };
 }
 
+export function checkinConfirmationEmail(input: {
+  email: string;
+  itemDisplayName: string;
+  campaignId: string;
+  nextDueAt: Date;
+}): TransactionalEmail {
+  const nextDue = input.nextDueAt.toLocaleDateString("en-US", { timeZone: "UTC" });
+  return {
+    to: input.email,
+    subject: `Your ${input.itemDisplayName} check-in was received`,
+    text: `Your check-in was received. Your next check-in is due ${nextDue}. Listing ID: ${input.campaignId}.`,
+    html: wrap("Check-in received", `Your ${escapeHtml(input.itemDisplayName)} check-in was received. Your next check-in is due ${escapeHtml(nextDue)}. Listing ID: ${escapeHtml(input.campaignId)}.`),
+  };
+}
+
+export function conditionReportOwnerEmail(input: {
+  email: string;
+  itemDisplayName: string;
+  type: "wear" | "theft_loss";
+}): TransactionalEmail {
+  const theft = input.type === "theft_loss";
+  return {
+    to: input.email,
+    subject: theft ? `Your theft or loss report was received` : `Your wear report was received`,
+    text: theft
+      ? `We received your theft or loss report for ${input.itemDisplayName}. The term has ended, your liability is none, and affected brand make-goods are pending admin confirmation.`
+      : `We received your wear report for ${input.itemDisplayName}. A replacement task was created and your owner account was not flagged.`,
+    html: wrap(theft ? "Theft or loss report received" : "Wear report received", theft
+      ? `We received your report for ${escapeHtml(input.itemDisplayName)}. The term has ended, your liability is none, and affected brand make-goods are pending admin confirmation.`
+      : `We received your report for ${escapeHtml(input.itemDisplayName)}. A replacement task was created and your owner account was not flagged.`),
+  };
+}
+
+export function brandMakeGoodPendingEmail(input: {
+  email: string;
+  itemDisplayName: string;
+  spotIndex: number;
+}): TransactionalEmail {
+  return {
+    to: input.email,
+    subject: `Make-good review pending for your BrandMyItem placement`,
+    text: `The term for your spot ${input.spotIndex + 1} placement on ${input.itemDisplayName} ended after an owner theft or loss report. A make-good is pending admin confirmation.`,
+    html: wrap("Make-good review pending", `The term for spot ${input.spotIndex + 1} on ${escapeHtml(input.itemDisplayName)} ended after an owner theft or loss report. A make-good is pending admin confirmation.`),
+  };
+}
+
 export function listingExpiredEmail(input: {
   email: string;
   itemDisplayName: string;

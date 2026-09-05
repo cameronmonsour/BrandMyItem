@@ -252,3 +252,59 @@ mtime_ms = 1788577795274
 storage_uri = "gcs://replit-rams-assets-riker/rams/assets/repl:3f7c2cc8-f08b-4158-944b-09fd3b52c7cc/a7cca434-2566-417c-89f2-d5e22fcf618f/65dfc87a-2732-44b1-8394-42efa8d5239c"
 storage_version_token = "1788577814663183"
 content_type = "application/octet-stream"
+
+[[outputs]]
+id = "rIbwA-fNOL766DaUo5wEG"
+uri = "file://verification/evidence/exif-scan.txt"
+type = "text"
+title = "Stored check-in EXIF scan"
+description = "Compares the GPS-tagged source JPEG with the downloaded stored object. The stored object has no APP1, EXIF, or GPS metadata."
+logical_id = "6310c1cb-8c73-4496-86c6-1f1a40c42f6f"
+content_hash = "sha256:16b459cad5df0838e48de1e4b2b38a5fd272d8da10bc5b56cc400e4018148fee"
+size = 464
+mtime_ms = 1788578975973
+storage_uri = "gcs://replit-rams-assets-riker/rams/assets/repl:3f7c2cc8-f08b-4158-944b-09fd3b52c7cc/6310c1cb-8c73-4496-86c6-1f1a40c42f6f/de5ac851-a037-42e1-91af-639af83398dd"
+storage_version_token = "1788579021291869"
+content_type = "text/plain"
+
+[[outputs]]
+id = "83BaVf9DVIlJLQtVausYm"
+uri = "file://verification/evidence/sweep-plus5.json"
+type = "unspecified"
+title = "Plus 5 day sweep result"
+description = "Lifecycle sweep output showing the pre-due reminder entry with the required to field."
+logical_id = "cdf43186-1b8e-4498-a4c4-266cc4afe7d0"
+content_hash = "sha256:27d6e58522d37e636d6e9632136b6e65ad85832ce836bc01fe6fc64aa53d6664"
+size = 1615
+mtime_ms = 1788578492750
+storage_uri = "gcs://replit-rams-assets-riker/rams/assets/repl:3f7c2cc8-f08b-4158-944b-09fd3b52c7cc/cdf43186-1b8e-4498-a4c4-266cc4afe7d0/9ab45670-61f7-4e15-a6be-ec1011ee624a"
+storage_version_token = "1788579022065808"
+content_type = "application/octet-stream"
+
+[[outputs]]
+id = "EjMGaSPgpv3tuvdjKlc5O"
+uri = "file://verification/evidence/resend-pre-due-status.json"
+type = "unspecified"
+title = "Resend delivery verification"
+description = "Resend delivery records showing the MacBook Pro pre-due reminder and check-in confirmation delivered to the owner."
+logical_id = "0f1c6d84-b176-4082-ba10-938e96ae3adb"
+content_hash = "sha256:073199096063f0338851697d4212bab4befbd5fe692d4908b2a3eb470a335284"
+size = 2624
+mtime_ms = 1788578991549
+storage_uri = "gcs://replit-rams-assets-riker/rams/assets/repl:3f7c2cc8-f08b-4158-944b-09fd3b52c7cc/0f1c6d84-b176-4082-ba10-938e96ae3adb/5c161975-4441-4d93-82c0-65088137078e"
+storage_version_token = "1788579022772693"
+content_type = "application/octet-stream"
+
+[[outputs]]
+id = "x9420SIppK-Lo9kjqLQnp"
+uri = "file://verification/evidence/final-database-state.json"
+type = "unspecified"
+title = "Final owner-flow database state"
+description = "Final campaign, order make-good, condition report, and check-in records for rdgsm8x."
+logical_id = "61b7ec6f-a0ab-4fb1-aba2-cc3833688e4b"
+content_hash = "sha256:1a38a0f65e1f09ef4102bf9ded64914bc9072c951cb3e1165612b6a7f2dde914"
+size = 841
+mtime_ms = 1788579020653
+storage_uri = "gcs://replit-rams-assets-riker/rams/assets/repl:3f7c2cc8-f08b-4158-944b-09fd3b52c7cc/61b7ec6f-a0ab-4fb1-aba2-cc3833688e4b/f4489106-a0bb-4bf0-9ec4-039323f406d8"
+storage_version_token = "1788579023483945"
+content_type = "application/octet-stream"

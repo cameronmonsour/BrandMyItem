@@ -1,0 +1,5 @@
+{
+  "campaignAndOrders": "id,active,lifecycle_status,checkin_status,checkin_due_at,make_good_status,owner_restricted,order_id,order_status,order_make_good_status,make_good_source\nrdgsm8x,f,complete,submitted,2026-10-05T03:26:31.282Z,pending,f,rdgsm8x-checkin-test,funded,make_good_pending,owner_theft_loss\n",
+  "conditionReports": "type,affected_spot_indexes,status,police_report_number,owner_liability,evidence_object_path\nwear,[0],replacement_pending,,,/objects/uploads/b5645e21-1f77-4af2-9f99-1716feee83ce\ntheft_loss,[0],make_good_pending,TEST-POLICE-2026-0905,none,/objects/uploads/460bc378-c735-4919-935a-65de1accd3a3\n",
+  "checkins": "id,status,note,photo_object_path,submitted_at\ne1659fe2-9e46-451f-a2d0-d59743b9adbb,submitted,GPS metadata test,/objects/uploads/c9a33672-0ea0-4a7b-ac97-654830c7b482,2026-09-05T03:26:31.282Z\n"
+}

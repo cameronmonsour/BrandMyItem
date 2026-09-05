@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import {
   campaignsTable,
+  campaignCheckinsTable,
   db,
   placementOrdersTable,
   updateCardCapabilitiesTable,
@@ -398,6 +399,19 @@ router.get("/tracking", async (req, res): Promise<void> => {
         .where(and(inArray(campaignsTable.id, campaignIds), ne(campaignsTable.test, true)))
         .orderBy(desc(campaignsTable.createdAt))
     : [];
+  const checkins = ownerCampaignIds.length
+    ? await db.select().from(campaignCheckinsTable).where(inArray(campaignCheckinsTable.campaignId, ownerCampaignIds)).orderBy(desc(campaignCheckinsTable.submittedAt))
+    : [];
+  const checkinsByCampaign = new Map<string, typeof checkins>();
+  for (const checkin of checkins) checkinsByCampaign.set(checkin.campaignId, [...(checkinsByCampaign.get(checkin.campaignId) ?? []), checkin]);
+
+  if (magicLink) {
+    for (const campaign of ownerCampaigns) {
+      const ownerToken = createAccessToken();
+      await db.update(campaignsTable).set({ ownerAccessTokenHash: hashAccessToken(ownerToken), updatedAt: now }).where(eq(campaignsTable.id, campaign.id));
+      setAccessCookie(res, "campaign", campaign.id, ownerToken);
+    }
+  }
 
   const ownerIdSet = new Set(ownerCampaignIds);
   const ordersByCampaign = new Map<
@@ -426,6 +440,13 @@ router.get("/tracking", async (req, res): Promise<void> => {
          deliveredAt: campaign.deliveredAt,
          checkinDueAt: campaign.checkinDueAt,
          checkinStatus: campaign.checkinStatus,
+         checkins: (checkinsByCampaign.get(campaign.id) ?? []).map((checkin) => ({
+           id: checkin.id,
+           status: checkin.status,
+           note: checkin.note,
+           photoObjectPath: checkin.photoObjectPath,
+           submittedAt: checkin.submittedAt,
+         })),
         ownerMatch: ownerIdSet.has(campaign.id),
         createdAt: campaign.createdAt,
         orders: Array.from(
@@ -440,6 +461,7 @@ router.get("/tracking", async (req, res): Promise<void> => {
           destinationUrl: order.destinationUrl,
           logoObjectPath: order.logoObjectPath,
           status: order.status,
+          makeGoodStatus: order.makeGoodStatus,
           createdAt: order.createdAt,
         })),
       })),

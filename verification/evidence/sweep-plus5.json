@@ -1,0 +1,51 @@
+{
+  "locked": true,
+  "changes": [
+    {
+      "entity": "campaign",
+      "id": "rdgsm8x",
+      "before": {
+        "lifecycleStatus": "active",
+        "active": true,
+        "checkinStatus": "due",
+        "proofStatus": "not_submitted",
+        "deliveredAt": "2026-09-05T03:21:28.208Z",
+        "checkinDueAt": "2026-09-12T03:21:28.208Z",
+        "fundedEmailSentAt": null,
+        "reopenedEmailSentAt": null,
+        "recipient": "cameronmonsour@gmail.com",
+        "checkinPreDueEmailSentAt": null,
+        "checkinDueEmailSentAt": null,
+        "checkinMissedEmailSentAt": null,
+        "restrictionEmailSentAt": "2026-11-05T03:11:56.713Z",
+        "proofAutoApprovedEmailSentAt": null,
+        "expiredEmailSentAt": null
+      },
+      "after": {
+        "lifecycleStatus": "active",
+        "active": true,
+        "checkinStatus": "due",
+        "proofStatus": "not_submitted",
+        "deliveredAt": "2026-09-05T03:21:28.208Z",
+        "checkinDueAt": "2026-09-12T03:21:28.208Z",
+        "fundedEmailSentAt": null,
+        "reopenedEmailSentAt": null,
+        "recipient": "cameronmonsour@gmail.com",
+        "checkinPreDueEmailSentAt": "2026-09-10T03:21:28.208Z",
+        "checkinDueEmailSentAt": null,
+        "checkinMissedEmailSentAt": null,
+        "restrictionEmailSentAt": "2026-11-05T03:11:56.713Z",
+        "proofAutoApprovedEmailSentAt": null,
+        "expiredEmailSentAt": null
+      }
+    }
+  ],
+  "emails": [
+    {
+      "template": "checkin_reminder_pre_due",
+      "to": "cameronmonsour@gmail.com",
+      "campaignId": "rdgsm8x",
+      "sentAt": "2026-09-10T03:21:28.208Z"
+    }
+  ]
+}

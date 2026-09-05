@@ -11,8 +11,8 @@ import {
   SubmitCampaignCheckinParams, SubmitCampaignCheckinResponse, SubmitCampaignProofBody, SubmitCampaignProofParams,
   SubmitCampaignProofResponse, SubmitOperatorCampaignProofBody, SubmitOperatorCampaignProofParams, SubmitOperatorCampaignProofResponse,
 } from "@workspace/api-zod";
-import { campaignCheckinsTable, campaignsTable, db, placementOrdersTable, uploadIntentsTable } from "@workspace/db";
-import { and, eq, gt } from "drizzle-orm";
+import { campaignCheckinsTable, campaignsTable, conditionReportsTable, db, placementOrdersTable, uploadIntentsTable } from "@workspace/db";
+import { and, eq, gt, inArray } from "drizzle-orm";
 import { Router, type IRouter } from "express";
 import { readAccessToken, accessTokenMatches } from "../lib/accessControl.ts";
 import { recordAuditEvent } from "../lib/audit.ts";
@@ -21,6 +21,8 @@ import { isDeliverableUsStreetAddress } from "../lib/shippingAddress.ts";
 import { createImageUploadURL, objectPathFromUploadUrl, verifyUploadIntentObject } from "../lib/objectStorage.ts";
 import { deliveryTransition } from "../lib/deliveryTransition.ts";
 import { hashUploadCapability, toPublicUploadIntent, uploadCapabilityMatches } from "../lib/uploadIntents.ts";
+import { sendTransactionalEmail } from "../emailDelivery.ts";
+import { brandMakeGoodPendingEmail, campaignItemDisplayName, checkinConfirmationEmail, conditionReportOwnerEmail } from "../emailTemplates.ts";
 
 const router: IRouter = Router();
 
@@ -176,7 +178,7 @@ router.post("/campaigns/:campaignId/checkins/photo/request-url", async (req, res
   if (!params.success || !body.success || !CHECKIN_TYPES.has(body.data.contentType) || body.data.size > CHECKIN_MAX_BYTES) { res.status(400).json({ error: "Invalid check-in photo metadata" }); return; }
   const campaign = await ownerCampaign(req, params.data.campaignId);
   if (!campaign) { res.status(404).json({ error: "Campaign not found" }); return; }
-  if (!["due", "reminded"].includes(campaign.checkinStatus) || !campaign.checkinDueAt || campaign.checkinDueAt > new Date()) { res.status(409).json({ error: "A check-in is not currently due." }); return; }
+  if (!["due", "reminded"].includes(campaign.checkinStatus) || !campaign.checkinDueAt || !campaign.deliveredAt) { res.status(409).json({ error: "A check-in is not currently due." }); return; }
   const token = readAccessToken(req, "campaign", campaign.id)!;
   const uploadURL = await createImageUploadURL(), objectPath = objectPathFromUploadUrl(uploadURL);
   const [intent] = await db.insert(uploadIntentsTable).values({ id: randomUUID(), capabilityDigest: hashUploadCapability(token), purpose: "owner_checkin", actorType: "campaign_owner", actorId: campaign.id, resourceType: "checkin_cycle", resourceId: checkinCycle(campaign), campaignId: campaign.id, objectPath, expectedMimeType: body.data.contentType, expectedSizeBytes: body.data.size, expectedFileName: body.data.name, expiresAt: new Date(Date.now() + 15 * 60_000) }).returning();
@@ -189,7 +191,7 @@ router.post("/campaigns/:campaignId/checkins/photo/:intentId/finalize", async (r
   if (!params.success) { res.status(400).json({ error: "Invalid check-in photo upload" }); return; }
   const campaign = await ownerCampaign(req, params.data.campaignId);
   if (!campaign || !campaign.checkinDueAt) { res.status(404).json({ error: "Campaign not found" }); return; }
-  if (!["due", "reminded"].includes(campaign.checkinStatus) || campaign.checkinDueAt > new Date()) { res.status(409).json({ error: "A check-in is not currently due." }); return; }
+  if (!["due", "reminded"].includes(campaign.checkinStatus) || !campaign.deliveredAt) { res.status(409).json({ error: "A check-in is not currently due." }); return; }
   const token = readAccessToken(req, "campaign", campaign.id)!;
   const [intent] = await db.select().from(uploadIntentsTable).where(eq(uploadIntentsTable.id, params.data.intentId)).limit(1);
   const now = new Date();
@@ -205,7 +207,7 @@ router.post("/campaigns/:campaignId/checkins", async (req, res): Promise<void> =
   if (!params.success || !input.success) { res.status(400).json({ error: "Invalid check-in" }); return; }
   const campaign = await ownerCampaign(req, params.data.campaignId);
   if (!campaign) { res.status(404).json({ error: "Campaign not found" }); return; }
-  if (!["due", "reminded"].includes(campaign.checkinStatus) || !campaign.checkinDueAt || campaign.checkinDueAt > new Date()) { res.status(409).json({ error: "A check-in is not currently due." }); return; }
+  if (!["due", "reminded"].includes(campaign.checkinStatus) || !campaign.checkinDueAt || !campaign.deliveredAt) { res.status(409).json({ error: "A check-in is not currently due." }); return; }
   const now = new Date(), id = randomUUID();
   const photoIntentId = input.data.photoIntentId;
   const submitted = await db.transaction(async (tx) => {
@@ -237,7 +239,14 @@ router.post("/campaigns/:campaignId/checkins", async (req, res): Promise<void> =
   });
   if (submitted === undefined) { res.status(409).json({ error: "Check-in photo or current cycle is no longer valid." }); return; }
   await recordAuditEvent({ actorType: "owner", actorId: campaign.id, action: "checkin_submitted", entityType: "campaign", entityId: campaign.id, requestIp: req.ip });
-  res.status(201).json(SubmitCampaignCheckinResponse.parse({ id, campaignId: campaign.id, note: input.data.note, photoObjectPath: submitted, submittedAt: now }));
+  const nextDueAt = new Date(now.getTime() + 30 * 86400000);
+  if (campaign.ownerEmail) {
+    try {
+      await sendTransactionalEmail(checkinConfirmationEmail({ email: campaign.ownerEmail, itemDisplayName: campaignItemDisplayName(campaign), campaignId: campaign.id, nextDueAt }));
+      await db.update(campaignsTable).set({ checkinConfirmationEmailSentAt: now }).where(eq(campaignsTable.id, campaign.id));
+    } catch { /* state transition remains authoritative */ }
+  }
+  res.status(201).json(SubmitCampaignCheckinResponse.parse({ id, campaignId: campaign.id, note: input.data.note ?? "", photoObjectPath: submitted, submittedAt: now }));
 });
 
 router.post("/campaigns/:campaignId/make-good", async (req, res): Promise<void> => {
@@ -295,7 +304,7 @@ router.post("/campaigns/:campaignId/condition-report", async (req, res): Promise
   const campaign = await ownerCampaign(req, String(req.params.campaignId));
   const type = req.body?.type;
   const note = typeof req.body?.note === "string" ? req.body.note.trim().slice(0, 2000) : "";
-  const intentId = typeof req.body?.policeReportIntentId === "string" ? req.body.policeReportIntentId : "";
+  const intentId = typeof req.body?.evidenceIntentId === "string" ? req.body.evidenceIntentId : "";
   const reportNumber = typeof req.body?.reportNumber === "string" ? req.body.reportNumber.trim().slice(0, 120) : "";
   if (!campaign) { res.status(404).json({ error: "Campaign not found" }); return; }
   const spots = Array.isArray(req.body?.spots) ? req.body.spots.filter((spot: unknown) => Number.isInteger(spot) && Number(spot) >= 0 && Number(spot) < campaign.pricesCents.length) : [];
@@ -317,15 +326,42 @@ router.post("/campaigns/:campaignId/condition-report", async (req, res): Promise
     if (!consumed) { res.status(409).json({ error: "Police report upload is no longer valid." }); return; }
     policeReportObjectPath = consumed.objectPath;
   }
-  const now = new Date();
+  const now = new Date(), reportId = randomUUID();
   const patch = type === "theft_loss" ? {
     makeGoodStatus: "pending", makeGoodSource: "owner_report", makeGoodNote: note || null,
     makeGoodPoliceReportObjectPath: policeReportObjectPath,
     makeGoodFlaggedAt: now, lifecycleStatus: "complete", active: false, updatedAt: now,
   } : { updatedAt: now };
-  await db.update(campaignsTable).set(patch).where(eq(campaignsTable.id, campaign.id));
+  await db.transaction(async (tx) => {
+    await tx.insert(conditionReportsTable).values({
+      id: reportId, campaignId: campaign.id, type, affectedSpotIndexes: spots, note: note || null,
+      evidenceObjectPath: policeReportObjectPath!, policeReportNumber: reportNumber || null,
+      ownerLiability: type === "theft_loss" ? "none" : null,
+      status: type === "wear" ? "replacement_pending" : "make_good_pending",
+    });
+    await tx.update(campaignsTable).set(patch).where(eq(campaignsTable.id, campaign.id));
+    if (type === "theft_loss") {
+      await tx.update(placementOrdersTable).set({ makeGoodStatus: "make_good_pending", makeGoodSource: "owner_theft_loss", updatedAt: now })
+        .where(and(eq(placementOrdersTable.campaignId, campaign.id), inArray(placementOrdersTable.spotIndex, spots), eq(placementOrdersTable.status, "funded")));
+    }
+  });
+  if (campaign.ownerEmail) {
+    try {
+      await sendTransactionalEmail(conditionReportOwnerEmail({ email: campaign.ownerEmail, itemDisplayName: campaignItemDisplayName(campaign), type }));
+      await db.update(campaignsTable).set({ conditionReportOwnerEmailSentAt: now }).where(eq(campaignsTable.id, campaign.id));
+    } catch { /* report remains authoritative */ }
+  }
+  if (type === "theft_loss") {
+    const affectedOrders = await db.select().from(placementOrdersTable).where(and(eq(placementOrdersTable.campaignId, campaign.id), inArray(placementOrdersTable.spotIndex, spots), eq(placementOrdersTable.makeGoodStatus, "make_good_pending")));
+    for (const order of affectedOrders) {
+      try {
+        await sendTransactionalEmail(brandMakeGoodPendingEmail({ email: order.email, itemDisplayName: campaignItemDisplayName(campaign), spotIndex: order.spotIndex }));
+        await db.update(placementOrdersTable).set({ makeGoodEmailSentAt: now }).where(eq(placementOrdersTable.id, order.id));
+      } catch { /* report remains authoritative */ }
+    }
+  }
   await recordAuditEvent({ actorType: "owner", actorId: campaign.id, action: type === "wear" ? "irli_replacement_task_created" : "theft_loss_reported", entityType: "campaign", entityId: campaign.id, requestIp: req.ip, metadata: { note, spots, reportNumber: reportNumber || null, evidenceObjectPath: policeReportObjectPath, ownerLiability: type === "theft_loss" ? "none" : null } });
-  res.status(201).json({ campaignId: campaign.id, type, status: type === "theft_loss" ? "make_good_pending" : "reported" });
+  res.status(201).json({ id: reportId, campaignId: campaign.id, type, status: type === "theft_loss" ? "make_good_pending" : "replacement_pending" });
 });
 
 export default router;

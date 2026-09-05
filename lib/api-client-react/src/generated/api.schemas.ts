@@ -412,6 +412,16 @@ export const TrackingOrderStatus = {
   expired: 'expired',
 } as const;
 
+export type TrackingOrderMakeGoodStatus = typeof TrackingOrderMakeGoodStatus[keyof typeof TrackingOrderMakeGoodStatus];
+
+
+export const TrackingOrderMakeGoodStatus = {
+  none: 'none',
+  make_good_pending: 'make_good_pending',
+  confirmed: 'confirmed',
+  refunded: 'refunded',
+} as const;
+
 export interface TrackingOrder {
   id: string;
   campaignId: string;
@@ -424,6 +434,7 @@ export interface TrackingOrder {
   /** @nullable */
   logoObjectPath?: string | null;
   status: TrackingOrderStatus;
+  makeGoodStatus?: TrackingOrderMakeGoodStatus;
   createdAt: string;
 }
 
@@ -442,6 +453,24 @@ export const TrackingCampaignLifecycleStatus = {
   expired: 'expired',
 } as const;
 
+export type TrackingCheckinStatus = typeof TrackingCheckinStatus[keyof typeof TrackingCheckinStatus];
+
+
+export const TrackingCheckinStatus = {
+  submitted: 'submitted',
+  missed: 'missed',
+} as const;
+
+export interface TrackingCheckin {
+  id: string;
+  status: TrackingCheckinStatus;
+  /** @nullable */
+  note?: string | null;
+  /** @nullable */
+  photoObjectPath?: string | null;
+  submittedAt: string;
+}
+
 export interface TrackingCampaign {
   id: string;
   itemType: string;
@@ -455,6 +484,7 @@ export interface TrackingCampaign {
   /** @nullable */
   checkinDueAt?: string | null;
   checkinStatus?: string;
+  checkins?: TrackingCheckin[];
   ownerMatch: boolean;
   createdAt: string;
   orders: TrackingOrder[];
@@ -670,13 +700,10 @@ export interface Delivery {
 }
 
 export interface CheckinSubmissionInput {
-  /**
-     * @minLength 1
-     * @maxLength 2000
-     */
-  note: string;
+  /** @maxLength 2000 */
+  note?: string;
   /** @minLength 1 */
-  photoIntentId?: string;
+  photoIntentId: string;
 }
 
 export type CheckinPhotoUploadRequestContentType = typeof CheckinPhotoUploadRequestContentType[keyof typeof CheckinPhotoUploadRequestContentType];
@@ -826,7 +853,17 @@ export interface ConditionReportInput {
   /** @maxLength 2000 */
   note?: string;
   /** @minLength 1 */
-  policeReportIntentId?: string;
+  evidenceIntentId: string;
+  /**
+     * @minItems 1
+     * @items.minimum 0
+     */
+  spots: number[];
+  /**
+     * @minLength 1
+     * @maxLength 120
+     */
+  reportNumber?: string;
 }
 
 export type GetTrackingParams = {

@@ -19,6 +19,9 @@ export async function ensureCommerceSchema(): Promise<void> {
       ADD COLUMN IF NOT EXISTS payment_reopened_email_sent_at timestamptz,
       ADD COLUMN IF NOT EXISTS release_email_sent_at timestamptz,
       ADD COLUMN IF NOT EXISTS release_email_message_id text,
+      ADD COLUMN IF NOT EXISTS make_good_status text NOT NULL DEFAULT 'none',
+      ADD COLUMN IF NOT EXISTS make_good_source text,
+      ADD COLUMN IF NOT EXISTS make_good_email_sent_at timestamptz,
       ADD COLUMN IF NOT EXISTS payment_reopened_email_message_id text;
     ALTER TABLE campaigns
       ADD COLUMN IF NOT EXISTS presentation jsonb NOT NULL DEFAULT '{}'::jsonb,
@@ -63,6 +66,8 @@ export async function ensureCommerceSchema(): Promise<void> {
       ADD COLUMN IF NOT EXISTS restriction_email_sent_at timestamptz,
       ADD COLUMN IF NOT EXISTS proof_auto_approved_email_sent_at timestamptz,
       ADD COLUMN IF NOT EXISTS expired_email_sent_at timestamptz,
+      ADD COLUMN IF NOT EXISTS checkin_confirmation_email_sent_at timestamptz,
+      ADD COLUMN IF NOT EXISTS condition_report_owner_email_sent_at timestamptz,
       ADD COLUMN IF NOT EXISTS funded_email_sent_at timestamptz,
       ADD COLUMN IF NOT EXISTS funded_email_message_id text,
       ADD COLUMN IF NOT EXISTS reopened_email_sent_at timestamptz,
@@ -77,9 +82,18 @@ export async function ensureCommerceSchema(): Promise<void> {
     CREATE TABLE IF NOT EXISTS campaign_checkins (
       id text PRIMARY KEY, campaign_id text NOT NULL REFERENCES campaigns(id),
       submitted_by text NOT NULL, note text, photo_object_path text,
+      status text NOT NULL DEFAULT 'submitted',
       submitted_at timestamptz NOT NULL DEFAULT now()
     );
+    ALTER TABLE campaign_checkins ADD COLUMN IF NOT EXISTS status text NOT NULL DEFAULT 'submitted';
     CREATE INDEX IF NOT EXISTS campaign_checkins_campaign_submitted_idx ON campaign_checkins (campaign_id, submitted_at);
+    CREATE TABLE IF NOT EXISTS condition_reports (
+      id text PRIMARY KEY, campaign_id text NOT NULL REFERENCES campaigns(id),
+      type text NOT NULL, affected_spot_indexes jsonb NOT NULL, note text,
+      evidence_object_path text NOT NULL, police_report_number text,
+      owner_liability text, status text NOT NULL, created_at timestamptz NOT NULL DEFAULT now()
+    );
+    CREATE INDEX IF NOT EXISTS condition_reports_campaign_created_idx ON condition_reports (campaign_id, created_at);
     CREATE TABLE IF NOT EXISTS audit_events (
       id text PRIMARY KEY, actor_type text NOT NULL, actor_id text, action text NOT NULL,
       entity_type text NOT NULL, entity_id text NOT NULL, request_ip text, metadata jsonb NOT NULL DEFAULT '{}'::jsonb,
@@ -152,7 +166,8 @@ export async function ensureCommerceSchema(): Promise<void> {
       finalized_at timestamptz,
       consumed_at timestamptz
     );
-    CREATE UNIQUE INDEX IF NOT EXISTS upload_intents_capability_digest_unique
+    DROP INDEX IF EXISTS upload_intents_capability_digest_unique;
+    CREATE INDEX IF NOT EXISTS upload_intents_capability_digest_idx
       ON upload_intents (capability_digest);
     CREATE INDEX IF NOT EXISTS upload_intents_lookup_idx
       ON upload_intents (actor_type, actor_id, purpose, status, expires_at);

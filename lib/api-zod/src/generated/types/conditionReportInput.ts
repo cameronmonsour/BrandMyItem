@@ -12,5 +12,15 @@ export interface ConditionReportInput {
   /** @maxLength 2000 */
   note?: string;
   /** @minLength 1 */
-  policeReportIntentId?: string;
+  evidenceIntentId: string;
+  /**
+     * @minItems 1
+     * @items.minimum 0
+     */
+  spots: number[];
+  /**
+     * @minLength 1
+     * @maxLength 120
+     */
+  reportNumber?: string;
 }

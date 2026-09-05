@@ -1049,6 +1049,9 @@ components:
         status:
           type: string
           enum: [pending, reserved, funding, payment_failed, funded, cancelled, released, expired]
+        makeGoodStatus:
+          type: string
+          enum: [none, make_good_pending, confirmed, refunded]
         createdAt:
           type: string
           format: date-time
@@ -1081,6 +1084,10 @@ components:
           format: date-time
         checkinStatus:
           type: string
+        checkins:
+          type: array
+          items:
+            $ref: "#/components/schemas/TrackingCheckin"
         ownerMatch:
           type: boolean
         createdAt:
@@ -1100,6 +1107,15 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/TrackingCampaign"
+    TrackingCheckin:
+      type: object
+      required: [id, status, submittedAt]
+      properties:
+        id: { type: string }
+        status: { type: string, enum: [submitted, missed] }
+        note: { type: [string, "null"] }
+        photoObjectPath: { type: [string, "null"] }
+        submittedAt: { type: string, format: date-time }
     PublicClaim:
       type: object
       required: [orderId, spotIndex, brandName, amountCents, reservedAt, status]
@@ -1234,9 +1250,9 @@ components:
     CheckinSubmissionInput:
       type: object
       additionalProperties: false
-      required: [note]
+      required: [photoIntentId]
       properties:
-        note: { type: string, minLength: 1, maxLength: 2000 }
+        note: { type: string, maxLength: 2000 }
         photoIntentId: { type: string, minLength: 1 }
     CheckinPhotoUploadRequest:
       type: object
@@ -1298,8 +1314,14 @@ components:
     ConditionReportInput:
       type: object
       additionalProperties: false
-      required: [type]
+      required: [type, spots, evidenceIntentId]
       properties:
         type: { type: string, enum: [wear, theft_loss] }
         note: { type: string, maxLength: 2000 }
-        policeReportIntentId: { type: string, minLength: 1 }
+        evidenceIntentId: { type: string, minLength: 1 }
+        spots:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items: { type: integer, minimum: 0 }
+        reportNumber: { type: string, minLength: 1, maxLength: 120 }

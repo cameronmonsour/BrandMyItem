@@ -1,0 +1,95 @@
+{
+  "matched": 10,
+  "emails": [
+    {
+      "id": "379027bd-9a9a-4fb3-b6b9-468c668e4fb7",
+      "to": [
+        "cameronmonsour@gmail.com"
+      ],
+      "subject": "Your MacBook Pro check-in was received",
+      "created_at": "2026-09-05 03:26:31.548000+00",
+      "last_event": "delivered"
+    },
+    {
+      "id": "fad247f9-961b-4221-860a-8681c1e02272",
+      "to": [
+        "cameronmonsour@gmail.com"
+      ],
+      "subject": "Your MacBook Pro check-in",
+      "created_at": "2026-09-05 03:21:32.846000+00",
+      "last_event": "delivered"
+    },
+    {
+      "id": "25219584-a257-4740-af34-f0b1f82d8375",
+      "to": [
+        "cameronmonsour@gmail.com"
+      ],
+      "subject": "Your MacBook Pro check-in was missed",
+      "created_at": "2026-09-05 03:11:57.198000+00",
+      "last_event": "delivered"
+    },
+    {
+      "id": "94368076-2533-4b37-9c44-930ea6a405f9",
+      "to": [
+        "cameronmonsour@gmail.com"
+      ],
+      "subject": "Your MacBook Pro check-in",
+      "created_at": "2026-09-05 03:11:57.092000+00",
+      "last_event": "delivered"
+    },
+    {
+      "id": "6baee789-4cb7-4656-9223-c2d0e7a678db",
+      "to": [
+        "cameronmonsour@gmail.com"
+      ],
+      "subject": "Your MacBook Pro check-in",
+      "created_at": "2026-09-05 03:11:57.023000+00",
+      "last_event": "delivered"
+    },
+    {
+      "id": "0e344c9f-2934-4cfc-9ebb-3f3f729a50e1",
+      "to": [
+        "cameronmonsour@gmail.com"
+      ],
+      "subject": "Your MacBook Pro check-in was missed",
+      "created_at": "2026-09-05 03:11:56.795000+00",
+      "last_event": "delivered"
+    },
+    {
+      "id": "c6e6b0ce-fdf6-4a3a-acff-06c373ad70fb",
+      "to": [
+        "cameronmonsour@gmail.com"
+      ],
+      "subject": "Your MacBook Pro check-in",
+      "created_at": "2026-09-05 03:11:56.606000+00",
+      "last_event": "delivered"
+    },
+    {
+      "id": "1b0830a5-76ce-4577-918b-00834d7c0e5f",
+      "to": [
+        "cameronmonsour@gmail.com"
+      ],
+      "subject": "Your MacBook Pro check-in",
+      "created_at": "2026-09-05 03:11:56.197000+00",
+      "last_event": "delivered"
+    },
+    {
+      "id": "c1ad628a-28f7-4cde-8c3a-1404591e7ab3",
+      "to": [
+        "cameronmonsour@gmail.com"
+      ],
+      "subject": "Your MacBook Pro check-in was missed",
+      "created_at": "2026-09-05 03:09:54.877000+00",
+      "last_event": "delivered"
+    },
+    {
+      "id": "fccd5081-3120-4ab6-aa18-6e54e496e67f",
+      "to": [
+        "cameronmonsour@gmail.com"
+      ],
+      "subject": "Your MacBook Pro check-in",
+      "created_at": "2026-09-05 03:09:54.745000+00",
+      "last_event": "delivered"
+    }
+  ]
+}

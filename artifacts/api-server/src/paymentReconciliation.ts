@@ -101,13 +101,13 @@ export async function runLifecycleSweeps(now = new Date()): Promise<{
           changes.push({ entity: "campaign", id, before: previous ?? null, after: next });
         }
         if (previous?.fundedEmailSentAt !== next.fundedEmailSentAt && next.fundedEmailSentAt) {
-          emails.push({ kind: "owner_funded", campaignId: id, sentAt: next.fundedEmailSentAt });
+           emails.push({ kind: "owner_funded", to: next.recipient, campaignId: id, sentAt: next.fundedEmailSentAt });
         }
         if (previous?.reopenedEmailSentAt !== next.reopenedEmailSentAt && next.reopenedEmailSentAt) {
-          emails.push({ kind: "owner_reopened", campaignId: id, sentAt: next.reopenedEmailSentAt });
+           emails.push({ kind: "owner_reopened", to: next.recipient, campaignId: id, sentAt: next.reopenedEmailSentAt });
         }
          for (const [field, template] of [["checkinPreDueEmailSentAt", "checkin_reminder_pre_due"], ["checkinDueEmailSentAt", "checkin_reminder_due"], ["checkinMissedEmailSentAt", "checkin_missed"], ["restrictionEmailSentAt", "owner_restricted"], ["proofAutoApprovedEmailSentAt", "proof_auto_approved"], ["expiredEmailSentAt", "listing_expired"]] as const) {
-           if (previous?.[field] !== next[field] && next[field]) emails.push({ template, recipient: next.recipient, campaignId: id, sentAt: next[field] });
+           if (previous?.[field] !== next[field] && next[field]) emails.push({ template, to: next.recipient, campaignId: id, sentAt: next[field] });
          }
       }
       for (const [id, next] of after.orders) {
@@ -116,16 +116,16 @@ export async function runLifecycleSweeps(now = new Date()): Promise<{
           changes.push({ entity: "placement_order", id, before: previous ?? null, after: next });
         }
         if (previous?.fundingEmailSentAt !== next.fundingEmailSentAt && next.fundingEmailSentAt) {
-          emails.push({ kind: "brand_funding", reservationId: id, sentAt: next.fundingEmailSentAt });
+           emails.push({ kind: "brand_funding", to: next.recipient, reservationId: id, sentAt: next.fundingEmailSentAt });
         }
         if (previous?.paymentDeclineEmailSentAt !== next.paymentDeclineEmailSentAt && next.paymentDeclineEmailSentAt) {
-          emails.push({ kind: "brand_decline", reservationId: id, sentAt: next.paymentDeclineEmailSentAt });
+           emails.push({ kind: "brand_decline", to: next.recipient, reservationId: id, sentAt: next.paymentDeclineEmailSentAt });
         }
         if (previous?.paymentReopenedEmailSentAt !== next.paymentReopenedEmailSentAt && next.paymentReopenedEmailSentAt) {
-          emails.push({ kind: "brand_reopened", reservationId: id, sentAt: next.paymentReopenedEmailSentAt });
+           emails.push({ kind: "brand_reopened", to: next.recipient, reservationId: id, sentAt: next.paymentReopenedEmailSentAt });
         }
          if (previous?.releaseEmailSentAt !== next.releaseEmailSentAt && next.releaseEmailSentAt) {
-           emails.push({ template: "reservation_released", recipient: next.recipient, reservationId: id, sentAt: next.releaseEmailSentAt });
+           emails.push({ template: "reservation_released", to: next.recipient, reservationId: id, sentAt: next.releaseEmailSentAt });
          }
       }
       return { locked: true, changes, emails };

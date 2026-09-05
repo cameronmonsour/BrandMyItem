@@ -538,6 +538,13 @@ export const GetTrackingResponse = zod.object({
   "deliveredAt": zod.coerce.date().nullish(),
   "checkinDueAt": zod.coerce.date().nullish(),
   "checkinStatus": zod.string().optional(),
+  "checkins": zod.array(zod.object({
+  "id": zod.string(),
+  "status": zod.enum(['submitted', 'missed']),
+  "note": zod.string().nullish(),
+  "photoObjectPath": zod.string().nullish(),
+  "submittedAt": zod.coerce.date()
+})).optional(),
   "ownerMatch": zod.boolean(),
   "createdAt": zod.coerce.date(),
   "orders": zod.array(zod.object({
@@ -550,6 +557,7 @@ export const GetTrackingResponse = zod.object({
   "destinationUrl": zod.string().nullish(),
   "logoObjectPath": zod.string().nullish(),
   "status": zod.enum(['pending', 'reserved', 'funding', 'payment_failed', 'funded', 'cancelled', 'released', 'expired']),
+  "makeGoodStatus": zod.enum(['none', 'make_good_pending', 'confirmed', 'refunded']).optional(),
   "createdAt": zod.coerce.date()
 }))
 }))
@@ -788,8 +796,8 @@ export const submitCampaignCheckinBodyNoteMax = 2000;
 
 
 export const SubmitCampaignCheckinBody = zod.object({
-  "note": zod.string().min(1).max(submitCampaignCheckinBodyNoteMax),
-  "photoIntentId": zod.string().min(1).optional()
+  "note": zod.string().max(submitCampaignCheckinBodyNoteMax).optional(),
+  "photoIntentId": zod.string().min(1)
 })
 
 export const SubmitCampaignCheckinResponse = zod.object({
@@ -969,12 +977,19 @@ export const SubmitCampaignConditionReportParams = zod.object({
 export const submitCampaignConditionReportBodyNoteMax = 2000;
 
 
+export const submitCampaignConditionReportBodySpotsItemMin = 0;
+
+
+export const submitCampaignConditionReportBodyReportNumberMax = 120;
+
 
 
 export const SubmitCampaignConditionReportBody = zod.object({
   "type": zod.enum(['wear', 'theft_loss']),
   "note": zod.string().max(submitCampaignConditionReportBodyNoteMax).optional(),
-  "policeReportIntentId": zod.string().min(1).optional()
+  "evidenceIntentId": zod.string().min(1),
+  "spots": zod.array(zod.int().min(submitCampaignConditionReportBodySpotsItemMin)).min(1),
+  "reportNumber": zod.string().min(1).max(submitCampaignConditionReportBodyReportNumberMax).optional()
 })
 
 export const SubmitCampaignConditionReportResponse = zod.void()

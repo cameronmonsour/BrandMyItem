@@ -7,11 +7,8 @@
  */
 
 export interface CheckinSubmissionInput {
-  /**
-     * @minLength 1
-     * @maxLength 2000
-     */
-  note: string;
+  /** @maxLength 2000 */
+  note?: string;
   /** @minLength 1 */
-  photoIntentId?: string;
+  photoIntentId: string;
 }

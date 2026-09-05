@@ -1,0 +1,21 @@
+Source upload metadata scan
+{
+  "path": "verification/uploads/gps-checkin.jpg",
+  "bytes": 4025,
+  "jpeg": true,
+  "app1Segments": 1,
+  "exifSegments": 1,
+  "gpsIfdPointerPresent": true,
+  "verdict": "EXIF/GPS METADATA PRESENT"
+}
+
+Stored object metadata scan
+{
+  "path": "verification/evidence/stored-checkin.jpg",
+  "bytes": 2561,
+  "jpeg": true,
+  "app1Segments": 0,
+  "exifSegments": 0,
+  "gpsIfdPointerPresent": false,
+  "verdict": "NO EXIF OR GPS METADATA"
+}

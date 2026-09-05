@@ -10919,6 +10919,7 @@ function serverTrackingMatches(payload,mail){
     l.deliveredAt=campaign.deliveredAt?new Date(campaign.deliveredAt).getTime():l.deliveredAt;
     l.checkinDueAt=campaign.checkinDueAt||l.checkinDueAt;
     l.checkinStatus=campaign.checkinStatus||l.checkinStatus;
+    l.checkins=(campaign.checkins||[]).map(function(checkin){return {confirmId:checkin.id,status:checkin.status,note:checkin.note||'',photo:storedAssetUrl(checkin.photoObjectPath),date:new Date(checkin.submittedAt).getTime()}});
      var reservedCount=(campaign.orders||[]).filter(function(order){return ['reserved','funding','payment_failed','funded'].includes(order.status)}).length;
      var fundedCount=(campaign.orders||[]).filter(function(order){return order.status==='funded'}).length;
      l.serverFundedPercent=l.slots?Math.min(100,reservedCount/l.slots*100):0;
@@ -10933,7 +10934,7 @@ function serverTrackingMatches(payload,mail){
         brand:order.brandName,mail:order.email,link:order.destinationUrl||'',logo:storedAssetUrl(order.logoObjectPath),amt:order.amountCents/100,fee:0,
          purchasedAt:new Date(order.reservedAt||order.createdAt).getTime(),subId:'BMI-'+String(order.id).toUpperCase().slice(0,6),stripeOrderId:order.id
       };
-      c.spotIndex=order.spotIndex;c.orderStatus=order.status;c.ownerOrder=campaign.ownerMatch;
+       c.spotIndex=order.spotIndex;c.orderStatus=order.status;c.makeGoodStatus=order.makeGoodStatus;c.ownerOrder=campaign.ownerMatch;
       matches.push({l:l,c:c});
     });
   });
@@ -11010,21 +11011,39 @@ function trackSubmitHtml(l,c){
   if(!c.ownerView)return '';
   var key=trackSubmitKey(c.subId);
   if(!c.demo&&!l.deliveredAt)return '<div class="track-submit"><p class="track-submit-copy">Your item is on its way — check-ins start 7 days after delivery.</p></div>';
-  if(!ownerCheckinIsDue(l))return '<div class="track-submit"><div class="track-submit-title">Check-in schedule</div><p class="track-submit-copy">No check-in is due right now. Return when the next server due window opens.</p></div>';
-  return '<div class="track-submit">'+
+  var checkins=l.checkins||[],canSubmit=['due','reminded'].includes(l.checkinStatus),reportState=l.lastConditionReport;
+  var history='<div class="track-submit" style="margin-top:12px"><div class="track-submit-title">Check-in history</div>'+
+    (checkins.length?checkins.slice().reverse().map(function(ci){return '<div class="checkin-item '+(ci.status==='missed'?'risk':'')+'">'+
+      (ci.photo?'<img src="'+safeImageAttr(ci.photo)+'" alt="Check-in thumbnail">':'<div class="checkin-missed">Missed</div>')+
+      '<span class="ci-date">'+safeCardText(ci.status==='missed'?'Missed '+new Date(ci.date).toLocaleDateString():new Date(ci.date).toLocaleDateString()+(ci.note?' · '+ci.note:''))+'</span></div>'}).join(''):'<p class="track-submit-copy">No check-ins yet.</p>')+'</div>';
+  var spots=(l.prices||[]).map(function(_,i){return '<label class="admin-check"><input type="checkbox" data-track-condition-spot="'+key+'" value="'+i+'"> Spot '+(i+1)+'</label>'}).join('');
+  var reports='<div class="track-submit" style="margin-top:12px"><div class="track-submit-title">Item condition</div><div class="mrow">'+spots+'</div>'+
+    '<div class="field"><label class="label" for="trackConditionNote_'+key+'">Note</label><textarea id="trackConditionNote_'+key+'" class="input" maxlength="2000" rows="3"></textarea></div>'+
+    '<div class="field"><label class="label" for="trackWearPhoto_'+key+'">Wear photo</label><input id="trackWearPhoto_'+key+'" type="file" accept="image/*" class="input" style="padding:9px"></div>'+
+    '<button class="btn btn-outline btn-full" type="button" onclick="submitTrackCondition('+safeInlineArg(l.id)+','+safeInlineArg(key)+',\'wear\')">Report wear</button>'+
+    '<div class="field" style="margin-top:12px"><label class="label" for="trackPoliceFile_'+key+'">Police report file</label><input id="trackPoliceFile_'+key+'" type="file" accept="application/pdf,image/*" class="input" style="padding:9px"></div>'+
+    '<div class="field"><label class="label" for="trackPoliceNumber_'+key+'">Police report number</label><input id="trackPoliceNumber_'+key+'" class="input" maxlength="120"></div>'+
+    '<button class="btn btn-outline btn-full" type="button" onclick="submitTrackCondition('+safeInlineArg(l.id)+','+safeInlineArg(key)+',\'theft_loss\')">Report theft or loss</button>'+
+    '<p class="finetext" id="trackConditionStatus_'+key+'" role="status">'+safeCardText(reportState==='replacement_pending'?'Wear report received. Replacement task pending.':(reportState==='make_good_pending'?'The term ended. Affected brand make-goods are pending admin confirmation.':''))+'</p></div>';
+  var form='<div class="track-submit">'+
     '<div class="track-submit-title">Check-in due '+safeCardText(new Date(l.checkinDueAt).toLocaleDateString())+'</div>'+
     '<p class="track-submit-copy">Upload a photo of the item in use with every placement visible. Location metadata is stripped before upload.</p>'+
-    '<div class="field"><label class="label" for="trackPhoto_'+key+'">Check-in photo</label><input id="trackPhoto_'+key+'" type="file" accept="image/*" class="input" style="padding:9px"></div>'+
+    (canSubmit?'<div class="field"><label class="label" for="trackPhoto_'+key+'">Check-in photo</label><input id="trackPhoto_'+key+'" type="file" accept="image/*" class="input" style="padding:9px"></div>'+
     '<div class="field" style="margin-top:12px"><label class="label" for="trackCaption_'+key+'">Caption (optional)</label><input id="trackCaption_'+key+'" class="input" maxlength="2000"></div>'+
     '<p class="finetext" id="trackSubmitErr_'+key+'" style="display:none;color:#B23327;margin:10px 0 0"></p>'+
-    '<button class="btn btn-primary btn-full" type="button" onclick="submitTrackProof('+safeInlineArg(l.id)+','+safeInlineArg(c.subId)+','+safeInlineArg(key)+')">Submit</button>'+
+    '<button class="btn btn-primary btn-full" type="button" onclick="submitTrackProof('+safeInlineArg(l.id)+','+safeInlineArg(c.subId)+','+safeInlineArg(key)+')">Submit</button>':'<p class="track-submit-copy">Submitted. Your next check-in opens on this cadence.</p>')+
   '</div>';
+  return form+reports+history;
 }
 function submitTrackProof(itemId,subId,key){
-  var l=DB.listings.filter(function(x){return x.id===itemId})[0];
+  var l=DB.listings.filter(function(x){return x.id===itemId})[0]||TRACK_MATCHES.map(function(m){return m.l}).filter(function(x){return x.id===itemId})[0];
   if(!l)return;
   var c=null;
   (l.claims||[]).forEach(function(x){if(x&&x.subId===subId)c=x});
+  if(!c){
+    var activeMatch=TRACK_MATCHES.filter(function(m){return m.l&&m.l.id===itemId&&m.c&&m.c.subId===subId})[0];
+    if(activeMatch)c=activeMatch.c;
+  }
    if(!c&&/^BMI-DEMO/.test(subId)){
      var demoMatch=demoTrackMatches().filter(function(m){return m.c.subId===subId})[0];
      if(demoMatch)c=demoMatch.c;
@@ -11036,8 +11055,9 @@ function submitTrackProof(itemId,subId,key){
   var fail=function(msg){if(err){err.textContent=msg;err.style.display='block'}};
   if(!photoInput||!photoInput.files||!photoInput.files[0]){fail('Upload the item photo for this check-in.');return}
   var photoFile=photoInput.files[0],caption=captionInput?captionInput.value.trim():'';
+  if(photoFile.size>25000000){fail('Choose an image smaller than 25 MB.');return}
    if(!isDemoListing(l)){
-    if(!ownerCheckinIsDue(l)){fail('A check-in is not currently due.');return}
+     if(!l.deliveredAt||!['due','reminded'].includes(l.checkinStatus)){fail('A check-in is not currently due.');return}
     var submitButton=err&&err.nextElementSibling;
     if(submitButton){submitButton.disabled=true;submitButton.textContent='Submitting…'}
     (async function(){
@@ -11048,7 +11068,7 @@ function submitTrackProof(itemId,subId,key){
         var submitted=await apiResponse(response,'Check-in could not be submitted.');
         l.checkins=l.checkins||[];
         l.checkins.push({date:new Date(submitted.submittedAt).getTime(),photo:storedAssetUrl(submitted.photoObjectPath),confirmId:submitted.id});
-        l.checkinStatus='submitted';saveDB();
+         l.checkinStatus='submitted';l.checkinDueAt=new Date(new Date(submitted.submittedAt).getTime()+30*86400000).toISOString();saveDB();
         var found=TRACK_MATCHES.filter(function(m){return m.c&&m.c.subId===subId})[0];
         if(found)renderTrackResults(TRACK_MATCHES);
         toast('Check-in submitted - '+submitted.id);
@@ -11071,8 +11091,29 @@ function submitTrackProof(itemId,subId,key){
       var found=TRACK_MATCHES.filter(function(m){return m.c&&m.c.subId===subId})[0];
       if(found)renderTrackResults(TRACK_MATCHES);
     }
-    toast(first?'Receipt and first photo submitted - '+cid:'Month '+l.checkins.length+' photo submitted - '+cid);
+    toast('Check-in submitted - '+cid);
   }
+}
+async function submitTrackCondition(itemId,key,type){
+  var l=TRACK_MATCHES.map(function(m){return m.l}).filter(function(item){return item.id===itemId})[0],status=document.getElementById('trackConditionStatus_'+key);
+  if(!l||!status)return;
+  var spots=Array.prototype.map.call(document.querySelectorAll('[data-track-condition-spot="'+key+'"]:checked'),function(el){return Number(el.value)});
+  var note=(document.getElementById('trackConditionNote_'+key)||{}).value||'',fileInput=document.getElementById(type==='wear'?'trackWearPhoto_'+key:'trackPoliceFile_'+key);
+  var reportNumber=((document.getElementById('trackPoliceNumber_'+key)||{}).value||'').trim();
+  if(!spots.length){status.textContent='Select at least one affected spot.';status.style.color='#B23327';return}
+  if(!fileInput||!fileInput.files[0]){status.textContent=type==='wear'?'Upload a wear photo.':'Upload the police report file.';status.style.color='#B23327';return}
+  if(type==='theft_loss'&&!reportNumber){status.textContent='Enter the police report number.';status.style.color='#B23327';return}
+  try{
+    status.textContent='Uploading…';status.style.color='#6e6e73';
+    var file=fileInput.files[0];if(type==='wear')file=await stripPhotoMetadata(file);
+    var uploaded=await requestFinalizedUpload('/api/campaigns/'+encodeURIComponent(itemId)+'/condition-report/photo/request-url',function(id){return '/api/campaigns/'+encodeURIComponent(itemId)+'/condition-report/photo/'+encodeURIComponent(id)+'/finalize'},file);
+    var response=await fetch('/api/campaigns/'+encodeURIComponent(itemId)+'/condition-report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:type,note:note.trim(),spots:spots,evidenceIntentId:uploaded.id,reportNumber:reportNumber||undefined})});
+    var result=await apiResponse(response,'Condition report could not be submitted.');
+    l.lastConditionReport=result.status;
+    if(type==='theft_loss'){l.lifecycleStatus='complete';l.status='closed';l.active=false;(l.claims||[]).forEach(function(claim,i){if(claim&&spots.includes(i))claim.makeGoodStatus='make_good_pending'})}
+    renderTrackResults(TRACK_MATCHES);
+    toast(type==='wear'?'Wear report submitted.':'Theft or loss report submitted.');
+  }catch(error){status.textContent=error&&error.message?error.message:'Condition report could not be submitted.';status.style.color='#B23327'}
 }
 function sendDelayNotice(l){
   if(!l||!l.fundedAt)return;
