@@ -168,6 +168,14 @@ router.post("/sponsor-reservation-drafts/:draftId/logo/:intentId/finalize", asyn
     .where(and(eq(uploadIntentsTable.id, intent.id), eq(uploadIntentsTable.status, "issued"),
       eq(uploadIntentsTable.statusVersion, intent.statusVersion), gt(uploadIntentsTable.expiresAt, now))).returning();
   if (!finalized.length) { res.status(409).json({ error: "Logo upload intent was already used" }); return; }
+  req.log.info({
+    draftId: draft.id,
+    logoIntentId: intent.id,
+    previousIntentStatus: intent.status,
+    previousIntentStatusVersion: intent.statusVersion,
+    finalizedIntentStatus: finalized[0].status,
+    finalizedIntentStatusVersion: finalized[0].statusVersion,
+  }, "Logo upload intent finalized");
   res.json(FinalizeSponsorReservationDraftLogoUploadResponse.parse(
     toPublicUploadIntent(finalized[0] as Parameters<typeof toPublicUploadIntent>[0]),
   ));

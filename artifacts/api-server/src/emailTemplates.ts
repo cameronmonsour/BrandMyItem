@@ -132,6 +132,25 @@ export function fundingConfirmationEmail(input: {
   };
 }
 
+export function ownerCampaignFundedEmail(input: {
+  email: string;
+  itemDisplayName: string;
+  campaignId: string;
+  totalCents: number;
+}): TransactionalEmail {
+  const itemDisplayName = escapeHtml(input.itemDisplayName);
+  const total = `$${(input.totalCents / 100).toFixed(2)}`;
+  return {
+    to: input.email,
+    subject: `Your BrandMyItem listing is fully funded`,
+    text: `Your ${input.itemDisplayName} listing is fully funded. All reserved placements were charged, for a campaign total of ${total}. Listing ID: ${input.campaignId}.`,
+    html: wrap(
+      "Your listing is fully funded",
+      `Your ${itemDisplayName} listing is fully funded. All reserved placements were charged, for a campaign total of ${total}. Listing ID: ${escapeHtml(input.campaignId)}.`,
+    ),
+  };
+}
+
 export function trackingMagicLinkEmail(input: {
   email: string;
   trackingUrl: string;

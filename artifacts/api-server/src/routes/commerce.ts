@@ -715,6 +715,16 @@ router.post("/checkout/sessions", async (req, res): Promise<void> => {
       .where(eq(sponsorReservationDraftsTable.id, input.reservationDraftId)).limit(1);
     const [intent] = await tx.select().from(uploadIntentsTable)
       .where(eq(uploadIntentsTable.id, input.logoIntentId)).limit(1);
+    req.log.info({
+      draftId: input.reservationDraftId,
+      draftStatus: draft?.status,
+      draftStatusVersion: draft?.statusVersion,
+      logoIntentId: input.logoIntentId,
+      logoIntentStatus: intent?.status,
+      logoIntentStatusVersion: intent?.statusVersion,
+      draftExpiresAt: draft?.expiresAt,
+      logoIntentExpiresAt: intent?.expiresAt,
+    }, "Checkout draft eligibility snapshot");
     const invalidReasons = [
       !liveCampaign || !liveCampaign.active ? "campaign_inactive" : null,
       liveCampaign?.lifecycleStatus !== "live" ? "campaign_not_live" : null,

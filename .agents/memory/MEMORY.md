@@ -29,3 +29,4 @@
 - [Campaign presentation contract](campaign-presentation-contract.md) — omit unavailable optional catalog strings, do not serialize them as null.
 - [Test listing isolation](test-listing-isolation.md) — automated listings carry a persisted test flag and never enter public listing, tracking, or activity surfaces.
 - [Checkout popup session state](checkout-popup-session-state.md) — sessionStorage is cloned only when a popup opens, so later reservation state must also be written into that popup.
+- [Funding email idempotency](funding-email-idempotency.md) — charge transitions and Resend notifications are separate durable outcomes with retry-safe delivery markers.

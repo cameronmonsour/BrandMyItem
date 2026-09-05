@@ -1,7 +1,14 @@
 import { campaignsTable, db, placementOrdersTable } from "@workspace/db";
-import { and, eq, inArray, lte } from "drizzle-orm";
+import { and, eq, inArray, isNull, lte } from "drizzle-orm";
 import { logger } from "./lib/logger.ts";
 import { stripeRequest } from "./stripeClient.ts";
+import { sendTransactionalEmail } from "./emailDelivery.ts";
+import {
+  campaignItemDisplayName,
+  fundingConfirmationEmail,
+  ownerCampaignFundedEmail,
+  paymentDeclinedEmail,
+} from "./emailTemplates.ts";
 import {
   fundingChargeIdempotencyKey,
   paymentFailureExpiresAt,
@@ -11,6 +18,13 @@ import {
 const FUNDING_STATUSES = ["reserved", "funding", "payment_failed"] as const;
 const SIXTY_DAYS_MS = 60 * 24 * 60 * 60 * 1000;
 const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
+
+function publicAppUrl(): string {
+  const configured = process.env.BRANDMYITEM_PUBLIC_URL?.trim();
+  if (configured) return configured.replace(/\/$/, "");
+  const domain = process.env.REPLIT_DEV_DOMAIN?.trim();
+  return domain ? `https://${domain}` : "https://brandmyitem.com";
+}
 
 type PaymentIntentSnapshot = {
   id: string;
@@ -155,6 +169,103 @@ export async function attemptCampaignFunding(
         updatedAt: now,
       })
       .where(eq(campaignsTable.id, campaignId));
+  }
+  await sendFundingLifecycleEmails(campaignId, now);
+}
+
+export async function sendFundingLifecycleEmails(
+  campaignId: string,
+  now = new Date(),
+): Promise<void> {
+  const [campaign] = await db
+    .select()
+    .from(campaignsTable)
+    .where(eq(campaignsTable.id, campaignId))
+    .limit(1);
+  if (!campaign) return;
+  const orders = await db
+    .select()
+    .from(placementOrdersTable)
+    .where(eq(placementOrdersTable.campaignId, campaignId));
+  const itemDisplayName = campaignItemDisplayName(campaign);
+
+  for (const order of orders) {
+    if (order.status === "funded" && !order.fundingEmailSentAt) {
+      try {
+        const delivery = await sendTransactionalEmail(fundingConfirmationEmail({
+          email: order.email,
+          reservationId: `BMI-${order.id.toUpperCase().slice(0, 6)}`,
+          itemDisplayName,
+          amountCents: order.amountCents,
+        }));
+        await db.update(placementOrdersTable).set({
+          fundingEmailSentAt: now,
+          fundingEmailMessageId: delivery.messageId ?? null,
+          updatedAt: now,
+        }).where(and(
+          eq(placementOrdersTable.id, order.id),
+          isNull(placementOrdersTable.fundingEmailSentAt),
+        ));
+      } catch (error) {
+        logger.warn({ err: error, reservationId: order.id }, "Funded reservation email delivery failed");
+      }
+    }
+    if (order.status === "payment_failed" && !order.paymentDeclineEmailSentAt) {
+      try {
+        const delivery = await sendTransactionalEmail(paymentDeclinedEmail({
+          email: order.email,
+          reservationId: `BMI-${order.id.toUpperCase().slice(0, 6)}`,
+          updateCardUrl: `${publicAppUrl()}/#track`,
+        }));
+        await db.update(placementOrdersTable).set({
+          paymentDeclineEmailSentAt: now,
+          paymentDeclineEmailMessageId: delivery.messageId ?? null,
+          updatedAt: now,
+        }).where(and(
+          eq(placementOrdersTable.id, order.id),
+          isNull(placementOrdersTable.paymentDeclineEmailSentAt),
+        ));
+      } catch (error) {
+        logger.warn({ err: error, reservationId: order.id }, "Payment decline email delivery failed");
+      }
+    }
+  }
+
+  const currentCampaign = await db
+    .select()
+    .from(campaignsTable)
+    .where(eq(campaignsTable.id, campaignId))
+    .limit(1);
+  const latestOrders = await db
+    .select()
+    .from(placementOrdersTable)
+    .where(eq(placementOrdersTable.campaignId, campaignId));
+  const latest = currentCampaign[0];
+  if (
+    latest?.lifecycleStatus === "funded" &&
+    latest.ownerEmail &&
+    !latest.fundedEmailSentAt &&
+    latestOrders.length >= latest.pricesCents.length &&
+    latestOrders.every((order) => order.status === "funded")
+  ) {
+    try {
+      const delivery = await sendTransactionalEmail(ownerCampaignFundedEmail({
+        email: latest.ownerEmail,
+        itemDisplayName: campaignItemDisplayName(latest),
+        campaignId: latest.id,
+        totalCents: latest.pricesCents.reduce((sum, cents) => sum + cents, 0),
+      }));
+      await db.update(campaignsTable).set({
+        fundedEmailSentAt: now,
+        fundedEmailMessageId: delivery.messageId ?? null,
+        updatedAt: now,
+      }).where(and(
+        eq(campaignsTable.id, latest.id),
+        isNull(campaignsTable.fundedEmailSentAt),
+      ));
+    } catch (error) {
+      logger.warn({ err: error, campaignId }, "Owner funded email delivery failed");
+    }
   }
 }
 

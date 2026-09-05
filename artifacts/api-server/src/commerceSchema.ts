@@ -9,7 +9,11 @@ export async function ensureCommerceSchema(): Promise<void> {
       ADD COLUMN IF NOT EXISTS stripe_refund_status text,
       ADD COLUMN IF NOT EXISTS logo_object_path text,
       ADD COLUMN IF NOT EXISTS confirmation_email_sent_at timestamptz,
-      ADD COLUMN IF NOT EXISTS confirmation_email_message_id text;
+      ADD COLUMN IF NOT EXISTS confirmation_email_message_id text,
+      ADD COLUMN IF NOT EXISTS funding_email_sent_at timestamptz,
+      ADD COLUMN IF NOT EXISTS funding_email_message_id text,
+      ADD COLUMN IF NOT EXISTS payment_decline_email_sent_at timestamptz,
+      ADD COLUMN IF NOT EXISTS payment_decline_email_message_id text;
     ALTER TABLE campaigns
       ADD COLUMN IF NOT EXISTS presentation jsonb NOT NULL DEFAULT '{}'::jsonb,
       ADD COLUMN IF NOT EXISTS owner_access_token_hash text,
@@ -36,7 +40,9 @@ export async function ensureCommerceSchema(): Promise<void> {
       ADD COLUMN IF NOT EXISTS checkin_reminder_sent_at timestamptz,
       ADD COLUMN IF NOT EXISTS checkin_status text NOT NULL DEFAULT 'not_due',
       ADD COLUMN IF NOT EXISTS make_good_selection text,
-      ADD COLUMN IF NOT EXISTS make_good_selected_at timestamptz;
+      ADD COLUMN IF NOT EXISTS make_good_selected_at timestamptz,
+      ADD COLUMN IF NOT EXISTS funded_email_sent_at timestamptz,
+      ADD COLUMN IF NOT EXISTS funded_email_message_id text;
     ALTER TABLE placement_orders
       ADD COLUMN IF NOT EXISTS proof_status text NOT NULL DEFAULT 'not_required',
       ADD COLUMN IF NOT EXISTS proof_revision integer NOT NULL DEFAULT 0,
