@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import test from 'node:test';
 
 const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+const commerceRoute = readFileSync(new URL('../../api-server/src/routes/commerce.ts', import.meta.url), 'utf8');
 const builderHtml = html.split('<!-- ITEM -->')[0];
 
 test('removes the screenshot-only homepage and page headers', () => {
@@ -292,6 +293,13 @@ test('placement reservations use Stripe Setup mode and only finalize after reser
   assert.match(html, /finalizeReservation\(order,pending\)/);
   assert.match(html, /Your spot is reserved\. Your saved card has not been charged/);
   assert.doesNotMatch(html, /Your spot was charged immediately in this demo/);
+});
+
+test('checkout return restores the listing before confirmation and Stripe remains card-only', () => {
+  assert.match(html, /history\.replaceState\(null,'',checkoutReturnUrl\(pending,order\.campaignId\)\);[\s\S]*?DEMO_VIEW=new URLSearchParams\(location\.search\)\.get\('demo'\)==='1';[\s\S]*?await finalizeReservation\(order,pending\)/);
+  assert.match(html, /async function finalizeReservation\(order,pending\)\{[\s\S]*?await hydratePublicCampaigns\(\);[\s\S]*?route\(\);[\s\S]*?document\.getElementById\('modalBg'\)\.classList\.add\('on'\)/);
+  assert.equal((commerceRoute.match(/"payment_method_types\[0\]": "card"/g) || []).length, 2);
+  assert.equal((commerceRoute.match(/"wallet_options\[link\]\[display\]": "never"/g) || []).length, 2);
 });
 
 test('fulfillment copy enforces BrandMyItem-applied branding', () => {

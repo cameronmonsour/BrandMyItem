@@ -11619,9 +11619,17 @@ async function beginStripeCheckout(){
 }
 async function finalizeReservation(order,pending){
   await hydratePublicCampaigns();
+  route();
   var listing=DB.listings.find(function(entry){return entry.id===order.campaignId});
   if(!listing)return;
    var now=Date.now(),price=order.amountCents/100,subId='BMI-'+String(order.id).toUpperCase().slice(0,6);
+  if(!listing.claims[order.spotIndex]){
+    listing.claims[order.spotIndex]={
+      brand:pending.brand,link:pending.link||'',logo:'',amt:price,fee:0,
+      purchasedAt:now,orderStatus:order.status,subId:subId,
+      stripeOrderId:order.id,itemId:order.campaignId,ts:now
+    };
+  }
   CUR=listing;
   claimSlot=order.spotIndex;
    if(order.status==='funded'&&!listing.fundedAt){listing.fundedAt=now;listing.status='funded';listing.promisedDeliveryAt=now+deliveryDaysOf(listing)*86400000}
@@ -11656,6 +11664,8 @@ async function resumeStripeCheckout(){
      var cancelledPending=null;
      try{cancelledPending=JSON.parse(sessionStorage.getItem('bmi_pending_checkout')||'null');if(cancelledPending&&cancelledPending.reservationDraftId){activeReservationDraftId=cancelledPending.reservationDraftId;await releaseReservationDraft();}sessionStorage.removeItem('bmi_pending_checkout');}catch(error){}
      history.replaceState(null,'',checkoutReturnUrl(cancelledPending,cancelledPending&&cancelledPending.campaignId));
+     DEMO_VIEW=new URLSearchParams(location.search).get('demo')==='1';
+     route();
      toast('Reservation cancelled. Your card was not charged.');
     return;
   }
@@ -11669,6 +11679,7 @@ async function resumeStripeCheckout(){
      if(!response.ok||!['reserved','funded','payment_failed'].includes(order.status))throw new Error('Your reservation is still being confirmed');
      sessionStorage.removeItem('bmi_pending_checkout');
      history.replaceState(null,'',checkoutReturnUrl(pending,order.campaignId));
+     DEMO_VIEW=new URLSearchParams(location.search).get('demo')==='1';
      await finalizeReservation(order,pending);
   }catch(error){
      try{var failedPending=JSON.parse(sessionStorage.getItem('bmi_pending_checkout')||'null');if(failedPending&&failedPending.reservationDraftId){activeReservationDraftId=failedPending.reservationDraftId;await releaseReservationDraft();}sessionStorage.removeItem('bmi_pending_checkout');}catch(releaseError){}
@@ -11993,9 +12004,16 @@ loadItemLogos();
 /* 3D retired: photo model is the product */
 initHomeFeatureBento();
 startHeroWordCycle();
-route();
-backfillLocalCampaigns().then(hydratePublicCampaigns).then(function(){route()}).catch(function(){});
-resumeStripeCheckout();
+async function initializeApp(){
+  route();
+  try{
+    await backfillLocalCampaigns();
+    await hydratePublicCampaigns();
+  }catch(error){}
+  route();
+  await resumeStripeCheckout();
+}
+initializeApp();
 /* Keep semantic image metadata intact for static and dynamically rendered listing views. */
 function applyImageAccessibility(root){
   (root||document).querySelectorAll('img').forEach(function(image){
