@@ -1,0 +1,33 @@
+{
+  "now": "2000-01-08T00:00:00.000Z",
+  "runs": [
+    {
+      "run": 1,
+      "emails": [
+        {
+          "template": "checkin_reminder_pre_due",
+          "to": "sweep-idempotency@example.com",
+          "campaignId": "sweep-idempotency-test",
+          "sentAt": "2000-01-08T00:00:00.000Z"
+        },
+        {
+          "template": "checkin_reminder_due",
+          "to": "sweep-idempotency@example.com",
+          "campaignId": "sweep-idempotency-test",
+          "sentAt": "2000-01-08T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "emails": []
+    },
+    {
+      "run": 3,
+      "emails": []
+    }
+  ],
+  "dueReminderCount": 1,
+  "passed": true,
+  "ledgerRows": "template,due_at,sent_at,total_rows\ncheckin_reminder_due,2000-01-08T00:00:00.000Z,2000-01-08T00:00:00.000Z,2\ncheckin_reminder_pre_due,2000-01-08T00:00:00.000Z,2000-01-08T00:00:00.000Z,2\n"
+}

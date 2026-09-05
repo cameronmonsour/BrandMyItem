@@ -4,6 +4,7 @@ import {
   integer,
   jsonb,
   pgTable,
+  primaryKey,
   text,
   timestamp,
   uniqueIndex,
@@ -108,6 +109,21 @@ export const campaignCheckinsTable = pgTable(
     submittedAt: timestamp("submitted_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [index("campaign_checkins_campaign_submitted_idx").on(table.campaignId, table.submittedAt)],
+);
+
+export const campaignCheckinEmailEventsTable = pgTable(
+  "campaign_checkin_email_events",
+  {
+    campaignId: text("campaign_id").notNull().references(() => campaignsTable.id),
+    dueAt: timestamp("due_at", { withTimezone: true }).notNull(),
+    template: text("template").notNull(),
+    sentAt: timestamp("sent_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.campaignId, table.dueAt, table.template] }),
+    index("campaign_checkin_email_events_campaign_idx").on(table.campaignId, table.dueAt),
+  ],
 );
 
 export const conditionReportsTable = pgTable(

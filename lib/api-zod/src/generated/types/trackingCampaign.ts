@@ -7,6 +7,7 @@
  */
 import type { TrackingCampaignLifecycleStatus } from './trackingCampaignLifecycleStatus';
 import type { TrackingCheckin } from './trackingCheckin';
+import type { TrackingConditionReport } from './trackingConditionReport';
 import type { TrackingOrder } from './trackingOrder';
 
 export interface TrackingCampaign {
@@ -22,7 +23,10 @@ export interface TrackingCampaign {
   /** @nullable */
   checkinDueAt?: Date | null;
   checkinStatus?: string;
-  checkins?: TrackingCheckin[];
+  checkins: TrackingCheckin[];
+  conditionReports: TrackingConditionReport[];
+  /** @nullable */
+  finalStatusAt?: Date | null;
   ownerMatch: boolean;
   createdAt: Date;
   orders: TrackingOrder[];

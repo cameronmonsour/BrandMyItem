@@ -471,6 +471,29 @@ export interface TrackingCheckin {
   submittedAt: string;
 }
 
+export type TrackingConditionReportType = typeof TrackingConditionReportType[keyof typeof TrackingConditionReportType];
+
+
+export const TrackingConditionReportType = {
+  wear: 'wear',
+  theft_loss: 'theft_loss',
+} as const;
+
+export interface TrackingConditionReport {
+  id: string;
+  type: TrackingConditionReportType;
+  affectedSpotIndexes: number[];
+  /** @nullable */
+  note?: string | null;
+  evidenceObjectPath: string;
+  /** @nullable */
+  policeReportNumber?: string | null;
+  /** @nullable */
+  ownerLiability?: string | null;
+  status: string;
+  createdAt: string;
+}
+
 export interface TrackingCampaign {
   id: string;
   itemType: string;
@@ -484,7 +507,10 @@ export interface TrackingCampaign {
   /** @nullable */
   checkinDueAt?: string | null;
   checkinStatus?: string;
-  checkins?: TrackingCheckin[];
+  checkins: TrackingCheckin[];
+  conditionReports: TrackingConditionReport[];
+  /** @nullable */
+  finalStatusAt?: string | null;
   ownerMatch: boolean;
   createdAt: string;
   orders: TrackingOrder[];

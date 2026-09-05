@@ -10920,6 +10920,8 @@ function serverTrackingMatches(payload,mail){
     l.checkinDueAt=campaign.checkinDueAt||l.checkinDueAt;
     l.checkinStatus=campaign.checkinStatus||l.checkinStatus;
     l.checkins=(campaign.checkins||[]).map(function(checkin){return {confirmId:checkin.id,status:checkin.status,note:checkin.note||'',photo:storedAssetUrl(checkin.photoObjectPath),date:new Date(checkin.submittedAt).getTime()}});
+    l.conditionReports=(campaign.conditionReports||[]).map(function(report){return {id:report.id,type:report.type,spots:report.affectedSpotIndexes||[],note:report.note||'',evidence:storedAssetUrl(report.evidenceObjectPath),reportNumber:report.policeReportNumber||'',ownerLiability:report.ownerLiability||'',status:report.status,date:new Date(report.createdAt).getTime()}});
+    l.finalStatusAt=campaign.finalStatusAt?new Date(campaign.finalStatusAt).getTime():null;
      var reservedCount=(campaign.orders||[]).filter(function(order){return ['reserved','funding','payment_failed','funded'].includes(order.status)}).length;
      var fundedCount=(campaign.orders||[]).filter(function(order){return order.status==='funded'}).length;
      l.serverFundedPercent=l.slots?Math.min(100,reservedCount/l.slots*100):0;
@@ -11010,12 +11012,23 @@ function trackSubmitKey(subId){
 function trackSubmitHtml(l,c){
   if(!c.ownerView)return '';
   var key=trackSubmitKey(c.subId);
-  if(!c.demo&&!l.deliveredAt)return '<div class="track-submit"><p class="track-submit-copy">Your item is on its way — check-ins start 7 days after delivery.</p></div>';
+  var archived=['complete','expired'].includes(l.lifecycleStatus);
+  if(!archived&&!c.demo&&!l.deliveredAt)return '<div class="track-submit"><p class="track-submit-copy">Your item is on its way — check-ins start 7 days after delivery.</p></div>';
   var checkins=l.checkins||[],canSubmit=['due','reminded'].includes(l.checkinStatus),reportState=l.lastConditionReport;
   var history='<div class="track-submit" style="margin-top:12px"><div class="track-submit-title">Check-in history</div>'+
     (checkins.length?checkins.slice().reverse().map(function(ci){return '<div class="checkin-item '+(ci.status==='missed'?'risk':'')+'">'+
       (ci.photo?'<img src="'+safeImageAttr(ci.photo)+'" alt="Check-in thumbnail">':'<div class="checkin-missed">Missed</div>')+
       '<span class="ci-date">'+safeCardText(ci.status==='missed'?'Missed '+new Date(ci.date).toLocaleDateString():new Date(ci.date).toLocaleDateString()+(ci.note?' · '+ci.note:''))+'</span></div>'}).join(''):'<p class="track-submit-copy">No check-ins yet.</p>')+'</div>';
+  if(archived){
+    var conditionHistory=(l.conditionReports||[]).length?(l.conditionReports||[]).map(function(report){
+      var label=report.type==='wear'?'Wear report':'Theft or loss report';
+      var outcome=report.type==='wear'?(report.status==='replacement_pending'?'Replacement task pending':report.status):(report.status==='make_good_pending'?'Affected brand make-goods pending':report.status);
+      return '<div class="checkin-item">'+(report.type==='wear'&&report.evidence?'<img src="'+safeImageAttr(report.evidence)+'" alt="Wear report thumbnail">':'<div class="checkin-missed">'+safeCardText(report.type==='wear'?'Wear':'Report')+'</div>')+'<span class="ci-date"><b>'+safeCardText(label)+'</b> · '+safeCardText(new Date(report.date).toLocaleDateString())+'<br>'+safeCardText('Spots '+report.spots.map(function(i){return i+1}).join(', ')+' · '+outcome+(report.reportNumber?' · Report '+report.reportNumber:'')+(report.ownerLiability?' · Owner liability: '+report.ownerLiability:''))+(report.note?'<br>'+safeCardText(report.note):'')+'</span></div>';
+    }).join(''):'<p class="track-submit-copy">No condition reports.</p>';
+    var finalLabel=l.lifecycleStatus==='expired'?'Expired':'Complete';
+    return '<div class="track-submit"><div class="track-submit-title">Final status</div><p class="track-submit-copy"><b>'+finalLabel+'</b>'+(l.finalStatusAt?' · '+safeCardText(new Date(l.finalStatusAt).toLocaleDateString()):'')+'</p></div>'+history+
+      '<div class="track-submit" style="margin-top:12px"><div class="track-submit-title">Condition report history</div>'+conditionHistory+'</div>';
+  }
   var spots=(l.prices||[]).map(function(_,i){return '<label class="admin-check"><input type="checkbox" data-track-condition-spot="'+key+'" value="'+i+'"> Spot '+(i+1)+'</label>'}).join('');
   var reports='<div class="track-submit" style="margin-top:12px"><div class="track-submit-title">Item condition</div><div class="mrow">'+spots+'</div>'+
     '<div class="field"><label class="label" for="trackConditionNote_'+key+'">Note</label><textarea id="trackConditionNote_'+key+'" class="input" maxlength="2000" rows="3"></textarea></div>'+

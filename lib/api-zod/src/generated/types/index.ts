@@ -73,6 +73,8 @@ export * from './trackingCampaign';
 export * from './trackingCampaignLifecycleStatus';
 export * from './trackingCheckin';
 export * from './trackingCheckinStatus';
+export * from './trackingConditionReport';
+export * from './trackingConditionReportType';
 export * from './trackingMagicLinkInput';
 export * from './trackingMagicLinkResponse';
 export * from './trackingOrder';

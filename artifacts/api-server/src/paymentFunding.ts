@@ -1,4 +1,4 @@
-import { campaignCheckinsTable, campaignsTable, db, placementOrdersTable, updateCardCapabilitiesTable } from "@workspace/db";
+import { campaignCheckinEmailEventsTable, campaignCheckinsTable, campaignsTable, db, placementOrdersTable, updateCardCapabilitiesTable } from "@workspace/db";
 import { and, eq, inArray, isNotNull, isNull, lte } from "drizzle-orm";
 import { logger } from "./lib/logger.ts";
 import { stripeRequest } from "./stripeClient.ts";
@@ -28,6 +28,37 @@ const FUNDING_STATUSES = ["reserved", "funding", "payment_failed"] as const;
 const ACTIVE_FUNDING_STATUSES = ["reserved", "funding", "payment_failed", "funded"] as const;
 const SIXTY_DAYS_MS = 60 * 24 * 60 * 60 * 1000;
 const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
+
+async function sendCheckinCycleEmailOnce(
+  campaignId: string,
+  dueAt: Date,
+  template: "checkin_reminder_pre_due" | "checkin_reminder_due" | "checkin_missed",
+  now: Date,
+  send: () => Promise<void>,
+): Promise<boolean> {
+  const [claimed] = await db.insert(campaignCheckinEmailEventsTable).values({
+    campaignId,
+    dueAt,
+    template,
+  }).onConflictDoNothing().returning();
+  if (!claimed) return false;
+  try {
+    await send();
+    await db.update(campaignCheckinEmailEventsTable).set({ sentAt: now }).where(and(
+      eq(campaignCheckinEmailEventsTable.campaignId, campaignId),
+      eq(campaignCheckinEmailEventsTable.dueAt, dueAt),
+      eq(campaignCheckinEmailEventsTable.template, template),
+    ));
+    return true;
+  } catch (error) {
+    await db.delete(campaignCheckinEmailEventsTable).where(and(
+      eq(campaignCheckinEmailEventsTable.campaignId, campaignId),
+      eq(campaignCheckinEmailEventsTable.dueAt, dueAt),
+      eq(campaignCheckinEmailEventsTable.template, template),
+    ));
+    throw error;
+  }
+}
 
 function publicAppUrl(): string {
   const configured = process.env.BRANDMYITEM_PUBLIC_URL?.trim();
@@ -544,18 +575,18 @@ export async function advanceCheckinLifecycle(now = new Date()): Promise<void> {
     const preDueAt = new Date(dueAt.getTime() - 3 * 24 * 60 * 60 * 1000);
     if (now >= preDueAt && !campaign.checkinPreDueEmailSentAt && campaign.ownerEmail) {
       try {
-        await sendTransactionalEmail(checkinReminderEmail({
-          email: campaign.ownerEmail,
-          itemDisplayName: campaignItemDisplayName(campaign),
-          campaignId: campaign.id,
-          timing: "pre_due",
-          dueAt,
-        }));
-        await db.update(campaignsTable).set({
-          checkinPreDueEmailSentAt: now,
-          checkinReminderSentAt: now,
-          updatedAt: now,
-        }).where(and(eq(campaignsTable.id, campaign.id), isNull(campaignsTable.checkinPreDueEmailSentAt)));
+        const sent = await sendCheckinCycleEmailOnce(campaign.id, dueAt, "checkin_reminder_pre_due", now, async () => {
+          await sendTransactionalEmail(checkinReminderEmail({
+            email: campaign.ownerEmail!,
+            itemDisplayName: campaignItemDisplayName(campaign),
+            campaignId: campaign.id,
+            timing: "pre_due",
+            dueAt,
+          }));
+        });
+        if (sent) await db.update(campaignsTable).set({
+          checkinPreDueEmailSentAt: now, checkinReminderSentAt: now, updatedAt: now,
+        }).where(eq(campaignsTable.id, campaign.id));
       } catch (error) {
         logger.warn({ err: error, campaignId: campaign.id }, "Pre-due check-in email delivery failed");
       }
@@ -566,19 +597,18 @@ export async function advanceCheckinLifecycle(now = new Date()): Promise<void> {
     }
     if (now >= dueAt && !campaign.checkinDueEmailSentAt && campaign.ownerEmail) {
       try {
-        await sendTransactionalEmail(checkinReminderEmail({
-          email: campaign.ownerEmail,
-          itemDisplayName: campaignItemDisplayName(campaign),
-          campaignId: campaign.id,
-          timing: "due",
-          dueAt,
-        }));
-        await db.update(campaignsTable).set({
-          checkinStatus: "due",
-          checkinDueEmailSentAt: now,
-          checkinReminderSentAt: now,
-          updatedAt: now,
-        }).where(and(eq(campaignsTable.id, campaign.id), isNull(campaignsTable.checkinDueEmailSentAt)));
+        const sent = await sendCheckinCycleEmailOnce(campaign.id, dueAt, "checkin_reminder_due", now, async () => {
+          await sendTransactionalEmail(checkinReminderEmail({
+            email: campaign.ownerEmail!,
+            itemDisplayName: campaignItemDisplayName(campaign),
+            campaignId: campaign.id,
+            timing: "due",
+            dueAt,
+          }));
+        });
+        if (sent) await db.update(campaignsTable).set({
+          checkinStatus: "due", checkinDueEmailSentAt: now, checkinReminderSentAt: now, updatedAt: now,
+        }).where(eq(campaignsTable.id, campaign.id));
       } catch (error) {
         logger.warn({ err: error, campaignId: campaign.id }, "Due check-in email delivery failed");
       }
@@ -613,15 +643,17 @@ export async function advanceCheckinLifecycle(now = new Date()): Promise<void> {
     }).onConflictDoNothing();
     if (campaign.ownerEmail) {
       try {
-        await sendTransactionalEmail(checkinReminderEmail({
-          email: campaign.ownerEmail,
-          itemDisplayName: campaignItemDisplayName(campaign),
-          campaignId: campaign.id,
-          timing: "missed",
-          dueAt,
-        }));
-        await db.update(campaignsTable).set({ checkinMissedEmailSentAt: now, updatedAt: now })
-          .where(and(eq(campaignsTable.id, campaign.id), isNull(campaignsTable.checkinMissedEmailSentAt)));
+        const sent = await sendCheckinCycleEmailOnce(campaign.id, dueAt, "checkin_missed", now, async () => {
+          await sendTransactionalEmail(checkinReminderEmail({
+            email: campaign.ownerEmail!,
+            itemDisplayName: campaignItemDisplayName(campaign),
+            campaignId: campaign.id,
+            timing: "missed",
+            dueAt,
+          }));
+        });
+        if (sent) await db.update(campaignsTable).set({ checkinMissedEmailSentAt: now, updatedAt: now })
+          .where(eq(campaignsTable.id, campaign.id));
       } catch (error) {
         logger.warn({ err: error, campaignId: campaign.id }, "Missed check-in email delivery failed");
       }

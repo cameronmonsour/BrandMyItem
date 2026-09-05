@@ -544,7 +544,19 @@ export const GetTrackingResponse = zod.object({
   "note": zod.string().nullish(),
   "photoObjectPath": zod.string().nullish(),
   "submittedAt": zod.coerce.date()
-})).optional(),
+})),
+  "conditionReports": zod.array(zod.object({
+  "id": zod.string(),
+  "type": zod.enum(['wear', 'theft_loss']),
+  "affectedSpotIndexes": zod.array(zod.int()),
+  "note": zod.string().nullish(),
+  "evidenceObjectPath": zod.string(),
+  "policeReportNumber": zod.string().nullish(),
+  "ownerLiability": zod.string().nullish(),
+  "status": zod.string(),
+  "createdAt": zod.coerce.date()
+})),
+  "finalStatusAt": zod.coerce.date().nullish(),
   "ownerMatch": zod.boolean(),
   "createdAt": zod.coerce.date(),
   "orders": zod.array(zod.object({

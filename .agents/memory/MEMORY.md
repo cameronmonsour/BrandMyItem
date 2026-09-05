@@ -34,3 +34,4 @@
 - [Recovery guardrails](brandmyitem-recovery-guardrails.md) — lifecycle repair must preserve IDs and Stripe references, while cleanup only deletes explicitly flagged stale test rows.
 - [Active order counts](active-order-counts.md) — funding thresholds and completion emails must ignore cancelled and expired reservation history.
 - [Reusable upload capabilities](reusable-upload-capabilities.md) — one owner capability can authorize sequential resource-bound upload intents, so its digest cannot be globally unique.
+- [Check-in email cycle ledger](checkin-email-cycle-ledger.md) — reminder idempotency is keyed by listing, due date, and template rather than mutable current-cycle timestamps.

@@ -1057,7 +1057,7 @@ components:
           format: date-time
     TrackingCampaign:
       type: object
-      required: [id, itemType, title, ownerName, pricesCents, active, ownerMatch, createdAt, orders]
+      required: [id, itemType, title, ownerName, pricesCents, active, ownerMatch, createdAt, orders, checkins, conditionReports]
       properties:
         id:
           type: string
@@ -1088,6 +1088,13 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/TrackingCheckin"
+        conditionReports:
+          type: array
+          items:
+            $ref: "#/components/schemas/TrackingConditionReport"
+        finalStatusAt:
+          type: ["string", "null"]
+          format: date-time
         ownerMatch:
           type: boolean
         createdAt:
@@ -1116,6 +1123,21 @@ components:
         note: { type: [string, "null"] }
         photoObjectPath: { type: [string, "null"] }
         submittedAt: { type: string, format: date-time }
+    TrackingConditionReport:
+      type: object
+      required: [id, type, affectedSpotIndexes, status, evidenceObjectPath, createdAt]
+      properties:
+        id: { type: string }
+        type: { type: string, enum: [wear, theft_loss] }
+        affectedSpotIndexes:
+          type: array
+          items: { type: integer }
+        note: { type: [string, "null"] }
+        evidenceObjectPath: { type: string }
+        policeReportNumber: { type: [string, "null"] }
+        ownerLiability: { type: [string, "null"] }
+        status: { type: string }
+        createdAt: { type: string, format: date-time }
     PublicClaim:
       type: object
       required: [orderId, spotIndex, brandName, amountCents, reservedAt, status]

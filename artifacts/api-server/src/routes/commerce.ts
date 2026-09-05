@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import {
   campaignsTable,
   campaignCheckinsTable,
+  conditionReportsTable,
   db,
   placementOrdersTable,
   updateCardCapabilitiesTable,
@@ -404,6 +405,11 @@ router.get("/tracking", async (req, res): Promise<void> => {
     : [];
   const checkinsByCampaign = new Map<string, typeof checkins>();
   for (const checkin of checkins) checkinsByCampaign.set(checkin.campaignId, [...(checkinsByCampaign.get(checkin.campaignId) ?? []), checkin]);
+  const conditionReports = ownerCampaignIds.length
+    ? await db.select().from(conditionReportsTable).where(inArray(conditionReportsTable.campaignId, ownerCampaignIds)).orderBy(desc(conditionReportsTable.createdAt))
+    : [];
+  const reportsByCampaign = new Map<string, typeof conditionReports>();
+  for (const report of conditionReports) reportsByCampaign.set(report.campaignId, [...(reportsByCampaign.get(report.campaignId) ?? []), report]);
 
   if (magicLink) {
     for (const campaign of ownerCampaigns) {
@@ -447,6 +453,22 @@ router.get("/tracking", async (req, res): Promise<void> => {
            photoObjectPath: checkin.photoObjectPath,
            submittedAt: checkin.submittedAt,
          })),
+          conditionReports: (reportsByCampaign.get(campaign.id) ?? []).map((report) => ({
+            id: report.id,
+            type: report.type,
+            affectedSpotIndexes: report.affectedSpotIndexes,
+            note: report.note,
+            evidenceObjectPath: report.evidenceObjectPath,
+            policeReportNumber: report.policeReportNumber,
+            ownerLiability: report.ownerLiability,
+            status: report.status,
+            createdAt: report.createdAt,
+          })),
+          finalStatusAt: campaign.lifecycleStatus === "expired"
+            ? campaign.expiredAt
+            : campaign.lifecycleStatus === "complete"
+              ? ((reportsByCampaign.get(campaign.id) ?? [])[0]?.createdAt ?? campaign.updatedAt)
+              : null,
         ownerMatch: ownerIdSet.has(campaign.id),
         createdAt: campaign.createdAt,
         orders: Array.from(

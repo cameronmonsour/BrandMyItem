@@ -308,3 +308,17 @@ mtime_ms = 1788579020653
 storage_uri = "gcs://replit-rams-assets-riker/rams/assets/repl:3f7c2cc8-f08b-4158-944b-09fd3b52c7cc/61b7ec6f-a0ab-4fb1-aba2-cc3833688e4b/f4489106-a0bb-4bf0-9ec4-039323f406d8"
 storage_version_token = "1788579023483945"
 content_type = "application/octet-stream"
+
+[[outputs]]
+id = "QmgPPiEbtGyw_Pj26oPUs"
+uri = "file://verification/evidence/sweep-plus7-idempotency.json"
+type = "unspecified"
+title = "Three-run +7 day sweep test"
+description = "Three sweeps at the identical +7-day timestamp. The first reports one due reminder, and runs two and three report none."
+logical_id = "943d351f-1245-42d3-b3fa-0f6e1bbd530b"
+content_hash = "sha256:34de14a5d7f48c1c41e4ebff29a24754900790930440dcf0d43f54114d560d4f"
+size = 886
+mtime_ms = 1788579561413
+storage_uri = "gcs://replit-rams-assets-riker/rams/assets/repl:3f7c2cc8-f08b-4158-944b-09fd3b52c7cc/943d351f-1245-42d3-b3fa-0f6e1bbd530b/330093e0-8bb6-4e2a-9e2b-504840bed12e"
+storage_version_token = "1788579562493604"
+content_type = "application/octet-stream"

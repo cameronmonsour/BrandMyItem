@@ -87,6 +87,16 @@ export async function ensureCommerceSchema(): Promise<void> {
     );
     ALTER TABLE campaign_checkins ADD COLUMN IF NOT EXISTS status text NOT NULL DEFAULT 'submitted';
     CREATE INDEX IF NOT EXISTS campaign_checkins_campaign_submitted_idx ON campaign_checkins (campaign_id, submitted_at);
+    CREATE TABLE IF NOT EXISTS campaign_checkin_email_events (
+      campaign_id text NOT NULL REFERENCES campaigns(id),
+      due_at timestamptz NOT NULL,
+      template text NOT NULL,
+      sent_at timestamptz,
+      created_at timestamptz NOT NULL DEFAULT now(),
+      PRIMARY KEY (campaign_id, due_at, template)
+    );
+    CREATE INDEX IF NOT EXISTS campaign_checkin_email_events_campaign_idx
+      ON campaign_checkin_email_events (campaign_id, due_at);
     CREATE TABLE IF NOT EXISTS condition_reports (
       id text PRIMARY KEY, campaign_id text NOT NULL REFERENCES campaigns(id),
       type text NOT NULL, affected_spot_indexes jsonb NOT NULL, note text,
