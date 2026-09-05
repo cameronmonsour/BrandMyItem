@@ -35,3 +35,4 @@
 - [Active order counts](active-order-counts.md) — funding thresholds and completion emails must ignore cancelled and expired reservation history.
 - [Reusable upload capabilities](reusable-upload-capabilities.md) — one owner capability can authorize sequential resource-bound upload intents, so its digest cannot be globally unique.
 - [Check-in email cycle ledger](checkin-email-cycle-ledger.md) — reminder idempotency is keyed by listing, due date, and template rather than mutable current-cycle timestamps.
+- [GitHub push authentication](github-push-authentication.md) — connector reads may work while Git writes remain blocked; preserve fast-forward safety and ask for Git-pane reauthorization.
